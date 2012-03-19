@@ -39,7 +39,7 @@ module Libertree
       migrations_run = dbh.execute( "SELECT filename FROM schema_migrations" ).as(:Struct).fetch(:all).map(&:filename)
 
       __DIR__ = File.dirname( __FILE__ )
-      Dir["#{__DIR__}/migrations/*.sql"].sort.each do |migration|
+      Dir["#{__DIR__}/../migrations/*.sql"].sort.each do |migration|
         filename = File.basename( migration )
         if ! migrations_run.include?( filename )
           dbh.transaction do
