@@ -1,9 +1,9 @@
-# Social Network Protocol
+# Libertree Protocol
 
 ## Introduction
 
-This document describes the behaviour of servers that are members of the
-social network.
+This document describes the behaviour required of servers that would be members
+of a Libertree network.
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
 "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be
@@ -27,6 +27,9 @@ messages MUST NOT contain any newline characters.  Messages MUST be encoded in
 UTF-8. All message contents, including structures (arrays and hashes) MUST be
 valid JSON structures.
 
+This communication protocol is called the Libertree Protocol, abbreviated LTP.
+LTP may be used as a noun and as an adjective.
+
 ## Server Authentication
 
 Every server MUST have a pair of encryption keys: one private and one public.
@@ -44,29 +47,53 @@ In the following descriptions, required components are indicated with angle
 brackets (<>). Optional components are indicated with double square brackets
 ([[]]). Multiple possibilities are indicated by separating them with a pipe
 character (|). Otherwise, the structures given are to be considered normative
-literal JSON data.
+literal JSON data.  Conformant servers MUST issue the strings described in the
+case shown (the protocol case sensitive).
 
 Requests are sent through the socket in this format:
 
-    <request command> <JSON data>
+    <request command> <data>
 
 For example:
 
-    INTRODUCE { 'public_key' => "-----BEGIN PGP PUBLIC KEY BLOCK-----\n..." }
+    INTRODUCE { "public_key" => "-----BEGIN PGP PUBLIC KEY BLOCK-----\n..." }
+
+### Invalid Requests
+
+Given any data sent by a requester through the connection which does not
+conform to this format, responders MUST respond with a "BAD REQUEST" code:
+
+    { "code" => "BAD REQUEST" }
+
+Given request data that conforms to the required format, but which contains
+a command not specified in this protocol, servers MUST respond with an
+"UNKNOWN COMMAND" code:
+
+    { "code" => "UNKNOWN COMMAND" }
+
+Given request data that conforms to the required format, contains a valid
+command, but whose parameter data is not valid JSON, responders MUST respond
+with a "BAD PARAMETER" code.  Servers MAY provide a message element to assist
+request debugging.  Response structure:
+
+    {
+      "code" => "BAD PARAMETER",
+      [[ "message" => <explanatory text> ]]
+    }
 
 ### INTRODUCE
 
 Request Parameters:
 
-    { 'public_key' => <public key> }
+    { "public_key" => <public key> }
 
 Response Structure:
 
-    { 'code' => 'OK' }
+    { "code" => "OK" }
     |
     {
-      'code' => 'OK',
-      'challenge' => <challenge>
+      "code" => "OK",
+      "challenge" => <challenge>
     }
 
 The first request sent through every connection is the INTRODUCE request.
@@ -88,15 +115,15 @@ any previous connection, whether with the same requester or a different one.
 
 Request Parameters:
 
-    { 'response' => <challenge response> }
+    { "response" => <challenge response> }
 
 Response Structure:
 
-    { 'code' => 'OK' }
+    { "code" => "OK" }
     |
     {
-      'code' => 'ERROR',
-      [[ 'message' => <explanatory text> ]]
+      "code" => "ERROR",
+      [[ "message" => <explanatory text> ]]
     }
 
 The requester, after receiving an INTRODUCE challenge from the responder, MUST
@@ -110,18 +137,18 @@ lifetime.
 
 If the challenge response does not match the original challenge string, then
 the responder MUST respond with an ERROR code.  The responder MAY provide a
-'message' element containing text that would assist a human in debugging.
+"message" element containing text that would assist a human in debugging.
 The responder MAY close the connection after the failed challenge.
 
 ### NEW-IP
 
 Request Parameters:
 
-    { 'ip' => <new IP> }
+    { "ip" => <new IP> }
 
 Response Structure:
 
-    { 'code' => 'OK' }
+    { "code" => "OK" }
 
 A requester uses NEW-IP to inform the responder that its IP has changed.  The
 responder MUST update its records for the requester's pubkey with the new IP.
