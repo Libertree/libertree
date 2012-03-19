@@ -1,0 +1,11 @@
+source 'http://rubygems.org'
+gem 'm4dbi'
+gem 'pg'
+gem 'rdbi', :git => 'git://github.com/RDBI/rdbi.git'
+gem 'rdbi-driver-postgresql', :git => 'git://github.com/RDBI/rdbi-driver-postgresql.git'
+gem 'rspec'
+gem 'eventmachine'
+
+group 'development' do
+  gem 'ruby-debug19'
+end
