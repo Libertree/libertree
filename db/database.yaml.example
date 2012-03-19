@@ -1,0 +1,12 @@
+development:
+  host: localhost
+  username: libertree
+  database: libertree
+test:
+  host: localhost
+  username: libertree
+  database: libertree_test
+production:
+  host: localhost
+  username: libertree
+  database: libertree_test

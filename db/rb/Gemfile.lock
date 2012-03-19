@@ -1,0 +1,39 @@
+GIT
+  remote: git://github.com/RDBI/rdbi-driver-postgresql.git
+  revision: f1b17633c3c355ace72e6de82e52a764969f5129
+  specs:
+    rdbi-driver-postgresql (0.9.1)
+      epoxy (>= 0.3.1)
+      methlab
+      pg (= 0.9.0)
+      rdbi
+
+GIT
+  remote: git://github.com/RDBI/rdbi.git
+  revision: e5accb27a99f314db1474f5bb01538b4d2ccb26a
+  specs:
+    rdbi (0.9.1)
+      epoxy (>= 0.3.1)
+      methlab (>= 0.0.9)
+      typelib
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    epoxy (0.3.1)
+    m4dbi (0.8.0)
+      metaid
+      rdbi
+    metaid (1.0)
+    methlab (0.1.0)
+    pg (0.9.0)
+    typelib (0.1.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  m4dbi
+  pg
+  rdbi!
+  rdbi-driver-postgresql!
