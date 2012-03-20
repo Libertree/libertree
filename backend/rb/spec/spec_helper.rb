@@ -3,12 +3,10 @@ require 'libertree/server'
 $responses = []
 
 class MockServer
+  include Libertree::Server
+
   def respond(data)
     $responses << data.to_json
-  end
-
-  def respond_with_code(code)
-    respond( { 'code' => code } )
   end
 end
 
