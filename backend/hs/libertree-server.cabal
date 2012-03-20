@@ -1,0 +1,31 @@
+Name:                libertree-server
+Version:             0.1
+Synopsis:            Haskell implementation of the Libertree server backend
+
+Description:         This is an implementation of the Libertree server backend
+                     in adherence to the Libertree protocol.
+
+Homepage:            http://libertreeproject.net
+License:             MIT
+License-file:        LICENSE
+Author:              rekado
+Maintainer:          rekado@elephly.net
+Category:            Network
+Build-type:          Simple
+
+-- Extra files to be distributed with the package, such as examples or
+-- a README.
+-- Extra-source-files:  
+Cabal-version:       >=1.2
+
+
+Executable libertree-server
+  Main-is:           Main.hs
+  hs-source-dirs:    src
+  Build-depends:     base>=4.3.1, unix, network, http-types, blaze-builder, bytestring, json
+
+  -- Extra tools (e.g. alex, hsc2hs, ...) needed to build the source.
+  -- Build-tools:         
+  --ghc-options:       -Wall -O2 -fllvm -optlc=-march=arm
+  ghc-options:       -Wall -O2
+
