@@ -3,16 +3,16 @@ require 'spec_helper'
 describe Libertree::Server::Dispatcher do
   describe 'process' do
     before :each do
-      @d = MockServer.new.extend(subject)
+      @s = MockServer.new
     end
 
     it 'responds to malformed requests' do
-      @d.process "malformed"
+      @s.process "malformed"
       shouldda_responded_with_code 'BAD REQUEST'
     end
 
     it 'responds to requests with non-JSON parameters' do
-      @d.process 'SOME-COMMAND invalid;JSON'
+      @s.process 'SOME-COMMAND invalid;JSON'
       shouldda_responded_with( {
         'code' => 'BAD PARAMETER',
         'message' => "743: unexpected token at 'invalid;JSON'",
@@ -20,7 +20,7 @@ describe Libertree::Server::Dispatcher do
     end
 
     it 'responds to unknown commands' do
-      @d.process 'NO-SUCH-COMMAND { "data": "foo" }'
+      @s.process 'NO-SUCH-COMMAND { "data": "foo" }'
       shouldda_responded_with_code 'UNKNOWN COMMAND'
     end
   end

@@ -5,7 +5,7 @@ module Libertree
   module Server
     module Dispatcher
       def process(request_raw)
-        if request_raw !~ /^(\S)+ (.+)$/
+        if request_raw !~ /^(\S+) (.+)$/
           respond_with_code 'BAD REQUEST'
           return
         end
@@ -21,10 +21,12 @@ module Libertree
           return
         end
 
-        case request_raw
+        case command
         when 'INTRODUCE'
+          method = "rsp_#{command.downcase.gsub('-', '_')}".to_sym
+          send  method, parameters
         else
-          respond_with_code 'UNKNOWN COMMAND'
+          respond 'code' => 'UNKNOWN COMMAND', 'message' => "Received: #{command}"
         end
       end
     end

@@ -1,18 +1,24 @@
 require 'eventmachine'
 require 'json'
-require 'libertree/dispatcher'
+require 'socket'
+
+require 'libertree/model'
+require 'libertree/server/dispatcher'
+require 'libertree/server/responder'
 
 module Libertree
   module Server
     PORT = 14404
 
     include Dispatcher
+    include Responder
 
     def initialize
     end
 
     def post_init
-      puts "Connection received."
+      port, @ip_remote = Socket.unpack_sockaddr_in(get_peername)
+      puts "#{@ip_remote} connected."
     end
 
     def receive_data(data)
