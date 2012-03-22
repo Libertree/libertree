@@ -1,6 +1,7 @@
 require 'eventmachine'
 require 'json'
 require 'socket'
+require 'gpgme'
 
 require 'libertree/model'
 require 'libertree/server/dispatcher'

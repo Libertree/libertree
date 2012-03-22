@@ -21,7 +21,7 @@ describe Libertree::Server::Responder::Authentication do
         params = { 'public_key' => @requester.public_key }.to_json
         @s.process "INTRODUCE #{params}"
         shouldda_responded_with_code 'OK'
-        response['challenge'].should =~ /^\S{16,}$/
+        response['challenge'].should =~ /^-----BEGIN PGP MESSAGE-----.{200,}-----END PGP MESSAGE-----$/m
       end
     end
   end
