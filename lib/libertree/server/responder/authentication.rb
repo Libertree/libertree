@@ -3,9 +3,7 @@ module Libertree
     module Responder
       module Authentication
         def rsp_authenticate(params)
-          if @server.nil?
-            respond 'code' => 'ERROR', 'message' => 'Not INTRODUCEd.'
-          elsif params['response'] != @server.challenge
+          if params['response'] != @server.challenge
             respond 'code' => 'ERROR', 'message' => 'Challenge failed.'
             close_connection_after_writing
           else

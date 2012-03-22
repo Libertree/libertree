@@ -22,9 +22,15 @@ module Libertree
         end
 
         case command
-        when 'AUTHENTICATE', 'INTRODUCE'
-          method = "rsp_#{command.downcase.gsub('-', '_')}".to_sym
-          send  method, parameters
+        when 'INTRODUCE'
+          rsp_introduce parameters
+        when 'AUTHENTICATE' # , ...
+          if ! introduced?
+            respond 'code' => 'ERROR', 'message' => 'Not INTRODUCEd.'
+          else
+            method = "rsp_#{command.downcase.gsub('-', '_')}".to_sym
+            send  method, parameters
+          end
         else
           respond 'code' => 'UNKNOWN COMMAND', 'message' => "Received command: #{command}"
         end

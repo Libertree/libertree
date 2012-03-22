@@ -44,6 +44,10 @@ module Libertree
       respond 'code' => code
     end
 
+    def introduced?
+      @server && @server.public_key
+    end
+
     def self.run
       EventMachine.run do
         EventMachine.start_server '127.0.0.1', PORT, self
