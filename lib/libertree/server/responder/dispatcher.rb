@@ -23,6 +23,8 @@ module Libertree
             return
           end
 
+          puts "Received request: #{command}"
+
           case command
           when 'AUTHENTICATE', 'INTRODUCE' # , ...
             if command != 'INTRODUCE' && ! introduced?

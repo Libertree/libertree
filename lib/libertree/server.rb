@@ -29,6 +29,7 @@ module Libertree
     end
 
     def unbind
+      puts "#{@ip_remote} disconnected."
       if @server
         @server.challenge = nil
         @server = nil
