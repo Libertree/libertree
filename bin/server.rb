@@ -1,3 +1,3 @@
 require 'libertree/server'
 
-Libertree::Server.run
+Libertree::Server.run ARGV[0]

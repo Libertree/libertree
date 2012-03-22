@@ -11,6 +11,10 @@ module Libertree
   module Server
     PORT = 14404
 
+    class << self
+      attr_accessor :conf
+    end
+
     include Responder
 
     # EventMachine callbacks
@@ -46,7 +50,18 @@ module Libertree
       @server && @server.public_key
     end
 
-    def self.run
+    def self.load_config(config_filename)
+      @conf = YAML.load( File.read(config_filename) )
+      [
+      ].each do |required_key|
+        if @conf[required_key].nil?
+          raise "Configuration error: #{required_key} is required."
+        end
+      end
+    end
+
+    def self.run(config_filename)
+      load_config config_filename
       EventMachine.run do
         EventMachine.start_server '127.0.0.1', PORT, self
         puts "Libertree started."
