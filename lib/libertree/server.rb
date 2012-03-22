@@ -5,14 +5,12 @@ require 'gpgme'
 
 require 'libertree/authenticatable'
 require 'libertree/model'
-require 'libertree/server/dispatcher'
 require 'libertree/server/responder'
 
 module Libertree
   module Server
     PORT = 14404
 
-    include Dispatcher
     include Responder
 
     # EventMachine callbacks

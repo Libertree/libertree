@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Libertree::Server::Dispatcher do
+describe Libertree::Server::Responder::Dispatcher do
   describe 'process' do
     before :each do
       @s = MockServer.new
