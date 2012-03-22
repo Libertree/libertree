@@ -22,10 +22,8 @@ module Libertree
         end
 
         case command
-        when 'INTRODUCE'
-          rsp_introduce parameters
-        when 'AUTHENTICATE' # , ...
-          if ! introduced?
+        when 'AUTHENTICATE', 'INTRODUCE' # , ...
+          if command != 'INTRODUCE' && ! introduced?
             respond 'code' => 'ERROR', 'message' => 'Not INTRODUCEd.'
           else
             method = "rsp_#{command.downcase.gsub('-', '_')}".to_sym
