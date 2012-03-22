@@ -3,6 +3,7 @@ require 'json'
 require 'socket'
 require 'gpgme'
 
+require 'libertree/authenticatable'
 require 'libertree/model'
 require 'libertree/server/dispatcher'
 require 'libertree/server/responder'
@@ -14,8 +15,7 @@ module Libertree
     include Dispatcher
     include Responder
 
-    def initialize
-    end
+    # EventMachine callbacks
 
     def post_init
       port, @ip_remote = Socket.unpack_sockaddr_in(get_peername)
@@ -25,6 +25,15 @@ module Libertree
     def receive_data(data)
       process data
     end
+
+    def unbind
+      if @server
+        @server.challenge = nil
+        @server = nil
+      end
+    end
+
+    # -------
 
     def respond(data)
       # TODO: Gracefully handle failure to convert to JSON

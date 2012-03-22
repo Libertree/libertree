@@ -13,6 +13,10 @@ class MockServer
   def respond(data)
     $responses << data.to_json
   end
+
+  def close_connection_after_writing
+    # noop in testing
+  end
 end
 
 def response
