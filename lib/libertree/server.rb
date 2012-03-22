@@ -37,15 +37,6 @@ module Libertree
 
     # -------
 
-    def respond(data)
-      # TODO: Gracefully handle failure to convert to JSON
-      send_data data.to_json
-    end
-
-    def respond_with_code(code)
-      respond 'code' => code
-    end
-
     def introduced?
       @server && @server.public_key
     end
