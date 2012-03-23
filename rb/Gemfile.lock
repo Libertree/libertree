@@ -20,6 +20,7 @@ GIT
 GEM
   remote: http://rubygems.org/
   specs:
+    bcrypt-ruby (3.0.1)
     epoxy (0.3.1)
     m4dbi (0.8.0)
       metaid
@@ -33,6 +34,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bcrypt-ruby
   m4dbi
   pg
   rdbi!
