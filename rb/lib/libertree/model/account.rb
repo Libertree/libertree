@@ -8,18 +8,19 @@ module Libertree
       # password.  The pseudo-field "password" can be treated like a normal
       # String field for reading and writing.
       def password
-        @password ||= BCrypt::Password.new(password_hash)
+        @password ||= BCrypt::Password.new(password_encrypted)
       end
 
       def password=( new_password )
         @password = BCrypt::Password.create(new_password)
-        self.password_hash = @password
+        self.password_encrypted = @password
       end
 
+      # Used by Ramaze::Helper::UserHelper.
       # @return [Account] authenticated account, or nil on failure to authenticate
       def self.authenticate(creds)
         account = Account[ 'username' => creds['username'] ]
-        if account.password ==  creds['password']
+        if account && account.password == creds['password']
           account
         end
       end
