@@ -64,7 +64,7 @@ CREATE TABLE sharings(
     , PRIMARY KEY(id)
 );
 COMMENT ON TABLE sharings IS
-'Sharing of public posts, to be read in stream pages.';
+'Sharing of public posts, to be read in stream pages.  A sort of "inverse subscription".';
 COMMENT ON COLUMN sharings.accepted IS
 'This is only meaningful for local members.';
 
