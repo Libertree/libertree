@@ -1,14 +1,21 @@
 ## Libertree Database - Setup and Maintenance
 
-Use createuser.sh to create the libertree PostgreSQL user.  Use createdb.sh to
-create the libertree PostgreSQL database and set it to be owned by the
-libertree user.
+### Requirements
 
-Install Bundler (http://gembundler.com/ `gem install bundler`), then `bundle
-install` to get required gems.  Migrate with:
+* PostgreSQL 9
+* uuid-ossp PostgreSQL module
 
-    cd db/rb
-    bundle exec ruby -Ilib migrate.rb [path to database.yaml]
+### Setup
+
+Use createuser.sh to create the libertree PostgreSQL user.
+
+Use createdb.sh to create the libertree PostgreSQL database for the development
+and test environments, and set them to be owned by the libertree user.
+
+Install the uuid-ossp module in each database using a PostgreSQL super user:
+
+    echo 'CREATE EXTENSION "uuid-ossp";' | psql -U postgres libertree_development
+    echo 'CREATE EXTENSION "uuid-ossp";' | psql -U postgres libertree_test
 
 ### Migration
 
@@ -24,3 +31,11 @@ time of the migration's creation.  For example:
 
     2012-03-19-1440-foobar-table.sql
 
+#### Ruby
+
+Install Bundler (http://gembundler.com/ `gem install bundler`), then `bundle
+install` to get required gems.
+
+Migrate with:
+
+    bundle exec ruby -Ilib migrate.rb [path to database.yaml]
