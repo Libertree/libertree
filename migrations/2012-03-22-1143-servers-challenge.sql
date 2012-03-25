@@ -1,1 +1,0 @@
-ALTER TABLE servers ADD COLUMN challenge VARCHAR(2048);

@@ -1,3 +1,16 @@
+CREATE TABLE servers (
+      id SERIAL
+    , ip INET NOT NULL
+    , public_key VARCHAR(4096) NOT NULL
+    , time_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+    , challenge VARCHAR(2048)
+    , PRIMARY KEY(id)
+);
+COMMENT ON TABLE servers IS
+'Records of remote servers.  The local server does not have a record in this table.';
+
+CREATE INDEX servers_public_key ON servers(public_key);
+
 CREATE TABLE accounts(
       id SERIAL
     , time_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
@@ -7,22 +20,31 @@ CREATE TABLE accounts(
     , PRIMARY KEY(id)
 );
 COMMENT ON TABLE accounts IS
-'Local user accounts.  For logging in, changing settings, etc.';
+'Local user accounts.  For server-local concerns, like logging in, changing settings, etc.  See also members and profiles tables.';
 
 CREATE TABLE members(
       id SERIAL
     , time_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
-    , guid VARCHAR(64) NOT NULL UNIQUE
-    , username VARCHAR(64) NOT NULL
-    , host VARCHAR(256) NOT NULL
+    , uuid UUID NOT NULL UNIQUE DEFAULT uuid_generate_v4()
+    , username VARCHAR(64)
+    , server_id INTEGER REFERENCES servers(id)
     , account_id INTEGER REFERENCES accounts(id)
     , PRIMARY KEY(id)
-    , UNIQUE( username, host )
+    , UNIQUE( username, server_id )
+    , CONSTRAINT either_local_or_remote CHECK (
+        username IS NULL AND server_id IS NULL AND account_id IS NOT NULL
+        OR username IS NOT NULL AND server_id IS NOT NULL AND account_id IS NULL
+    )
 );
 COMMENT ON TABLE members IS
-'Representation of both local and remote users.  For public profiles, associating contacts, etc.';
+'Representation of both local and remote users.  For inter-server concerns, like public profiles, associating contacts, etc.';
+COMMENT ON COLUMN members.username IS
+'A duplicate of remote data (remote accounts.username column).';
+COMMENT ON COLUMN members.server_id IS
+'If not NULL, the member is remote.  If NULL, the member is local.';
 COMMENT ON COLUMN members.account_id IS
 'If NULL, the member is remote.  If not NULL, the member is local.';
+CREATE INDEX members_uuid ON members(uuid);
 
 CREATE TABLE profiles(
       id SERIAL
@@ -39,10 +61,11 @@ CREATE TABLE posts(
     , time_updated TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
     , member_id INTEGER NOT NULL REFERENCES members(id)
     , public BOOLEAN NOT NULL DEFAULT FALSE
-    , guid VARCHAR(64) NOT NULL UNIQUE
+    , uuid UUID NOT NULL UNIQUE DEFAULT uuid_generate_v4()
     , text VARCHAR(16384) NOT NULL
     , PRIMARY KEY(id)
 );
+CREATE INDEX posts_uuid ON posts(uuid);
 
 CREATE TABLE comments(
       id SERIAL
@@ -50,23 +73,22 @@ CREATE TABLE comments(
     , time_updated TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
     , member_id INTEGER NOT NULL REFERENCES members(id)
     , post_id INTEGER NOT NULL REFERENCES posts(id)
-    , guid VARCHAR(64) NOT NULL UNIQUE
+    , uuid UUID NOT NULL UNIQUE DEFAULT uuid_generate_v4()
     , text VARCHAR(16384) NOT NULL
     , PRIMARY KEY(id)
 );
+CREATE INDEX comments_uuid ON comments(uuid);
 
 CREATE TABLE sharings(
       id SERIAL
     , time_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
-    , from_member_id INTEGER NOT NULL REFERENCES members(id)
-    , to_member_id INTEGER NOT NULL REFERENCES members(id)
+    , member_id_from INTEGER NOT NULL REFERENCES members(id)
+    , member_id_to INTEGER NOT NULL REFERENCES members(id)
     , accepted BOOLEAN NOT NULL DEFAULT FALSE
     , PRIMARY KEY(id)
 );
 COMMENT ON TABLE sharings IS
 'Sharing of public posts, to be read in stream pages.  A sort of "inverse subscription".';
-COMMENT ON COLUMN sharings.accepted IS
-'This is only meaningful for local members.';
 
 CREATE TABLE contact_categories(
       id SERIAL
@@ -81,8 +103,9 @@ CREATE TABLE contact_categories(
 CREATE TABLE contacts(
       id SERIAL
     , time_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
-    , account_id INTEGER NOT NULL REFERENCES accounts(id)
-    , member_id INTEGER NOT NULL REFERENCES members(id)
+    , member_id_from INTEGER NOT NULL REFERENCES members(id)
+    , member_id_to INTEGER NOT NULL REFERENCES members(id)
+    , accepted BOOLEAN NOT NULL DEFAULT FALSE
     , contact_category_id INTEGER NOT NULL REFERENCES contact_categories(id)
     , notes VARCHAR(1024)
     , PRIMARY KEY(id)
