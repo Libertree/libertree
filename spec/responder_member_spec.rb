@@ -9,8 +9,8 @@ describe Libertree::Server::Responder::Member do
     context 'when the requester has not INTRODUCEd itself' do
       it 'returns ERROR' do
         @s.process 'MEMBER { "anything": "anything" }'
-        shouldda_responded_with_code 'ERROR'
-        response['message'].should =~ /introduce/i
+        @s.should have_responded_with_code('ERROR')
+        @s.response['message'].should =~ /introduce/i
       end
     end
 
@@ -32,20 +32,20 @@ describe Libertree::Server::Responder::Member do
         context 'when the requester has not AUTHENTICATEd itself' do
           it 'returns ERROR' do
             @s.process 'MEMBER { "anything": "anything" }'
-            shouldda_responded_with_code 'ERROR'
-            response['message'].should =~ /authenticate/i
+            @s.should have_responded_with_code('ERROR')
+            @s.response['message'].should =~ /authenticate/i
           end
         end
 
         context 'when the requester has AUTHENTICATEd itself' do
           before :each do
             @s.process 'AUTHENTICATE { "response": "abcdefghijklmnopqrstuvwxyz" }'
-            shouldda_responded_with_code 'OK'
+            @s.should have_responded_with_code('OK')
           end
 
           it 'with a missing uuid it responds with MISSING PARAMETER' do
             @s.process 'MEMBER { "username": "yo" }'
-            shouldda_responded_with( {
+            @s.should have_responded_with( {
               'code' => 'MISSING PARAMETER',
               'parameter' => 'uuid'
             } )
@@ -53,7 +53,7 @@ describe Libertree::Server::Responder::Member do
 
           it 'with a missing username it responds with MISSING PARAMETER' do
             @s.process 'MEMBER { "uuid": "bcad1067-cfb6-413b-b399-33828cb0c708" }'
-            shouldda_responded_with( {
+            @s.should have_responded_with( {
               'code' => 'MISSING PARAMETER',
               'parameter' => 'username'
             } )
@@ -61,12 +61,12 @@ describe Libertree::Server::Responder::Member do
 
           it 'with an invalid uuid it responds with ERROR' do
             @s.process 'MEMBER { "uuid": "invaliduuid", "username": "user" }'
-            shouldda_responded_with_code 'ERROR'
+            @s.should have_responded_with_code('ERROR')
           end
 
           it 'with a blank uuid it responds with MISSING PARAMETER' do
             @s.process 'MEMBER { "uuid": "", "username": "user" }'
-            shouldda_responded_with( {
+            @s.should have_responded_with( {
               'code' => 'MISSING PARAMETER',
               'parameter' => 'uuid'
             } )
@@ -74,7 +74,7 @@ describe Libertree::Server::Responder::Member do
 
           it 'with a blank username it responds with MISSING PARAMETER' do
             @s.process 'MEMBER { "uuid": "bcad1067-cfb6-413b-b399-33828cb0c708", "username": "" }'
-            shouldda_responded_with( {
+            @s.should have_responded_with( {
               'code' => 'MISSING PARAMETER',
               'parameter' => 'username'
             } )
@@ -82,7 +82,7 @@ describe Libertree::Server::Responder::Member do
 
           it 'with valid data it responds with OK' do
             @s.process 'MEMBER { "uuid": "bcad1067-cfb6-413b-b399-33828cb0c708", "username": "myname" }'
-            shouldda_responded_with_code 'OK'
+            @s.should have_responded_with_code('OK')
           end
         end
       end

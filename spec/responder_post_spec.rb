@@ -10,8 +10,8 @@ describe Libertree::Server::Responder::Post do
     context 'when the requester has not INTRODUCEd itself' do
       it 'returns ERROR' do
         @s.process 'POST { "anything": "anything" }'
-        shouldda_responded_with_code 'ERROR'
-        response['message'].should =~ /introduce/i
+        @s.should have_responded_with_code('ERROR')
+        @s.response['message'].should =~ /introduce/i
       end
     end
 
@@ -33,15 +33,15 @@ describe Libertree::Server::Responder::Post do
         context 'when the requester has not AUTHENTICATEd itself' do
           it 'returns ERROR' do
             @s.process 'POST { "anything": "anything" }'
-            shouldda_responded_with_code 'ERROR'
-            response['message'].should =~ /authenticate/i
+            @s.should have_responded_with_code('ERROR')
+            @s.response['message'].should =~ /authenticate/i
           end
         end
 
         context 'when the requester has AUTHENTICATEd itself' do
           before :each do
             @s.process 'AUTHENTICATE { "response": "abcdefghijklmnopqrstuvwxyz" }'
-            shouldda_responded_with_code 'OK'
+            @s.should have_responded_with_code('OK')
           end
 
           context 'and the member is known' do
@@ -58,7 +58,7 @@ describe Libertree::Server::Responder::Post do
                 'text'        => 'A test post.',
               }
               @s.process "POST #{h.to_json}"
-              shouldda_responded_with_code 'MISSING PARAMETER'
+              @s.should have_responded_with_code('MISSING PARAMETER')
             end
 
             it 'with an invalid uuid it responds with ERROR' do
@@ -69,7 +69,7 @@ describe Libertree::Server::Responder::Post do
                 'text'        => 'A test post.',
               }
               @s.process "POST #{h.to_json}"
-              shouldda_responded_with_code 'ERROR'
+              @s.should have_responded_with_code('ERROR')
             end
 
             it 'with a blank uuid it responds with MISSING PARAMETER' do
@@ -95,7 +95,7 @@ describe Libertree::Server::Responder::Post do
                 'text'        => 'A test post.',
               }
               @s.process "POST #{h.to_json}"
-              shouldda_responded_with_code 'OK'
+              @s.should have_responded_with_code('OK')
             end
           end
         end
