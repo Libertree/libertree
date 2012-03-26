@@ -1,6 +1,7 @@
 require 'libertree/server/responder/dispatcher'
 require 'libertree/server/responder/authentication'
 require 'libertree/server/responder/member'
+require 'libertree/server/responder/post'
 
 module Libertree
   module Server
@@ -8,6 +9,7 @@ module Libertree
       include Dispatcher
       include Authentication
       include Member
+      include Post
 
       def respond(data)
         # TODO: Gracefully handle failure to convert to JSON

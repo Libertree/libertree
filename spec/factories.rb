@@ -8,4 +8,10 @@ FactoryGirl.define do
     }
     sequence(:public_key, 0xf000000) { |n| "%08x" % n }
   end
+
+  factory :member, :class => Libertree::Model::Member do
+    sequence(:uuid, 0x10000000000000000000000000000000) { |n| "%x" % n }
+    sequence(:username) { |n| "member#{n}" }
+    server
+  end
 end
