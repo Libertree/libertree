@@ -56,20 +56,20 @@ Requests are sent through the socket in this format:
 
 For example:
 
-    INTRODUCE { "public_key" : "-----BEGIN PGP PUBLIC KEY BLOCK-----\n..." }
+    INTRODUCE { "public_key": "-----BEGIN PGP PUBLIC KEY BLOCK-----\n..." }
 
 ### Invalid Requests
 
 Given any data sent by a requester through the connection which does not
 conform to this format, responders MUST respond with a "BAD REQUEST" code:
 
-    { "code" : "BAD REQUEST" }
+    { "code": "BAD REQUEST" }
 
 Given request data that conforms to the required format, but which contains
 a command not specified in this protocol, servers MUST respond with an
 "UNKNOWN COMMAND" code:
 
-    { "code" : "UNKNOWN COMMAND" }
+    { "code": "UNKNOWN COMMAND" }
 
 Given request data that conforms to the required format, contains a valid
 command, but whose parameter data is not valid JSON, responders MUST respond
@@ -77,23 +77,23 @@ with a "BAD PARAMETER" code.  Servers MAY provide a message element to assist
 request debugging.  Response structure:
 
     {
-      "code" : "BAD PARAMETER",
-      [[ "message" : <explanatory text> ]]
+      "code": "BAD PARAMETER",
+      [[ "message": <explanatory text> ]]
     }
 
 ### INTRODUCE
 
 Request Parameters:
 
-    { "public_key" : <public key> }
+    { "public_key": <public key> }
 
 Response Structure:
 
-    { "code" : "OK" }
+    { "code": "OK" }
     |
     {
-      "code" : "OK",
-      "challenge" : <challenge>
+      "code": "OK",
+      "challenge": <challenge>
     }
 
 The first request sent through every connection is the INTRODUCE request.
@@ -115,15 +115,15 @@ any previous connection, whether with the same requester or a different one.
 
 Request Parameters:
 
-    { "response" : <challenge response> }
+    { "response": <challenge response> }
 
 Response Structure:
 
-    { "code" : "OK" }
+    { "code": "OK" }
     |
     {
-      "code" : "ERROR",
-      [[ "message" : <explanatory text> ]]
+      "code": "ERROR",
+      [[ "message": <explanatory text> ]]
     }
 
 The requester, after receiving an INTRODUCE challenge from the responder, MUST
@@ -146,11 +146,135 @@ lifetime.
 
 Request Parameters:
 
-    { "ip" : <new IP> }
+    { "ip": <new IP> }
 
 Response Structure:
 
-    { "code" : "OK" }
+    { "code": "OK" }
 
-A requester uses NEW-IP to inform the responder that its IP has changed.  The
-responder MUST update its records for the requester's pubkey with the new IP.
+A requester would use NEW-IP to inform a responder that its IP has changed.
+
+### MEMBER
+
+Request Parameters:
+
+    {
+      "uuid": <uuid>,
+      "username": <username>
+    }
+
+Response Structure:
+
+    { "code": "OK" }
+
+A requester would use MEMBER to tell a remote server about one of its local members.
+
+### SHARING-REQUEST
+
+Request Parameters:
+
+    {
+      "from_member_uuid": <member uuid>,
+      "to_member_uuid": <member uuid>
+    }
+
+Response Structure:
+
+    { "code": "OK" }
+    |
+    {
+      "code": "NOT FOUND",
+      "from_member_uuid": <uuid>,
+      |
+      "to_member_uuid": <uuid>,
+    }
+
+If the responder has no record of one of the provided member uuids, it MUST
+respond with a "NOT FOUND" code and provide the uuid that was not found.
+
+If it is the from_member_uuid which is not found, the requester SHOULD issue
+a MEMBER request with that uuid.
+
+### SHARING-RETRACT
+
+Request Parameters:
+
+    {
+      "from_member_uuid": <member uuid>,
+      "to_member_uuid": <member uuid>
+    }
+
+Response Structure:
+
+    { "code": "OK" }
+    |
+    {
+      "code": "NOT FOUND",
+      "from_member_uuid": <uuid>,
+      |
+      "to_member_uuid": <uuid>,
+    }
+
+If the responder has no record of one of the provided member uuids, it MUST
+respond with a "NOT FOUND" code and provide the uuid that was not found.
+
+If the responder recognizes both member uuids, it MUST respond with an "OK"
+code, regardless of whether or not a matching sharing request was actually
+pending.
+
+### SHARING-ACCEPT
+
+Request Parameters:
+
+    {
+      "from_member_uuid": <member uuid>,
+      "to_member_uuid": <member uuid>
+    }
+
+Response Structure:
+
+    { "code": "OK" }
+    |
+    {
+      "code": "NOT FOUND",
+      "from_member_uuid": <uuid>,
+      |
+      "to_member_uuid": <uuid>,
+    }
+
+If the responder has no record of one of the provided member uuids, or has no
+record of a pending sharing request which matches, it MUST respond with a "NOT
+FOUND" code and provide the uuid that was not found.
+
+If the responder has a matching pending sharing request, it MUST respond with
+an "OK" code.
+
+### POST
+
+Request Parameters:
+
+    {
+      "member_uuid": <member uuid>,
+      "uuid": <post uuid>,
+      "public": <boolean>,
+      "text": <post text>,
+    }
+
+Response Structure:
+
+    { "code": "OK" }
+    |
+    {
+      "code": "REJECTED",
+      [[ "message": <explanatory message> ]]
+    }
+    |
+    {
+      "code": "NOT FOUND",
+      [[ "message": <explanatory message> ]]
+    }
+
+
+A requester would use the POST command to share with a remote server a new post
+created at the requester.
+
