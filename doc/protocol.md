@@ -81,6 +81,29 @@ request debugging.  Response structure:
       [[ "message": <explanatory text> ]]
     }
 
+Given a request parameter structure which is valid JSON, but which is missing
+any required parameter, responders MUST respond with a "MISSING PARAMETER" code
+and the name of the missing element.  Unless otherwise specified, a parameter
+which is present but blank MUST be considered missing.  Responders MAY provide
+a message element to assist request debugging.  Response structure:
+
+    {
+      "code": "MISSING PARAMETER",
+      "parameter": <field name>,
+      [[ "message": <explanatory text> ]]
+    }
+
+Given a request parameter structure which has a parameter of the wrong data
+type, responders MUST respond with an "WRONG TYPE" error code and the name of
+the offending element.  Responders MAY provide a message element to assist
+request debugging.  Response structure:
+
+    {
+      "code": "WRONG TYPE",
+      "parameter": <field name>,
+      [[ "message": <explanatory text> ]]
+    }
+
 ### INTRODUCE
 
 Request Parameters:
@@ -154,97 +177,63 @@ Response Structure:
 
 A requester would use NEW-IP to inform a responder that its IP has changed.
 
-### MEMBER
-
-Request Parameters:
-
-    {
-      "uuid": <uuid>,
-      "username": <username>
-    }
-
-Response Structure:
-
-    { "code": "OK" }
-
-A requester would use MEMBER to tell a remote server about one of its local members.
-
 ### SHARING-REQUEST
 
 Request Parameters:
 
     {
-      "from_member_uuid": <member uuid>,
-      "to_member_uuid": <member uuid>
+      "from_username": <username>,
+      "to_username": <username>
     }
 
 Response Structure:
 
     { "code": "OK" }
     |
-    {
-      "code": "NOT FOUND",
-      "from_member_uuid": <uuid>,
-      |
-      "to_member_uuid": <uuid>,
-    }
+    { "code": "NOT FOUND" }
 
-If the responder has no record of one of the provided member uuids, it MUST
-respond with a "NOT FOUND" code and provide the uuid that was not found.
-
-If it is the from_member_uuid which is not found, the requester SHOULD issue
-a MEMBER request with that uuid.
+If the responder has no record of the to_username, it MUST respond with a "NOT
+FOUND" code.
 
 ### SHARING-RETRACT
 
 Request Parameters:
 
     {
-      "from_member_uuid": <member uuid>,
-      "to_member_uuid": <member uuid>
+      "from_username": <username>,
+      "to_username": <username>
     }
 
 Response Structure:
 
     { "code": "OK" }
     |
-    {
-      "code": "NOT FOUND",
-      "from_member_uuid": <uuid>,
-      |
-      "to_member_uuid": <uuid>,
-    }
+    { "code": "NOT FOUND" }
 
-If the responder has no record of one of the provided member uuids, it MUST
-respond with a "NOT FOUND" code and provide the uuid that was not found.
+If the responder has no record of the to_username, it MUST respond with a "NOT
+FOUND" code.
 
-If the responder recognizes both member uuids, it MUST respond with an "OK"
-code, regardless of whether or not a matching sharing request was actually
-pending.
+If the responder has a record of a member with the to_username, it MUST respond
+with an "OK" code, regardless of whether or not a matching sharing request was
+actually pending.
 
 ### SHARING-ACCEPT
 
 Request Parameters:
 
     {
-      "from_member_uuid": <member uuid>,
-      "to_member_uuid": <member uuid>
+      "from_username": <username>,
+      "to_username": <username>
     }
 
 Response Structure:
 
     { "code": "OK" }
     |
-    {
-      "code": "NOT FOUND",
-      "from_member_uuid": <uuid>,
-      |
-      "to_member_uuid": <uuid>,
-    }
+    { "code": "NOT FOUND" }
 
-If the responder has no record of one of the provided member uuids, or has no
-record of a pending sharing request which matches, it MUST respond with a "NOT
-FOUND" code and provide the uuid that was not found.
+If the responder has no record of the to_username, or has no record of a
+pending sharing request which matchesit MUST respond with a "NOT FOUND" code.
 
 If the responder has a matching pending sharing request, it MUST respond with
 an "OK" code.
@@ -254,8 +243,8 @@ an "OK" code.
 Request Parameters:
 
     {
-      "member_uuid": <member uuid>,
-      "uuid": <post uuid>,
+      "username": <member username>,
+      "id": <post id on requester>,
       "public": <boolean>,
       "text": <post text>,
     }
@@ -268,13 +257,11 @@ Response Structure:
       "code": "REJECTED",
       [[ "message": <explanatory message> ]]
     }
-    |
-    {
-      "code": "NOT FOUND",
-      [[ "message": <explanatory message> ]]
-    }
-
 
 A requester would use the POST command to share with a remote server a new post
 created at the requester.
 
+Responders MAY respond with a REJECTED code for any reason, and such a response
+MAY be accompanied by an explanatory message.  When a POST request is rejected,
+the requester SHOULD retry the POST request at a future time, but MAY elect
+not to after several rejections.
