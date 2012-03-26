@@ -43,14 +43,20 @@ describe Libertree::Server::Responder::Member do
             shouldda_responded_with_code 'OK'
           end
 
-          it 'with a missing uuid it responds with ERROR' do
+          it 'with a missing uuid it responds with MISSING PARAMETER' do
             @s.process 'MEMBER { "username": "yo" }'
-            shouldda_responded_with_code 'ERROR'
+            shouldda_responded_with( {
+              'code' => 'MISSING PARAMETER',
+              'parameter' => 'uuid'
+            } )
           end
 
-          it 'with a missing username it responds with ERROR' do
+          it 'with a missing username it responds with MISSING PARAMETER' do
             @s.process 'MEMBER { "uuid": "bcad1067-cfb6-413b-b399-33828cb0c708" }'
-            shouldda_responded_with_code 'ERROR'
+            shouldda_responded_with( {
+              'code' => 'MISSING PARAMETER',
+              'parameter' => 'username'
+            } )
           end
 
           it 'with an invalid uuid it responds with ERROR' do
@@ -58,14 +64,20 @@ describe Libertree::Server::Responder::Member do
             shouldda_responded_with_code 'ERROR'
           end
 
-          it 'with a blank uuid it responds with ERROR' do
+          it 'with a blank uuid it responds with MISSING PARAMETER' do
             @s.process 'MEMBER { "uuid": "", "username": "user" }'
-            shouldda_responded_with_code 'ERROR'
+            shouldda_responded_with( {
+              'code' => 'MISSING PARAMETER',
+              'parameter' => 'uuid'
+            } )
           end
 
-          it 'with a blank username it responds with ERROR' do
+          it 'with a blank username it responds with MISSING PARAMETER' do
             @s.process 'MEMBER { "uuid": "bcad1067-cfb6-413b-b399-33828cb0c708", "username": "" }'
-            shouldda_responded_with_code 'ERROR'
+            shouldda_responded_with( {
+              'code' => 'MISSING PARAMETER',
+              'parameter' => 'username'
+            } )
           end
 
           it 'with valid data it responds with OK' do
