@@ -68,3 +68,15 @@ mpYBtdSR
 =s/IG
 -----END PGP PUBLIC KEY BLOCK-----
 }
+
+RSpec.configure do |config|
+  config.before(:each) do
+    @s = MockServer.new
+    Libertree::DB.dbh.execute 'TRUNCATE posts CASCADE'
+    Libertree::DB.dbh.execute 'TRUNCATE servers CASCADE'
+  end
+
+  config.after(:each) do
+    @s.unbind
+  end
+end

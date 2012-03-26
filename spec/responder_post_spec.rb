@@ -1,10 +1,6 @@
 require 'spec_helper'
 
 describe Libertree::Server::Responder::Post do
-  before :each do
-    @s = MockServer.new
-  end
-
   describe 'rsp_post' do
 
     context 'when the requester has not INTRODUCEd itself' do

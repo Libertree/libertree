@@ -2,10 +2,6 @@ require 'spec_helper'
 
 describe Libertree::Server::Responder::Dispatcher do
   describe 'process' do
-    before :each do
-      @s = MockServer.new
-    end
-
     it 'responds to malformed requests' do
       @s.process "malformed"
       @s.should have_responded_with_code('BAD REQUEST')

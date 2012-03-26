@@ -1,10 +1,6 @@
 require 'spec_helper'
 
 describe Libertree::Server::Responder::Member do
-  before :each do
-    @s = MockServer.new
-  end
-
   describe 'rsp_member' do
     context 'when the requester has not INTRODUCEd itself' do
       it 'returns ERROR' do

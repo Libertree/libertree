@@ -1,10 +1,6 @@
 require 'spec_helper'
 
 describe Libertree::Server::Responder::Authentication do
-  before :each do
-    @s = MockServer.new
-  end
-
   describe 'rsp_introduce' do
     it 'returns OK when the public_key is unrecognized' do
       @s.process 'INTRODUCE { "public_key": "some brand new public key"}'
