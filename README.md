@@ -12,11 +12,6 @@ Use createuser.sh to create the libertree PostgreSQL user.
 Use createdb.sh to create the libertree PostgreSQL database for the development
 and test environments, and set them to be owned by the libertree user.
 
-Install the uuid-ossp module in each database using a PostgreSQL super user:
-
-    echo 'CREATE EXTENSION "uuid-ossp";' | psql -U postgres libertree_development
-    echo 'CREATE EXTENSION "uuid-ossp";' | psql -U postgres libertree_test
-
 ### Migration
 
 Use your choice of migration script to migrate your database.  These are found
