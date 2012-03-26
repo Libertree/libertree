@@ -83,6 +83,10 @@ describe Libertree::Server::Responder::Post do
               shouldda_responded_with_code 'MISSING PARAMETER'
             end
 
+            context 'with valid post data, and a member that does not belong to the requester' do
+              it 'responds with NOT FOUND'
+            end
+
             it 'with valid data it responds with OK' do
               h = {
                 'member_uuid' => @member.uuid,
