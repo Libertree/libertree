@@ -72,6 +72,7 @@ mpYBtdSR
 RSpec.configure do |config|
   config.before(:each) do
     @s = MockServer.new
+    Libertree::DB.dbh.execute "SET client_min_messages TO 'warning';"
     Libertree::DB.dbh.execute 'TRUNCATE posts CASCADE'
     Libertree::DB.dbh.execute 'TRUNCATE servers CASCADE'
   end
