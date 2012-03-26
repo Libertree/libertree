@@ -42,6 +42,10 @@ module Libertree
       @server && @server.public_key
     end
 
+    def authenticated?
+      @server && @server.authenticated?
+    end
+
     def self.load_config(config_filename)
       @conf = YAML.load( File.read(config_filename) )
       [

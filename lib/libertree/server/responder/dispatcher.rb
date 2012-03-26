@@ -26,9 +26,11 @@ module Libertree
           puts "Received request: #{command}"
 
           case command
-          when 'AUTHENTICATE', 'INTRODUCE' # , ...
-            if command != 'INTRODUCE' && ! introduced?
+          when 'AUTHENTICATE', 'INTRODUCE', 'MEMBER' # , ...
+            if ! introduced? && command != 'INTRODUCE'
               respond 'code' => 'ERROR', 'message' => 'Not INTRODUCEd.'
+            elsif introduced? && ! authenticated? && command != 'AUTHENTICATE'
+              respond 'code' => 'ERROR', 'message' => 'Not AUTHENTICATEd.'
             else
               method = "rsp_#{command.downcase.gsub('-', '_')}".to_sym
               send  method, parameters

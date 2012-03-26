@@ -7,6 +7,7 @@ gem 'rspec'
 gem 'eventmachine'
 gem 'factory_girl'
 gem 'gpgme'
+gem 'bcrypt-ruby'
 
 gem 'libertree-db', path: '../libertree-db/rb'
 
