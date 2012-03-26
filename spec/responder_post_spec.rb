@@ -76,11 +76,42 @@ describe Libertree::Server::Responder::Post do
                 'text'        => 'A test post.',
               }
               @s.process "POST #{h.to_json}"
-              shouldda_responded_with_code 'MISSING PARAMETER'
+              @s.should have_responded_with_code('MISSING PARAMETER')
+            end
+
+            it "with a member uuid that isn't found" do
+              h = {
+                'member_uuid' => 'bcad1067-cfb6-413b-b399-33828cb0c709',
+                'uuid'        => 'bcad1067-cfb6-413b-b399-33828cb0c708',
+                'public'      => true,
+                'text'        => 'A test post.',
+              }
+              @s.process "POST #{h.to_json}"
+              @s.should have_responded_with_code('NOT FOUND')
             end
 
             context 'with valid post data, and a member that does not belong to the requester' do
-              it 'responds with NOT FOUND'
+              before :each do
+                other_server = Libertree::Model::Server.create(
+                  FactoryGirl.attributes_for(:server).merge(
+                    { :public_key => $test_public_key }
+                  )
+                )
+                @member = Libertree::Model::Member.create(
+                  FactoryGirl.attributes_for(:member, :server_id => other_server.id)
+                )
+              end
+
+              it 'responds with NOT FOUND' do
+                h = {
+                  'member_uuid' => @member.uuid,
+                  'uuid'        => 'bcad1067-cfb6-413b-b399-33828cb0c708',
+                  'public'      => true,
+                  'text'        => 'A test post.',
+                }
+                @s.process "POST #{h.to_json}"
+                @s.should have_responded_with_code('NOT FOUND')
+              end
             end
 
             it 'with valid data it responds with OK' do

@@ -7,7 +7,7 @@ module Libertree
 
           begin
             member = Model::Member['uuid' => params['member_uuid']]
-            if member.nil?
+            if member.nil? || member.server_id != @server.id
               respond( {
                 'code' => 'NOT FOUND',
                 'message' => "Unrecognized member uuid: #{params['member_uuid'].inspect}"
