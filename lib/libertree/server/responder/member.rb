@@ -3,7 +3,7 @@ module Libertree
     module Responder
       module Member
         def rsp_member(params)
-          return  if missing_parameter(params, 'uuid', 'username')
+          return  if require_parameters(params, 'uuid', 'username')
 
           begin
             Model::Member.find_or_create(

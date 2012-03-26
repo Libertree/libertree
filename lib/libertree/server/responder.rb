@@ -34,7 +34,7 @@ module Libertree
       # Calls #missing_parameters.  If any parameters are missing, responds (to
       # the requester) with the first missing parameter.
       # @return [Boolean] whether there were missing parameters
-      def missing_parameter(*args)
+      def require_parameters(*args)
         mp = missing_parameters(*args)
         if mp[0]
           respond( {
