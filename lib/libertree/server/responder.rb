@@ -1,6 +1,5 @@
 require 'libertree/server/responder/dispatcher'
 require 'libertree/server/responder/authentication'
-require 'libertree/server/responder/member'
 require 'libertree/server/responder/post'
 
 module Libertree
@@ -8,7 +7,6 @@ module Libertree
     module Responder
       include Dispatcher
       include Authentication
-      include Member
       include Post
 
       def respond(data)
