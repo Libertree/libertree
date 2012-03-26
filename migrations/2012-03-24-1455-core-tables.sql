@@ -26,7 +26,7 @@ CREATE TABLE members(
       id SERIAL
     , time_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
     , uuid UUID NOT NULL UNIQUE DEFAULT uuid_generate_v4()
-    , username VARCHAR(64)
+    , username VARCHAR(64) CHECK( length(username) > 0 )
     , server_id INTEGER REFERENCES servers(id)
     , account_id INTEGER REFERENCES accounts(id)
     , PRIMARY KEY(id)
