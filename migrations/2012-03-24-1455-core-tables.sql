@@ -25,7 +25,6 @@ COMMENT ON TABLE accounts IS
 CREATE TABLE members(
       id SERIAL
     , time_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
-    , uuid UUID NOT NULL UNIQUE DEFAULT uuid_generate_v4()
     , username VARCHAR(64) CHECK( length(username) > 0 )
     , server_id INTEGER REFERENCES servers(id)
     , account_id INTEGER REFERENCES accounts(id)
@@ -44,7 +43,6 @@ COMMENT ON COLUMN members.server_id IS
 'If not NULL, the member is remote.  If NULL, the member is local.';
 COMMENT ON COLUMN members.account_id IS
 'If NULL, the member is remote.  If not NULL, the member is local.';
-CREATE INDEX members_uuid ON members(uuid);
 
 CREATE TABLE profiles(
       id SERIAL
@@ -61,11 +59,9 @@ CREATE TABLE posts(
     , time_updated TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
     , member_id INTEGER NOT NULL REFERENCES members(id)
     , public BOOLEAN NOT NULL DEFAULT FALSE
-    , uuid UUID NOT NULL UNIQUE DEFAULT uuid_generate_v4()
     , text VARCHAR(16384) NOT NULL
     , PRIMARY KEY(id)
 );
-CREATE INDEX posts_uuid ON posts(uuid);
 
 CREATE TABLE comments(
       id SERIAL
@@ -73,11 +69,9 @@ CREATE TABLE comments(
     , time_updated TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
     , member_id INTEGER NOT NULL REFERENCES members(id)
     , post_id INTEGER NOT NULL REFERENCES posts(id)
-    , uuid UUID NOT NULL UNIQUE DEFAULT uuid_generate_v4()
     , text VARCHAR(16384) NOT NULL
     , PRIMARY KEY(id)
 );
-CREATE INDEX comments_uuid ON comments(uuid);
 
 CREATE TABLE sharings(
       id SERIAL

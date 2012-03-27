@@ -3,7 +3,6 @@
 ### Requirements
 
 * PostgreSQL 9
-* uuid-ossp PostgreSQL module
 
 ### Setup
 
