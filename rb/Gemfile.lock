@@ -28,6 +28,7 @@ GEM
     metaid (1.0)
     methlab (0.1.0)
     pg (0.9.0)
+    redcarpet (2.1.1)
     typelib (0.1.0)
 
 PLATFORMS
@@ -39,3 +40,4 @@ DEPENDENCIES
   pg
   rdbi!
   rdbi-driver-postgresql!
+  redcarpet
