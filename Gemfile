@@ -8,6 +8,7 @@ gem 'eventmachine'
 gem 'factory_girl'
 gem 'gpgme'
 gem 'bcrypt-ruby'
+gem 'redcarpet'
 
 gem 'libertree-db', path: '../libertree-db/rb'
 
