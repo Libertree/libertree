@@ -10,7 +10,6 @@ FactoryGirl.define do
   end
 
   factory :member, :class => Libertree::Model::Member do
-    sequence(:uuid, 0x10000000000000000000000000000000) { |n| "%x" % n }
     sequence(:username) { |n| "member#{n}" }
     server
   end

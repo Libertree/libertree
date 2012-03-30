@@ -47,9 +47,9 @@ describe Libertree::Server::Responder::Post do
               )
             end
 
-            it 'with a missing uuid it responds with MISSING PARAMETER' do
+            it 'with a missing id it responds with MISSING PARAMETER' do
               h = {
-                'member_uuid' => @member.uuid,
+                'username' => @member.username,
                 'public'      => true,
                 'text'        => 'A test post.',
               }
@@ -57,21 +57,11 @@ describe Libertree::Server::Responder::Post do
               @s.should have_responded_with_code('MISSING PARAMETER')
             end
 
-            it 'with an invalid uuid it responds with ERROR' do
-              h = {
-                'member_uuid' => @member.uuid,
-                'uuid'        => 'invalid uuid',
-                'public'      => true,
-                'text'        => 'A test post.',
-              }
-              @s.process "POST #{h.to_json}"
-              @s.should have_responded_with_code('ERROR')
-            end
 
-            it 'with a blank uuid it responds with MISSING PARAMETER' do
+            it 'with a blank id it responds with MISSING PARAMETER' do
               h = {
-                'member_uuid' => @member.uuid,
-                'uuid'        => '',
+                'username' => @member.username,
+                'id'        => '',
                 'public'      => true,
                 'text'        => 'A test post.',
               }
@@ -79,12 +69,12 @@ describe Libertree::Server::Responder::Post do
               @s.should have_responded_with_code('MISSING PARAMETER')
             end
 
-            it "with a member uuid that isn't found" do
+            it "with a member username that isn't found" do
               h = {
-                'member_uuid' => 'bcad1067-cfb6-413b-b399-33828cb0c709',
-                'uuid'        => 'bcad1067-cfb6-413b-b399-33828cb0c708',
-                'public'      => true,
-                'text'        => 'A test post.',
+                'username' => 'nosuchusername',
+                'id'       => 4,
+                'public'   => true,
+                'text'     => 'A test post.',
               }
               @s.process "POST #{h.to_json}"
               @s.should have_responded_with_code('NOT FOUND')
@@ -104,10 +94,10 @@ describe Libertree::Server::Responder::Post do
 
               it 'responds with NOT FOUND' do
                 h = {
-                  'member_uuid' => @member.uuid,
-                  'uuid'        => 'bcad1067-cfb6-413b-b399-33828cb0c708',
-                  'public'      => true,
-                  'text'        => 'A test post.',
+                  'username' => @member.username,
+                  'id'       => 5,
+                  'public'   => true,
+                  'text'     => 'A test post.',
                 }
                 @s.process "POST #{h.to_json}"
                 @s.should have_responded_with_code('NOT FOUND')
@@ -116,10 +106,10 @@ describe Libertree::Server::Responder::Post do
 
             it 'with valid data it responds with OK' do
               h = {
-                'member_uuid' => @member.uuid,
-                'uuid'        => 'bcad1067-cfb6-413b-b399-33828cb0c708',
-                'public'      => true,
-                'text'        => 'A test post.',
+                'username' => @member.username,
+                'id'       => 6,
+                'public'   => true,
+                'text'     => 'A test post.',
               }
               @s.process "POST #{h.to_json}"
               @s.should have_responded_with_code('OK')
