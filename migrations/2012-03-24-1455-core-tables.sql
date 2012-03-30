@@ -18,6 +18,7 @@ CREATE TABLE accounts(
     , password_encrypted VARCHAR(512) NOT NULL
     , email VARCHAR(512)
     , PRIMARY KEY(id)
+    , CONSTRAINT username_valid CHECK ( name ~ '^[a-z0-9_-]{2,}$' )
 );
 COMMENT ON TABLE accounts IS
 'Local user accounts.  For server-local concerns, like logging in, changing settings, etc.  See also members and profiles tables.';
@@ -28,6 +29,7 @@ CREATE TABLE members(
     , username VARCHAR(64) CHECK( length(username) > 0 )
     , server_id INTEGER REFERENCES servers(id)
     , account_id INTEGER REFERENCES accounts(id)
+    , avatar_path VARCHAR(256)
     , PRIMARY KEY(id)
     , UNIQUE( username, server_id )
     , CONSTRAINT either_local_or_remote CHECK (
@@ -44,63 +46,64 @@ COMMENT ON COLUMN members.server_id IS
 COMMENT ON COLUMN members.account_id IS
 'If NULL, the member is remote.  If not NULL, the member is local.';
 
-CREATE TABLE profiles(
-      id SERIAL
-    , time_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
-    , member_id INTEGER NOT NULL REFERENCES members(id)
-    , name_display VARCHAR(128)
-    , description VARCHAR(2048)
-    , PRIMARY KEY(id)
-);
+-- CREATE TABLE profiles(
+      -- id SERIAL
+    -- , time_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+    -- , member_id INTEGER NOT NULL REFERENCES members(id)
+    -- , name_display VARCHAR(128)
+    -- , description VARCHAR(2048)
+    -- , PRIMARY KEY(id)
+-- );
 
 CREATE TABLE posts(
       id SERIAL
     , time_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
     , time_updated TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+    , remote_id INTEGER
     , member_id INTEGER NOT NULL REFERENCES members(id)
     , public BOOLEAN NOT NULL DEFAULT FALSE
     , text VARCHAR(16384) NOT NULL
     , PRIMARY KEY(id)
 );
 
-CREATE TABLE comments(
-      id SERIAL
-    , time_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
-    , time_updated TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
-    , member_id INTEGER NOT NULL REFERENCES members(id)
-    , post_id INTEGER NOT NULL REFERENCES posts(id)
-    , text VARCHAR(16384) NOT NULL
-    , PRIMARY KEY(id)
-);
+-- CREATE TABLE comments(
+      -- id SERIAL
+    -- , time_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+    -- , time_updated TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+    -- , member_id INTEGER NOT NULL REFERENCES members(id)
+    -- , post_id INTEGER NOT NULL REFERENCES posts(id)
+    -- , text VARCHAR(16384) NOT NULL
+    -- , PRIMARY KEY(id)
+-- );
 
-CREATE TABLE sharings(
-      id SERIAL
-    , time_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
-    , member_id_from INTEGER NOT NULL REFERENCES members(id)
-    , member_id_to INTEGER NOT NULL REFERENCES members(id)
-    , accepted BOOLEAN NOT NULL DEFAULT FALSE
-    , PRIMARY KEY(id)
-);
-COMMENT ON TABLE sharings IS
-'Sharing of public posts, to be read in stream pages.  A sort of "inverse subscription".';
+-- CREATE TABLE sharings(
+      -- id SERIAL
+    -- , time_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+    -- , member_id_from INTEGER NOT NULL REFERENCES members(id)
+    -- , member_id_to INTEGER NOT NULL REFERENCES members(id)
+    -- , accepted BOOLEAN NOT NULL DEFAULT FALSE
+    -- , PRIMARY KEY(id)
+-- );
+-- COMMENT ON TABLE sharings IS
+-- 'Sharing of public posts, to be read in stream pages.  A sort of "inverse subscription".';
 
-CREATE TABLE contact_categories(
-      id SERIAL
-    , time_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
-    , account_id INTEGER NOT NULL REFERENCES accounts(id)
-    , name VARCHAR(64) NOT NULL
-    , description VARCHAR(256) NOT NULL
-    , PRIMARY KEY(id)
-    , UNIQUE( account_id, name )
-);
+-- CREATE TABLE contact_categories(
+      -- id SERIAL
+    -- , time_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+    -- , account_id INTEGER NOT NULL REFERENCES accounts(id)
+    -- , name VARCHAR(64) NOT NULL
+    -- , description VARCHAR(256) NOT NULL
+    -- , PRIMARY KEY(id)
+    -- , UNIQUE( account_id, name )
+-- );
 
-CREATE TABLE contacts(
-      id SERIAL
-    , time_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
-    , member_id_from INTEGER NOT NULL REFERENCES members(id)
-    , member_id_to INTEGER NOT NULL REFERENCES members(id)
-    , accepted BOOLEAN NOT NULL DEFAULT FALSE
-    , contact_category_id INTEGER NOT NULL REFERENCES contact_categories(id)
-    , notes VARCHAR(1024)
-    , PRIMARY KEY(id)
-);
+-- CREATE TABLE contacts(
+      -- id SERIAL
+    -- , time_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
+    -- , member_id_from INTEGER NOT NULL REFERENCES members(id)
+    -- , member_id_to INTEGER NOT NULL REFERENCES members(id)
+    -- , accepted BOOLEAN NOT NULL DEFAULT FALSE
+    -- , contact_category_id INTEGER NOT NULL REFERENCES contact_categories(id)
+    -- , notes VARCHAR(1024)
+    -- , PRIMARY KEY(id)
+-- );

@@ -24,6 +24,10 @@ module Libertree
           account
         end
       end
+
+      def member
+        @member ||= Member['account_id' => self.id]
+      end
     end
   end
 end
