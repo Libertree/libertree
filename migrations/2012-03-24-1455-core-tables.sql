@@ -18,7 +18,7 @@ CREATE TABLE accounts(
     , password_encrypted VARCHAR(512) NOT NULL
     , email VARCHAR(512)
     , PRIMARY KEY(id)
-    , CONSTRAINT username_valid CHECK ( name ~ '^[a-z0-9_-]{2,}$' )
+    , CONSTRAINT username_valid CHECK ( username ~ '^[a-z0-9_-]{2,}$' )
 );
 COMMENT ON TABLE accounts IS
 'Local user accounts.  For server-local concerns, like logging in, changing settings, etc.  See also members and profiles tables.';
