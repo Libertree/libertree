@@ -11,6 +11,10 @@ Use createuser.sh to create the libertree PostgreSQL user.
 Use createdb.sh to create the libertree PostgreSQL database for the development
 and test environments, and set them to be owned by the libertree user.
 
+You may need to set the PGHOST environment variable before running these.
+
+Copy database.yaml.example to database.yaml .  Edit, if desired.
+
 ### Migration
 
 Use your choice of migration script to migrate your database.  These are found
