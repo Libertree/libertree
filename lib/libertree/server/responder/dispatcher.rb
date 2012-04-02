@@ -7,6 +7,9 @@ module Libertree
       module Dispatcher
 
         def process(request_raw)
+          # This is a hack.  TODO: Find out where these empty lines are coming from.
+          return  if request_raw.strip == ''
+
           if request_raw !~ /^(\S+) (.+)$/
             respond_with_code 'BAD REQUEST'
             return
