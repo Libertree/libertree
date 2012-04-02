@@ -45,6 +45,8 @@ COMMENT ON COLUMN members.server_id IS
 'If not NULL, the member is remote.  If NULL, the member is local.';
 COMMENT ON COLUMN members.account_id IS
 'If NULL, the member is remote.  If not NULL, the member is local.';
+COMMENT ON COLUMN members.avatar_path IS
+'A relative URL, not a filesystem path.';
 
 -- CREATE TABLE profiles(
       -- id SERIAL
