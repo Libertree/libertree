@@ -27,18 +27,8 @@ module Libertree
             respond_with_code 'OK'
           else
             @server.extend Authenticatable
-
-            challenge = challenge_new
-            challenge_encrypted = nil
-
-            $gpg_mutex ||= Mutex.new
-            $gpg_mutex.synchronize do
-              GPGME::Key.import(public_key)
-              crypto = GPGME::Crypto.new( armor: true )
-              challenge_encrypted = crypto.encrypt(challenge, armor: true, always_trust: true).read
-            end
-
-            @server.challenge = challenge
+            @server.challenge = challenge_new
+            challenge_encrypted = RCrypt.encrypt(@server.challenge, public_key)
 
             respond( {
               'code' => 'OK',

@@ -13,17 +13,13 @@ describe Libertree::Server::Responder::Post do
 
     context 'with a known requester' do
       before :each do
-        @requester = Libertree::Model::Server.create(
-          FactoryGirl.attributes_for(:server).merge(
-            { :public_key => $test_public_key }
-          )
-        )
+        @requester = Libertree::Model::Server.create( FactoryGirl.attributes_for(:server) )
       end
 
       context 'when the requester has INTRODUCEd itself' do
         before :each do
           @s.stub(:challenge_new) { 'abcdefghijklmnopqrstuvwxyz' }
-          @s.process %<INTRODUCE { "public_key": #{$test_public_key.to_json} } >
+          @s.process %<INTRODUCE { "public_key": #{@requester.public_key.to_json} } >
         end
 
         context 'when the requester has not AUTHENTICATEd itself' do
@@ -82,11 +78,7 @@ describe Libertree::Server::Responder::Post do
 
             context 'with valid post data, and a member that does not belong to the requester' do
               before :each do
-                other_server = Libertree::Model::Server.create(
-                  FactoryGirl.attributes_for(:server).merge(
-                    { :public_key => $test_public_key }
-                  )
-                )
+                other_server = Libertree::Model::Server.create( FactoryGirl.attributes_for(:server) )
                 @member = Libertree::Model::Member.create(
                   FactoryGirl.attributes_for(:member, :server_id => other_server.id)
                 )

@@ -17,7 +17,7 @@ describe Libertree::Server::Responder::Authentication do
         params = { 'public_key' => @requester.public_key }.to_json
         @s.process "INTRODUCE #{params}"
         @s.should have_responded_with_code('OK')
-        @s.response['challenge'].should =~ /^-----BEGIN PGP MESSAGE-----.{200,}-----END PGP MESSAGE-----$/m
+        @s.response['challenge'].should =~ /^(\S{60}\n){4}\S{44}\n$/m
       end
     end
   end
@@ -33,11 +33,7 @@ describe Libertree::Server::Responder::Authentication do
 
     context 'with a known requester' do
       before :each do
-        @requester = Libertree::Model::Server.create(
-          FactoryGirl.attributes_for(:server).merge(
-            { :public_key => $test_public_key }
-          )
-        )
+        @requester = Libertree::Model::Server.create( FactoryGirl.attributes_for(:server) )
       end
 
       context 'given a specific challenge string' do
@@ -47,7 +43,7 @@ describe Libertree::Server::Responder::Authentication do
 
         context 'when the requester has INTRODUCEd itself' do
           before :each do
-            @s.process %<INTRODUCE { "public_key": #{$test_public_key.to_json} } >
+            @s.process %<INTRODUCE { "public_key": #{@requester.public_key.to_json} } >
           end
 
           it 'returns ERROR if the requester fails the challenge' do

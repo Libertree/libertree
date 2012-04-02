@@ -6,7 +6,7 @@ gem 'rdbi-driver-postgresql', :git => 'git://github.com/RDBI/rdbi-driver-postgre
 gem 'rspec'
 gem 'eventmachine'
 gem 'factory_girl'
-gem 'gpgme'
+gem 'rcrypt'
 gem 'bcrypt-ruby'
 gem 'redcarpet'
 
