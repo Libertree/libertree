@@ -59,9 +59,10 @@ module Libertree
     def self.run(config_filename)
       load_config config_filename
       EventMachine.run do
-        EventMachine.start_server '127.0.0.1', PORT, self
+        host = @conf['host_listen'] || '127.0.0.1'
+        EventMachine.start_server( host, PORT, self )
         puts "Libertree started."
-        puts "Listening on port #{PORT}."
+        puts "Listening on #{host}, port #{PORT}."
       end
     end
   end
