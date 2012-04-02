@@ -3,9 +3,9 @@ require 'libertree/connection'
 
 module Libertree
   class Client
-    def initialize(key_pair)
-      @public_key = key_pair[:public]
-      @private_key = key_pair[:private]
+    def initialize( params = {} )
+      @public_key = params[:public_key] or raise ":public_key required by Libertree::Client"
+      @private_key = params[:private_key] or raise ":private_key required by Libertree::Client"
     end
 
     def connect(remote_host)
