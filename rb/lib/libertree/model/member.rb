@@ -6,11 +6,15 @@ module Libertree
       end
 
       def name_display
-        username || account.username
+        username
       end
 
       def avatar_path
         self['avatar_path'] || '/images/avatars/default.png'
+      end
+
+      def username
+        self['username'] || account.username
       end
     end
   end
