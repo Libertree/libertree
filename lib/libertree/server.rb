@@ -25,7 +25,11 @@ module Libertree
     end
 
     def receive_data(data)
-      process data
+      begin
+        process data
+      rescue Exception => e
+        $stderr.puts e.message + "\n" + e.backtrace[0..5].join("\n\t")
+      end
     end
 
     def unbind
