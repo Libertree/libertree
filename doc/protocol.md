@@ -193,6 +193,30 @@ MAY be accompanied by an explanatory message.  When a POST request is rejected,
 the requester SHOULD retry the POST request at a future time, but MAY elect
 not to after several rejections.
 
+### MEMBER
+
+Request Parameters:
+
+    {
+      "username": <member username>,
+      "avatar_url": <URL to image file>,
+    }
+
+Response Structure:
+
+    { "code": "OK" }
+    |
+    {
+      "code": "ERROR",
+      [[ "message": <explanatory message> ]]
+    }
+
+A requester would use the MEMBER command to share with a remote server
+information about a member at the requester server.
+
+If the responder responds with ERROR, it MAY provide a "message" element
+containing text that would assist a human in debugging.
+
 ### NEW-IP
 
 Request Parameters:
