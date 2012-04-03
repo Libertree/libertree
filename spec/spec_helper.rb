@@ -9,7 +9,6 @@ class MockServer
   def initialize
     @ip_remote = '192.168.0.100'
     @responses = []
-    @conf = {}
   end
 
   def respond(data)

@@ -41,6 +41,8 @@ describe Libertree::Server::Responder::Member do
               @member = Libertree::Model::Member.create(
                 FactoryGirl.attributes_for(:member, :server_id => @requester.id)
               )
+
+              Libertree::Server.stub(:conf) { Hash.new }
               Net::HTTP.any_instance.stub(:get)
               Net::HTTPResponse.any_instance.stub(:body)
               Socket.stub(:getaddrinfo) { [ [nil,nil,nil,@requester.ip] ] }

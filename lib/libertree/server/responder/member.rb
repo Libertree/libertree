@@ -25,7 +25,7 @@ module Libertree
               )
               Net::HTTP.start(uri.host) { |http|
                 resp = http.get(uri.path)
-                File.open( "#{@conf['avatar_dir']}/#{member.id}.png", 'wb' ) { |file|
+                File.open( "#{Libertree::Server.conf['avatar_dir']}/#{member.id}.png", 'wb' ) { |file|
                   file.write(resp.body)
                 }
               }
