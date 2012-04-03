@@ -15,6 +15,10 @@ module Libertree
 
         def rsp_introduce(params)
           public_key = params['public_key']
+          if public_key.nil? || public_key.strip.empty?
+            respond_with_code 'MISSING PARAMETER'
+            return
+          end
 
           @server = Model::Server[ 'public_key' => public_key ]
           if @server.nil?

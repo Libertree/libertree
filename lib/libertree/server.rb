@@ -28,7 +28,7 @@ module Libertree
       begin
         process data
       rescue Exception => e
-        $stderr.puts e.message + "\n" + e.backtrace[0..5].join("\n\t")
+        $stderr.puts e.message + "\n" + e.backtrace.reject { |s| s =~ %r{/gems/} }[0..5].join("\n\t")
       end
     end
 
