@@ -29,11 +29,20 @@ module Libertree
                 Timeout.timeout(5) do
                   Net::HTTP.start(uri.host) { |http|
                     resp = http.get(uri.path)
-                    File.open( "#{Libertree::Server.conf['avatar_dir']}/#{member.id}.png", 'wb' ) { |file|
-                      file.write(resp.body)
-                    }
+                    ext = File.extname(uri.path)
+                    if ! ['.png', '.gif', '.jpg', '.jpeg'].include?(ext.downcase)
+                      respond( {
+                        'code' => 'ERROR',
+                        'message' => "Invalid avatar file type: #{ext}"
+                      } )
+                      return
+                    else
+                      File.open( "#{Libertree::Server.conf['avatar_dir']}/#{member.id}#{ext}", 'wb' ) { |file|
+                        file.write(resp.body)
+                      }
+                      member.avatar_path = "/images/avatars/#{member.id}#{ext}"
+                    end
                   }
-                  member.avatar_path = "/images/avatars/#{member.id}.png"
                 end
               rescue Timeout::Error
                 # ignore
