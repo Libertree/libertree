@@ -3,9 +3,14 @@ require 'libertree/connection'
 
 module Libertree
   class Client
+    # @param [Hash] params Paramaters Hash
+    # @option params [String] :public_key A public RSA key, the partner of the private key
+    # @option params [String] :private_key A private RSA key, the partner of the public key
+    # @option params [String] :avatar_url_base The base to prefix before member avatar_path when sending requests with an avatar_url parameter
     def initialize( params = {} )
       @public_key = params[:public_key] or raise ":public_key required by Libertree::Client"
       @private_key = params[:private_key] or raise ":private_key required by Libertree::Client"
+      @avatar_url_base = params[:avatar_url_base]
     end
 
     def connect(remote_host)
@@ -31,6 +36,14 @@ module Libertree
 
     def close
       @conn.close
+    end
+
+    def req_member(member)
+      @conn.request(
+        'MEMBER',
+        'username' => member.username,
+        'avatar_url' => "#{@avatar_url_base}#{member.avatar_path}"
+      )
     end
 
     def req_post(post)
