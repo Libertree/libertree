@@ -41,6 +41,10 @@ describe Libertree::Server::Responder::Member do
               @member = Libertree::Model::Member.create(
                 FactoryGirl.attributes_for(:member, :server_id => @requester.id)
               )
+              Net::HTTP.any_instance.stub(:get)
+              Net::HTTPResponse.any_instance.stub(:body)
+              Socket.stub(:getaddrinfo) { [ [nil,nil,nil,@requester.ip] ] }
+              File.stub(:open)
             end
 
             it 'with a missing username it responds with MISSING PARAMETER' do

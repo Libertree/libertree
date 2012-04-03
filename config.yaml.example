@@ -1,1 +1,2 @@
 host_listen: 99.76.54.132
+avatar_dir: '/path/to/public/images/avatars'
