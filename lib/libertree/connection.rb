@@ -1,5 +1,6 @@
 require 'socket'
 require 'json'
+require 'timeout'
 
 module Libertree
   # Lower level connection class.  Wrapper for TCPSocket.
@@ -9,8 +10,19 @@ module Libertree
     end
 
     def request( command, params )
-      @s.puts "#{command} #{params.to_json}"
-      JSON.parse @s.gets
+      $stderr.puts "REQUEST: >#{command} #{params.to_json.strip}<"
+      @s.puts "#{command} #{params.to_json.strip}"
+      begin
+        Timeout.timeout(10) do
+          response = JSON.parse(@s.gets)
+          if response['code'] != 'OK'
+            $stderr.puts "Not OK: #{response.inspect}"
+          end
+          response
+        end
+      rescue Timeout::Error
+        $stderr.puts "(timeout)"
+      end
     end
 
     def close
