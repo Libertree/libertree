@@ -1,2 +1,8 @@
 host_listen: 99.76.54.132
 avatar_dir: '/path/to/public/images/avatars'
+public_key_path: /path/to/public.key
+private_key_path: /path/to/private.key
+avatar_url_base: 'http://domain-or-ip-without-trailing-slash'
+forest:
+  # - 'host or ip'
+  # - 'host or ip'
