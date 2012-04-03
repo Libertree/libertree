@@ -25,6 +25,11 @@ GIT
       ruby_core_source (>= 0.1.4)
 
 PATH
+  remote: ../libertree-client-rb
+  specs:
+    libertree-client (0.0.1)
+
+PATH
   remote: ../libertree-db/rb
   specs:
     libertree-db (0.0.1)
@@ -86,6 +91,7 @@ DEPENDENCIES
   bcrypt-ruby
   eventmachine
   factory_girl
+  libertree-client!
   libertree-db!
   linecache19!
   m4dbi

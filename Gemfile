@@ -11,6 +11,7 @@ gem 'bcrypt-ruby'
 gem 'redcarpet'
 
 gem 'libertree-db', path: '../libertree-db/rb'
+gem 'libertree-client', path: '../libertree-client-rb'
 
 group 'development' do
   gem 'linecache19', :git => 'git://github.com/mark-moseley/linecache'
