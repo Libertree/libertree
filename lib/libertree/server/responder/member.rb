@@ -1,6 +1,7 @@
 require 'uri'
 require 'net/http'
 require 'socket'
+require 'timeout'
 
 module Libertree
   module Server
@@ -23,13 +24,20 @@ module Libertree
                 'username' => params['username'],
                 'server_id' => @server.id
               )
-              Net::HTTP.start(uri.host) { |http|
-                resp = http.get(uri.path)
-                File.open( "#{Libertree::Server.conf['avatar_dir']}/#{member.id}.png", 'wb' ) { |file|
-                  file.write(resp.body)
-                }
-              }
-              member.avatar_path = "/images/avatars/#{member.id}.png"
+
+              begin
+                Timeout.timeout(5) do
+                  Net::HTTP.start(uri.host) { |http|
+                    resp = http.get(uri.path)
+                    File.open( "#{Libertree::Server.conf['avatar_dir']}/#{member.id}.png", 'wb' ) { |file|
+                      file.write(resp.body)
+                    }
+                  }
+                  member.avatar_path = "/images/avatars/#{member.id}.png"
+                end
+              rescue Timeout::Error
+                # ignore
+              end
 
               respond_with_code 'OK'
             end
