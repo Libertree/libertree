@@ -14,6 +14,14 @@ module Libertree
       def time_created
         DateTime.parse self['time_created']
       end
+
+      def remote?
+        !! remote_id
+      end
+
+      def local?
+        ! remote_id
+      end
     end
   end
 end
