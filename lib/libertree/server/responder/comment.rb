@@ -19,7 +19,7 @@ module Libertree
             end
 
             origin = Model::Server[ public_key: params['public_key'] ]
-            if origin.nil?
+            if origin.nil? && params['public_key'] != @public_key
               # TODO: Is this revealing too much to the requester?
               respond( {
                 'code' => 'NOT FOUND',
@@ -28,18 +28,24 @@ module Libertree
               return
             end
 
-            posts = Model::Post.where( remote_id: params['post_id'] )
-            posts.reject! { |p|
-              p.member.server != origin
-            }
-            if posts.empty?
+            if origin.nil?
+              # origin is supposedly this local server
+              post = Model::Post[ params['post_id'] ]
+            else
+              posts = Model::Post.where( remote_id: params['post_id'] )
+              posts.reject! { |p|
+                p.member.server != origin
+              }
+              post = posts[0]  # There should only be one or none
+            end
+
+            if post.nil?
               respond( {
                 'code' => 'NOT FOUND',
                 'message' => "Unrecognized post."
               } )
               return
             end
-            post = posts[0]  # There should only be one
 
             Model::Comment.find_or_create(
               'member_id' => member.id,
