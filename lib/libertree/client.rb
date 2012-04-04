@@ -41,11 +41,13 @@ module Libertree
     # ---------
 
     def req_comment(comment)
+      post = comment.post
       @conn.request(
         'COMMENT',
-        'post_id'  => comment.post.id,
-        'username' => comment.member.username,
-        'text'     => comment.text
+        'post_id'    => post.remote_id || post.id,
+        'public_key' => post.member.server.public_key,
+        'username'   => comment.member.username,
+        'text'       => comment.text
       )
     end
 
