@@ -217,6 +217,33 @@ MAY be accompanied by an explanatory message.  When a POST request is rejected,
 the requester SHOULD retry the POST request at a future time, but MAY elect
 not to after several rejections.
 
+### COMMENT
+
+Request Parameters:
+
+    {
+      "id": <comment id on requester>,
+      "member_id": <member id of author on requester>,
+      "text": <post text>,
+    }
+
+Response Structure:
+
+    { "code": "OK" }
+    |
+    {
+      "code": "REJECTED",
+      [[ "message": <explanatory message> ]]
+    }
+
+A requester would use the COMMENT command to share with a remote server a new
+comment created at the requester.
+
+Responders MAY respond with a REJECTED code for any reason, and such a response
+MAY be accompanied by an explanatory message.  When a COMMENT request is rejected,
+the requester SHOULD retry the COMMENT request at a future time, but MAY elect
+not to after several rejections.
+
 ### NEW-IP
 
 Request Parameters:
