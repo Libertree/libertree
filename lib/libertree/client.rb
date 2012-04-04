@@ -43,7 +43,7 @@ module Libertree
     def req_comment(comment)
       post = comment.post
       server = post.member.server
-      public_key = server ? server.public_key : @pulic_key
+      public_key = server ? server.public_key : @public_key
       @conn.request(
         'COMMENT',
         'post_id'    => post.public_id,
