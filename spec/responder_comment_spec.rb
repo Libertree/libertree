@@ -46,49 +46,33 @@ describe Libertree::Server::Responder::Comment do
               )
             end
 
-            it 'with a missing post_id it responds with MISSING PARAMETER' do
+            it 'and a parameter is missing or blank, it responds with MISSING PARAMETER' do
               h = {
-                'username' => @member.username,
-                'text'        => 'A test comment.',
+                'username'   => @member.username,
+                'public_key' => @requester.public_key,
+                'post_id'    => @post.remote_id,
+                'text'       => 'A test comment.',
               }
-              @s.process "COMMENT #{h.to_json}"
-              @s.should have_responded_with_code('MISSING PARAMETER')
-            end
 
-            it 'with a missing username it responds with MISSING PARAMETER' do
-              h = {
-                'post_id' => @post.remote_id,
-                'text'        => 'A test comment.',
-              }
-              @s.process "COMMENT #{h.to_json}"
-              @s.should have_responded_with_code('MISSING PARAMETER')
-            end
+              keys = h.keys
+              keys.each do |key|
+                h_ = h.reject { |k,v| k == key }
+                @s.process "COMMENT #{h_.to_json}"
+                @s.should have_responded_with_code('MISSING PARAMETER')
 
-            it 'with a blank post_id it responds with MISSING PARAMETER' do
-              h = {
-                'username' => @member.username,
-                'post_id'   => '',
-                'text'      => 'A test comment.',
-              }
-              @s.process "COMMENT #{h.to_json}"
-              @s.should have_responded_with_code('MISSING PARAMETER')
-            end
-
-            it 'with a blank username it responds with MISSING PARAMETER' do
-              h = {
-                'username' => '',
-                'post_id'   => @post.remote_id,
-                'text'      => 'A test comment.',
-              }
-              @s.process "COMMENT #{h.to_json}"
-              @s.should have_responded_with_code('MISSING PARAMETER')
+                h_ = h.dup
+                h_[key] = ''
+                @s.process "COMMENT #{h_.to_json}"
+                @s.should have_responded_with_code('MISSING PARAMETER')
+              end
             end
 
             it "with a member username that isn't found" do
               h = {
-                'username' => 'nosuchusername',
-                'post_id'   => @post.remote_id,
-                'text'      => 'A test comment.',
+                'username'   => 'nosuchusername',
+                'public_key' => @requester.public_key,
+                'post_id'    => @post.remote_id,
+                'text'       => 'A test comment.',
               }
               @s.process "COMMENT #{h.to_json}"
               @s.should have_responded_with_code('NOT FOUND')
@@ -96,9 +80,10 @@ describe Libertree::Server::Responder::Comment do
 
             it "with a post id that isn't found" do
               h = {
-                'username' => @member.username,
-                'post_id'   => 9999999,
-                'text'      => 'A test comment.',
+                'username'   => @member.username,
+                'public_key' => @requester.public_key,
+                'post_id'    => 99999999,
+                'text'       => 'A test comment.',
               }
               @s.process "COMMENT #{h.to_json}"
               @s.should have_responded_with_code('NOT FOUND')
@@ -114,9 +99,10 @@ describe Libertree::Server::Responder::Comment do
 
               it 'responds with NOT FOUND' do
                 h = {
-                  'username' => @member.username,
-                  'post_id'  => 5,
-                  'text'     => 'A test comment.',
+                  'username'   => @member.username,
+                  'public_key' => @requester.public_key,
+                  'post_id'    => @post.remote_id,
+                  'text'       => 'A test comment.',
                 }
                 @s.process "COMMENT #{h.to_json}"
                 @s.should have_responded_with_code('NOT FOUND')
@@ -134,22 +120,24 @@ describe Libertree::Server::Responder::Comment do
                 )
               end
 
-              it 'responds with NOT FOUND' do
+              it 'responds with OK' do
                 h = {
-                  'username' => @member.username,
-                  'post_id'  => @post.remote_id,
-                  'text'     => 'A test comment.',
+                  'username'   => @member.username,
+                  'public_key' => @requester.public_key,
+                  'post_id'    => @post.remote_id,
+                  'text'       => 'A test comment.',
                 }
                 @s.process "COMMENT #{h.to_json}"
-                @s.should have_responded_with_code('NOT FOUND')
+                @s.should have_responded_with_code('OK')
               end
             end
 
             it 'with valid data it responds with OK' do
               h = {
-                'username' => @member.username,
-                'post_id'  => @post.remote_id,
-                'text'     => 'A test comment.',
+                'username'   => @member.username,
+                'public_key' => @requester.public_key,
+                'post_id'    => @post.remote_id,
+                'text'       => 'A test comment.',
               }
               @s.process "COMMENT #{h.to_json}"
               @s.should have_responded_with_code('OK')
