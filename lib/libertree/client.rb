@@ -42,10 +42,12 @@ module Libertree
 
     def req_comment(comment)
       post = comment.post
+      server = post.member.server
+      public_key = server ? server.public_key : @pulic_key
       @conn.request(
         'COMMENT',
-        'post_id'    => post.remote_id || post.id,
-        'public_key' => post.member.server.public_key,
+        'post_id'    => post.public_id,
+        'public_key' => public_key,
         'username'   => comment.member.username,
         'text'       => comment.text
       )
