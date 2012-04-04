@@ -5,8 +5,16 @@ module Libertree
         @account ||= Account[self.account_id]
       end
 
+      def server
+        @server ||= Server[self.server_id]
+      end
+
       def name_display
-        username
+        if self['username']
+          self['username'] + "@#{server.ip}"
+        else
+          account.username
+        end
       end
 
       def avatar_path
