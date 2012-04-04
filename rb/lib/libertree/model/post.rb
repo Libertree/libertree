@@ -54,6 +54,32 @@ module Libertree
       def mark_as_unread_by(account)
         $dbh.execute  "DELETE FROM posts_read WHERE post_id = ? AND account_id = ?", self.id, account.id
       end
+
+      def mark_as_unread_by_all
+        $dbh.execute  "DELETE FROM posts_read WHERE post_id = ?", self.id
+      end
+
+      def self.mark_all_as_read_by(account)
+        $dbh.execute(
+          %{
+            INSERT INTO posts_read ( post_id, account_id )
+            SELECT
+                p.id
+              , ?
+            FROM
+              posts p
+            WHERE NOT EXISTS (
+              SELECT 1
+              FROM posts_read pr2
+              WHERE
+                pr2.post_id = p.id
+                AND pr2.account_id = ?
+            )
+          },
+          account.id,
+          account.id
+        )
+      end
     end
   end
 end
