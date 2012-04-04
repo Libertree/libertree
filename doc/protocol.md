@@ -204,13 +204,18 @@ Response Structure:
 
     { "code": "OK" }
     |
+    { "code": "NOT FOUND" }
+    |
     {
       "code": "REJECTED",
       [[ "message": <explanatory message> ]]
     }
 
-A requester would use the POST command to share with a remote server a new post
-created at the requester.
+A requester would use the POST command to share with a remote server a new
+post created at the requester.
+
+Responders SHOULD return a "NOT FOUND" code to indicate that it has no record
+of the given member.
 
 Responders MAY respond with a REJECTED code for any reason, and such a response
 MAY be accompanied by an explanatory message.  When a POST request is rejected,
@@ -222,14 +227,19 @@ not to after several rejections.
 Request Parameters:
 
     {
-      "id": <comment id on requester>,
-      "member_id": <member id of author on requester>,
-      "text": <post text>,
+      "post_id": <post id on requester>,
+      "username": <member username of author on requester>,
+      "text": <comment text>,
     }
 
 Response Structure:
 
     { "code": "OK" }
+    |
+    {
+      "code": "NOT FOUND",
+      [[ "message": <explanatory message> ]]
+    }
     |
     {
       "code": "REJECTED",
@@ -238,6 +248,11 @@ Response Structure:
 
 A requester would use the COMMENT command to share with a remote server a new
 comment created at the requester.
+
+Responders SHOULD return a "NOT FOUND" code to indicate that it has no record
+of the given member.  Responders SHOULD return a "NOT FOUND" code to indicate
+that it has no record of the given post.  Responders MAY provide an explanatary
+message with a "NOT FOUND" response.
 
 Responders MAY respond with a REJECTED code for any reason, and such a response
 MAY be accompanied by an explanatory message.  When a COMMENT request is rejected,
