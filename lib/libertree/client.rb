@@ -38,10 +38,21 @@ module Libertree
       @conn.close
     end
 
+    # ---------
+
+    def req_comment(comment)
+      @conn.request(
+        'COMMENT',
+        'post_id'  => comment.post.id,
+        'username' => comment.member.username,
+        'text'     => comment.text
+      )
+    end
+
     def req_member(member)
       @conn.request(
         'MEMBER',
-        'username' => member.username,
+        'username'   => member.username,
         'avatar_url' => "#{@avatar_url_base}#{member.avatar_path}"
       )
     end
