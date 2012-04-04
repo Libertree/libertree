@@ -14,4 +14,10 @@ FactoryGirl.define do
     sequence(:username) { |n| "member#{n}" }
     server
   end
+
+  factory :post, :class => Libertree::Model::Post do
+    sequence(:text) { |n| "Post #{n}" }
+    sequence(:remote_id, 1000)
+    public true
+  end
 end
