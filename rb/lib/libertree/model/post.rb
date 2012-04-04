@@ -22,6 +22,10 @@ module Libertree
       def local?
         ! remote_id
       end
+
+      def public_id
+        self.remote_id || self.id
+      end
     end
   end
 end
