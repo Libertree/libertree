@@ -227,8 +227,9 @@ not to after several rejections.
 Request Parameters:
 
     {
-      "post_id": <post id on requester>,
-      "username": <member username of author on requester>,
+      "post_id": <post id on post origin>,
+      "public_key": <public key of post origin>,
+      "username": <member username of comment author on requester>,
       "text": <comment text>,
     }
 
@@ -250,7 +251,7 @@ A requester would use the COMMENT command to share with a remote server a new
 comment created at the requester.
 
 Responders SHOULD return a "NOT FOUND" code to indicate that it has no record
-of the given member.  Responders SHOULD return a "NOT FOUND" code to indicate
+of the comment author.  Responders SHOULD return a "NOT FOUND" code to indicate
 that it has no record of the given post.  Responders MAY provide an explanatary
 message with a "NOT FOUND" response.
 
