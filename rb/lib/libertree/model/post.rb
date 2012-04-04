@@ -26,6 +26,18 @@ module Libertree
       def public_id
         self.remote_id || self.id
       end
+
+      def read_by?(account)
+        $dbh.sc  "SELECT EXISTS( SELECT 1 FROM posts_read WHERE post_id = ? AND account_id = ? LIMIT 1 )", self.id, account.id
+      end
+
+      def mark_as_read_by(account)
+        $dbh.execute  "INSERT INTO posts_read ( post_id, account_id ) VALUES ( ?, ? )", self.id, account.id
+      end
+
+      def mark_as_unread_by(account)
+        $dbh.execute  "DELETE FROM posts_read WHERE post_id = ? AND account_id = ?", self.id, account.id
+      end
     end
   end
 end
