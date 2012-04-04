@@ -244,18 +244,6 @@ MAY be accompanied by an explanatory message.  When a COMMENT request is rejecte
 the requester SHOULD retry the COMMENT request at a future time, but MAY elect
 not to after several rejections.
 
-### NEW-IP
-
-Request Parameters:
-
-    { "ip": <new IP> }
-
-Response Structure:
-
-    { "code": "OK" }
-
-A requester would use NEW-IP to inform a responder that its IP has changed.
-
 ### SHARING-REQUEST
 
 Request Parameters:
