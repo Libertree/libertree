@@ -42,6 +42,14 @@ class JobProcessor
     puts "Processing: job #{job.id}"
 
     case job.task
+    when 'request:COMMENT'
+      comment = Libertree::Model::Comment[job.params['comment_id'].to_i]
+      if comment
+        with_forest do |tree|
+          tree.req_comment comment
+        end
+      end
+      job.time_finished = Time.now
     when 'request:MEMBER'
       member = Libertree::Model::Member[job.params['member_id'].to_i]
       if member
