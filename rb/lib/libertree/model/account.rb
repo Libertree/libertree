@@ -35,6 +35,20 @@ module Libertree
           data: data.to_json
         )
       end
+
+      def notifications
+        Notification.s(
+          "SELECT * FROM notifications WHERE account_id = ? ORDER BY id DESC",
+          self.id
+        )
+      end
+
+      def notifications_unseen
+        Notification.s(
+          "SELECT * FROM notifications WHERE account_id = ? AND seen = FALSE ORDER BY id",
+          self.id
+        )
+      end
     end
   end
 end
