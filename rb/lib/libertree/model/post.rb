@@ -28,11 +28,11 @@ module Libertree
       end
 
       def read_by?(account)
-        $dbh.sc  "SELECT EXISTS( SELECT 1 FROM posts_read WHERE post_id = ? AND account_id = ? LIMIT 1 )", self.id, account.id
+        DB.dbh.sc  "SELECT EXISTS( SELECT 1 FROM posts_read WHERE post_id = ? AND account_id = ? LIMIT 1 )", self.id, account.id
       end
 
       def mark_as_read_by(account)
-        $dbh.execute(
+        DB.dbh.execute(
           %{
             INSERT INTO posts_read ( post_id, account_id )
             SELECT ?, ?
@@ -52,15 +52,15 @@ module Libertree
       end
 
       def mark_as_unread_by(account)
-        $dbh.execute  "DELETE FROM posts_read WHERE post_id = ? AND account_id = ?", self.id, account.id
+        DB.dbh.execute  "DELETE FROM posts_read WHERE post_id = ? AND account_id = ?", self.id, account.id
       end
 
       def mark_as_unread_by_all
-        $dbh.execute  "DELETE FROM posts_read WHERE post_id = ?", self.id
+        DB.dbh.execute  "DELETE FROM posts_read WHERE post_id = ?", self.id
       end
 
       def self.mark_all_as_read_by(account)
-        $dbh.execute(
+        DB.dbh.execute(
           %{
             INSERT INTO posts_read ( post_id, account_id )
             SELECT
