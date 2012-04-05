@@ -47,11 +47,15 @@ module Libertree
               return
             end
 
-            Model::Comment.find_or_create(
+            comment = Model::Comment.find_or_create(
               'member_id' => member.id,
               'post_id' => post.id,
+              # TODO: Sanitize with Loofah
               'text' => params['text']
             )
+            post.mark_as_unread_by_all
+            post.notify_participants_about_comment comment
+
             respond_with_code 'OK'
           rescue PGError => e
             respond_with_code 'ERROR'
