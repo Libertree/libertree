@@ -28,6 +28,13 @@ module Libertree
       def member
         @member ||= Member['account_id' => self.id]
       end
+
+      def notify_about(data)
+        Notification.create(
+          account_id: self.id,
+          data: data.to_json
+        )
+      end
     end
   end
 end

@@ -80,6 +80,19 @@ module Libertree
           account.id
         )
       end
+
+      def notify_participants_about_comment(comment)
+        accounts = []
+        comments.each do |c|
+          accounts << c.member.account
+        end
+        accounts.uniq.compact.each do |a|
+          a.notify_about( {
+            'type'       => 'comment',
+            'comment_id' => comment.id,
+          } )
+        end
+      end
     end
   end
 end
