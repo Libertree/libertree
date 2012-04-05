@@ -108,7 +108,10 @@ request debugging.  Response structure:
 
 Request Parameters:
 
-    { "public_key": <public key> }
+    {
+      "public_key": <public key>,
+      [[ "name": <human-readable name of requester> ]]
+    }
 
 Response Structure:
 
@@ -119,7 +122,8 @@ Response Structure:
       "challenge": <challenge>
     }
 
-The first request sent through every connection is the INTRODUCE request.
+The first request that MUST be sent through every connection is the INTRODUCE
+request.
 
 If the responder has no record of a server having the given public key, the
 responder MUST store the public key and the requester's IP address.  The
@@ -133,6 +137,10 @@ encrypted string.  The requester MUST then issue an AUTHENTICATE request.
 
 The random string used for the challenge SHOULD NOT be the same as one used in
 any previous connection, whether with the same requester or a different one.
+
+The requester MAY provide a name for itself.  This name is intended to be used
+for display purposes.  It MUST be 64 characters in length or shorter.  It MUST
+NOT be empty.  It MUST NOT consist entirely of whitespace.
 
 ### AUTHENTICATE
 

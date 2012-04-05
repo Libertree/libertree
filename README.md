@@ -15,18 +15,23 @@ The remainder of the documentation found in this repository refers to the
 Libertree social network software, and not The Libertree Project as a whole,
 unless otherwise explicitly stated.
 
-There are (and will be) several implementations of the various components of
+## Reference Implementation
+
+There are (will be) several implementations of the various components of
 Libertree.  The first implementation, the reference implementation, is
 written in Ruby.
 
-## Reference Implementation
-
 ### Requirements
 
-* PostgreSQL 9+
+* A UNIX-compatible system (such as Linux or OSX)
+* PostgreSQL 9
 * Ruby 1.9
-* GPGME
 * GraphicsMagick (or ImageMagick)
+* git
+
+### Recommended
+
+* A web server or other proxy (such as Nginx or Apache)
 
 ### Components
 
@@ -38,7 +43,11 @@ source code repository.
 * libertree-client-rb
 * libertree-frontend-ramaze
 
-### Installation
+## Installation
 
-Begin by creating the database using libertree-db .  See the README in that
-repository.
+Refer to the INSTALLATION.md file.
+
+## Usage
+
+Refer to the USAGE.md file for information on how to start the Libertree
+services and how to maintain a Libertree server.
