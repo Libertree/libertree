@@ -1,10 +1,10 @@
-## Libertree Database - Setup and Maintenance
+# Libertree Database - Setup and Maintenance
 
-### Requirements
+## Requirements
 
 * PostgreSQL 9
 
-### Setup
+## Setup
 
 Use createuser.sh to create the libertree PostgreSQL user.
 
@@ -15,7 +15,7 @@ You may need to set the PGHOST environment variable before running these.
 
 Copy database.yaml.example to database.yaml .  Edit, if desired.
 
-### Migration
+## Migration
 
 Use your choice of migration script to migrate your database.  These are found
 in the following directories:
@@ -29,7 +29,7 @@ time of the migration's creation.  For example:
 
     2012-03-19-1440-foobar-table.sql
 
-#### Ruby
+### Ruby
 
 Install Bundler (http://gembundler.com/ `gem install bundler`), then `bundle
 install` to get required gems.
