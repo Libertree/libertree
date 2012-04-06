@@ -96,6 +96,14 @@ module Libertree
           end
         end
       end
+
+      def glimpse
+        if self.text.length < 61
+          self.text
+        else
+          self.text[0...60] + '...'
+        end
+      end
     end
   end
 end
