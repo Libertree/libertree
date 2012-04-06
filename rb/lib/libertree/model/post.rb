@@ -86,20 +86,19 @@ module Libertree
           'type'       => 'comment',
           'comment_id' => comment.id,
         }
-        local_post_author = comment.post.member.account
-        if local_post_author
-          local_post_author.notify_about notification_attributes
-        end
-
-        author = comment.member.account
         accounts = []
+        local_post_author = comment.post.member.account
+        accounts << local_post_author
+
+        comment_author = comment.member.account
         comments.each do |c|
           accounts << c.member.account
         end
-        accounts.uniq.compact.each do |a|
-          if a != author
-            a.notify_about notification_attributes
-          end
+
+        accounts.uniq!.compact!
+        accounts.delete comment_author
+        accounts.each do |a|
+          a.notify_about notification_attributes
         end
       end
 
