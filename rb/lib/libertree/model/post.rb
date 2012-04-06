@@ -81,7 +81,16 @@ module Libertree
         )
       end
 
-      def notify_participants_about_comment(comment)
+      def notify_about_comment(comment)
+        notification_attributes = {
+          'type'       => 'comment',
+          'comment_id' => comment.id,
+        }
+        local_post_author = comment.post.member.account
+        if local_post_author
+          local_post_author.notify_about notification_attributes
+        end
+
         author = comment.member.account
         accounts = []
         comments.each do |c|
@@ -89,10 +98,7 @@ module Libertree
         end
         accounts.uniq.compact.each do |a|
           if a != author
-            a.notify_about( {
-              'type'       => 'comment',
-              'comment_id' => comment.id,
-            } )
+            a.notify_about notification_attributes
           end
         end
       end
