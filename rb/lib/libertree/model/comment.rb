@@ -1,10 +1,6 @@
-require 'libertree/has-renderable-text'
-
 module Libertree
   module Model
     class Comment < M4DBI::Model(:comments)
-      include Libertree::HasRenderableText
-
       def member
         @member ||= Member[self.member_id]
       end

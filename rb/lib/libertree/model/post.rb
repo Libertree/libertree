@@ -1,10 +1,8 @@
 require 'date'
-require 'libertree/has-renderable-text'
 
 module Libertree
   module Model
     class Post < M4DBI::Model(:posts)
-      include Libertree::HasRenderableText
 
       def member
         @member ||= Member[self.member_id]
