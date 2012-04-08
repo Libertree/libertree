@@ -65,6 +65,20 @@ check_dependencies() {
   info "All dependencies are installed."
 }
 
+install_rvm() {
+  # skip if rvm exists or use doesn't want to install it.
+  command -v rvm >/dev/null 2>&1 && return 0
+  warn "RVM is not installed. Do you want to install it now? [y/n]"
+  read -sn 1 choice
+  if [[ "$choice" != "y" ]]; then
+    echo "SKIPPED"
+    fatal "RVM is required. Please install it manually."
+  fi
+
+  # TODO
+  fatal "TODO: not implemented yet. Please install RVM manually."
+}
+
 setup_user() {
   echo "It is recommended to run libertree as a system user."
   echo "Please press enter to use the user \"libertree\" or optionally input the name of the system user you would like to use instead. [default: libertree]"
@@ -210,6 +224,7 @@ setup_frontend() {
 
 wizard() {
   check_dependencies
+  install_rvm
   setup_user
   install_as_system_user
   echo -e "\nYour Libertree has been planted."
