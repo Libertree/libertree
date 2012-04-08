@@ -160,6 +160,7 @@ setup_backend() {
   if [[ "$choice" != "y" ]]; then
     echo "SKIPPED"; return 0
   fi
+  echo ""
 
   # TODO: untested
   cd ~/git/libertree-backend-rb
@@ -169,7 +170,18 @@ setup_backend() {
   bundle exec ruby generate-key-pair.rb
   cp config.yaml.example config.yaml
 
-  # if $EDITOR is undefined, ask for editor
+  # ask if $EDITOR is undefined
+  if [[ "${EDITOR:-unset}" == "unset" ]]; then
+    echo -n "What program do you want to use for editing the configuration file?"
+    read -s choice
+    command -v $choice >/dev/null 2>&1 || fatal "The editor could not be found."
+    EDITOR=$choice
+  else
+    info "Opening configuration file for editing tasks."
+    info "Please press a key to continue."
+    read -n1
+  fi
+
   ${EDITOR} config.yaml
 }
 
