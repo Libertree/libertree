@@ -93,7 +93,8 @@ module Libertree
           accounts << c.member.account
         end
 
-        accounts.uniq!.compact!
+        accounts.uniq!
+        accounts.compact!
         accounts.delete comment_author
         accounts.each do |a|
           a.notify_about notification_attributes
