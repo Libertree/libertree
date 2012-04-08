@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# -------------------------------------------------------------------------------- 
+# --------------------------------------------------------------------------------
 # Settings
 
 safety() {
@@ -9,7 +9,7 @@ safety() {
 }
 safety
 
-# -------------------------------------------------------------------------------- 
+# --------------------------------------------------------------------------------
 # Logging functions
 
 info() {
@@ -29,8 +29,8 @@ fatal() {
 }
 
 
-# -------------------------------------------------------------------------------- 
-# Functions
+# --------------------------------------------------------------------------------
+# Functions to be used as a common user
 
 exists() {
   local NAME=$1
@@ -61,6 +61,8 @@ check_dependencies() {
   local v=$(ruby --version | cut -d' ' -f2 | cut -d'.' -f1-2)
   check_version "Ruby" "1.9" $v
 
+  # TODO: check if rvm exists
+
   # git
   exists "Git" "git"
 
@@ -70,18 +72,131 @@ check_dependencies() {
   info "All dependencies are installed."
 }
 
+setup_user() {
+  # skip if user exists
+  $(id -u libertree >/dev/null 2>&1) && return 0
 
-# -------------------------------------------------------------------------------- 
+  # otherwise add user as root
+  local PREFIX=""
+
+  if [[ $(id -u) -ne 0 ]]; then
+    if [[ $(command -v sudo) ]]; then
+      info "You are not root. Using sudo."
+      PREFIX="sudo"
+    else
+      fatal "You are not root and the sudo command cannot be found. Please run this script as root."
+    fi
+  fi
+
+  $PREFIX useradd -m libertree
+  info "enter new password for libertree user"
+  $PREFIX passwd libertree || fatal "removing user \"libertree\" because no password was supplied." "$PREFIX userdel -rf libertree"
+}
+
+install_as_libertree_user() {
+  [[ $(id -u libertree) ]] || fatal "The user \"libertree\" does not exist."
+
+  if [[ $(id -u) -ne 0 ]]; then
+    info "Switching to user \"libertree\"."
+  fi
+
+  # export functions to subshell
+  export -f safety
+  export -f info warn fatal
+  export -f clone_repos setup_db setup_backend setup_frontend
+  export -f stuff_for_libertree_user
+  su libertree -c "stuff_for_libertree_user"
+}
+
+
+# --------------------------------------------------------------------------------
+# Functions to be used as the libertree user
+
+stuff_for_libertree_user() {
+  safety # never do without safety checks, even in subshell
+  #clone_repos
+  setup_db
+  setup_backend
+  setup_frontend
+}
+
+clone_repos() {
+  info "Cloning repositories as libertree user..."
+
+  # TODO: update with proper URL for public repos
+  URL="some.hostname.tld"
+  mkdir -p ~/git
+  cd ~/git
+  git clone git://$URL/libertree-db.git
+  git clone git://$URL/libertree-backend-rb.git
+  git clone git://$URL/libertree-client-rb.git
+  git clone git://$URL/libertree-frontend-ramaze.git
+}
+
+
+setup_db() {
+  echo -n "Do you want to create a new db? [y/n] "
+  read -sn 1 choice
+  if [[ "$choice" != "y" ]]; then
+    echo "SKIPPED"; return 0
+  fi
+
+  # TODO: untested
+  cd ~/git/libertree-db
+  export PGHOST=localhost
+  ./createuser.sh
+  ./createdb.sh
+  cp database.yaml.example database.yaml
+  cd rb
+  rvm use --create 1.9.3@libertree-db
+  gem install bundler
+  bundle install
+  ./migrate.sh
+}
+
+setup_backend() {
+  echo -n "Do you want to install the ruby backend? [y/n] "
+  read -sn 1 choice
+  if [[ "$choice" != "y" ]]; then
+    echo "SKIPPED"; return 0
+  fi
+
+  # TODO: untested
+  cd ~/git/libertree-backend-rb
+  rvm use --create 1.9.3@libertree-backend-rb
+  gem install bundler
+  bundle install
+  bundle exec ruby generate-key-pair.rb
+  cp config.yaml.example config.yaml
+
+  # if $EDITOR is undefined, ask for editor
+  ${EDITOR} config.yaml
+}
+
+setup_frontend() {
+  echo -n "Do you want to install the ramaze frontend? [y/n] "
+  read -sn 1 choice
+  if [[ "$choice" != "y" ]]; then
+    echo "SKIPPED"; return 0
+  fi
+
+  # TODO: untested
+  cd ~/git/libertree-frontend-ramaze
+  rvm use --create 1.9.3@libertree-frontend-ramaze
+  gem install bundler
+  bundle install
+  cd config
+  cp database.yaml.example database.yaml
+}
+
+# --------------------------------------------------------------------------------
 # Main
 
 wizard() {
   check_dependencies
-  #setup_user
-  #clone_repos 
-  #setup_db
-  #setup_backend
-  #setup_frontend
-  #install_libertree path
+  setup_user
+  install_as_libertree_user
+  echo -e "\nYour Libertree has been planted."
 }
 
 wizard
