@@ -66,8 +66,19 @@ check_dependencies() {
 }
 
 setup_user() {
+  echo "It is recommended to run libertree as a system user."
+  echo "Please press enter to use the user \"libertree\" or optionally input the name of the system user you would like to use instead. [default: libertree]"
+  read username
+
+  if [[ "${username:-default}" == "default" ]]; then
+    LT_USER="libertree"
+  else
+    LT_USER=$username
+  fi
+  info "Will use \"$LT_USER\" as the system user."
+
   # skip if user exists
-  $(id -u libertree >/dev/null 2>&1) && return 0
+  $(id -u $LT_USER >/dev/null 2>&1) && info "The user \"$LT_USER\" already exists. Skipping." && return 0
 
   # otherwise add user as root
   local PREFIX=""
@@ -81,16 +92,16 @@ setup_user() {
     fi
   fi
 
-  $PREFIX useradd -m libertree
-  info "enter new password for libertree user"
-  $PREFIX passwd libertree || fatal "removing user \"libertree\" because no password was supplied." "$PREFIX userdel -rf libertree"
+  $PREFIX useradd -m $LT_USER
+  info "enter new password for user \"$LT_USER\""
+  $PREFIX passwd $LT_USER || fatal "removing user \"$LT_USER\" because no password was supplied." "$PREFIX userdel -rf $LT_USER"
 }
 
-install_as_libertree_user() {
-  [[ $(id -u libertree) ]] || fatal "The user \"libertree\" does not exist."
+install_as_system_user() {
+  [[ $(id -u $LT_USER) ]] || fatal "The user \"$LT_USER\" does not exist."
 
   if [[ $(id -u) -ne 0 ]]; then
-    info "Switching to user \"libertree\"."
+    info "Switching to user \"$LT_USER\"."
   fi
 
   # export functions to subshell
@@ -98,7 +109,7 @@ install_as_libertree_user() {
   export -f info warn fatal
   export -f clone_repos setup_db setup_backend setup_frontend
   export -f stuff_for_libertree_user
-  su libertree -c "stuff_for_libertree_user"
+  su $LT_USER -c "stuff_for_libertree_user"
 }
 
 
@@ -200,7 +211,7 @@ setup_frontend() {
 wizard() {
   check_dependencies
   setup_user
-  install_as_libertree_user
+  install_as_system_user
   echo -e "\nYour Libertree has been planted."
 }
 
