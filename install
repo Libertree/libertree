@@ -22,6 +22,9 @@ warn() {
 
 fatal() {
   echo >&2 "[ERROR] $1"
+
+  # execute clean up command in $2 if provided
+  [[ "${2:-unset}" == "unset" ]] || $2
   exit 1
 }
 
