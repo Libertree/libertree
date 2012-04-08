@@ -1,10 +1,13 @@
-#!/bin/bash
+#!/bin/sh
 
 # -------------------------------------------------------------------------------- 
 # Settings
 
-set -u # Abort if we try to use an unset variable
-
+safety() {
+  set -o nounset # abort if we try to use an unset variable
+  set -o errexit # exit if any statement returns a non-true return value
+}
+safety
 
 # -------------------------------------------------------------------------------- 
 # Logging functions
