@@ -1,0 +1,77 @@
+#!/bin/bash
+
+# -------------------------------------------------------------------------------- 
+# Settings
+
+set -u # Abort if we try to use an unset variable
+
+
+# -------------------------------------------------------------------------------- 
+# Logging functions
+
+info() {
+  echo "[INFO] $1"
+}
+
+fatal() {
+  echo >&2 "[ERROR] $1"
+  exit 1
+}
+
+
+# -------------------------------------------------------------------------------- 
+# Functions
+
+exists() {
+  local NAME=$1
+  local BIN=$2
+  command -v $BIN >/dev/null 2>&1 || fatal "$NAME: required but not installed. Aborting."
+}
+
+check_version() {
+  local NAME=$1
+  local V_REQ=$2
+  local V_EXIST=$3
+  [[ $V_EXIST = $V_REQ ]] || fatal "$NAME: found version \"$V_EXIST\", but \"$V_REQ\" is required."
+}
+
+check_dependencies() {
+  # 1. check if executable exist
+  # 2. check if version is okay
+
+  info "Checking dependencies..."
+
+  # PostgreSQL 9.0.0 <= v < 10.x.x
+  exists "PostgreSQL" "postgres"
+  local v=$(postgres --version | cut -d' ' -f3 | cut -d'.' -f1)
+  check_version "PostgreSQL" "9" $v
+
+  # Ruby >= 1.9
+  exists "Ruby" "ruby"
+  local v=$(ruby --version | cut -d' ' -f2 | cut -d'.' -f1-2)
+  check_version "Ruby" "1.9" $v
+
+  # git
+  exists "Git" "git"
+
+  # GraphicsMagick or ImageMagick
+  [[ $(command -v gm 2>/dev/null) || $(command -v mogrify 2>/dev/null) ]] || fatal "ImageMagick/GraphicsMagick: one of the two is required but not installed. Aborting."
+
+  info "All dependencies are installed."
+}
+
+
+# -------------------------------------------------------------------------------- 
+# Main
+
+wizard() {
+  check_dependencies
+  #setup_user
+  #clone_repos 
+  #setup_db
+  #setup_backend
+  #setup_frontend
+  #install_libertree path
+}
+
+wizard
