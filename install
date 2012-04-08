@@ -114,7 +114,7 @@ install_as_libertree_user() {
 
 stuff_for_libertree_user() {
   safety # never do without safety checks, even in subshell
-  #clone_repos
+  clone_repos
   setup_db
   setup_backend
   setup_frontend
