@@ -16,6 +16,10 @@ info() {
   echo "[INFO] $1"
 }
 
+warn() {
+  echo "[WARNING] $1"
+}
+
 fatal() {
   echo >&2 "[ERROR] $1"
   exit 1
