@@ -61,7 +61,8 @@ check_dependencies() {
   local v=$(ruby --version | cut -d' ' -f2 | cut -d'.' -f1-2)
   check_version "Ruby" "1.9" $v
 
-  # TODO: check if rvm exists
+  # rvm
+  exists "RVM" "rvm"
 
   # git
   exists "Git" "git"
