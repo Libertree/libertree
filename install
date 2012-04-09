@@ -150,16 +150,32 @@ check_dependencies() {
 
 install_rvm() {
   # skip if rvm exists or use doesn't want to install it.
-  command -v rvm >/dev/null 2>&1 && return 0
-  warn "RVM is not installed. Do you want to install it now? [y/n]"
+  ls ~/.rvm >/dev/null 2>&1 && return 0
+  warn "RVM is not installed."
+  echo -n "Do you want to install RVM now? [y/n]"
   read -sn 1 choice
   if [[ "$choice" != "y" ]]; then
     echo "SKIPPED"
     fatal "RVM is required. Please install it manually."
   fi
+  echo ""
 
-  # TODO
-  fatal "TODO: not implemented yet. Please install RVM manually."
+  info "fetching RVM installation script from http://get.rvm.io"
+  curl -L get.rvm.io | bash -s stable || fatal "Installation of RVM failed. Please install it manually."
+
+  # TODO: optionally add source line to bashrc
+  safety off
+    source ~/.rvm/scripts/rvm
+  safety on
+
+  rvm requirements
+  echo -n "Make sure your system meets these requirements and then press any key to continue installing ruby 1.9.3"
+  read -n1
+
+  info "installing ruby 1.9.3"
+  safety off
+    rvm install 1.9.3
+  safety on
 }
 
 setup_user() {
@@ -204,7 +220,7 @@ install_as_system_user() {
   # export functions to subshell
   export -f safety
   export -f info warn fatal
-  export -f clone_repos setup_db setup_backend setup_frontend
+  export -f install_rvm clone_repos setup_db setup_backend setup_frontend
   export -f stuff_for_system_user
   su $LT_USER -c "stuff_for_system_user"
 }
@@ -215,6 +231,7 @@ install_as_system_user() {
 
 stuff_for_system_user() {
   safety on # never do without safety checks, even in subshell
+  install_rvm
   clone_repos
   setup_db
   setup_backend
@@ -308,7 +325,6 @@ setup_frontend() {
 wizard() {
   determine_system
   check_dependencies
-  install_rvm
   setup_user
   install_as_system_user
   echo -e "\nYour Libertree has been planted."
