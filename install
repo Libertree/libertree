@@ -4,10 +4,15 @@
 # Settings
 
 safety() {
-  set -o nounset # abort if we try to use an unset variable
-  set -o errexit # exit if any statement returns a non-true return value
+  if [[ "$1" == "on" ]]; then
+    set -o nounset # abort if we try to use an unset variable
+    set -o errexit # exit if any statement returns a non-true return value
+  else
+    set +o nounset
+    set +o errexit
+  fi
 }
-safety
+safety on
 
 # --------------------------------------------------------------------------------
 # Logging functions
@@ -209,7 +214,7 @@ install_as_system_user() {
 # Functions to be used as the libertree user
 
 stuff_for_system_user() {
-  safety # never do without safety checks, even in subshell
+  safety on # never do without safety checks, even in subshell
   clone_repos
   setup_db
   setup_backend
