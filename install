@@ -137,6 +137,35 @@ check_dependencies() {
   local v=$(postgres --version | cut -d' ' -f3 | cut -d'.' -f1)
   check_version "PostgreSQL" "9" $v
 
+  # make sure postgresql server is started
+  if ! pgrep postgres >/dev/null; then
+    warn "The PostgreSQL server is not running."
+
+    # determine the right start command for the distro
+    case "$DIST" in
+      (arch)
+        START_PSQL="rc.d start postgresql"
+        ;;
+      (gentoo)
+        START_PSQL="/etc/init.d/postgresql-9.1 start"
+        ;;
+      (*)
+        fatal "I don't know how to start the PostgreSQL server on your system. Please start the server manually."
+        ;;
+    esac
+
+    if [[ $(id -u) -ne 0 ]]; then
+      if [[ $(command -v sudo) ]]; then
+        info "Using sudo to start the PostgreSQL server."
+        PREFIX="sudo"
+      else
+        fatal "You are not root and the sudo command cannot be found. Please start the PostgreSQL server manually."
+      fi
+    fi
+
+    $PREFIX $START_PSQL
+  fi
+
   # git
   exists "Git" "git" "default:git"
 
@@ -283,14 +312,19 @@ clone_repos() {
 
 
 setup_db() {
-  # TODO: make sure postgresql server is started
-  # TODO: skip if databases already exists
-
   echo -n "Do you want to create a new db? [y/n] "
   read -sn 1 choice
   if [[ "$choice" != "y" ]]; then
     echo "SKIPPED"; return 0
   fi
+  echo ""
+
+  # abort if db server is not running
+  if ! pgrep postgres >/dev/null; then
+    fatal "The PostgreSQL server is not running. Please start it manually."
+  fi
+
+  # TODO: skip if databases already exists
 
   # TODO: untested
   safety off
