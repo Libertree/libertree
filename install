@@ -251,7 +251,9 @@ clone_repos() {
   URL="libertree-public-repo"
 
   mkdir -p ~/git
-  cd ~/git
+  safety off
+    cd ~/git
+  safety on
   for repo in libertree-db \
               libertree-backend-rb \
               libertree-client-rb \
@@ -259,31 +261,40 @@ clone_repos() {
     if [[ ! -d $repo ]]; then
       git clone "$URL/$repo.git"
     else
-      cd "$repo"
+      safety off
+        cd "$repo"
+      safety on
       git pull origin
-      cd -
+      safety off
+        cd -
+      safety on
     fi
   done
 }
 
 
 setup_db() {
+  # TODO: make sure postgresql server is started
+  # TODO: skip if databases already exists
+
   echo -n "Do you want to create a new db? [y/n] "
   read -sn 1 choice
   if [[ "$choice" != "y" ]]; then
     echo "SKIPPED"; return 0
   fi
 
-  # TODO: make sure postgresql server is started
-
   # TODO: untested
-  cd ~/git/libertree-db
+  safety off
+    cd ~/git/libertree-db
+  safety on
   export PGHOST=localhost
   ./createuser.sh
   ./createdb.sh
   cp database.yaml.example database.yaml
-  cd rb
-  rvm use --create 1.9.3@libertree-db
+  safety off
+    cd rb
+    rvm use --create 1.9.3@libertree-db
+  safety on
   gem install bundler
   bundle install
   ./migrate.sh
@@ -298,8 +309,10 @@ setup_backend() {
   echo ""
 
   # TODO: untested
-  cd ~/git/libertree-backend-rb
-  rvm use --create 1.9.3@libertree-backend-rb
+  safety off
+    cd ~/git/libertree-backend-rb
+    rvm use --create 1.9.3@libertree-backend-rb
+  safety on
   gem install bundler
   bundle install
   bundle exec ruby generate-key-pair.rb
@@ -328,11 +341,15 @@ setup_frontend() {
   fi
 
   # TODO: untested
-  cd ~/git/libertree-frontend-ramaze
-  rvm use --create 1.9.3@libertree-frontend-ramaze
+  safety off
+    cd ~/git/libertree-frontend-ramaze
+    rvm use --create 1.9.3@libertree-frontend-ramaze
+  safety on
   gem install bundler
   bundle install
-  cd config
+  safety off
+    cd config
+  safety on
   cp database.yaml.example database.yaml
 }
 
