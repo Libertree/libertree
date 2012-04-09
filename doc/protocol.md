@@ -131,9 +131,10 @@ responder responds with an OK code, and MUST consider the requester
 authenticated for the remainder of the connection's lifetime.
 
 If the responder has a record of the given public key, the responder generates
-a random string which MUST be at least 16 characters long, and encrypts it
-using the public key.  It then responds with an OK code together with the
-encrypted string.  The requester MUST then issue an AUTHENTICATE request.
+a random string which MUST be at least 16 characters long, and MUST consist
+only of ASCII characters.  The responder then encrypts it using the public key,
+and responds with an OK code together with the encrypted string.  The requester
+SHOULD then issue an AUTHENTICATE request.
 
 The random string used for the challenge SHOULD NOT be the same as one used in
 any previous connection, whether with the same requester or a different one.
