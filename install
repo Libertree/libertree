@@ -317,7 +317,6 @@ setup_backend() {
   fi
   echo ""
 
-  # TODO: untested
   safety off
     cd ~/git/libertree-backend-rb
     rvm use --create 1.9.3@libertree-backend-rb
@@ -348,6 +347,7 @@ setup_frontend() {
   if [[ "$choice" != "y" ]]; then
     echo "SKIPPED"; return 0
   fi
+  echo ""
 
   # TODO: untested
   safety off
