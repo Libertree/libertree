@@ -92,10 +92,10 @@ offer_install() {
   # find the right package name for the given $DIST
   for pair in $PKGS; do
     if [[ "$pair" =~ ^$DIST ]]; then
-      local PKG="${pair#*:}" # TODO: is this a bashism?
+      local PKG="${pair#*:}"
       break
     elif [[ "$pair" =~ ^default ]]; then
-      local DEFPKG="${pair#*:}" # TODO: is this a bashism?
+      local DEFPKG="${pair#*:}"
     fi
   done
 
@@ -149,7 +149,8 @@ check_dependencies() {
 }
 
 install_rvm() {
-  # skip if rvm exists or use doesn't want to install it.
+  # TODO: if RVM exists, check if ruby 1.9.3 is installed.
+  # skip if rvm exists or user doesn't want to install it.
   ls ~/.rvm >/dev/null 2>&1 && return 0
   warn "RVM is not installed."
   echo -n "Do you want to install RVM now? [y/n]"
@@ -232,6 +233,11 @@ install_as_system_user() {
 stuff_for_system_user() {
   safety on # never do without safety checks, even in subshell
   install_rvm
+
+  safety off
+    source ~/.rvm/scripts/rvm
+  safety on
+
   clone_repos
   setup_db
   setup_backend
@@ -267,6 +273,8 @@ setup_db() {
   if [[ "$choice" != "y" ]]; then
     echo "SKIPPED"; return 0
   fi
+
+  # TODO: make sure postgresql server is started
 
   # TODO: untested
   cd ~/git/libertree-db
@@ -309,7 +317,7 @@ setup_backend() {
     read -n1
   fi
 
-  ${EDITOR} config.yaml
+  $EDITOR config.yaml
 }
 
 setup_frontend() {
