@@ -58,6 +58,8 @@ determine_system() {
   fi
 }
 
+# Checks if a given binary can be found, and offers
+# to install the matching package if it's missing.
 exists() {
   local NAME=$1
   local BIN=$2
@@ -70,7 +72,7 @@ exists() {
     fatal "$NAME: required but not installed. Please install it manually."
   fi
   warn "$NAME: required but not installed."
-  offer_install $NAME $BIN $PKGS
+  offer_install $NAME $PKGS
 
   # check again
   command -v $BIN >/dev/null 2>&1 && return 0
@@ -78,10 +80,12 @@ exists() {
   fatal "$NAME: required but not installed. Please install it manually."
 }
 
+
+# Invokes the system's package manager (if supported)
+# to install a software package
 offer_install() {
   local NAME=$1
-  local BIN=$2
-  local PKGS=$3
+  local PKGS=$2
 
   echo "Do you want to install $NAME through your package manager now? [y/n]"
   read -sn1 choice
@@ -125,9 +129,6 @@ check_version() {
 }
 
 check_dependencies() {
-  # 1. check if executable exist
-  # 2. check if version is okay
-
   info "Checking dependencies..."
 
   # PostgreSQL 9.0.0 <= v < 10.x.x
@@ -137,13 +138,11 @@ check_dependencies() {
   check_version "PostgreSQL" "9" $v
 
   # git
-  local pkgs="default:git"
-  exists "Git" "git" "$pkgs"
+  exists "Git" "git" "default:git"
 
   # GraphicsMagick or ImageMagick
   # TODO: ugly not to use "exists" function
-  local pkgs="default:graphicsmagick"
-  [[ $(command -v gm 2>/dev/null) || $(command -v mogrify 2>/dev/null) ]] || fatal "ImageMagick/GraphicsMagick: one of the two is required but not installed. Aborting."
+  [[ $(command -v gm 2>/dev/null) || $(command -v mogrify 2>/dev/null) ]] || ( warning "ImageMagick/GraphicsMagick: one of the two is required but not installed."; offer_install "GraphicsMagick" "default:graphicsmagick" )
 
   info "All dependencies are installed."
 }
@@ -198,7 +197,7 @@ setup_user() {
   info "Will use \"$LT_USER\" as the system user."
 
   # skip if user exists
-  $(id -u $LT_USER >/dev/null 2>&1) && info "The user \"$LT_USER\" already exists. Skipping." && return 0
+  $(id -u $LT_USER >/dev/null 2>&1) && return 0
 
   # otherwise add user as root
   local PREFIX=""
