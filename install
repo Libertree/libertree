@@ -242,13 +242,22 @@ clone_repos() {
   info "Cloning repositories as libertree user..."
 
   # TODO: update with proper URL for public repos
-  URL="some.hostname.tld"
+  URL="libertree-public-repo"
+
   mkdir -p ~/git
   cd ~/git
-  git clone git://$URL/libertree-db.git
-  git clone git://$URL/libertree-backend-rb.git
-  git clone git://$URL/libertree-client-rb.git
-  git clone git://$URL/libertree-frontend-ramaze.git
+  for repo in libertree-db \
+              libertree-backend-rb \
+              libertree-client-rb \
+              libertree-frontend-ramaze; do
+    if [[ ! -d $repo ]]; then
+      git clone "$URL/$repo.git"
+    else
+      cd "$repo"
+      git pull origin
+      cd -
+    fi
+  done
 }
 
 
