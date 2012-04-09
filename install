@@ -13,15 +13,15 @@ safety
 # Logging functions
 
 info() {
-  echo "[INFO] $1"
+  echo -e "[INFO] $1"
 }
 
 warn() {
-  echo "[WARNING] $1"
+  echo -e "[WARNING] $1"
 }
 
 fatal() {
-  echo >&2 "[ERROR] $1"
+  echo -e >&2 "[ERROR] $1"
 
   # execute clean up command in $2 if provided
   [[ "${2:-unset}" == "unset" ]] || $2
@@ -32,10 +32,84 @@ fatal() {
 # --------------------------------------------------------------------------------
 # Functions to be used as a common user
 
+determine_system() {
+  local system="$(uname|tr a-z A-Z)"
+  if [[ "$system" == "LINUX" ]] || [[ "$system" =~ *BSD* ]]; then
+    DIST=$(ls /etc/*-release | sed -e 's/\/etc\/\(.*\)-release/\1/')
+    case "$DIST" in
+      (arch)
+        INSTALL="pacman -S"
+        ;;
+      (gentoo)
+        INSTALL="emerge -1atv"
+        ;;
+      (*)
+        INSTALL="UNKNOWN"
+        warn "auto-install is not supported on your system."
+        ;;
+    esac
+  else
+    INSTALL="UNKNOWN"
+  fi
+}
+
 exists() {
   local NAME=$1
   local BIN=$2
-  command -v $BIN >/dev/null 2>&1 || fatal "$NAME: required but not installed. Aborting."
+  local PKGS=$3
+
+  # if exists: skip
+  command -v $BIN >/dev/null 2>&1 && return 0
+
+  if [[ "$INSTALL" == "UNKNOWN" ]]; then
+    fatal "$NAME: required but not installed. Please install it manually."
+  fi
+  warn "$NAME: required but not installed."
+  offer_install $NAME $BIN $PKGS
+
+  # check again
+  command -v $BIN >/dev/null 2>&1 && return 0
+  # if failed: abort
+  fatal "$NAME: required but not installed. Please install it manually."
+}
+
+offer_install() {
+  local NAME=$1
+  local BIN=$2
+  local PKGS=$3
+
+  echo "Do you want to install $NAME through your package manager now? [y/n]"
+  read -sn1 choice
+  if [[ "$choice" != "y" ]]; then
+    fatal "$NAME is required. Please install it manually."
+  fi
+
+  # find the right package name for the given $DIST
+  for pair in $PKGS; do
+    if [[ "$pair" =~ ^$DIST ]]; then
+      local PKG="${pair#*:}" # TODO: is this a bashism?
+      break
+    elif [[ "$pair" =~ ^default ]]; then
+      local DEFPKG="${pair#*:}" # TODO: is this a bashism?
+    fi
+  done
+
+  # use default package if no exception for this system was provided
+  local PKG=${PKG:-$DEFPKG}
+
+  # install
+  if [[ $(id -u) -ne 0 ]]; then
+    if [[ $(command -v sudo) ]]; then
+      info "You are not root. Using sudo."
+      local PREFIX="sudo"
+    else
+      fatal "You are not root and the sudo command cannot be found. Cannot install dependencies."
+    fi
+  fi
+
+  echo -e "\n\n------- PACKAGE MANAGER --------"
+  $PREFIX $INSTALL $PKG
+  echo -e "---- END OF PACKAGE MANAGER ----\n\n"
 }
 
 check_version() {
@@ -52,14 +126,18 @@ check_dependencies() {
   info "Checking dependencies..."
 
   # PostgreSQL 9.0.0 <= v < 10.x.x
-  exists "PostgreSQL" "postgres"
+  local pkgs="default:postgresql gentoo:postgresql-server"
+  exists "PostgreSQL" "postgres" "$pkgs"
   local v=$(postgres --version | cut -d' ' -f3 | cut -d'.' -f1)
   check_version "PostgreSQL" "9" $v
 
   # git
-  exists "Git" "git"
+  local pkgs="default:git"
+  exists "Git" "git" "$pkgs"
 
   # GraphicsMagick or ImageMagick
+  # TODO: ugly not to use "exists" function
+  local pkgs="default:graphicsmagick"
   [[ $(command -v gm 2>/dev/null) || $(command -v mogrify 2>/dev/null) ]] || fatal "ImageMagick/GraphicsMagick: one of the two is required but not installed. Aborting."
 
   info "All dependencies are installed."
@@ -223,6 +301,7 @@ setup_frontend() {
 # Main
 
 wizard() {
+  determine_system
   check_dependencies
   install_rvm
   setup_user
