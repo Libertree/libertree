@@ -122,15 +122,15 @@ install_as_system_user() {
   export -f safety
   export -f info warn fatal
   export -f clone_repos setup_db setup_backend setup_frontend
-  export -f stuff_for_libertree_user
-  su $LT_USER -c "stuff_for_libertree_user"
+  export -f stuff_for_system_user
+  su $LT_USER -c "stuff_for_system_user"
 }
 
 
 # --------------------------------------------------------------------------------
 # Functions to be used as the libertree user
 
-stuff_for_libertree_user() {
+stuff_for_system_user() {
   safety # never do without safety checks, even in subshell
   clone_repos
   setup_db
