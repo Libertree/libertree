@@ -71,10 +71,10 @@ module Libertree
       )
     end
 
-    def req_post_delete(post)
+    def req_post_delete(post_id)
       @conn.request(
         'POST-DELETE',
-        'id' => post.id
+        'id' => post_id
       )
     end
   end
