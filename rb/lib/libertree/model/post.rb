@@ -25,6 +25,10 @@ module Libertree
         self.remote_id || self.id
       end
 
+      def server
+        member.server
+      end
+
       def read_by?(account)
         DB.dbh.sc  "SELECT EXISTS( SELECT 1 FROM posts_read WHERE post_id = ? AND account_id = ? LIMIT 1 )", self.id, account.id
       end
