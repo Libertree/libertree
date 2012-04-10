@@ -405,7 +405,14 @@ setup_frontend() {
   safety off
     cd config
   safety on
-  cp database.yaml.example database.yaml
+
+  # instantiate database.yaml
+  if [[ -e database.yaml ]]; then
+    warn "database.yaml already exists."
+    skip_decision "Do you want to overwrite it with database.yaml.example?" && cp database.yaml.example database.yaml
+  else
+    cp database.yaml.example database.yaml
+  fi
 }
 
 # --------------------------------------------------------------------------------
