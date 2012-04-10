@@ -28,6 +28,28 @@ module Libertree
             respond_with_code 'ERROR'
           end
         end
+
+        def rsp_post_delete(params)
+          return  if require_parameters(params, 'id')
+
+          begin
+            posts = Model::Post.
+              where( 'remote_id' => params['id'] ).
+              reject { |p| p.server != @server }
+
+            if posts.empty?
+              respond( {
+                'code' => 'NOT FOUND',
+                'message' => "Unrecognized post ID: #{params['id'].inspect}"
+              } )
+            else
+              posts[0].delete  # there should only be one
+              respond_with_code 'OK'
+            end
+          rescue PGError => e
+            respond_with_code 'ERROR'
+          end
+        end
       end
     end
   end
