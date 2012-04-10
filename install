@@ -17,22 +17,47 @@ safety on
 # --------------------------------------------------------------------------------
 # Logging functions
 
+say() {
+  echo -e "$1"
+}
+
 info() {
-  echo -e "[INFO] $1"
+  # TODO: make this depend on verbosity setting
+  say "$1"
 }
 
 warn() {
-  echo -e "[WARNING] $1"
+  say "[WARNING] $1"
 }
 
 fatal() {
-  echo -e >&2 "[ERROR] $1"
+  echo -e >&2 "\n[ERROR] $1"
 
   # execute clean up command in $2 if provided
   [[ "${2:-unset}" == "unset" ]] || $2
   exit 1
 }
 
+yes_or_fatal() {
+  QUESTION="$1"
+  ERROR="$2"
+
+  echo -n "$QUESTION [y/N]"
+  read -sn1 choice
+  if [[ "$choice" != "y" ]]; then
+    fatal "$ERROR"
+  fi
+  echo ""
+}
+
+skip_decision() {
+  echo -n "$1 [y/N] "
+  read -sn 1 choice
+  if [[ "$choice" != "y" ]]; then
+    say "SKIPPED"; return 1
+  fi
+  echo ""
+}
 
 # --------------------------------------------------------------------------------
 # Functions to be used as a common user
@@ -90,11 +115,7 @@ offer_install() {
   local NAME=$1
   local PKGS=$2
 
-  echo "Do you want to install $NAME through your package manager now? [y/n]"
-  read -sn1 choice
-  if [[ "$choice" != "y" ]]; then
-    fatal "$NAME is required. Please install it manually."
-  fi
+  yes_or_fatal "Do you want to install $NAME through your package manager now?" "$NAME is required. Please install it manually."
 
   # find the right package name for the given $DIST
   for pair in $PKGS; do
@@ -119,9 +140,10 @@ offer_install() {
     fi
   fi
 
-  echo -e "\n\n------- PACKAGE MANAGER --------"
+  clear
+  say "\n\n------- PACKAGE MANAGER --------"
   $PREFIX $INSTALL $PKG
-  echo -e "---- END OF PACKAGE MANAGER ----\n\n"
+  say "---- END OF PACKAGE MANAGER ----\n\n"
 }
 
 check_version() {
@@ -181,16 +203,11 @@ check_dependencies() {
 
 install_rvm() {
   # skip if rvm exists or user doesn't want to install it.
+  # TODO: ~/.rvm exists even if the RVM install was aborted. Try harder.
   [[ -d ~/.rvm ]] && return 0
 
   warn "RVM is not installed."
-  echo -n "Do you want to install RVM now? [y/n]"
-  read -sn 1 choice
-  if [[ "$choice" != "y" ]]; then
-    echo "SKIPPED"
-    fatal "RVM is required. Please install it manually."
-  fi
-  echo ""
+  yes_or_fatal "Do you want to install RVM now?" "RVM is required. Please install it manually."
 
   info "fetching RVM installation script from http://get.rvm.io"
   curl -L get.rvm.io | bash -s stable || fatal "Installation of RVM failed. Please install it manually."
@@ -202,6 +219,7 @@ install_ruby() {
     return 0
   fi
 
+  clear
   info "Installing ruby 1.9.3"
   info "You will see a number of requirements that your system must meet in order to install ruby."
   info "Press any key to show the requirements."
@@ -217,8 +235,8 @@ install_ruby() {
 }
 
 setup_user() {
-  echo "It is recommended to run libertree as a system user."
-  echo "Please press enter to use the user \"libertree\" or optionally input the name of the system user you would like to use instead. [default: libertree]"
+  say "It is recommended to run libertree as a system user."
+  say "Please input the name of the account you want to use, or press enter for the user \"libertree\" [default]"
   read username
 
   if [[ "${username:-default}" == "default" ]]; then
@@ -257,7 +275,8 @@ install_as_system_user() {
 
   # export functions to subshell
   export -f safety
-  export -f info warn fatal
+  export -f say info warn fatal
+  export -f yes_or_fatal skip_decision
   export -f install_rvm install_ruby load_rvm clone_repos setup_db setup_backend setup_frontend
   export -f stuff_for_system_user
   su $LT_USER -c "stuff_for_system_user"
@@ -280,9 +299,10 @@ stuff_for_system_user() {
   install_ruby
 
   clone_repos
-  setup_db
-  setup_backend
-  setup_frontend
+
+  skip_decision "Do you want to create a new db?"             && setup_db
+  skip_decision "Do you want to install the ruby backend?"    && setup_backend
+  skip_decision "Do you want to install the ramaze frontend?" && setup_frontend
 }
 
 clone_repos() {
@@ -315,13 +335,6 @@ clone_repos() {
 
 
 setup_db() {
-  echo -n "Do you want to create a new db? [y/n] "
-  read -sn 1 choice
-  if [[ "$choice" != "y" ]]; then
-    echo "SKIPPED"; return 0
-  fi
-  echo ""
-
   # abort if db server is not running
   if ! pgrep postgres >/dev/null; then
     fatal "The PostgreSQL server is not running. Please start it manually."
@@ -347,45 +360,32 @@ setup_db() {
 }
 
 setup_backend() {
-  echo -n "Do you want to install the ruby backend? [y/n] "
-  read -sn 1 choice
-  if [[ "$choice" != "y" ]]; then
-    echo "SKIPPED"; return 0
-  fi
-  echo ""
-
   safety off
     cd ~/git/libertree-backend-rb
     rvm use --create 1.9.3@libertree-backend-rb
   safety on
   gem install bundler
   bundle install
+  # TODO: only do this if keys don't exist
   bundle exec ruby generate-key-pair.rb
 
   # copy config.yaml.example unless config.yaml exists
   if [[ -e config.yaml ]]; then
     warn "config.yaml already exists."
-    echo -n "Do you want to overwrite it with config.yaml.example? [y/n]"
-    read -sn 1 choice
-    if [[ "$choice" != "y" ]]; then
-      echo "SKIPPED"
-    else
-      cp config.yaml.example config.yaml
-    fi
-    echo ""
+    skip_decision "Do you want to overwrite it with config.yaml.example?" && cp config.yaml.example config.yaml
   else
     cp config.yaml.example config.yaml
   fi
 
   # ask if $EDITOR is undefined
   if [[ "${EDITOR:-unset}" == "unset" ]]; then
-    echo -n "What program do you want to use for editing the configuration file?"
+    say "What program do you want to use for editing the configuration file?"
     read -s choice
     command -v $choice >/dev/null 2>&1 || fatal "The editor could not be found."
     EDITOR=$choice
   else
-    info "Opening configuration file for editing tasks."
-    info "Please press a key to continue."
+    say "Opening configuration file for editing tasks."
+    say "Please press a key to continue."
     read -n1
   fi
 
@@ -395,13 +395,6 @@ setup_backend() {
 }
 
 setup_frontend() {
-  echo -n "Do you want to install the ramaze frontend? [y/n] "
-  read -sn 1 choice
-  if [[ "$choice" != "y" ]]; then
-    echo "SKIPPED"; return 0
-  fi
-  echo ""
-
   # TODO: untested
   safety off
     cd ~/git/libertree-frontend-ramaze
@@ -423,7 +416,7 @@ wizard() {
   check_dependencies
   setup_user
   install_as_system_user
-  echo -e "\nYour Libertree has been planted."
+  say "\nYour Libertree has been planted."
 }
 
 wizard
