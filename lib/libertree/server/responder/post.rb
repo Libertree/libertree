@@ -43,7 +43,7 @@ module Libertree
                 'message' => "Unrecognized post ID: #{params['id'].inspect}"
               } )
             else
-              posts[0].delete  # there should only be one
+              posts[0].delete_cascade  # there should only be one post
               respond_with_code 'OK'
             end
           rescue PGError => e
