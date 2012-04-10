@@ -231,6 +231,26 @@ MAY be accompanied by an explanatory message.  When a POST request is rejected,
 the requester SHOULD retry the POST request at a future time, but MAY elect
 not to after several rejections.
 
+### POST-DELETE
+
+Request Parameters:
+
+    {
+      "id": <post id on requester>,
+    }
+
+Response Structure:
+
+    { "code": "OK" }
+    |
+    { "code": "NOT FOUND" }
+
+A requester would use the POST-DELETE command to request that a remote server
+delete their copy of a post that originated at the requester.
+
+Responders MAY return a "NOT FOUND" code to indicate that it has no record
+of the given post.
+
 ### COMMENT
 
 Request Parameters:
