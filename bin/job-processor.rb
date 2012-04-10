@@ -67,11 +67,8 @@ class JobProcessor
       end
       job.time_finished = Time.now
     when 'request:POST-DELETE'
-      post = Libertree::Model::Post[job.params['post_id'].to_i]
-      if post
-        with_forest do |tree|
-          tree.req_post_delete post
-        end
+      with_forest do |tree|
+        tree.req_post_delete job.params['post_id']
       end
       job.time_finished = Time.now
     end
