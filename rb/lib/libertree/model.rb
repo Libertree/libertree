@@ -10,6 +10,7 @@ require_relative 'model/member'
 require_relative 'model/notification'
 require_relative 'model/post'
 require_relative 'model/server'
+require_relative 'model/session-account'
 
 # require_relative 'model/profile'
 # require_relative 'model/sharing'
