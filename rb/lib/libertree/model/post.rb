@@ -112,6 +112,11 @@ module Libertree
           self.text[0...60] + '...'
         end
       end
+
+      def delete_cascade
+        DB.dbh.delete "DELETE FROM posts_read WHERE post_id = ?", self.id
+        delete
+      end
     end
   end
 end
