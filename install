@@ -358,7 +358,21 @@ setup_backend() {
   gem install bundler
   bundle install
   bundle exec ruby generate-key-pair.rb
-  cp config.yaml.example config.yaml
+
+  # copy config.yaml.example unless config.yaml exists
+  if [[ -e config.yaml ]]; then
+    warn "config.yaml already exists."
+    echo -n "Do you want to overwrite it with config.yaml.example? [y/n]"
+    read -sn 1 choice
+    if [[ "$choice" != "y" ]]; then
+      echo "SKIPPED"
+    else
+      cp config.yaml.example config.yaml
+    fi
+    echo ""
+  else
+    cp config.yaml.example config.yaml
+  fi
 
   # ask if $EDITOR is undefined
   if [[ "${EDITOR:-unset}" == "unset" ]]; then
