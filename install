@@ -40,13 +40,16 @@ fatal() {
 determine_system() {
   local system="$(uname|tr a-z A-Z)"
   if [[ "$system" == "LINUX" ]] || [[ "$system" =~ *BSD* ]]; then
-    DIST=$(ls /etc/*-release | sed -e 's/\/etc\/\(.*\)-release/\1/')
+    DIST=$(find /etc -maxdepth 1 -type f -name "*-release" | sed -e 's|/etc/\(.*\)-release|\1|')
     case "$DIST" in
       (arch)
         INSTALL="pacman -S"
         ;;
       (gentoo)
         INSTALL="emerge -1atv"
+        ;;
+      (fedora)
+        INSTALL="yum install"
         ;;
       (*)
         INSTALL="UNKNOWN"
