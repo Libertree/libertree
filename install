@@ -387,6 +387,8 @@ setup_backend() {
   fi
 
   $EDITOR config.yaml
+  info "Running test suite now"
+  bundle exec bin/test.sh
 }
 
 setup_frontend() {
