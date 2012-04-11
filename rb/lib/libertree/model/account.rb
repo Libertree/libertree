@@ -49,6 +49,10 @@ module Libertree
           self.id
         )
       end
+
+      def num_notifications_unseen
+        Libertree::DB.dbh.sc "SELECT COUNT(*) FROM notifications WHERE account_id = ? AND seen = FALSE", self.id
+      end
     end
   end
 end
