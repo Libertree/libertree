@@ -152,7 +152,7 @@ offer_install() {
   fi
 
   clear
-  say "\n\n------- PACKAGE MANAGER --------"
+  say "------- PACKAGE MANAGER --------"
   $PREFIX $INSTALL $PKG
   say "---- END OF PACKAGE MANAGER ----\n\n"
 }
