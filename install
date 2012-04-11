@@ -106,11 +106,6 @@ exists() {
 
   # if exists: skip
   command -v $BIN >/dev/null 2>&1 && return 0
-
-  if [[ "$INSTALL" == "UNKNOWN" ]]; then
-    fatal "$NAME: required but not installed. Please install it manually."
-  fi
-  warn "$NAME: required but not installed."
   offer_install $NAME $PKGS
 
   # check again
@@ -125,6 +120,11 @@ exists() {
 offer_install() {
   local NAME=$1
   local PKGS=$2
+
+  if [[ "$INSTALL" == "UNKNOWN" ]]; then
+    fatal "$NAME: required but not installed. Please install it manually."
+  fi
+  warn "$NAME: required but not installed."
 
   yes_or_fatal "Do you want to install $NAME through your package manager now?" "$NAME is required. Please install it manually."
 
