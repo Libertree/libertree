@@ -1,0 +1,32 @@
+create_system_user() {
+  say "It is recommended to run libertree as a system user."
+  say "Please input the name of the account you want to use, or press enter for the user \"libertree\" [default]"
+  read username
+
+  if [[ "${username:-default}" == "default" ]]; then
+    LT_USER="libertree"
+  else
+    LT_USER=$username
+  fi
+  info "Will use \"$LT_USER\" as the system user."
+
+  # skip if user exists
+  $(id -u $LT_USER >/dev/null 2>&1) && return 0
+
+  # otherwise add user as root
+  local PREFIX=""
+
+  if [[ $(id -u) -ne 0 ]]; then
+    if [[ $(command -v sudo) ]]; then
+      info "You are not root. Using sudo."
+      PREFIX="sudo"
+    else
+      fatal "You are not root and the sudo command cannot be found. Please run this script as root."
+    fi
+  fi
+
+  $PREFIX useradd -m $LT_USER
+  info "enter new password for user \"$LT_USER\""
+  $PREFIX passwd $LT_USER || fatal "removing user \"$LT_USER\" because no password was supplied." "$PREFIX userdel -rf $LT_USER"
+}
+
