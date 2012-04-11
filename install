@@ -168,9 +168,18 @@ check_dependencies() {
   info "Checking dependencies..."
 
   # PostgreSQL 9.0.0 <= v < 10.x.x
-  local pkgs="default:postgresql gentoo:postgresql-server"
-  exists "PostgreSQL" "postgres" "$pkgs"
-  local v=$(postgres --version | cut -d' ' -f3 | cut -d'.' -f1)
+  if ! command -v postgres >/dev/null 2>&1; then
+    # check if binary is in /usr/lib (as on Ubuntu)
+    local postgres_bin=$(find /usr/lib -executable -type f -name postgres 2>/dev/null)
+    local pkgs="default:postgresql gentoo:postgresql-server"
+    [[ -z $postgres_bin ]] && offer_install "PostgreSQL" "$pkgs"
+  fi
+
+  local postgres_bin_default=$(command -v postgres)
+  local postgres_bin_alt=$(find /usr/lib -executable -type f -name postgres 2>/dev/null)
+  local postgres_bin=${postgres_bin_default:-$postgres_bin_alt}
+
+  local v=$("$postgres_bin" --version | cut -d' ' -f3 | cut -d'.' -f1)
   check_version "PostgreSQL" "9" $v
 
   # make sure postgresql server is started
@@ -184,6 +193,9 @@ check_dependencies() {
         ;;
       (gentoo)
         START_PSQL="/etc/init.d/postgresql-9.1 start"
+        ;;
+      (lsb|debian)
+        START_PSQL="/etc/init.d/postgresql start"
         ;;
       (*)
         fatal "I don't know how to start the PostgreSQL server on your system. Please start the server manually."
