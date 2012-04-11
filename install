@@ -65,7 +65,7 @@ skip_decision() {
 determine_system() {
   local system="$(uname|tr a-z A-Z)"
   if [[ "$system" == "LINUX" ]] || [[ "$system" =~ *BSD* ]]; then
-    DIST=$(find /etc -maxdepth 1 -type f -name "*-release" | sed -e 's|/etc/\(.*\)-release|\1|')
+    DIST=$(find /etc -maxdepth 1 -type f -name "*[-_]release" | sed -e 's|/etc/\(.*\)[-_]release|\1|')
     case "$DIST" in
       (arch)
         INSTALL="pacman -S"
@@ -76,7 +76,7 @@ determine_system() {
       (fedora|redhat)
         INSTALL="yum install"
         ;;
-      (ubuntu|debian)
+      (lsb|debian)
         INSTALL="apt-get install"
         ;;
       (*)
