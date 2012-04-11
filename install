@@ -73,14 +73,25 @@ determine_system() {
       (gentoo)
         INSTALL="emerge -1atv"
         ;;
-      (fedora)
+      (fedora|redhat)
         INSTALL="yum install"
+        ;;
+      (ubuntu|debian)
+        INSTALL="apt-get install"
         ;;
       (*)
         INSTALL="UNKNOWN"
-        warn "auto-install is not supported on your system."
+        warn "Auto-install is not supported on your system. Please talk to us so that we can add support for your system."
         ;;
     esac
+  elif [[ "$system" == "DARWIN" ]]; then
+    DIST="mac"
+    if [[ $(command -v brew) ]]; then
+      INSTALL="brew install"
+    else
+      warn "Auto-install on Mac is only supported through the homebrew package manager."
+      INSTALL="UNKNOWN"
+    fi
   else
     INSTALL="UNKNOWN"
   fi
