@@ -345,7 +345,7 @@ Response Structure:
     { "code": "NOT FOUND" }
 
 If the responder has no record of the to_username, or has no record of a
-pending sharing request which matchesit MUST respond with a "NOT FOUND" code.
+pending sharing request which matches it MUST respond with a "NOT FOUND" code.
 
 If the responder has a matching pending sharing request, it MUST respond with
 an "OK" code.
