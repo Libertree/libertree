@@ -67,17 +67,34 @@ setup_db() {
     fatal "The PostgreSQL server is not running. Please start it manually."
   fi
 
-  # TODO: skip if databases already exists
-
-  # TODO: untested
   safety off
     cd ~/git/libertree-db
   safety on
+
   export PGHOST=localhost
   info "Creating db owner and database as user \"postgres\"."
-  ./createuser.sh
-  ./createdb.sh
-  cp database.yaml.example database.yaml
+
+  # TODO: better move these checks to the create{user,db}.sh scripts
+  if echo "\dg" | psql -U postgres | grep -q libertree; then
+    warn "libertree database owner already exists. Skipping."
+  else
+    ./createuser.sh
+  fi
+
+  if psql -U postgres -l | grep -q libertree; then
+    warn "libertree databases already exist. Skipping."
+  else
+    ./createdb.sh
+  fi
+
+  # copy database.yaml.example unless database.yaml exists
+  if [[ -e database.yaml ]]; then
+    warn "database.yaml already exists."
+    skip_decision "Do you want to overwrite it with database.yaml.example?" && cp database.yaml.example database.yaml
+  else
+    cp database.yaml.example database.yaml
+  fi
+
   safety off
     cd rb
     rvm use --create 1.9.3@libertree-db
