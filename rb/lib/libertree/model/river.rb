@@ -28,9 +28,22 @@ module Libertree
       def try_post(post)
         return  if DB.dbh.sc "SELECT EXISTS( SELECT 1 FROM river_posts WHERE river_id = ? AND post_id = ? LIMIT 1 )", self.id, post.id
 
-        if query_components.include?(':tree')
+        parts = query_components
+        if parts.include?(':tree')
           return  if post.member.account.nil?
         end
+        parts.delete ':forest'
+        parts.delete ':tree'
+
+        parts.each do |term|
+          return  if term =~ /^-./ && post.text =~ /\b#{term[1..-1]}\b/i
+        end
+
+        term_match = false
+        parts.each do |term|
+          term_match ||= ( /\b#{term}\b/i === post.text )
+        end
+        return  if ! term_match
 
         DB.dbh.i "INSERT INTO river_posts ( river_id, post_id ) VALUES ( ?, ? )", self.id, post.id
       end

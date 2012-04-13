@@ -4,5 +4,5 @@ include Libertree::Model
 
 Post.each do |p|
   p.add_to_matching_rivers
-  $stdout.puts '.'; $stdout.flush
+  $stdout.print '.'; $stdout.flush
 end
