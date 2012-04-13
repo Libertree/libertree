@@ -9,6 +9,7 @@ require_relative 'model/job'
 require_relative 'model/member'
 require_relative 'model/notification'
 require_relative 'model/post'
+require_relative 'model/river'
 require_relative 'model/server'
 require_relative 'model/session-account'
 
@@ -18,3 +19,4 @@ require_relative 'model/session-account'
 # require_relative 'model/contact'
 
 M4DBI::Model.one_to_many( Libertree::Model::Post, Libertree::Model::Comment, :comments, :post, :post_id )
+M4DBI::Model.one_to_many( Libertree::Model::Account, Libertree::Model::River, :rivers, :account, :account_id )

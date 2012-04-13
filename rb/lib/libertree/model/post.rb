@@ -117,6 +117,12 @@ module Libertree
         DB.dbh.delete "DELETE FROM posts_read WHERE post_id = ?", self.id
         delete
       end
+
+      def add_to_matching_rivers
+        River.each do |river|
+          river.try_post self
+        end
+      end
     end
   end
 end
