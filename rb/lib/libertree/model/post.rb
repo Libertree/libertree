@@ -115,6 +115,7 @@ module Libertree
 
       def delete_cascade
         DB.dbh.delete "DELETE FROM posts_read WHERE post_id = ?", self.id
+        DB.dbh.delete "DELETE FROM river_posts WHERE post_id = ?", self.id
         delete
       end
 
@@ -122,6 +123,18 @@ module Libertree
         River.each do |river|
           river.try_post self
         end
+      end
+
+      def self.create(*args)
+        post = super
+        post.add_to_matching_rivers
+        post
+      end
+
+      def self.find_or_create(*args)
+        post = super
+        post.add_to_matching_rivers
+        post
       end
     end
   end
