@@ -1,7 +1,39 @@
 #!/bin/bash
 
+intro() {
+  clear
+  cat <<EOF
+==================================
+Welcome to The Libertree Installer
+==================================
+
+The installer will attempt to fulfill the following tasks:
+
+  1. Determine your system's package manager
+  2. Check if libertree dependencies are installed
+     and install them if they are missing
+  3. Create a system user for libertree
+  4. Install libertree as that system user.
+     This includes:
+       - install RVM and Ruby 1.9.3 in RVM
+       - setup a PostgreSQL owner and databases
+       - install the ruby backend
+       - install the ramaze frontend
+
+To install system packages you will need root privileges.  If sudo is installed
+you may need to input your password to execute certain tasks as root.  For
+database administration you may need the password of the PostgreSQL superuser
+on some systems.
+
+Press a key to continue
+EOF
+  read -n1
+  clear
+}
+
 wizard() {
   safety on
+  intro
   determine_system
   check_dependencies
   create_system_user
@@ -9,7 +41,7 @@ wizard() {
   say "\nYour Libertree has been planted."
 }
 
-for file in ./installer-functions/*; do
+for file in ./installer/functions/*; do
   source $file
 done
 
