@@ -15,7 +15,7 @@ install_as_system_user() {
 # Functions to be used as the system user
 
 system_user_install() {
-  for file in ./installer/functions/*; do
+  for file in ./functions/*; do
     source $file
   done
 

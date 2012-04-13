@@ -41,7 +41,7 @@ wizard() {
   say "\nYour Libertree has been planted."
 }
 
-for file in ./installer/functions/*; do
+for file in ./functions/*; do
   source $file
 done
 
