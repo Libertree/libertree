@@ -136,6 +136,13 @@ module Libertree
         post.add_to_matching_rivers
         post
       end
+
+      def self.add_recent_to_river(river, n = 100)
+        posts = self.s("SELECT * FROM posts ORDER BY id DESC LIMIT #{n.to_i}")
+        posts.each do |p|
+          river.try_post p
+        end
+      end
     end
   end
 end
