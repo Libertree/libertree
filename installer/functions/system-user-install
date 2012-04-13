@@ -100,6 +100,8 @@ setup_db() {
     cd rb
     rvm use --create 1.9.3@libertree-db
   safety on
+
+  info "Installing bundler"
   gem install bundler
 
   info "Installing dependent gems"
@@ -114,6 +116,8 @@ setup_backend() {
     cd ~/git/libertree-backend-rb
     rvm use --create 1.9.3@libertree-backend-rb
   safety on
+
+  info "Installing bundler"
   gem install bundler
 
   info "Installing dependent gems"
@@ -152,10 +156,13 @@ setup_frontend() {
     cd ~/git/libertree-frontend-ramaze
     rvm use --create 1.9.3@libertree-frontend-ramaze
   safety on
+
+  info "Installing bundler"
   gem install bundler
 
   info "Installing dependent gems"
   bundle install
+
   safety off
     cd config
   safety on
