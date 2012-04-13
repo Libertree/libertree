@@ -15,7 +15,7 @@ install_as_system_user() {
 # Functions to be used as the system user
 
 system_user_install() {
-  for file in ./installer-functions/*; do
+  for file in ./installer/functions/*; do
     source $file
   done
 
@@ -36,7 +36,7 @@ clone_repos() {
   info "Cloning repositories..."
 
   # TODO: update with proper URL for public repos
-  URL="libertree-public-repo"
+  URL="/libertree-test-repo"
 
   mkdir -p ~/git
   safety off
@@ -47,7 +47,8 @@ clone_repos() {
               libertree-client-rb \
               libertree-frontend-ramaze; do
     if [[ ! -d $repo ]]; then
-      git clone "$URL/$repo.git"
+      #git clone "$URL/$repo.git"
+      git clone "$URL/$repo"
     else
       safety off
         cd "$repo"
@@ -100,7 +101,11 @@ setup_db() {
     rvm use --create 1.9.3@libertree-db
   safety on
   gem install bundler
+
+  info "Installing dependent gems"
   bundle install
+
+  info "Applying database migrations"
   ./migrate.sh
 }
 
@@ -110,9 +115,11 @@ setup_backend() {
     rvm use --create 1.9.3@libertree-backend-rb
   safety on
   gem install bundler
+
+  info "Installing dependent gems"
   bundle install
-  # TODO: only do this if keys don't exist
-  bundle exec ruby generate-key-pair.rb
+
+  [[ ! -e public.key ]] && [[ ! -e private.key ]] && bundle exec ruby generate-key-pair.rb
 
   # copy config.yaml.example unless config.yaml exists
   if [[ -e config.yaml ]]; then
@@ -146,6 +153,8 @@ setup_frontend() {
     rvm use --create 1.9.3@libertree-frontend-ramaze
   safety on
   gem install bundler
+
+  info "Installing dependent gems"
   bundle install
   safety off
     cd config
