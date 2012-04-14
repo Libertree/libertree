@@ -53,6 +53,10 @@ module Libertree
       def num_notifications_unseen
         Libertree::DB.dbh.sc "SELECT COUNT(*) FROM notifications WHERE account_id = ? AND seen = FALSE", self.id
       end
+
+      def rivers
+        River.s "SELECT * FROM rivers WHERE account_id = ? ORDER BY position ASC, id DESC", self.id
+      end
     end
   end
 end
