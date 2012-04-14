@@ -23,6 +23,7 @@ module Libertree
 
       def query_components
         @query_components ||= self.query.split(/\s+/)
+        @query_components.dup
       end
 
       def try_post(post)
@@ -35,15 +36,22 @@ module Libertree
         parts.delete ':forest'
         parts.delete ':tree'
 
-        parts.each do |term|
-          return  if term =~ /^-./ && post.text =~ /(?:^|\b)#{term[1..-1]}(?:\b|$)/i
+        parts.dup.each do |term|
+          if term =~ /^-./
+            parts.delete term
+            if post.text =~ /(?:^|\b)#{term[1..-1]}(?:\b|$)/i
+              return
+            end
+          end
         end
 
-        term_match = false
-        parts.each do |term|
-          term_match ||= ( /(?:^|\b)#{term}(?:\b|$)/ii === post.text )
+        if parts.any?
+          term_match = false
+          parts.each do |term|
+            term_match ||= ( /(?:^|\b)#{term}(?:\b|$)/i === post.text )
+          end
+          return  if ! term_match
         end
-        return  if ! term_match
 
         DB.dbh.i "INSERT INTO river_posts ( river_id, post_id ) VALUES ( ?, ? )", self.id, post.id
       end
@@ -51,6 +59,17 @@ module Libertree
       def delete_cascade
         DB.dbh.delete "DELETE FROM river_posts WHERE river_id = ?", self.id
         delete
+      end
+
+      def self.create(*args)
+        river = super
+        Post.add_recent_to_river river
+        river
+      end
+      def self.find_or_create(*args)
+        river = super
+        Post.add_recent_to_river river
+        river
       end
     end
   end

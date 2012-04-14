@@ -57,6 +57,37 @@ module Libertree
       def rivers
         River.s "SELECT * FROM rivers WHERE account_id = ? ORDER BY position ASC, id DESC", self.id
       end
+
+      def self.create(*args)
+        account = super
+        River.create(
+          account_id: account.id,
+          label: 'Posts from my tree',
+          query: ':tree'
+        )
+        River.create(
+          account_id: account.id,
+          label: 'Posts from the forest',
+          query: ':forest'
+        )
+        account
+      end
+
+      def self.find_or_create(*args)
+        account = super
+        # TODO: DRY this up along with self.create
+        River.create(
+          account_id: account.id,
+          label: 'Posts from my tree',
+          query: ':tree'
+        )
+        River.create(
+          account_id: account.id,
+          label: 'Posts from the forest',
+          query: ':forest'
+        )
+        account
+      end
     end
   end
 end
