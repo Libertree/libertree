@@ -22,7 +22,7 @@ module Libertree
 
       if challenge_encrypted && response['code'] == 'OK'
         key = OpenSSL::PKey::RSA.new @private_key
-        challenge_decrypted = key.private_decrypt Base64.decode64(challenge_encrypted)
+        challenge_decrypted = key.private_decrypt(Base64.decode64(challenge_encrypted), OpenSSL::PKey::RSA::PKCS1_OAEP_PADDING)
         response = @conn.request('AUTHENTICATE', 'response' => challenge_decrypted)
 
         if response['code'] != 'OK'
