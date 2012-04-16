@@ -88,6 +88,28 @@ module Libertree
         )
         account
       end
+
+      def first_unread_post
+        Post.s1(
+          %{
+            SELECT
+              p.*
+            FROM
+              posts p
+            WHERE
+              p.id = (
+                SELECT MIN(p2.id)
+                FROM posts p2
+                WHERE NOT EXISTS(
+                  SELECT 1
+                  FROM posts_read pr
+                  WHERE pr.account_id = ?
+                )
+              )
+          },
+          self.id
+        )
+      end
     end
   end
 end
