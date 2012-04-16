@@ -39,7 +39,7 @@ module Libertree
         parts.dup.each do |term|
           if term =~ /^-./
             parts.delete term
-            if post.text =~ /(?:^|\b)#{term[1..-1]}(?:\b|$)/i
+            if post.text =~ /(?:^|\b|\s)#{term[1..-1]}(?:\b|\s|$)/i
               return
             end
           end
@@ -48,7 +48,7 @@ module Libertree
         if parts.any?
           term_match = false
           parts.each do |term|
-            term_match ||= ( /(?:^|\b)#{term}(?:\b|$)/i === post.text )
+            term_match ||= ( /(?:^|\b|\s)#{term}(?:\b|\s|$)/i === post.text )
           end
           return  if ! term_match
         end
