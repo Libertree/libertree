@@ -48,15 +48,6 @@ COMMENT ON COLUMN members.account_id IS
 COMMENT ON COLUMN members.avatar_path IS
 'A relative URL, not a filesystem path.';
 
--- CREATE TABLE profiles(
-      -- id SERIAL
-    -- , time_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
-    -- , member_id INTEGER NOT NULL REFERENCES members(id)
-    -- , name_display VARCHAR(128)
-    -- , description VARCHAR(2048)
-    -- , PRIMARY KEY(id)
--- );
-
 CREATE TABLE posts(
       id SERIAL
     , time_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()

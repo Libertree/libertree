@@ -10,6 +10,10 @@ module Libertree
       end
 
       def name_display
+        @name_display ||= ( profile.name_display || self.handle )
+      end
+
+      def handle
         if self['username']
           self['username'] + "@#{server.ip}"
         else
@@ -23,6 +27,10 @@ module Libertree
 
       def username
         self['username'] || account.username
+      end
+
+      def profile
+        Profile[ member_id: self.id ]
       end
     end
   end
