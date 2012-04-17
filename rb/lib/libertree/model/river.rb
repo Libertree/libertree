@@ -1,24 +1,55 @@
 module Libertree
   module Model
     class River < M4DBI::Model(:rivers)
-      def posts(limit = 30)
-        Post.s(
-          %{
-            SELECT * FROM (
-              SELECT p.*
-              FROM
-                  river_posts rp
-                , posts p
-              WHERE
-                p.id = rp.post_id
-                AND rp.river_id = ?
-              ORDER BY p.id DESC
-              LIMIT #{limit.to_i}
-            ) AS x
-            ORDER BY id
-          },
-          self.id
-        )
+      def posts( opts = {} )
+        limit = opts.fetch(:limit, 30)
+        if opts[:order_by] == :comment
+          Post.s(
+            %{
+              SELECT * FROM (
+                SELECT
+                    p.*
+                  , COALESCE(
+                    (
+                      SELECT MAX(time_updated)
+                      FROM comments c
+                      WHERE c.post_id = p.id
+                    ),
+                    p.time_updated
+                  ) AS time_updated_overall
+                FROM
+                    river_posts rp
+                  , posts p
+                WHERE
+                  p.id = rp.post_id
+                  AND rp.river_id = ?
+                ORDER BY time_updated_overall DESC
+                LIMIT #{limit}
+              ) AS x
+              ORDER BY time_updated_overall
+            },
+            self.id
+          )
+        else
+          Post.s(
+            %{
+              SELECT * FROM (
+                SELECT
+                  p.*
+                FROM
+                    river_posts rp
+                  , posts p
+                WHERE
+                  p.id = rp.post_id
+                  AND rp.river_id = ?
+                ORDER BY p.id DESC
+                LIMIT #{limit}
+              ) AS x
+              ORDER BY id
+            },
+            self.id
+          )
+        end
       end
 
       def query_components

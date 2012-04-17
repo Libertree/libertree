@@ -5,6 +5,10 @@ module Libertree
         @member ||= Member[self.member_id]
       end
 
+      def post
+        Post[self.post_id]
+      end
+
       # RDBI casting not working with TIMESTAMP WITH TIME ZONE ?
       def time_created
         DateTime.parse self['time_created']
