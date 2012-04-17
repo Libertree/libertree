@@ -18,5 +18,3 @@ require_relative 'model/session-account'
 # require_relative 'model/sharing'
 # require_relative 'model/contact-category'
 # require_relative 'model/contact'
-
-M4DBI::Model.one_to_many( Libertree::Model::Post, Libertree::Model::Comment, :comments, :post, :post_id )

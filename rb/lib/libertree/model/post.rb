@@ -83,6 +83,10 @@ module Libertree
         )
       end
 
+      def comments
+        Comment.s "SELECT * FROM comments WHERE post_id = ? ORDER BY id", self.id
+      end
+
       def notify_about_comment(comment)
         notification_attributes = {
           'type'       => 'comment',
