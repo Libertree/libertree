@@ -4,6 +4,7 @@ require 'libertree/server/responder/authentication'
 require 'libertree/server/responder/comment'
 require 'libertree/server/responder/member'
 require 'libertree/server/responder/post'
+require 'libertree/server/responder/post-like'
 
 module Libertree
   module Server
@@ -14,6 +15,7 @@ module Libertree
       include Comment
       include Member
       include Post
+      include PostLike
 
       def respond(data)
         # TODO: Gracefully handle failure to convert to JSON

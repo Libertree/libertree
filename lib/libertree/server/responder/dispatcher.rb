@@ -29,7 +29,7 @@ module Libertree
           puts "Received request: #{command}"
 
           case command
-          when 'AUTHENTICATE', 'COMMENT', 'COMMENT-DELETE', 'INTRODUCE', 'MEMBER', 'POST', 'POST-DELETE' # , ...
+          when 'AUTHENTICATE', 'COMMENT', 'COMMENT-DELETE', 'INTRODUCE', 'MEMBER', 'POST', 'POST-DELETE', 'POST-LIKE' # , ...
             if ! introduced? && command != 'INTRODUCE'
               respond 'code' => 'ERROR', 'message' => 'Not INTRODUCEd.'
             elsif introduced? && ! authenticated? && command != 'AUTHENTICATE'
