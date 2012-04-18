@@ -89,5 +89,24 @@ module Libertree
         'id' => post_id
       )
     end
+
+    def req_post_like(like)
+      server = like.post.member.server
+      public_key = server ? server.public_key : @public_key
+      @conn.request(
+        'POST-LIKE',
+        'id'         => like.id,
+        'post_id'    => like.post.public_id,
+        'public_key' => public_key,
+        'username'   => like.member.username,
+      )
+    end
+
+    def req_post_like_delete(like_id)
+      @conn.request(
+        'POST-LIKE-DELETE',
+        'id' => like_id
+      )
+    end
   end
 end
