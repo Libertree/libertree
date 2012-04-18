@@ -52,8 +52,7 @@ module Libertree
               'post_id' => post.id,
               'remote_id' => params['id'],
             )
-            # TODO: notify_about_like
-            # post.notify_about_like like
+            post.notify_about_like like
 
             respond_with_code 'OK'
           rescue PGError => e
