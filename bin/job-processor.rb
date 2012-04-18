@@ -50,6 +50,11 @@ class JobProcessor
         end
       end
       job.time_finished = Time.now
+    when 'request:COMMENT-DELETE'
+      with_forest do |tree|
+        tree.req_comment_delete job.params['comment_id']
+      end
+      job.time_finished = Time.now
     when 'request:MEMBER'
       member = Libertree::Model::Member[job.params['member_id'].to_i]
       if member
