@@ -87,6 +87,10 @@ module Libertree
         Comment.s "SELECT * FROM comments WHERE post_id = ? ORDER BY id", self.id
       end
 
+      def likes
+        PostLike.s "SELECT * FROM post_likes WHERE post_id = ? ORDER BY id DESC", self.id
+      end
+
       def notify_about_comment(comment)
         notification_attributes = {
           'type'       => 'comment',
@@ -146,6 +150,10 @@ module Libertree
         posts.each do |p|
           river.try_post p
         end
+      end
+
+      def like_by(member)
+        PostLike[ member_id: member.id, post_id: self.id ]
       end
     end
   end
