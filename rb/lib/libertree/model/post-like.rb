@@ -1,6 +1,6 @@
 module Libertree
   module Model
-    class Comment < M4DBI::Model(:comments)
+    class PostLike < M4DBI::Model(:post_likes)
       def member
         @member ||= Member[self.member_id]
       end
