@@ -113,6 +113,19 @@ module Libertree
         end
       end
 
+      def notify_about_like(like)
+        notification_attributes = {
+          'type'         => 'post-like',
+          'post_like_id' => like.id,
+        }
+        local_post_author = like.post.member.account
+        like_author = like.member.account
+
+        if local_post_author != like_author
+          local_post_author.notify_about notification_attributes
+        end
+      end
+
       def glimpse
         if self.text.length < 61
           self.text
