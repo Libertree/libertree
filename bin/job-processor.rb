@@ -76,6 +76,19 @@ class JobProcessor
         tree.req_post_delete job.params['post_id']
       end
       job.time_finished = Time.now
+    when 'request:POST-LIKE'
+      like = Libertree::Model::PostLike[job.params['post_like_id'].to_i]
+      if like
+        with_forest do |tree|
+          tree.req_post_like like
+        end
+      end
+      job.time_finished = Time.now
+    when 'request:POST-LIKE-DELETE'
+      with_forest do |tree|
+        tree.req_post_like_delete job.params['post_like_id']
+      end
+      job.time_finished = Time.now
     end
 
     if job.time_finished.nil?
