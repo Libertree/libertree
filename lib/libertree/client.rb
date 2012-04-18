@@ -54,6 +54,13 @@ module Libertree
       )
     end
 
+    def req_comment_delete(comment_id)
+      @conn.request(
+        'COMMENT-DELETE',
+        'id' => comment_id
+      )
+    end
+
     def req_member(member)
       @conn.request(
         'MEMBER',
