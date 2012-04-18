@@ -46,6 +46,7 @@ module Libertree
       public_key = server ? server.public_key : @public_key
       @conn.request(
         'COMMENT',
+        'id'         => comment.id,
         'post_id'    => post.public_id,
         'public_key' => public_key,
         'username'   => comment.member.username,
