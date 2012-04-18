@@ -25,7 +25,11 @@ module Libertree
                 'server_id' => @server.id
               )
 
-              Libertree::Model::Profile.create( member_id: member.id )
+              profile = Libertree::Model::Profile.create( member_id: member.id )
+              if params['profile']
+                profile.name_display = params['profile']['name_display']
+                profile.description = params['profile']['description']
+              end
 
               begin
                 Timeout.timeout(5) do

@@ -52,16 +52,24 @@ describe Libertree::Server::Responder::Member do
             it 'with a missing username it responds with MISSING PARAMETER' do
               h = {
                 'avatar_url' => 'http://libertree.net/images/avatars/1.png',
+                'profile' => {
+                  'name_display' => '',
+                  'description'  => '',
+                }
               }
               @s.process "MEMBER #{h.to_json}"
               @s.should have_responded_with_code('MISSING PARAMETER')
             end
 
 
-            it 'with a blank id it responds with MISSING PARAMETER' do
+            it 'with a blank username it responds with MISSING PARAMETER' do
               h = {
                 'username' => '',
                 'avatar_url' => 'http://libertree.net/images/avatars/1.png',
+                'profile' => {
+                  'name_display' => '',
+                  'description'  => '',
+                }
               }
               @s.process "MEMBER #{h.to_json}"
               @s.should have_responded_with_code('MISSING PARAMETER')
@@ -71,6 +79,10 @@ describe Libertree::Server::Responder::Member do
               h = {
                 'username' => 'someuser',
                 'avatar_url' => 'http://libertree.net/images/avatars/1.png',
+                'profile' => {
+                  'name_display' => '',
+                  'description'  => '',
+                }
               }
               @s.process "MEMBER #{h.to_json}"
               @s.should have_responded_with_code('OK')
