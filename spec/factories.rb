@@ -25,4 +25,8 @@ FactoryGirl.define do
     sequence(:text) { |n| "Comment #{n}" }
     sequence(:remote_id, 1000)
   end
+
+  factory :post_like, :class => Libertree::Model::PostLike do
+    sequence(:remote_id, 1000)
+  end
 end

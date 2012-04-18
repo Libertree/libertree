@@ -6,6 +6,11 @@ module Libertree
     module Responder
       module Dispatcher
 
+        VALID_COMMANDS = [
+          'AUTHENTICATE', 'COMMENT', 'COMMENT-DELETE', 'INTRODUCE', 'MEMBER',
+          'POST', 'POST-DELETE', 'POST-LIKE', 'POST-LIKE-DELETE' # , ...
+        ]
+
         def process(request_raw)
           # This is a hack.  TODO: Find out where these empty lines are coming from.
           return  if request_raw.strip == ''
@@ -28,8 +33,7 @@ module Libertree
 
           puts "Received request: #{command}"
 
-          case command
-          when 'AUTHENTICATE', 'COMMENT', 'COMMENT-DELETE', 'INTRODUCE', 'MEMBER', 'POST', 'POST-DELETE', 'POST-LIKE' # , ...
+          if VALID_COMMANDS.include?(command)
             if ! introduced? && command != 'INTRODUCE'
               respond 'code' => 'ERROR', 'message' => 'Not INTRODUCEd.'
             elsif introduced? && ! authenticated? && command != 'AUTHENTICATE'

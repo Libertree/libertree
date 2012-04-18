@@ -61,28 +61,27 @@ module Libertree
           end
         end
 
-        # def rsp_comment_delete(params)
-          # return  if require_parameters(params, 'id')
+        def rsp_post_like_delete(params)
+          return  if require_parameters(params, 'id')
 
-          # begin
-            # comments = Model::Comment.
-              # where( 'remote_id' => params['id'] ).
-              # reject { |c| c.post.server != @server }
+          begin
+            likes = Model::PostLike.
+              where( 'remote_id' => params['id'] ).
+              reject { |c| c.post.server != @server }
 
-            # if comments.empty?
-              # respond( {
-                # 'code' => 'NOT FOUND',
-                # 'message' => "Unrecognized comment ID: #{params['id'].inspect}"
-              # } )
-            # else
-              # # TODO: Change to delete_cascade when comment Likes are added to the system
-              # comments[0].delete  # there should only be one comment
-              # respond_with_code 'OK'
-            # end
-          # rescue PGError => e
-            # respond_with_code 'ERROR'
-          # end
-        # end
+            if likes.empty?
+              respond( {
+                'code' => 'NOT FOUND',
+                'message' => "Unrecognized like ID: #{params['id'].inspect}"
+              } )
+            else
+              likes[0].delete  # there should only be one Like
+              respond_with_code 'OK'
+            end
+          rescue PGError => e
+            respond_with_code 'ERROR'
+          end
+        end
       end
     end
   end
