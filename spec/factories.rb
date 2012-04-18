@@ -20,4 +20,9 @@ FactoryGirl.define do
     sequence(:remote_id, 1000)
     public true
   end
+
+  factory :comment, :class => Libertree::Model::Comment do
+    sequence(:text) { |n| "Comment #{n}" }
+    sequence(:remote_id, 1000)
+  end
 end

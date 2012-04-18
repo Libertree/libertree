@@ -62,6 +62,29 @@ module Libertree
             respond_with_code 'ERROR'
           end
         end
+
+        def rsp_comment_delete(params)
+          return  if require_parameters(params, 'id')
+
+          begin
+            comments = Model::Comment.
+              where( 'remote_id' => params['id'] ).
+              reject { |c| c.post.server != @server }
+
+            if comments.empty?
+              respond( {
+                'code' => 'NOT FOUND',
+                'message' => "Unrecognized comment ID: #{params['id'].inspect}"
+              } )
+            else
+              # TODO: Change to delete_cascade when comment Likes are added to the system
+              comments[0].delete  # there should only be one comment
+              respond_with_code 'OK'
+            end
+          rescue PGError => e
+            respond_with_code 'ERROR'
+          end
+        end
       end
     end
   end
