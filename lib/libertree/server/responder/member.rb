@@ -25,6 +25,8 @@ module Libertree
                 'server_id' => @server.id
               )
 
+              Libertree::Model::Profile.create( member_id: member.id )
+
               begin
                 Timeout.timeout(5) do
                   Net::HTTP.start(uri.host) { |http|
