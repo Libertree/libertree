@@ -65,7 +65,11 @@ module Libertree
       @conn.request(
         'MEMBER',
         'username'   => member.username,
-        'avatar_url' => "#{@avatar_url_base}#{member.avatar_path}"
+        'avatar_url' => "#{@avatar_url_base}#{member.avatar_path}",
+        'profile' => {
+          'name_display' => member.profile.name_display,
+          'description'  => member.profile.description,
+        }
       )
     end
 
