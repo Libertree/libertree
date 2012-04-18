@@ -312,5 +312,64 @@ A requester would use the COMMENT-DELETE command to request that a remote server
 delete its copy of a comment that originated at the requester.
 
 Responders MAY return a "NOT FOUND" code to indicate that it has no record
-of the given post.
+of the given comment.
+
+### POST-LIKE
+
+Request Parameters:
+
+    {
+      "id": <like id on requester>,
+      "post_id": <post id on post origin>,
+      "public_key": <public key of post origin>,
+      "username": <member username of liker on requester>,
+    }
+
+Response Structure:
+
+    { "code": "OK" }
+    |
+    {
+      "code": "NOT FOUND",
+      [[ "message": <explanatory message> ]]
+    }
+    |
+    {
+      "code": "REJECTED",
+      [[ "message": <explanatory message> ]]
+    }
+
+A requester would use the POST-LIKE command to share with a remote server a new
+Like created at the requester.
+
+Responders SHOULD return a "NOT FOUND" code to indicate that it has no record
+of the Liker.  Responders SHOULD return a "NOT FOUND" code to indicate
+that it has no record of the given post.  Responders MAY provide an explanatary
+message with a "NOT FOUND" response.
+
+Responders MAY respond with a REJECTED code for any reason, and such a response
+MAY be accompanied by an explanatory message.  When a POST-LIKE request is rejected,
+the requester SHOULD retry the POST-LIKE request at a future time, but MAY elect
+not to after several rejections.
+
+### POST-LIKE-DELETE
+
+Request Parameters:
+
+    {
+      "id": <like id on requester>,
+    }
+
+Response Structure:
+
+    { "code": "OK" }
+    |
+    { "code": "NOT FOUND" }
+
+A requester would use the POST-LIKE-DELETE command to request that a remote server
+delete its copy of a Like that originated at the requester.  i.e. Unlike
+the post.
+
+Responders MAY return a "NOT FOUND" code to indicate that it has no record
+of the given Like.
 
