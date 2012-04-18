@@ -246,7 +246,7 @@ Response Structure:
     { "code": "NOT FOUND" }
 
 A requester would use the POST-DELETE command to request that a remote server
-delete their copy of a post that originated at the requester.
+delete its copy of a post that originated at the requester.
 
 Responders MAY return a "NOT FOUND" code to indicate that it has no record
 of the given post.
@@ -256,6 +256,7 @@ of the given post.
 Request Parameters:
 
     {
+      "id": <comment id on requester>,
       "post_id": <post id on post origin>,
       "public_key": <public key of post origin>,
       "username": <member username of comment author on requester>,
@@ -288,3 +289,24 @@ Responders MAY respond with a REJECTED code for any reason, and such a response
 MAY be accompanied by an explanatory message.  When a COMMENT request is rejected,
 the requester SHOULD retry the COMMENT request at a future time, but MAY elect
 not to after several rejections.
+
+### COMMENT-DELETE
+
+Request Parameters:
+
+    {
+      "id": <comment id on requester>,
+    }
+
+Response Structure:
+
+    { "code": "OK" }
+    |
+    { "code": "NOT FOUND" }
+
+A requester would use the COMMENT-DELETE command to request that a remote server
+delete its copy of a comment that originated at the requester.
+
+Responders MAY return a "NOT FOUND" code to indicate that it has no record
+of the given post.
+
