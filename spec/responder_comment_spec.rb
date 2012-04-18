@@ -48,6 +48,7 @@ describe Libertree::Server::Responder::Comment do
 
             it 'and a parameter is missing or blank, it responds with MISSING PARAMETER' do
               h = {
+                'id'         => 999,
                 'username'   => @member.username,
                 'public_key' => @requester.public_key,
                 'post_id'    => @post.remote_id,
@@ -67,8 +68,9 @@ describe Libertree::Server::Responder::Comment do
               end
             end
 
-            it "with a member username that isn't found" do
+            it "with a member username that isn't found, it responds with NOT FOUND" do
               h = {
+                'id'         => 999,
                 'username'   => 'nosuchusername',
                 'public_key' => @requester.public_key,
                 'post_id'    => @post.remote_id,
@@ -78,8 +80,9 @@ describe Libertree::Server::Responder::Comment do
               @s.should have_responded_with_code('NOT FOUND')
             end
 
-            it "with a post id that isn't found" do
+            it "with a post id that isn't found, it responds with NOT FOUND" do
               h = {
+                'id'         => 999,
                 'username'   => @member.username,
                 'public_key' => @requester.public_key,
                 'post_id'    => 99999999,
@@ -99,6 +102,7 @@ describe Libertree::Server::Responder::Comment do
 
               it 'responds with NOT FOUND' do
                 h = {
+                  'id'         => 999,
                   'username'   => @member.username,
                   'public_key' => @requester.public_key,
                   'post_id'    => @post.remote_id,
@@ -122,6 +126,7 @@ describe Libertree::Server::Responder::Comment do
 
               it 'responds with OK' do
                 h = {
+                  'id'         => 999,
                   'username'   => @member.username,
                   'public_key' => @requester.public_key,
                   'post_id'    => @post.remote_id,
@@ -134,6 +139,7 @@ describe Libertree::Server::Responder::Comment do
 
             it 'with valid data it responds with OK' do
               h = {
+                'id'         => 999,
                 'username'   => @member.username,
                 'public_key' => @requester.public_key,
                 'post_id'    => @post.remote_id,

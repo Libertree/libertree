@@ -3,7 +3,7 @@ module Libertree
     module Responder
       module Comment
         def rsp_comment(params)
-          return  if require_parameters(params, 'username', 'public_key', 'post_id', 'text')
+          return  if require_parameters(params, 'id', 'username', 'public_key', 'post_id', 'text')
 
           begin
             member = Model::Member[
@@ -50,6 +50,7 @@ module Libertree
             comment = Model::Comment.find_or_create(
               'member_id' => member.id,
               'post_id' => post.id,
+              'remote_id' => params['id'],
               # TODO: Sanitize with Loofah
               'text' => params['text']
             )
