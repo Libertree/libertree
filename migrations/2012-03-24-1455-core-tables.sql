@@ -68,35 +68,3 @@ CREATE TABLE comments(
     , text VARCHAR(16384) NOT NULL
     , PRIMARY KEY(id)
 );
-
--- CREATE TABLE sharings(
-      -- id SERIAL
-    -- , time_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
-    -- , member_id_from INTEGER NOT NULL REFERENCES members(id)
-    -- , member_id_to INTEGER NOT NULL REFERENCES members(id)
-    -- , accepted BOOLEAN NOT NULL DEFAULT FALSE
-    -- , PRIMARY KEY(id)
--- );
--- COMMENT ON TABLE sharings IS
--- 'Sharing of public posts, to be read in stream pages.  A sort of "inverse subscription".';
-
--- CREATE TABLE contact_categories(
-      -- id SERIAL
-    -- , time_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
-    -- , account_id INTEGER NOT NULL REFERENCES accounts(id)
-    -- , name VARCHAR(64) NOT NULL
-    -- , description VARCHAR(256) NOT NULL
-    -- , PRIMARY KEY(id)
-    -- , UNIQUE( account_id, name )
--- );
-
--- CREATE TABLE contacts(
-      -- id SERIAL
-    -- , time_created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW()
-    -- , member_id_from INTEGER NOT NULL REFERENCES members(id)
-    -- , member_id_to INTEGER NOT NULL REFERENCES members(id)
-    -- , accepted BOOLEAN NOT NULL DEFAULT FALSE
-    -- , contact_category_id INTEGER NOT NULL REFERENCES contact_categories(id)
-    -- , notes VARCHAR(1024)
-    -- , PRIMARY KEY(id)
--- );
