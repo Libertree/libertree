@@ -15,7 +15,8 @@ module Libertree
       end
 
       def delete_cascade
-        Notification.d %|DELETE FROM notifications WHERE data = '{"type":"comment","comment_id":#{self.id}}'|
+        DB.dbh.d %|DELETE FROM notifications WHERE data = '{"type":"comment","comment_id":#{self.id}}'|
+        self.delete
       end
     end
   end
