@@ -51,14 +51,29 @@ module Libertree
           self.id,
           account.id
         )
+        DB.dbh.delete(
+          %{
+            DELETE FROM river_posts rp
+            USING rivers r
+            WHERE
+              rp.river_id = r.id
+              AND r.account_id = ?
+              AND r.query LIKE '%:unread%'
+              AND rp.post_id = ?
+          },
+          account.id,
+          self.id
+        )
       end
 
       def mark_as_unread_by(account)
         DB.dbh.execute  "DELETE FROM posts_read WHERE post_id = ? AND account_id = ?", self.id, account.id
+        self.add_to_matching_rivers
       end
 
       def mark_as_unread_by_all
         DB.dbh.execute  "DELETE FROM posts_read WHERE post_id = ?", self.id
+        self.add_to_matching_rivers
       end
 
       def self.mark_all_as_read_by(account)
@@ -79,6 +94,17 @@ module Libertree
             )
           },
           account.id,
+          account.id
+        )
+        DB.dbh.delete(
+          %{
+            DELETE FROM river_posts rp
+            USING rivers r
+            WHERE
+              rp.river_id = r.id
+              AND r.account_id = ?
+              AND r.query LIKE '%:unread%'
+          },
           account.id
         )
       end
@@ -146,15 +172,18 @@ module Libertree
         end
       end
 
+      # TODO: DRY this up with find_or_create
       def self.create(*args)
         post = super
         post.add_to_matching_rivers
+        post.mark_as_read_by post.member.account
         post
       end
 
       def self.find_or_create(*args)
         post = super
         post.add_to_matching_rivers
+        post.mark_as_read_by post.member.account
         post
       end
 

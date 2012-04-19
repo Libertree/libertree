@@ -1,6 +1,10 @@
 module Libertree
   module Model
     class River < M4DBI::Model(:rivers)
+      def account
+        @account ||= Account[self.account_id]
+      end
+
       def posts( opts = {} )
         limit = opts.fetch(:limit, 30)
         if opts[:order_by] == :comment
@@ -61,11 +65,12 @@ module Libertree
         return  if DB.dbh.sc "SELECT EXISTS( SELECT 1 FROM river_posts WHERE river_id = ? AND post_id = ? LIMIT 1 )", self.id, post.id
 
         parts = query_components
-        if parts.include?(':tree')
-          return  if post.member.account.nil?
-        end
+        return  if parts.include?(':tree') && post.member.account.nil?
+        return  if parts.include?(':unread') && post.read_by?( self.account )
+        # TODO: Maybe just delete everything starting with a colon?
         parts.delete ':forest'
         parts.delete ':tree'
+        parts.delete ':unread'
 
         parts.dup.each do |term|
           if term =~ /^-./
