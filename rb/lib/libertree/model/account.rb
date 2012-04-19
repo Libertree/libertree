@@ -70,6 +70,11 @@ module Libertree
           label: 'Posts from the forest',
           query: ':forest'
         )
+        River.create(
+          account_id: account.id,
+          label: 'Unread posts from the forest',
+          query: ':unread'
+        )
         account
       end
 
@@ -85,6 +90,11 @@ module Libertree
           account_id: account.id,
           label: 'Posts from the forest',
           query: ':forest'
+        )
+        River.create(
+          account_id: account.id,
+          label: 'Unread posts from the forest',
+          query: ':unread'
         )
         account
       end
