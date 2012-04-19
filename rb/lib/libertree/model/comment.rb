@@ -13,6 +13,10 @@ module Libertree
       def time_created
         DateTime.parse self['time_created']
       end
+
+      def delete_cascade
+        Notification.d %|DELETE FROM notifications WHERE data = '{"type":"comment","comment_id":#{self.id}}'|
+      end
     end
   end
 end
