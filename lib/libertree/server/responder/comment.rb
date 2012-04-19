@@ -77,8 +77,7 @@ module Libertree
                 'message' => "Unrecognized comment ID: #{params['id'].inspect}"
               } )
             else
-              # TODO: Change to delete_cascade when comment Likes are added to the system
-              comments[0].delete  # there should only be one comment
+              comments[0].delete_cascade  # there should only be one comment
               respond_with_code 'OK'
             end
           rescue PGError => e
