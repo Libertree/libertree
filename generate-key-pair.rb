@@ -1,4 +1,4 @@
-require 'rcrypt'
+require 'openssl'
 
 pubkey_file = ARGV[0] || 'public.key'
 privkey_file = ARGV[1] || 'private.key'
@@ -12,9 +12,11 @@ if File.exist?(privkey_file)
   exit 2
 end
 
-pair = RCrypt.generate_key_pair
-File.open(pubkey_file, 'w') { |f| f.puts pair[:public] }
-File.open(privkey_file, 'w') { |f| f.puts pair[:private] }
+pair = OpenSSL::PKey::RSA.new(2048, 65537)
+priv, pub = [pair.to_pem, pair.public_key.to_pem]
+
+File.open(pubkey_file, 'w') { |f| f.puts pub }
+File.open(privkey_file, 'w') { |f| f.puts priv }
 File.chmod(0600, privkey_file)
 
 puts "Generated #{pubkey_file} and #{privkey_file}."
