@@ -32,7 +32,8 @@ module Libertree
           else
             @server.extend Authenticatable
             @server.challenge = challenge_new
-            challenge_encrypted = RCrypt.encrypt(@server.challenge, public_key)
+            key = OpenSSL::PKey::RSA.new public_key
+            challenge_encrypted = Base64.encode64(key.public_encrypt(@server.challenge, OpenSSL::PKey::RSA::PKCS1_OAEP_PADDING))
 
             respond( {
               'code' => 'OK',

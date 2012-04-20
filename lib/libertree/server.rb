@@ -1,7 +1,8 @@
 require 'eventmachine'
 require 'json'
 require 'socket'
-require 'rcrypt'
+require 'openssl'
+require 'base64'
 
 require 'libertree/authenticatable'
 require 'libertree/model'
