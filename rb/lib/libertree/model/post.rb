@@ -201,6 +201,22 @@ module Libertree
       def self.search(q)
         self.s("SELECT * FROM posts WHERE text ILIKE '%' || ? || '%' ORDER BY time_created DESC LIMIT 42", q)
       end
+
+      def rivers_belonged_to
+        River.s(
+          %{
+            SELECT
+              r.*
+            FROM
+                rivers r
+              , river_posts rp
+            WHERE
+              rp.river_id = r.id
+              AND rp.post_id = ?
+          },
+          self.id
+        )
+      end
     end
   end
 end
