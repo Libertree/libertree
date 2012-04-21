@@ -202,6 +202,8 @@ module Libertree
         self.s("SELECT * FROM posts WHERE text ILIKE '%' || ? || '%' ORDER BY time_created DESC LIMIT 42", q)
       end
 
+      # TODO: Optionally restrict by account, so as not to reveal too much to browser/client
+      # i.e. rivers not belonging to current account
       def rivers_belonged_to
         River.s(
           %{
