@@ -197,6 +197,10 @@ module Libertree
       def like_by(member)
         PostLike[ member_id: member.id, post_id: self.id ]
       end
+
+      def self.search(q)
+        self.s("SELECT * FROM posts WHERE text ILIKE '%' || ? || '%' ORDER BY time_created DESC LIMIT 42", q)
+      end
     end
   end
 end
