@@ -18,6 +18,20 @@ module Libertree
         DB.dbh.d %|DELETE FROM notifications WHERE data = '{"type":"post-like","post_like_id":#{self.id}}'|
         self.delete
       end
+
+      def after_create
+        self.post.notify_about_like self
+      end
+      def self.create(*args)
+        like = super
+        like.after_create
+        like
+      end
+      def self.find_or_create(*args)
+        like = super
+        like.after_create
+        like
+      end
     end
   end
 end
