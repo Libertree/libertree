@@ -36,9 +36,9 @@ module Libertree
         )
       end
 
-      def notifications
+      def notifications( limit = 128 )
         Notification.s(
-          "SELECT * FROM notifications WHERE account_id = ? ORDER BY id DESC",
+          "SELECT * FROM notifications WHERE account_id = ? ORDER BY id DESC LIMIT #{limit.to_i}",
           self.id
         )
       end
