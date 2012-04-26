@@ -1,4 +1,5 @@
-require 'rcrypt'
+require 'base64'
+require 'openssl'
 require 'libertree/connection'
 
 module Libertree
@@ -17,10 +18,11 @@ module Libertree
       @conn = Libertree::Connection.new(remote_host)
 
       response = @conn.request('INTRODUCE', 'public_key' => @public_key)
-
       challenge_encrypted = response['challenge']
+
       if challenge_encrypted && response['code'] == 'OK'
-        challenge_decrypted = RCrypt.decrypt(challenge_encrypted, @private_key)
+        key = OpenSSL::PKey::RSA.new @private_key
+        challenge_decrypted = key.private_decrypt(Base64.decode64(challenge_encrypted), OpenSSL::PKey::RSA::PKCS1_OAEP_PADDING)
         response = @conn.request('AUTHENTICATE', 'response' => challenge_decrypted)
 
         if response['code'] != 'OK'

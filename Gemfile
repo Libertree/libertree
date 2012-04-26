@@ -1,5 +1,4 @@
 source 'http://rubygems.org'
-gem 'rcrypt'
 
 group 'development' do
   gem 'linecache19', :git => 'git://github.com/mark-moseley/linecache'
