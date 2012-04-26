@@ -51,7 +51,6 @@ module Libertree
               WHERE
                 account_id = ?
                 AND data = '{"type":"post-like","post_like_id":#{like.id}}'
-              LIMIT 1
             |,
             account.id
           )
@@ -65,7 +64,6 @@ module Libertree
               WHERE
                 account_id = ?
                 AND data = '{"type":"comment","comment_id":#{comment.id}}'
-              LIMIT 1
             |,
             account.id
           )
