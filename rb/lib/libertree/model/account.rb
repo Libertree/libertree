@@ -78,27 +78,6 @@ module Libertree
         account
       end
 
-      def self.find_or_create(*args)
-        account = super
-        # TODO: DRY this up along with self.create
-        River.create(
-          account_id: account.id,
-          label: 'Posts from my tree',
-          query: ':tree'
-        )
-        River.create(
-          account_id: account.id,
-          label: 'Posts from the forest',
-          query: ':forest'
-        )
-        River.create(
-          account_id: account.id,
-          label: 'Unread posts from the forest',
-          query: ':unread'
-        )
-        account
-      end
-
       def first_unread_post
         Post.s1(
           %{

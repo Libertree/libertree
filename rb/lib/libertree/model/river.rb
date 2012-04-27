@@ -102,11 +102,6 @@ module Libertree
         Post.add_recent_to_river river
         river
       end
-      def self.find_or_create(*args)
-        river = super
-        Post.add_recent_to_river river
-        river
-      end
     end
   end
 end

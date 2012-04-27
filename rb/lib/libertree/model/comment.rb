@@ -42,11 +42,6 @@ module Libertree
         comment.after_create
         comment
       end
-      def self.find_or_create(*args)
-        comment = super
-        comment.after_create
-        comment
-      end
     end
   end
 end

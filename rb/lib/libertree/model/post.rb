@@ -172,23 +172,12 @@ module Libertree
         end
       end
 
-      def after_create
-        self.add_to_matching_rivers
-        if self.member.account
-          self.mark_as_read_by self.member.account
-        end
-      end
-
-      # TODO: DRY this up with find_or_create
       def self.create(*args)
         post = super
-        post.after_create
-        post
-      end
-
-      def self.find_or_create(*args)
-        post = super
-        post.after_create
+        post.add_to_matching_rivers
+        if post.member.account
+          post.mark_as_read_by post.member.account
+        end
         post
       end
 

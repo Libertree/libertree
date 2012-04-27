@@ -19,17 +19,9 @@ module Libertree
         self.delete
       end
 
-      def after_create
-        self.post.notify_about_like self
-      end
       def self.create(*args)
         like = super
-        like.after_create
-        like
-      end
-      def self.find_or_create(*args)
-        like = super
-        like.after_create
+        like.post.notify_about_like like
         like
       end
     end
