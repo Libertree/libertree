@@ -1,16 +1,18 @@
 require 'libertree/client'
 require 'readline'
+require 'openssl'
 
 Member = Struct.new(:username, :avatar_path)
 
-if ARGV.size < 2
-  $stderr.puts "#{$0} <public key file> <private key file> [avatar_url_base]"
+if ARGV.size < 1
+  $stderr.puts "#{$0} <private key file> [avatar_url_base]"
   exit 1
 end
 
+key = OpenSSL::PKey::RSA.new File.read(ARGV[0])
 client = Libertree::Client.new(
-  public_key: File.read(ARGV[0]),
-  private_key: File.read(ARGV[1]),
+  private_key: key,
+  public_key: key.public_key,
   avatar_url_base: ARGV[2]
 )
 
