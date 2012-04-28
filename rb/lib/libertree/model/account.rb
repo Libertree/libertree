@@ -60,6 +60,8 @@ module Libertree
 
       def self.create(*args)
         account = super
+        member = Member.create( account_id: account.id )
+        Profile.create( member_id: member.id )
         River.create(
           account_id: account.id,
           label: 'Posts from my tree',
