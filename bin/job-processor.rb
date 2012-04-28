@@ -107,9 +107,10 @@ class JobProcessor
   end
 
   def lt_client(remote_host)
+    key = OpenSSL::PKey::RSA.new File.read(@conf['private_key_path'])
     c = Libertree::Client.new(
-      public_key: File.read(@conf['public_key_path']),
-      private_key: File.read(@conf['private_key_path']),
+      public_key: key.public_key,
+      private_key: key,
       avatar_url_base: @conf['avatar_url_base']
     )
 

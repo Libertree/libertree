@@ -22,7 +22,8 @@ module Libertree
 
     def post_init
       # TODO: Not sure if there isn't a better place to read in the local public key
-      @public_key = File.read( Libertree::Server.conf['public_key_path'])
+      key = OpenSSL::PKey::RSA.new File.read(Libertree::Server.conf['private_key_path'])
+      @public_key = key.public_key
 
       port, @ip_remote = Socket.unpack_sockaddr_in(get_peername)
       puts "#{@ip_remote} connected."
