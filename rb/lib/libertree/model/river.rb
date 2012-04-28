@@ -102,6 +102,24 @@ module Libertree
         Post.add_recent_to_river river
         river
       end
+
+      def self.ensure_beginner_rivers_for(account)
+        River.find_or_create(
+          account_id: account.id,
+          label: 'Posts from my tree',
+          query: ':tree'
+        )
+        River.find_or_create(
+          account_id: account.id,
+          label: 'Posts from the forest',
+          query: ':forest'
+        )
+        River.find_or_create(
+          account_id: account.id,
+          label: 'Unread posts from the forest',
+          query: ':unread'
+        )
+      end
     end
   end
 end

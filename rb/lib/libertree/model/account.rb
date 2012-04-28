@@ -62,21 +62,7 @@ module Libertree
         account = super
         member = Member.create( account_id: account.id )
         Profile.create( member_id: member.id )
-        River.create(
-          account_id: account.id,
-          label: 'Posts from my tree',
-          query: ':tree'
-        )
-        River.create(
-          account_id: account.id,
-          label: 'Posts from the forest',
-          query: ':forest'
-        )
-        River.create(
-          account_id: account.id,
-          label: 'Unread posts from the forest',
-          query: ':unread'
-        )
+        River.ensure_beginner_rivers_for account
         account
       end
 
