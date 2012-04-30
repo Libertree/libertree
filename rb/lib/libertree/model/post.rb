@@ -213,6 +213,15 @@ module Libertree
           self.id
         )
       end
+
+      def set(*args)
+        PostRevision.create(
+          'post_id' => self.id,
+          'text'    => self.text
+        )
+        super
+        self.time_updated = Time.now
+      end
     end
   end
 end
