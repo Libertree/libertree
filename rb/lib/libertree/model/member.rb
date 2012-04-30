@@ -32,6 +32,12 @@ module Libertree
       def profile
         Profile[ member_id: self.id ]
       end
+
+      def self.create(*args)
+        member = super
+        Profile.create( member_id: member.id )
+        member
+      end
     end
   end
 end
