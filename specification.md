@@ -225,7 +225,7 @@ Response Structure:
     }
 
 A requester would use the POST command to share with a remote server a new
-post created at the requester.
+post created at the requester, or an update of a post on the requester.
 
 Responders SHOULD return a "NOT FOUND" code to indicate that it has no record
 of the given member.
@@ -234,6 +234,11 @@ Responders MAY respond with a REJECTED code for any reason, and such a response
 MAY be accompanied by an explanatory message.  When a POST request is rejected,
 the requester SHOULD retry the POST request at a future time, but MAY elect
 not to after several rejections.
+
+If the responder has a record of a post with the given remote id (on the requester)
+by the given remote member, it MUST update its local record with the given text
+and public values.  Responders SHOULD create a post revision for the post's values
+prior to performing the local update.
 
 ### POST-DELETE
 
