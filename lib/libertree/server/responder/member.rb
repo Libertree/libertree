@@ -27,7 +27,19 @@ module Libertree
 
               profile = Libertree::Model::Profile.find_or_create( member_id: member.id )
               if params['profile']
-                profile.name_display = params['profile']['name_display']
+                begin
+                  profile.name_display = params['profile']['name_display']
+                rescue PGError => e
+                  if e.message =~ /valid_name_display/
+                    respond( {
+                      'code' => 'ERROR',
+                      'message' => "Invalid display name: #{params['profile']['name_display'].inspect}"
+                    } )
+                    return
+                  else
+                    raise e
+                  end
+                end
                 profile.description = params['profile']['description']
               end
 
