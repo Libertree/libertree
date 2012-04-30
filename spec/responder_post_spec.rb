@@ -53,7 +53,6 @@ describe Libertree::Server::Responder::Post do
               @s.should have_responded_with_code('MISSING PARAMETER')
             end
 
-
             it 'with a blank id it responds with MISSING PARAMETER' do
               h = {
                 'username' => @member.username,
@@ -65,7 +64,7 @@ describe Libertree::Server::Responder::Post do
               @s.should have_responded_with_code('MISSING PARAMETER')
             end
 
-            it "with a member username that isn't found" do
+            it "with a member username that isn't found it responds with NOT FOUND" do
               h = {
                 'username' => 'nosuchusername',
                 'id'       => 4,
@@ -105,6 +104,30 @@ describe Libertree::Server::Responder::Post do
               }
               @s.process "POST #{h.to_json}"
               @s.should have_responded_with_code('OK')
+            end
+
+            context 'when a remote post exists already' do
+              before :each do
+                @post = Libertree::Model::Post.create(
+                  FactoryGirl.attributes_for(:post, member_id: @member.id)
+                )
+                @initial_text = @post.text
+              end
+
+              it 'updates the post text' do
+                @post.text.should_not == 'edited text'
+
+                h = {
+                  'username' => @member.username,
+                  'id'       => @post.remote_id,
+                  'public'   => true,
+                  'text'     => 'edited text',
+                }
+                @s.process "POST #{h.to_json}"
+                @s.should have_responded_with_code('OK')
+
+                Libertree::Model::Post[@post.id].text.should == 'edited text'
+              end
             end
           end
         end

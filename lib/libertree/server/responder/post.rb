@@ -16,12 +16,24 @@ module Libertree
                 'message' => "Unrecognized member username: #{params['username'].inspect}"
               } )
             else
-              Model::Post.find_or_create(
+              # <Pistos> There's a microscopic risk of a race condition here (find/create),
+              # but it's so small, I guess we'll ignore it for now.
+
+              post = Model::Post[
                 'member_id' => member.id,
-                'remote_id' => params['id'],
-                'public' => params['public'],
-                'text' => params['text']
-              )
+                'remote_id' => params['id']
+              ]
+              if post
+                post.text = params['text']
+              else
+                Model::Post.create(
+                  'member_id' => member.id,
+                  'remote_id' => params['id'],
+                  'public' => params['public'],
+                  'text' => params['text']
+                )
+              end
+
               respond_with_code 'OK'
             end
           rescue PGError => e
