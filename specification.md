@@ -1,4 +1,4 @@
-# Libertree Protocol
+# Libertree Specification
 
 ## Introduction
 
