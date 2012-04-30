@@ -24,7 +24,7 @@ module Libertree
                 'remote_id' => params['id']
               ]
               if post
-                post.text = params['text']
+                post.set 'text' => params['text']
               else
                 Model::Post.create(
                   'member_id' => member.id,
