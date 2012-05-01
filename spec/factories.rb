@@ -26,6 +26,10 @@ FactoryGirl.define do
     sequence(:remote_id, 1000)
   end
 
+  factory :comment_like, :class => Libertree::Model::CommentLike do
+    sequence(:remote_id, 1000)
+  end
+
   factory :post_like, :class => Libertree::Model::PostLike do
     sequence(:remote_id, 1000)
   end
