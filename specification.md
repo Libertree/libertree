@@ -378,3 +378,62 @@ the post.
 Responders MAY return a "NOT FOUND" code to indicate that it has no record
 of the given Like.
 
+### COMMENT-LIKE
+
+Request Parameters:
+
+    {
+      "id": <like id on requester>,
+      "comment_id": <comment id on comment origin>,
+      "public_key": <public key of comment origin>,
+      "username": <member username of liker on requester>,
+    }
+
+Response Structure:
+
+    { "code": "OK" }
+    |
+    {
+      "code": "NOT FOUND",
+      [[ "message": <explanatory message> ]]
+    }
+    |
+    {
+      "code": "REJECTED",
+      [[ "message": <explanatory message> ]]
+    }
+
+A requester would use the COMMENT-LIKE command to share with a remote server a new
+Like created at the requester.
+
+Responders SHOULD return a "NOT FOUND" code to indicate that it has no record
+of the Liker.  Responders SHOULD return a "NOT FOUND" code to indicate
+that it has no record of the given comment.  Responders MAY provide an explanatary
+message with a "NOT FOUND" response.
+
+Responders MAY respond with a REJECTED code for any reason, and such a response
+MAY be accompanied by an explanatory message.  When a COMMENT-LIKE request is rejected,
+the requester SHOULD retry the COMMENT-LIKE request at a future time, but MAY elect
+not to after several rejections.
+
+### COMMENT-LIKE-DELETE
+
+Request Parameters:
+
+    {
+      "id": <like id on requester>,
+    }
+
+Response Structure:
+
+    { "code": "OK" }
+    |
+    { "code": "NOT FOUND" }
+
+A requester would use the COMMENT-LIKE-DELETE command to request that a remote server
+delete its copy of a Like that originated at the requester.  i.e. Unlike
+the comment.
+
+Responders MAY return a "NOT FOUND" code to indicate that it has no record
+of the given Like.
+
