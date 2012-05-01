@@ -63,6 +63,25 @@ module Libertree
       )
     end
 
+    def req_comment_like(like)
+      server = like.comment.member.server
+      public_key = server ? server.public_key : @public_key
+      @conn.request(
+        'COMMENT-LIKE',
+        'id'         => like.id,
+        'comment_id' => like.comment.public_id,
+        'public_key' => public_key,
+        'username'   => like.member.username,
+      )
+    end
+
+    def req_comment_like_delete(like_id)
+      @conn.request(
+        'COMMENT-LIKE-DELETE',
+        'id' => like_id
+      )
+    end
+
     def req_member(member)
       @conn.request(
         'MEMBER',
