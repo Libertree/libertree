@@ -20,6 +20,8 @@ module Libertree
         @subject ||= case self.data['type']
         when 'comment'
           Libertree::Model::Comment[ self.data['comment_id'] ]
+        when 'comment-like'
+          Libertree::Model::CommentLike[ self.data['comment_like_id'] ]
         when 'post-like'
           Libertree::Model::PostLike[ self.data['post_like_id'] ]
         end

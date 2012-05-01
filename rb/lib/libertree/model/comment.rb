@@ -42,6 +42,27 @@ module Libertree
         comment.after_create
         comment
       end
+
+      def likes
+        CommentLike.s "SELECT * FROM comment_likes WHERE comment_id = ? ORDER BY id DESC", self.id
+      end
+
+      def notify_about_like(like)
+        notification_attributes = {
+          'type'         => 'comment-like',
+          'comment_like_id' => like.id,
+        }
+        local_comment_author = like.comment.member.account
+        like_author = like.member.account
+
+        if local_comment_author && local_comment_author != like_author
+          local_comment_author.notify_about notification_attributes
+        end
+      end
+
+      def like_by(member)
+        CommentLike[ member_id: member.id, comment_id: self.id ]
+      end
     end
   end
 end
