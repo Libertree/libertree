@@ -67,6 +67,10 @@ module Libertree
       def server
         self.member.server
       end
+
+      def public_id
+        self.remote_id || self.id
+      end
     end
   end
 end
