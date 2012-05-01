@@ -63,6 +63,10 @@ module Libertree
       def like_by(member)
         CommentLike[ member_id: member.id, comment_id: self.id ]
       end
+
+      def server
+        self.member.server
+      end
     end
   end
 end
