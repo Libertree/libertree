@@ -69,6 +69,19 @@ module Libertree
             |,
             account.id
           )
+
+          comment.likes.each do |like|
+            r += self.s(
+              %|
+                SELECT *
+                FROM notifications
+                WHERE
+                  account_id = ?
+                  AND data = '{"type":"comment-like","comment_like_id":#{like.id}}'
+              |,
+              account.id
+            )
+          end
         end
 
         r
