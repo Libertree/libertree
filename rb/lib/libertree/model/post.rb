@@ -223,6 +223,7 @@ module Libertree
           'text'         => text_new,
           'time_updated' => Time.now
         )
+        mark_as_unread_by_all
       end
     end
   end
