@@ -12,6 +12,9 @@ module Libertree
       def time_created
         DateTime.parse self['time_created']
       end
+      def time_updated
+        DateTime.parse self['time_updated']
+      end
 
       def remote?
         !! remote_id
