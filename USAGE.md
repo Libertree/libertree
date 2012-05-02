@@ -24,8 +24,8 @@ Apache or something equivalent.  Under Gentoo:
 ### Ruby services
 
 Libertree needs three Ruby services running: the frontend, the backend and job
-processing.  Each of these services might be served by more than one process
-or daemon.
+processing.  The websocket server is optional.  Some of these services might be
+served by more than one process or daemon.
 
 #### Backend
 
@@ -54,6 +54,12 @@ As the libertree user:
 Use any port number desired.  The web server proxy will proxy requests from the
 standard HTTP port (80) to this port.
 
+Optional (recommended) web socket server:
+
+    % cd ~/git/libertree-frontend-ramaze
+    % rvm use 1.9.3@libertree-frontend-ramaze
+    % bundle exec ruby websocket-server.rb
+
 ## Maintenance
 
 Multiple job processing and frontend processes can be started, but almost all
@@ -73,3 +79,11 @@ repository:
 
 Then restart all the services.  They can all be stopped by typing Ctrl-C. Check for
 release notes which may describe new settings or migrations.
+
+If there are SCSS changes, compile the SCSS to CSS:
+
+    % cd ~/git/libertree-frontend-ramaze
+    % ./css-build.sh
+
+This command is safe to run, even if it is not certain whether there were SCSS
+changes.
