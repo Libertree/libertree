@@ -21,7 +21,11 @@ module Libertree
 
       def respond(data)
         # TODO: Gracefully handle failure to convert to JSON
-        send_data data.to_json + "\n"
+        response = data.to_json + "\n"
+        if Server.conf['debug']
+          $stderr.puts response
+        end
+        send_data response
       end
 
       def respond_with_code(code)
