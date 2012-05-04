@@ -8,16 +8,23 @@ module Libertree
     # @option params [String] :public_key A public RSA key, the partner of the private key
     # @option params [String] :private_key A private RSA key, the partner of the public key
     # @option params [String] :avatar_url_base The base to prefix before member avatar_path when sending requests with an avatar_url parameter
+    # @option params [String] :server_name a short identifier that other servers will display beside member usernames
     def initialize( params = {} )
       @public_key = params[:public_key] or raise ":public_key required by Libertree::Client"
       @private_key = params[:private_key] or raise ":private_key required by Libertree::Client"
       @avatar_url_base = params[:avatar_url_base]
+      @server_name = params[:server_name]
+
+      @intro_params = { 'public_key' => @public_key, }
+      if @server_name
+        @intro_params['name'] = @server_name
+      end
     end
 
     def connect(remote_host)
       @conn = Libertree::Connection.new(remote_host)
 
-      response = @conn.request('INTRODUCE', 'public_key' => @public_key)
+      response = @conn.request('INTRODUCE', @intro_params)
       challenge_encrypted = response['challenge']
 
       if challenge_encrypted && response['code'] == 'OK'
