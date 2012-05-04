@@ -140,8 +140,9 @@ The random string used for the challenge SHOULD NOT be the same as one used in
 any previous connection, whether with the same requester or a different one.
 
 The requester MAY provide a name for itself.  This name is intended to be used
-for display purposes.  It MUST be 64 characters in length or shorter.  It MUST
-NOT be empty.  It MUST NOT consist entirely of whitespace.
+for display purposes.  It MUST be 32 characters in length or shorter.  It MUST
+NOT be empty.  Each of its characters MUST be a letter, a number, a period, or
+a hyphen.
 
 ### AUTHENTICATE
 
