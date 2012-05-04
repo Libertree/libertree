@@ -15,7 +15,7 @@ module Libertree
 
       def handle
         if self['username']
-          self['username'] + "@#{server.ip}"
+          self['username'] + "@#{server.name_display}"
         else
           account.username
         end
