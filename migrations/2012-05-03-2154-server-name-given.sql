@@ -1,1 +1,1 @@
-ALTER TABLE servers ADD COLUMN name_given VARCHAR(32) CONSTRAINT valid_name_given CHECK ( name_given ~ '^[^\s!"#$%&()*+,/:;<=>?\[\\\]^_`~]+$' );
+ALTER TABLE servers ADD COLUMN name_given VARCHAR(32) CONSTRAINT valid_name_given CHECK ( name_given ~ E'^[^\\s!"#$%&()*+,/\\:;<=>?[\\]^_`~]+$' );
