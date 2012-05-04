@@ -25,6 +25,7 @@ module Libertree
             @server = Model::Server.create(
               'ip'         => @ip_remote,
               'public_key' => public_key,
+              'name_given' => params['name']
             )
             @server.extend Authenticatable
             @server.authenticated = true
