@@ -34,7 +34,7 @@ module Libertree
 
       def self.create(*args)
         comment = super
-        comment.post.mark_as_unread_by_all
+        comment.post.mark_as_unread_by_all  except: [comment.member.account]
         comment.post.notify_about_comment comment
         comment
       end

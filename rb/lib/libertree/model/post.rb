@@ -74,8 +74,16 @@ module Libertree
         self.add_to_matching_rivers
       end
 
-      def mark_as_unread_by_all
-        DB.dbh.execute  "DELETE FROM posts_read WHERE post_id = ?", self.id
+      def mark_as_unread_by_all( options = {} )
+        except_accounts = options.fetch(:except, [])
+        if except_accounts.any?
+          ids = except_accounts.map { |a| a.id }
+          placeholders = ( ['?'] * ids.count ).join(', ')
+          DB.dbh.execute  "DELETE FROM posts_read WHERE post_id = ? AND NOT account_id IN (#{placeholders})", self.id, *ids
+        else
+          DB.dbh.execute  "DELETE FROM posts_read WHERE post_id = ?", self.id
+        end
+
         self.add_to_matching_rivers
       end
 
