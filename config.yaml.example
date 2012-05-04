@@ -9,6 +9,12 @@ avatar_dir: '/path/to/public/images/avatars'
 public_key_path: /path/to/public.key
 private_key_path: /path/to/private.key
 
+# A brief name which will be displayed by remote servers next to the usernames
+# of this server's members.  Letters, numbers, period and dash only.  If omitted,
+# the server's IP address will be displayed instead.  This could be the server's
+# domain name, but need not be.
+# server_name:
+
 # The URL base which other servers will use to retrieve avatar image files
 # from this server
 avatar_url_base: 'http://domain-or-ip-without-trailing-slash'

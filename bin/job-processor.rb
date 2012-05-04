@@ -123,7 +123,8 @@ class JobProcessor
     c = Libertree::Client.new(
       public_key: File.read(@conf['public_key_path']),
       private_key: File.read(@conf['private_key_path']),
-      avatar_url_base: @conf['avatar_url_base']
+      avatar_url_base: @conf['avatar_url_base'],
+      server_name: @conf['server_name']
     )
 
     if c
