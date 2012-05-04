@@ -32,14 +32,10 @@ module Libertree
         self.s("SELECT * FROM comments WHERE text ILIKE '%' || ? || '%' ORDER BY time_created DESC LIMIT 42", q)
       end
 
-      def after_create
-        self.post.mark_as_unread_by_all
-        self.post.notify_about_comment self
-      end
-
       def self.create(*args)
         comment = super
-        comment.after_create
+        comment.post.mark_as_unread_by_all
+        comment.post.notify_about_comment comment
         comment
       end
 
