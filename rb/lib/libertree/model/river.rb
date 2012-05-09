@@ -134,6 +134,10 @@ module Libertree
           query: ':unread'
         )
       end
+
+      def home?
+        self.home
+      end
     end
   end
 end

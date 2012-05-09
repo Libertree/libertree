@@ -86,6 +86,10 @@ module Libertree
           self.id
         )
       end
+
+      def home_river
+        River.s1 "SELECT * FROM rivers WHERE account_id = ? AND home = TRUE", self.id
+      end
     end
   end
 end
