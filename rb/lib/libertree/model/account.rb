@@ -90,6 +90,11 @@ module Libertree
       def home_river
         River.s1 "SELECT * FROM rivers WHERE account_id = ? AND home = TRUE", self.id
       end
+
+      def home_river=(river)
+        DB.dbh.u "UPDATE rivers SET home = FALSE WHERE account_id = ?", self.id
+        DB.dbh.u "UPDATE rivers SET home = TRUE WHERE account_id = ? and id = ?", self.id, river.id
+      end
     end
   end
 end
