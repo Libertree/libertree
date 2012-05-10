@@ -95,6 +95,16 @@ module Libertree
         DB.dbh.u "UPDATE rivers SET home = FALSE WHERE account_id = ?", self.id
         DB.dbh.u "UPDATE rivers SET home = TRUE WHERE account_id = ? and id = ?", self.id, river.id
       end
+
+      def invitations_not_accepted
+        Invitation.s "SELECT * FROM invitations WHERE inviter_account_id = ? AND account_id IS NULL ORDER BY id", self.id
+      end
+
+      def new_invitation
+        if invitations_not_accepted.count < 5
+          Invitation.create( inviter_account_id: self.id )
+        end
+      end
     end
   end
 end
