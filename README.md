@@ -15,6 +15,20 @@ The remainder of the documentation found in this repository refers to the
 Libertree social network software, and not The Libertree Project as a whole,
 unless otherwise explicitly stated.
 
+## Raison d'être
+
+Why bother making another social network?  What sets Libertree apart?
+
+> I created Libertree because I wanted a social network that was free from the
+tentacles of commercial interests.  In building and continuing to shape this
+software, I also want to foster a great community, a place where people can
+find a positive, friendly atmosphere, and also feel involved in its growth,
+improvement and progress.  In the Libertree community, I want people to
+experience being listened to, talked with, and acknowledged when it comes to
+using the software and being a part of the community.  I want to make Libertree
+into what people want it to be, something that makes them happy, that makes
+their lives simpler, easier, better.
+
 ## Reference Implementation
 
 There are (will be) several implementations of the various components of
