@@ -1,4 +1,5 @@
 require 'bcrypt'
+require 'securerandom'
 
 module Libertree
   module Model
@@ -104,6 +105,24 @@ module Libertree
         if invitations_not_accepted.count < 5
           Invitation.create( inviter_account_id: self.id )
         end
+      end
+
+      def generate_api_token
+        self.api_token = SecureRandom.hex(16)
+      end
+
+      # RDBI casting not working with TIMESTAMP WITH TIME ZONE ?
+      def api_time_last
+        if self['api_time_last']
+          DateTime.parse self['api_time_last']
+        end
+      end
+
+      # @param [Time] time The time to compare to
+      # @return [Boolean] whether or not the API was last used by this account
+      #                   more recently than the given Time
+      def api_last_used_more_recently_than(time)
+        self.api_time_last && self.api_time_last.to_time > time
       end
     end
   end
