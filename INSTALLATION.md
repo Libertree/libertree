@@ -21,7 +21,6 @@ Install the required system packages:
 * PostgreSQL 9
 * GraphicsMagick (or ImageMagick)
 * git
-* Ruby 1.9
 
 Under Gentoo Linux, this is done with this command as the root user:
 
@@ -62,7 +61,9 @@ other ways, if desired.
 
 ### System user
 
-Create a system user for Libertree.  As the root user:
+An existing system user can be used, or a distinct user can be created for Libertree.
+
+Create a system user for Libertree, as the root user:
 
     # useradd -m libertree
 

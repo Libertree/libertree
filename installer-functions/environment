@@ -1,0 +1,15 @@
+# functions to alter the execution environment
+
+safety() {
+  if [[ "$1" == "on" ]]; then
+    set -o nounset # abort if we try to use an unset variable
+    set -o errexit # exit if any statement returns a non-true return value
+  else
+    set +o nounset
+    set +o errexit
+  fi
+}
+
+load_rvm() {
+  source ~/.rvm/scripts/rvm
+}

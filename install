@@ -1,0 +1,16 @@
+#!/bin/bash
+
+wizard() {
+  safety on
+  determine_system
+  check_dependencies
+  create_system_user
+  install_as_system_user
+  say "\nYour Libertree has been planted."
+}
+
+for file in ./installer-functions/*; do
+  source $file
+done
+
+wizard

@@ -1,0 +1,41 @@
+say() {
+  echo -e "$1"
+}
+
+info() {
+  # TODO: make this depend on verbosity setting
+  say "$1"
+}
+
+warn() {
+  say "[WARNING] $1"
+}
+
+fatal() {
+  echo -e >&2 "\n[ERROR] $1"
+
+  # execute clean up command in $2 if provided
+  [[ "${2:-unset}" == "unset" ]] || $2
+  exit 1
+}
+
+yes_or_fatal() {
+  QUESTION="$1"
+  ERROR="$2"
+
+  echo -n "$QUESTION [y/N]"
+  read -sn1 choice
+  if [[ "$choice" != "y" ]]; then
+    fatal "$ERROR"
+  fi
+  echo ""
+}
+
+skip_decision() {
+  echo -n "$1 [y/N] "
+  read -sn 1 choice
+  if [[ "$choice" != "y" ]]; then
+    say "SKIPPED"; return 1
+  fi
+  echo ""
+}

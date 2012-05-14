@@ -1,0 +1,176 @@
+# Initiate system user install
+
+install_as_system_user() {
+  [[ $(id -u $LT_USER) ]] || fatal "The user \"$LT_USER\" does not exist."
+
+  if [[ $(id -u) -ne 0 ]]; then
+    info "Switching to user \"$LT_USER\"."
+  fi
+
+  export -f system_user_install
+  su $LT_USER --shell /bin/bash -c "system_user_install"
+}
+
+
+# Functions to be used as the system user
+
+system_user_install() {
+  for file in ./installer-functions/*; do
+    source $file
+  done
+
+  safety on
+  install_rvm
+  safety off
+    load_rvm
+  safety on
+  install_ruby
+  clone_repos
+
+  skip_decision "Do you want to create a new db?"             && setup_db
+  skip_decision "Do you want to install the ruby backend?"    && setup_backend
+  skip_decision "Do you want to install the ramaze frontend?" && setup_frontend
+}
+
+clone_repos() {
+  info "Cloning repositories..."
+
+  # TODO: update with proper URL for public repos
+  URL="libertree-public-repo"
+
+  mkdir -p ~/git
+  safety off
+    cd ~/git
+  safety on
+  for repo in libertree-db \
+              libertree-backend-rb \
+              libertree-client-rb \
+              libertree-frontend-ramaze; do
+    if [[ ! -d $repo ]]; then
+      git clone "$URL/$repo.git"
+    else
+      safety off
+        cd "$repo"
+      safety on
+      git pull origin
+      safety off
+        cd -
+      safety on
+    fi
+  done
+}
+
+
+setup_db() {
+  # abort if db server is not running
+  if ! pgrep postgres >/dev/null; then
+    fatal "The PostgreSQL server is not running. Please start it manually."
+  fi
+
+  # TODO: skip if databases already exists
+
+  # TODO: untested
+  safety off
+    cd ~/git/libertree-db
+  safety on
+  export PGHOST=localhost
+  info "Creating db owner and database as user \"postgres\"."
+  ./createuser.sh
+  ./createdb.sh
+  cp database.yaml.example database.yaml
+  safety off
+    cd rb
+    rvm use --create 1.9.3@libertree-db
+  safety on
+  gem install bundler
+  bundle install
+  ./migrate.sh
+}
+
+setup_backend() {
+  safety off
+    cd ~/git/libertree-backend-rb
+    rvm use --create 1.9.3@libertree-backend-rb
+  safety on
+  gem install bundler
+  bundle install
+  # TODO: only do this if keys don't exist
+  bundle exec ruby generate-key-pair.rb
+
+  # copy config.yaml.example unless config.yaml exists
+  if [[ -e config.yaml ]]; then
+    warn "config.yaml already exists."
+    skip_decision "Do you want to overwrite it with config.yaml.example?" && cp config.yaml.example config.yaml
+  else
+    cp config.yaml.example config.yaml
+  fi
+
+  # ask if $EDITOR is undefined
+  if [[ "${EDITOR:-unset}" == "unset" ]]; then
+    say "What program do you want to use for editing the configuration file?"
+    read -s choice
+    command -v $choice >/dev/null 2>&1 || fatal "The editor could not be found."
+    EDITOR=$choice
+  else
+    say "Opening configuration file for editing tasks."
+    say "Please press a key to continue."
+    read -n1
+  fi
+
+  $EDITOR config.yaml
+  info "Running test suite now"
+  bundle exec bin/test.sh
+}
+
+setup_frontend() {
+  # TODO: untested
+  safety off
+    cd ~/git/libertree-frontend-ramaze
+    rvm use --create 1.9.3@libertree-frontend-ramaze
+  safety on
+  gem install bundler
+  bundle install
+  safety off
+    cd config
+  safety on
+
+  # instantiate database.yaml
+  if [[ -e database.yaml ]]; then
+    warn "database.yaml already exists."
+    skip_decision "Do you want to overwrite it with database.yaml.example?" && cp database.yaml.example database.yaml
+  else
+    cp database.yaml.example database.yaml
+  fi
+}
+
+install_rvm() {
+  # skip if rvm exists or user doesn't want to install it.
+  # TODO: ~/.rvm exists even if the RVM install was aborted. Try harder.
+  [[ -d ~/.rvm ]] && return 0
+
+  warn "RVM is not installed."
+  yes_or_fatal "Do you want to install RVM now?" "RVM is required. Please install it manually."
+
+  info "fetching RVM installation script from http://get.rvm.io"
+  curl -L get.rvm.io | bash -s stable || fatal "Installation of RVM failed. Please install it manually."
+}
+
+install_ruby() {
+  # skip if ruby v1.9.3 is installed
+  if rvm list | grep -q "ruby-1.9.3"; then
+    return 0
+  fi
+
+  clear
+  info "Installing ruby 1.9.3"
+  info "You will see a number of requirements that your system must meet in order to install ruby."
+  info "Press any key to show the requirements."
+  read -n1
+
+  safety off
+    rvm requirements
+    info "Press any key to continue installing ruby 1.9.3."
+    read -n1
+    rvm install 1.9.3
+  safety on
+}

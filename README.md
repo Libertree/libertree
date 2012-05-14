@@ -37,7 +37,7 @@ written in Ruby.
 
 ### Requirements
 
-* A UNIX-compatible system (such as Linux or OSX)
+* A UNIX-compatible system (such as GNU/Linux or OSX)
 * PostgreSQL 9
 * Ruby 1.9
 * GraphicsMagick (or ImageMagick)
