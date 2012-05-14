@@ -14,14 +14,9 @@ An administrator of a Libertree server is an arborista.  "Arbo" for short.
 
 ## Member
 
-A user of a Libertree server.
-
-## Community Ecology
-
-Public relations between members of the Libertree community.  This usually
-refers to that between the Libertree Project team and Libertree members.
-People whose role it is to help create, foster, nuture and maintain good
-Community Ecology are called Community Ecologists.
+Someone involved with Libertree at any level, whether someone with an account
+at a tree, a developer, a designer or an arborista.  Anyone who is a part of
+the Libertree community.
 
 ## River
 
