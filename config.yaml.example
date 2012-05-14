@@ -8,6 +8,12 @@ avatar_dir: '/path/to/public/images/avatars'
 # Use generate-key-pair.rb to generate it.
 private_key_path: /path/to/private.key
 
+# A brief name which will be displayed by remote servers next to the usernames
+# of this server's members.  Letters, numbers, period and dash only.  If omitted,
+# the server's IP address will be displayed instead.  This could be the server's
+# domain name, but need not be.
+# server_name:
+
 # The URL base which other servers will use to retrieve avatar image files
 # from this server
 avatar_url_base: 'http://domain-or-ip-without-trailing-slash'
@@ -17,3 +23,9 @@ avatar_url_base: 'http://domain-or-ip-without-trailing-slash'
 forest:
   # - 'host or ip'
   # - 'host or ip'
+
+# To not distribute to any other trees, set the forest to an empty array, like this:
+# forest: []
+
+# For more verbose output, set debug to true.
+debug: false

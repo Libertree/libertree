@@ -15,6 +15,14 @@ describe Libertree::Server::Responder::Authentication do
       @s.response['challenge'].should be_nil
     end
 
+    it 'stores the server name when it is given' do
+      Libertree::Model::Server[name_given: 'cool-server'].should be_nil
+      @s.process 'INTRODUCE { "public_key": "some brand new public key", "name": "cool-server"}'
+      @s.should have_responded_with_code('OK')
+      @s.response['challenge'].should be_nil
+      Libertree::Model::Server[name_given: 'cool-server'].should_not be_nil
+    end
+
     context 'when the public_key is recognized' do
       before :each do
         @requester = Libertree::Model::Server.create( FactoryGirl.attributes_for(:server) )

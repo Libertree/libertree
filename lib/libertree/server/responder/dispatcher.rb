@@ -7,8 +7,9 @@ module Libertree
       module Dispatcher
 
         VALID_COMMANDS = [
-          'AUTHENTICATE', 'COMMENT', 'COMMENT-DELETE', 'INTRODUCE', 'MEMBER',
-          'POST', 'POST-DELETE', 'POST-LIKE', 'POST-LIKE-DELETE' # , ...
+          'AUTHENTICATE', 'COMMENT', 'COMMENT-DELETE', 'COMMENT-LIKE',
+          'COMMENT-LIKE-DELETE', 'INTRODUCE', 'MEMBER', 'POST', 'POST-DELETE',
+          'POST-LIKE', 'POST-LIKE-DELETE',
         ]
 
         def process(request_raw)
@@ -33,7 +34,9 @@ module Libertree
 
           puts "Received request: #{command}"
 
-          if VALID_COMMANDS.include?(command)
+          if ! VALID_COMMANDS.include?(command)
+            respond 'code' => 'UNKNOWN COMMAND', 'message' => "Received command: #{command}"
+          else
             if ! introduced? && command != 'INTRODUCE'
               respond 'code' => 'ERROR', 'message' => 'Not INTRODUCEd.'
             elsif introduced? && ! authenticated? && command != 'AUTHENTICATE'
@@ -42,8 +45,6 @@ module Libertree
               method = "rsp_#{command.downcase.gsub('-', '_')}".to_sym
               send  method, parameters
             end
-          else
-            respond 'code' => 'UNKNOWN COMMAND', 'message' => "Received command: #{command}"
           end
         end
 

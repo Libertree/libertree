@@ -44,15 +44,46 @@ class JobProcessor
     case job.task
     when 'request:COMMENT'
       comment = Libertree::Model::Comment[job.params['comment_id'].to_i]
+      retry_later = false
       if comment
         with_forest do |tree|
-          tree.req_comment comment
+          response = tree.req_comment(comment)
+          if response['code'] == 'NOT FOUND'
+            # Remote didn't recognize the comment author or the referenced post
+            # Send the potentially missing data, then retry the comment later.
+            retry_later = true
+            case response['message']
+            when /post/
+              tree.req_post comment.post
+            when /member/
+              tree.req_member comment.member
+            else
+              tree.req_post comment.post
+              tree.req_member comment.member
+            end
+          end
         end
       end
-      job.time_finished = Time.now
+
+      if ! retry_later
+        job.time_finished = Time.now
+      end
     when 'request:COMMENT-DELETE'
       with_forest do |tree|
         tree.req_comment_delete job.params['comment_id']
+      end
+      job.time_finished = Time.now
+    when 'request:COMMENT-LIKE'
+      like = Libertree::Model::CommentLike[job.params['comment_like_id'].to_i]
+      if like
+        with_forest do |tree|
+          tree.req_comment_like like
+        end
+      end
+      job.time_finished = Time.now
+    when 'request:COMMENT-LIKE-DELETE'
+      with_forest do |tree|
+        tree.req_comment_like_delete job.params['comment_like_id']
       end
       job.time_finished = Time.now
     when 'request:MEMBER'
@@ -111,7 +142,8 @@ class JobProcessor
     c = Libertree::Client.new(
       public_key: key.public_key,
       private_key: key,
-      avatar_url_base: @conf['avatar_url_base']
+      avatar_url_base: @conf['avatar_url_base'],
+      server_name: @conf['server_name']
     )
 
     if c

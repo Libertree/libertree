@@ -2,6 +2,7 @@ require 'libertree/server/responder/dispatcher'
 
 require 'libertree/server/responder/authentication'
 require 'libertree/server/responder/comment'
+require 'libertree/server/responder/comment-like'
 require 'libertree/server/responder/member'
 require 'libertree/server/responder/post'
 require 'libertree/server/responder/post-like'
@@ -13,13 +14,18 @@ module Libertree
 
       include Authentication
       include Comment
+      include CommentLike
       include Member
       include Post
       include PostLike
 
       def respond(data)
         # TODO: Gracefully handle failure to convert to JSON
-        send_data data.to_json + "\n"
+        response = data.to_json + "\n"
+        if Server.conf['debug']
+          $stderr.puts response
+        end
+        send_data response
       end
 
       def respond_with_code(code)
