@@ -41,6 +41,11 @@ wizard() {
   say "\nYour Libertree has been planted."
 }
 
+# save original working directory and always return to it on exit
+orig_dir=$(pwd)
+trap "cd $orig_dir" EXIT
+
+cd $(dirname $0)
 for file in ./functions/*; do
   source $file
 done
