@@ -74,14 +74,12 @@ shell startup scripts, and any other such preparations.
 
 As the libertree user:
 
-(TODO: Update with proper URLs for public repositories)
-
     % mkdir ~/git
     % cd ~/git
-    % git clone git://....../libertree-db.git
-    % git clone git://....../libertree-backend-rb.git
-    % git clone git://....../libertree-client-rb.git
-    % git clone git://....../libertree-frontend-ramaze.git
+    % git clone git://github.com/Libertree/libertree-db.git
+    % git clone git://github.com/Libertree/libertree-backend-rb.git
+    % git clone git://github.com/Libertree/libertree-client-rb.git
+    % git clone git://github.com/Libertree/libertree-frontend-ramaze.git
 
 ## Database
 
