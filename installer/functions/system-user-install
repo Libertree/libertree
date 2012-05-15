@@ -15,7 +15,7 @@ install_as_system_user() {
 # Functions to be used as the system user
 
 system_user_install() {
-  for file in ./installer-functions/*; do
+  for file in ./functions/*; do
     source $file
   done
 
@@ -66,23 +66,46 @@ setup_db() {
     fatal "The PostgreSQL server is not running. Please start it manually."
   fi
 
-  # TODO: skip if databases already exists
-
-  # TODO: untested
   safety off
     cd ~/git/libertree-db
   safety on
+
   export PGHOST=localhost
   info "Creating db owner and database as user \"postgres\"."
-  ./createuser.sh
-  ./createdb.sh
-  cp database.yaml.example database.yaml
+
+  # TODO: better move these checks to the create{user,db}.sh scripts
+  if echo "\dg" | psql -U postgres | grep -q libertree; then
+    warn "libertree database owner already exists. Skipping."
+  else
+    ./createuser.sh
+  fi
+
+  if psql -U postgres -l | grep -q libertree; then
+    warn "libertree databases already exist. Skipping."
+  else
+    ./createdb.sh
+  fi
+
+  # copy database.yaml.example unless database.yaml exists
+  if [[ -e database.yaml ]]; then
+    warn "database.yaml already exists."
+    skip_decision "Do you want to overwrite it with database.yaml.example?" && cp database.yaml.example database.yaml
+  else
+    cp database.yaml.example database.yaml
+  fi
+
   safety off
     cd rb
     rvm use --create 1.9.3@libertree-db
   safety on
+
+  info "Installing bundler"
   gem install bundler
+
+  info "Installing dependent gems"
   bundle install
+
+  info "Applying database migrations"
   ./migrate.sh
 }
 
@@ -91,10 +114,14 @@ setup_backend() {
     cd ~/git/libertree-backend-rb
     rvm use --create 1.9.3@libertree-backend-rb
   safety on
+
+  info "Installing bundler"
   gem install bundler
+
+  info "Installing dependent gems"
   bundle install
-  # TODO: only do this if keys don't exist
-  bundle exec ruby generate-key-pair.rb
+
+  [[ ! -e public.key ]] && [[ ! -e private.key ]] && bundle exec ruby generate-key-pair.rb
 
   # copy config.yaml.example unless config.yaml exists
   if [[ -e config.yaml ]]; then
@@ -127,8 +154,13 @@ setup_frontend() {
     cd ~/git/libertree-frontend-ramaze
     rvm use --create 1.9.3@libertree-frontend-ramaze
   safety on
+
+  info "Installing bundler"
   gem install bundler
+
+  info "Installing dependent gems"
   bundle install
+
   safety off
     cd config
   safety on
