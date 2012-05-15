@@ -92,7 +92,6 @@ check_dependencies() {
   exists "Git" "git" "default:git"
 
   # GraphicsMagick or ImageMagick
-  # TODO: ugly not to use "exists" function
   [[ $(command -v gm 2>/dev/null) || $(command -v mogrify 2>/dev/null) ]] || ( warning "ImageMagick/GraphicsMagick: one of the two is required but not installed."; offer_install "GraphicsMagick" "default:graphicsmagick" )
 
   info "All dependencies are installed."
