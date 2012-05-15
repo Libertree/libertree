@@ -15,22 +15,14 @@ module Libertree
               SELECT * FROM (
                 SELECT
                     p.*
-                  , COALESCE(
-                    (
-                      SELECT MAX(time_updated)
-                      FROM comments c
-                      WHERE c.post_id = p.id
-                    ),
-                    p.time_updated
-                  ) AS time_updated_overall
                 FROM
                     river_posts rp
-                  , posts p
+                  , view__posts_with_time_updated_overall p
                 WHERE
                   p.id = rp.post_id
                   AND rp.river_id = ?
-                  AND time_updated_overall < ?
-                ORDER BY time_updated_overall DESC
+                  AND p.time_updated_overall < ?
+                ORDER BY p.time_updated_overall DESC
                 LIMIT #{limit}
               ) AS x
               ORDER BY time_updated_overall
