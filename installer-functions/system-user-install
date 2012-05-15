@@ -35,8 +35,7 @@ system_user_install() {
 clone_repos() {
   info "Cloning repositories..."
 
-  # TODO: update with proper URL for public repos
-  URL="libertree-public-repo"
+  URL="git://github.com/Libertree"
 
   mkdir -p ~/git
   safety off
