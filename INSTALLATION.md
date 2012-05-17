@@ -131,7 +131,7 @@ worked out.
 Start the backend processes:
 
     % bundle exec ruby -Ilib bin/server.rb config.yaml > server.log &
-    % bundle exec ruby -Ilib bin/job-processor.rb > worker.log &
+    % bundle exec ruby -Ilib bin/job-processor.rb config.yaml > worker.log &
 
 ## Frontend
 
