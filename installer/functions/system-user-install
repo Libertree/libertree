@@ -93,8 +93,7 @@ setup_db() {
     rvm use --create 1.9.3@libertree-db
   safety on
 
-  info "Installing bundler"
-  gem install bundler
+  gem list --local | grep -qE '^bundler' || (info "Installing bundler"; gem install bundler)
 
   info "Installing dependent gems"
   bundle install
@@ -128,11 +127,12 @@ setup_frontend() {
     rvm use --create 1.9.3@libertree-frontend-ramaze
   safety on
 
-  info "Installing bundler"
-  gem install bundler
+  gem list --local | grep -qE '^bundler' || (info "Installing bundler"; gem install bundler)
 
   info "Installing dependent gems"
   bundle install
+
+  # TODO: run css-build.sh
 
   safety off
     cd config
