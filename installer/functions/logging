@@ -39,3 +39,25 @@ skip_decision() {
   fi
   echo ""
 }
+
+offer_editing() {
+  skip_decision "Do you want to edit the configuration file \"$1\" now?" && (\
+    define_editor
+    say "Opening \"$1\" for editing tasks."
+    say "Please press a key to continue."
+    read -n1
+    $EDITOR "$1"
+  )
+  return 0
+}
+
+handle_config() {
+  if [[ -e "$1" ]]; then
+    warn "\"$1\" already exists."
+    skip_decision "Do you want to overwrite it with \"$1.example\"?" && cp "$1.example" "$1"
+  else
+    cp "$1.example" "$1"
+  fi
+
+  offer_editing "$1"
+}

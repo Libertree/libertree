@@ -86,21 +86,7 @@ setup_db() {
     ./createdb.sh
   fi
 
-  # copy database.yaml.example unless database.yaml exists
-  if [[ -e database.yaml ]]; then
-    warn "database.yaml already exists."
-    skip_decision "Do you want to overwrite it with database.yaml.example?" && cp database.yaml.example database.yaml
-  else
-    cp database.yaml.example database.yaml
-  fi
-
-  skip_decision "Do you want to edit the configuration file now?" && (\
-    define_editor
-    say "Opening database configuration file for editing tasks."
-    say "Please press a key to continue."
-    read -n1
-    $EDITOR database.yaml
-  )
+  handle_config "database.yaml"
 
   safety off
     cd rb
@@ -123,28 +109,14 @@ setup_backend() {
     rvm use --create 1.9.3@libertree-backend-rb
   safety on
 
-  info "Installing bundler"
-  gem install bundler
+  gem list --local | grep -qE '^bundler' || (info "Installing bundler"; gem install bundler)
 
   info "Installing dependent gems"
   bundle install
 
   [[ ! -e public.key ]] && [[ ! -e private.key ]] && bundle exec ruby generate-key-pair.rb
+  handle_config "config.yaml"
 
-  # copy config.yaml.example unless config.yaml exists
-  if [[ -e config.yaml ]]; then
-    warn "config.yaml already exists."
-    skip_decision "Do you want to overwrite it with config.yaml.example?" && cp config.yaml.example config.yaml
-  else
-    cp config.yaml.example config.yaml
-  fi
-
-  define_editor
-  say "Opening configuration file for editing tasks."
-  say "Please press a key to continue."
-  read -n1
-
-  $EDITOR config.yaml
   info "Running test suite now"
   bundle exec bin/test.sh
 }
@@ -166,13 +138,8 @@ setup_frontend() {
     cd config
   safety on
 
-  # instantiate database.yaml
-  if [[ -e database.yaml ]]; then
-    warn "database.yaml already exists."
-    skip_decision "Do you want to overwrite it with database.yaml.example?" && cp database.yaml.example database.yaml
-  else
-    cp database.yaml.example database.yaml
-  fi
+  handle_config "database.yaml"
+  handle_config "application.yaml"
 }
 
 install_rvm() {
