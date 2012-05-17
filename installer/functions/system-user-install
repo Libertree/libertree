@@ -95,18 +95,10 @@ setup_db() {
   fi
 
   skip_decision "Do you want to edit the configuration file now?" && (\
-    # ask if $EDITOR is undefined
-    if [[ "${EDITOR:-unset}" == "unset" ]]; then
-      say "What program do you want to use for editing the database configuration file?"
-      read -s choice
-      command -v $choice >/dev/null 2>&1 || fatal "The editor could not be found."
-      EDITOR=$choice
-    else
-      say "Opening database configuration file for editing tasks."
-      say "Please press a key to continue."
-      read -n1
-    fi
-
+    define_editor
+    say "Opening database configuration file for editing tasks."
+    say "Please press a key to continue."
+    read -n1
     $EDITOR database.yaml
   )
 
@@ -147,17 +139,10 @@ setup_backend() {
     cp config.yaml.example config.yaml
   fi
 
-  # ask if $EDITOR is undefined
-  if [[ "${EDITOR:-unset}" == "unset" ]]; then
-    say "What program do you want to use for editing the configuration file?"
-    read -s choice
-    command -v $choice >/dev/null 2>&1 || fatal "The editor could not be found."
-    EDITOR=$choice
-  else
-    say "Opening configuration file for editing tasks."
-    say "Please press a key to continue."
-    read -n1
-  fi
+  define_editor
+  say "Opening configuration file for editing tasks."
+  say "Please press a key to continue."
+  read -n1
 
   $EDITOR config.yaml
   info "Running test suite now"
