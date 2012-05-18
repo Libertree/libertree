@@ -38,6 +38,10 @@ could be Apache, or Nginx, or anything equivalent.  Under Gentoo:
     # # OR
     # emerge -1atv apache
 
+Usage of memcached is recommended, but not required:
+
+    # emerge -1atv memcached
+
 ### Ruby
 
 While it is possible to use the system Ruby package, it is recommended that a
