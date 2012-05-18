@@ -20,7 +20,8 @@ module Libertree
         :PostgreSQL,
         host:     config['host'],
         database: config['database'],
-        username: config['username']
+        username: config['username'],
+        password: config['password']
       )
     end
 
