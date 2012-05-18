@@ -12,7 +12,7 @@ end
 key = OpenSSL::PKey::RSA.new File.read(ARGV[0])
 client = Libertree::Client.new(
   private_key: key,
-  public_key: key.public_key,
+  public_key: key.public_key.to_pem,
   avatar_url_base: ARGV[2]
 )
 
