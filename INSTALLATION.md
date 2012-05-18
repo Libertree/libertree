@@ -148,11 +148,9 @@ As the libertree user:
     % ./css-build.sh
     % cd config
     % cp database.yaml.example database.yaml
+    % $EDITOR database.yaml
     % cp application.yaml.example application.yaml
-
-To start the application server on port 8088:
-
-    % bundle exec unicorn -p 8088
+    % $EDITOR application.yaml
 
 ## Web Server Proxy
 
