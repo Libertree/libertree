@@ -18,7 +18,7 @@ OpenSSL and a shell (bash, zsh, etc.).
 
 Install the required system packages:
 
-* PostgreSQL 9
+* PostgreSQL 8 or 9
 * GraphicsMagick (or ImageMagick)
 * git
 
