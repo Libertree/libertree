@@ -22,7 +22,10 @@ module Libertree
       def self.create(*args)
         like = super
         like.post.notify_about_like like
-        like.post.mark_as_read_by like.member.account
+        account = like.member.account
+        if account
+          like.post.mark_as_read_by account
+        end
         like
       end
     end
