@@ -38,21 +38,21 @@ module Libertree
       end
 
       def notifications( limit = 128 )
-        Notification.s(
+        @notifications ||= Notification.s(
           "SELECT * FROM notifications WHERE account_id = ? ORDER BY id DESC LIMIT #{limit.to_i}",
           self.id
         )
       end
 
       def notifications_unseen
-        Notification.s(
+        @notifications_unseen ||= Notification.s(
           "SELECT * FROM notifications WHERE account_id = ? AND seen = FALSE ORDER BY id",
           self.id
         )
       end
 
       def num_notifications_unseen
-        Libertree::DB.dbh.sc "SELECT COUNT(*) FROM notifications WHERE account_id = ? AND seen = FALSE", self.id
+        @num_notifications_unseen ||= Libertree::DB.dbh.sc("SELECT COUNT(*) FROM notifications WHERE account_id = ? AND seen = FALSE", self.id)
       end
 
       def rivers

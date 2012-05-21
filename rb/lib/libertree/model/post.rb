@@ -121,11 +121,11 @@ module Libertree
       end
 
       def comments
-        Comment.s "SELECT * FROM comments WHERE post_id = ? ORDER BY id", self.id
+        @comments ||= Comment.s("SELECT * FROM comments WHERE post_id = ? ORDER BY id", self.id)
       end
 
       def likes
-        PostLike.s "SELECT * FROM post_likes WHERE post_id = ? ORDER BY id DESC", self.id
+        @likes ||= PostLike.s("SELECT * FROM post_likes WHERE post_id = ? ORDER BY id DESC", self.id)
       end
 
       def notify_about_comment(comment)

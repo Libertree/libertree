@@ -44,7 +44,7 @@ module Libertree
       end
 
       def likes
-        CommentLike.s "SELECT * FROM comment_likes WHERE comment_id = ? ORDER BY id DESC", self.id
+        @likes ||= CommentLike.s("SELECT * FROM comment_likes WHERE comment_id = ? ORDER BY id DESC", self.id)
       end
 
       def notify_about_like(like)
