@@ -98,7 +98,7 @@ As the libertree user:
     % rvm use --create 1.9.3@libertree-db
     % gem install bundler
     % bundle install
-    % ./migrate.sh
+    % LIBERTREE_ENV=production ./migrate.sh
 
 It is recommended to ensure the created database is encoded with UTF-8.  This
 can be checked with:
