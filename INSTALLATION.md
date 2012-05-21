@@ -157,6 +157,7 @@ As the libertree user:
     % $EDITOR database.yaml
     % cp application.yaml.example application.yaml
     % $EDITOR application.yaml
+    % mkdir -p public/images/avatars
 
 ## Web Server Proxy
 
