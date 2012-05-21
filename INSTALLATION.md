@@ -143,11 +143,6 @@ Run the test suite:
 If the suite does not pass, the installation has some issues that need to be
 worked out.
 
-Start the backend processes:
-
-    % bundle exec ruby -Ilib bin/server.rb config.yaml > server.log &
-    % bundle exec ruby -Ilib bin/job-processor.rb config.yaml > worker.log &
-
 ## Frontend
 
 As the libertree user:
