@@ -21,6 +21,10 @@ Apache or something equivalent.  Under Gentoo:
     # # OR
     # /etc/init.d/apache2 start
 
+If the Libertree installation is configured to use memcache, start memcached:
+
+    # /etc/init.d/memcached start
+
 ### Ruby services
 
 Libertree needs three Ruby services running: the frontend, the backend and job
@@ -49,6 +53,7 @@ As the libertree user:
 
     % cd ~/git/libertree-frontend-ramaze
     % rvm use 1.9.3@libertree-frontend-ramaze
+    % ./css-build.sh
     % LIBERTREE_ENV=production bundle exec unicorn -p <port number>
 
 Use any port number desired.  The web server proxy will proxy requests from the
