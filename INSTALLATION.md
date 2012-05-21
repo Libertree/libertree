@@ -100,6 +100,17 @@ As the libertree user:
     % bundle install
     % ./migrate.sh
 
+It is recommended to ensure the created database is encoded with UTF-8.  This
+can be checked with:
+
+    % psql -l | grep libertree
+
+If this shows an encoding other than what is desired, confirm the language
+and locale settings of the shell/environment, or explicitly specify the
+encoding when creating the database, like this:
+
+    % createdb -U postgres -O libertree -E UTF8 --lc-collate=en_GB.UTF-8 --lc-ctype=en_GB.UTF-8 -T template0 libertree_production
+
 ### First member invitation
 
 The Libertree software currently requires a valid invitation code to sign up.
