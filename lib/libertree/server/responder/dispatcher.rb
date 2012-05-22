@@ -32,7 +32,7 @@ module Libertree
             return
           end
 
-          puts "Received request: #{command}"
+          log "Received request: #{command}"
 
           if ! VALID_COMMANDS.include?(command)
             respond 'code' => 'UNKNOWN COMMAND', 'message' => "Received command: #{command}"

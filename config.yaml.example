@@ -29,3 +29,6 @@ forest:
 
 # For more verbose output, set debug to true.
 debug: false
+
+# If no log_path is specified, the server logs to stdout
+# log_path: /path/to/libertree-backend-rb.log

@@ -23,7 +23,7 @@ module Libertree
         # TODO: Gracefully handle failure to convert to JSON
         response = data.to_json + "\n"
         if Server.conf['debug']
-          $stderr.puts response
+          log response
         end
         send_data response
       end

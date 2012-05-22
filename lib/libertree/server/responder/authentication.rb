@@ -7,7 +7,7 @@ module Libertree
             respond 'code' => 'ERROR', 'message' => 'Challenge failed.'
             close_connection_after_writing
           else
-            puts "Server #{@server.id} authenticated."
+            log "Server #{@server.id} authenticated."
             @server.authenticated = true
             respond_with_code 'OK'
           end
