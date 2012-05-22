@@ -83,6 +83,7 @@ setup_db() {
   if psql -U postgres -l | grep -q libertree; then
     warn "libertree databases already exist. Skipping."
   else
+    # TODO: ensure that db is UTF-8 encoded
     ./createdb.sh
   fi
 
@@ -99,7 +100,7 @@ setup_db() {
   bundle install
 
   info "Applying database migrations"
-  ./migrate.sh
+  LIBERTREE_ENV=production ./migrate.sh
 }
 
 setup_backend() {
@@ -140,6 +141,7 @@ setup_frontend() {
 
   handle_config "database.yaml"
   handle_config "application.yaml"
+  mkdir -p public/images/avatars
 }
 
 install_rvm() {
