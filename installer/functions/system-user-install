@@ -83,7 +83,6 @@ setup_db() {
   if psql -U postgres -l | grep -q libertree; then
     warn "libertree databases already exist. Skipping."
   else
-    # TODO: ensure that db is UTF-8 encoded
     ./createdb.sh
   fi
 
@@ -132,8 +131,7 @@ setup_frontend() {
 
   info "Installing dependent gems"
   bundle install
-
-  # TODO: run css-build.sh
+  ./css-build.sh
 
   safety off
     cd config
