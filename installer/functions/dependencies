@@ -54,7 +54,8 @@ check_dependencies() {
   local postgres_bin=${postgres_bin_default:-$postgres_bin_alt}
 
   local v=$("$postgres_bin" --version | cut -d' ' -f3 | cut -d'.' -f1)
-  check_version "PostgreSQL" "9" $v
+  # TODO: allow version 8 and above
+  check_version "PostgreSQL" "8" $v
 
   # make sure postgresql server is started
   if ! pgrep postgres >/dev/null; then
@@ -118,7 +119,7 @@ check_version() {
   local NAME=$1
   local V_REQ=$2
   local V_EXIST=$3
-  [[ $V_EXIST = $V_REQ ]] || fatal "$NAME: found version \"$V_EXIST\", but \"$V_REQ\" is required."
+  [[ $V_EXIST -ge $V_REQ ]] || fatal "$NAME: found version \"$V_EXIST\", but \"$V_REQ\" is required."
 }
 
 
