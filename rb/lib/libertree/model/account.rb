@@ -124,6 +124,13 @@ module Libertree
       def api_last_used_more_recently_than(time)
         self.api_time_last && self.api_time_last.to_time > time
       end
+
+      # Clears some memoized data
+      def dirty
+        @notifications = nil
+        @notifications_unseen = nil
+        @num_notifications_unseen = nil
+      end
     end
   end
 end
