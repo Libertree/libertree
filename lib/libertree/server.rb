@@ -88,6 +88,7 @@ module Libertree
       load_config config_filename
       if @conf['log_path']
         @log = File.open( @conf['log_path'], 'a+' )
+        @log.sync = true
       else
         @log = $stdout
       end
