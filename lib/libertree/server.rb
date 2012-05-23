@@ -87,7 +87,7 @@ module Libertree
     def self.run(config_filename)
       load_config config_filename
       if @conf['log_path']
-        @log = File.open( @conf['log_path'], 'w+' )
+        @log = File.open( @conf['log_path'], 'a+' )
       else
         @log = $stdout
       end
