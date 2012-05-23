@@ -14,6 +14,8 @@ module Libertree
       @private_key = params[:private_key] or raise ":private_key required by Libertree::Client"
       @avatar_url_base = params[:avatar_url_base]
       @server_name = params[:server_name]
+      @log = params[:log] || $stdout
+      @log_identifier = params[:log_identifier] || "pid #{Process.pid}"
 
       @intro_params = { 'public_key' => @public_key, }
       if @server_name
@@ -22,7 +24,7 @@ module Libertree
     end
 
     def connect(remote_host)
-      @conn = Libertree::Connection.new(remote_host)
+      @conn = Libertree::Connection.new(host: remote_host, log: @log, log_identifier: @log_identifier)
 
       response = @conn.request('INTRODUCE', @intro_params)
       challenge_encrypted = response['challenge']
