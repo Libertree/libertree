@@ -4,6 +4,29 @@ require 'libertree/model'
 class JobProcessor
   def initialize(config_filename)
     @conf = YAML.load( File.read(config_filename) )
+    if @conf['log_path']
+      @log = File.open( @conf['log_path'], 'a+' )
+      @log.sync = true
+    else
+      @log = $stdout
+    end
+    @pid = Process.pid
+    @log_identifier = "jobp #{@pid}"
+
+    puts "pid #{@pid} logging to #{File.absolute_path(@log.path)}"
+  end
+
+  def log(s, level = nil)
+    t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
+    if level
+      l = "#{level} "
+    end
+
+    @log.puts "[#{t}] (#{@log_identifier}) #{l}#{s}"
+  end
+
+  def log_error(s)
+    log s, 'ERROR'
   end
 
   # @return [Job] nil if no job was reserved
@@ -39,7 +62,7 @@ class JobProcessor
   end
 
   def process(job)
-    puts "Processing: job #{job.id}"
+    log "Processing: job #{job.id}"
 
     case job.task
     when 'request:COMMENT'
@@ -132,9 +155,9 @@ class JobProcessor
       )
     end
 
-    puts "Leaving: job #{job.id}"
+    log "Leaving: job #{job.id}"
   rescue Exception => e
-    $stderr.puts "Error processing job #{job.id}: #{e.message}\n" + e.backtrace.join("\n\t")
+    log_error "Error processing job #{job.id}: #{e.message}\n" + e.backtrace.join("\n\t")
   end
 
   def lt_client(remote_host)
@@ -143,7 +166,9 @@ class JobProcessor
       public_key: key.public_key,
       private_key: key,
       avatar_url_base: @conf['avatar_url_base'],
-      server_name: @conf['server_name']
+      server_name: @conf['server_name'],
+      log: @log,
+      log_identifier: @log_identifier
     )
 
     if c
