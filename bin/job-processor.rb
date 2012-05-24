@@ -186,8 +186,12 @@ class JobProcessor
 
   def with_forest
     @conf['forest'].each do |host|
-      lt_client(host) do |client|
-        yield client
+      begin
+        lt_client(host) do |client|
+          yield client
+        end
+      rescue Errno::ETIMEDOUT => e
+        log_error "With #{host}: #{e.message}"
       end
     end
   end
