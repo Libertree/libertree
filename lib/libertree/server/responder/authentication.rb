@@ -29,12 +29,17 @@ module Libertree
             )
             @server.extend Authenticatable
             @server.authenticated = true
+
+            log "#{@ip_remote} is a new server (id #{@server.id})."
+
             respond_with_code 'OK'
           else
             @server.extend Authenticatable
             @server.challenge = challenge_new
             key = OpenSSL::PKey::RSA.new public_key
             challenge_encrypted = Base64.encode64(key.public_encrypt(@server.challenge, OpenSSL::PKey::RSA::PKCS1_OAEP_PADDING))
+
+            log "#{@ip_remote} provided public key of server #{@server.id} ."
 
             respond( {
               'code' => 'OK',
