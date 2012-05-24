@@ -13,7 +13,9 @@ class JobProcessor
     @pid = Process.pid
     @log_identifier = "jobp #{@pid}"
 
-    puts "pid #{@pid} logging to #{File.absolute_path(@log.path)}"
+    unless @log == $stdout
+      puts "pid #{@pid} logging to #{File.absolute_path(@log.path)}"
+    end
   end
 
   def log(s, level = nil)
