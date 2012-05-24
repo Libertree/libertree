@@ -159,7 +159,7 @@ class JobProcessor
 
     log "Leaving: job #{job.id}"
   rescue Exception => e
-    log_error "Error processing job #{job.id}: #{e.message}\n" + e.backtrace.join("\n\t")
+    log_error "Error processing job #{job.id}: #{e.class} #{e.message}\n" + e.backtrace.join("\n\t")
   end
 
   def lt_client(remote_host)
