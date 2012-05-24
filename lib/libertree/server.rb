@@ -98,7 +98,7 @@ module Libertree
         EventMachine.start_server( host, PORT, self )
         puts "Libertree started."
         puts "Listening on #{host}, port #{PORT}."
-        unless @log == $stdout
+        if @log.respond_to? :path
           puts "Logging to #{File.absolute_path(@log.path)}"
         end
       end

@@ -13,7 +13,7 @@ class JobProcessor
     @pid = Process.pid
     @log_identifier = "jobp #{@pid}"
 
-    unless @log == $stdout
+    if @log.respond_to? :path
       puts "pid #{@pid} logging to #{File.absolute_path(@log.path)}"
     end
   end
