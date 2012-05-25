@@ -10,19 +10,19 @@ LIBERTREE_ENV=${LIBERTREE_ENV:-production}
 LIBERTREE_BACKEND_PATH=${LIBERTREE_BACKEND_PATH:-../libertree-backend-rb}
 LIBERTREE_FRONTEND_PATH=${LIBERTREE_FRONTEND_PATH:-../libertree-frontend-ramaze}
 LIBERTREE_FRONTEND_PORT=${LIBERTREE_FRONTEND_PORT:-8088}
-LIBERTREE_RUN_DIR=${LIBERTREE_RUN_DIR:-../run}
+LIBERTREE_PID_DIR=${LIBERTREE_PID_DIR:-pid}
 LIBERTREE_LOG_PATH=${LIBERTREE_LOG_PATH:-../logs}
 
 start_backend_server(){
   echo "Starting backend..."
   pushd "$LIBERTREE_BACKEND_PATH"
-  mkdir -p "$LIBERTREE_RUN_DIR"
+  mkdir -p "$LIBERTREE_PID_DIR"
   mkdir -p "$LIBERTREE_LOG_PATH"
   bundle exec ruby -Ilib bin/server.rb config.yaml >> $LIBERTREE_LOG_PATH/backend.log &
   local rc=$(echo $?)
   local pid=$(echo $!)
   if [[ $rc == 0 ]]; then
-    echo $pid > "$LIBERTREE_RUN_DIR"/backend.pid
+    echo $pid > "$LIBERTREE_PID_DIR"/backend.pid
     echo "Backend started.  PID: $pid"
 	else
     echo "Failed to start backend."
@@ -33,13 +33,13 @@ start_backend_server(){
 start_job_server(){
   echo "Starting job processor..."
   pushd "$LIBERTREE_BACKEND_PATH"
-  mkdir -p "$LIBERTREE_RUN_DIR"
+  mkdir -p "$LIBERTREE_PID_DIR"
   mkdir -p "$LIBERTREE_LOG_PATH"
   bundle exec ruby bin/job-processor.rb config.yaml >> $LIBERTREE_LOG_PATH/backend.log &
   local rc=$(echo $?)
   local pid=$(echo $!)
   if [[ $rc == 0 ]]; then
-    echo $pid > "$LIBERTREE_RUN_DIR"/job.pid
+    echo $pid > "$LIBERTREE_PID_DIR"/job.pid
     echo "Job processor started.  PID: $pid"
 	else
     echo "Failed to start job processor."
@@ -50,13 +50,13 @@ start_job_server(){
 start_frontend_server(){
   echo "Starting frontend..."
   pushd "$LIBERTREE_FRONTEND_PATH"
-  mkdir -p "$LIBERTREE_RUN_DIR"
+  mkdir -p "$LIBERTREE_PID_DIR"
   mkdir -p "$LIBERTREE_LOG_PATH"
   ./css-build.sh
   if [[ -f "$LIBERTREE_FRONTEND_PATH"/unicorn-frontend.conf ]]; then
     bundle exec unicorn -D -c "$LIBERTREE_FRONTEND_PATH"/unicorn-frontend.conf
     local rc=$(echo $?)
-    local pid=$(cat $LIBERTREE_RUN_DIR/frontend.pid)
+    local pid=$(cat $LIBERTREE_PID_DIR/frontend.pid)
     if [[ $rc == 0 ]]; then
       echo "Frontend started.  PID: $pid"
 	  else
@@ -67,7 +67,7 @@ start_frontend_server(){
     local rc=$(echo $?)
     local pid=$(echo $!)
     if [[ $rc == 0 ]]; then
-      echo $pid > "$LIBERTREE_RUN_DIR"/frontend.pid
+      echo $pid > "$LIBERTREE_PID_DIR"/frontend.pid
       echo "Frontend started.  PID: $pid"
     else
       echo "Failed to start frontend"
@@ -79,13 +79,13 @@ start_frontend_server(){
 start_websocket_server(){
   echo "Starting websocket server"
   pushd "$LIBERTREE_FRONTEND_PATH"
-  mkdir -p "$LIBERTREE_RUN_DIR"
+  mkdir -p "$LIBERTREE_PID_DIR"
   mkdir -p "$LIBERTREE_LOG_PATH"
   bundle exec ruby websocket-server.rb >> $LIBERTREE_LOG_PATH/websocket.log &
   local rc=$(echo $?)
   local pid=$(echo $!)
   if [[ $rc == 0 ]]; then
-    echo $pid > "$LIBERTREE_RUN_DIR"/websocket.pid
+    echo $pid > "$LIBERTREE_PID_DIR"/websocket.pid
     echo "Websocket server started.  PID: $pid"
 	else
     echo "Failed to start websocket server."
@@ -95,30 +95,30 @@ start_websocket_server(){
 
 stop_backend_server(){
   echo "Stopping backend..."
-  kill -15 $(cat "$LIBERTREE_RUN_DIR"/backend.pid) &&
+  kill -15 $(cat "$LIBERTREE_PID_DIR"/backend.pid) &&
 	echo "Backend stopped." &&
-  rm "$LIBERTREE_RUN_DIR"/backend.pid
+  rm "$LIBERTREE_PID_DIR"/backend.pid
 }
 
 stop_job_server(){
   echo "Stopping job processor..."
-  kill -15 $(cat "$LIBERTREE_RUN_DIR"/job.pid) &&
+  kill -15 $(cat "$LIBERTREE_PID_DIR"/job.pid) &&
 	echo "Job processor stopped." &&
-  rm "$LIBERTREE_RUN_DIR"/job.pid
+  rm "$LIBERTREE_PID_DIR"/job.pid
 }
 
 stop_frontend_server(){
   echo "Stopping frontend..."
-  kill -15 $(cat "$LIBERTREE_RUN_DIR"/frontend.pid) &&
+  kill -15 $(cat "$LIBERTREE_PID_DIR"/frontend.pid) &&
 	echo "Frontend stopped." &&
-  rm "$LIBERTREE_RUN_DIR"/frontend.pid
+  rm "$LIBERTREE_PID_DIR"/frontend.pid
 }
 
 stop_websocket_server(){
   echo "Stopping websocket server..."
-  kill -15 $(cat "$LIBERTREE_RUN_DIR"/websocket.pid) &&
+  kill -15 $(cat "$LIBERTREE_PID_DIR"/websocket.pid) &&
 	echo "Websocket server stopped." &&
-  rm "$LIBERTREE_RUN_DIR"/websocket.pid
+  rm "$LIBERTREE_PID_DIR"/websocket.pid
 }
 
 start(){
