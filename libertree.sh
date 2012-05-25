@@ -25,6 +25,10 @@ ensure_dirs_exist() {
   mkdir -p "$LIBERTREE_LOG_PATH"
 }
 
+# debugging
+ensure_dirs_exist
+exit 1
+
 start_backend_server(){
   echo "Starting backend..."
   pushd "$LIBERTREE_BACKEND_PATH"
