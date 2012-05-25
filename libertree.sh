@@ -136,5 +136,8 @@ stop(){
   stop_websocket_server
 }
 
-$1
-
+if [ $# -gt 0 ]; then
+  $1
+else
+  echo "${0} <start|stop>"
+fi
