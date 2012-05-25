@@ -26,12 +26,19 @@ module Libertree
       key = OpenSSL::PKey::RSA.new File.read( Libertree::Server.conf['private_key_path'] )
       @public_key = key.public_key.to_pem
       port, @ip_remote = Socket.unpack_sockaddr_in(get_peername)
+      @data = ''
       log "#{@ip_remote} connected."
     end
 
+    # We're assuming this is never called simultaneously by EventMachine for
+    # the same connection.
     def receive_data(data)
       begin
-        process data
+        @data << data
+        if data =~ /\n/
+          process @data
+          @data = ''  # needed?
+        end
       rescue Exception => e
         log_error( e.message + "\n" + e.backtrace.reject { |s| s =~ %r{/gems/} }[0..5].join("\n\t") )
       end
