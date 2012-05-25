@@ -57,7 +57,9 @@ As the libertree user:
     % LIBERTREE_ENV=production bundle exec unicorn -p <port number>
 
 Use any port number desired.  The web server proxy will proxy requests from the
-standard HTTP port (80) to this port.
+standard HTTP port (80) to this port.  If you run more than one frontend
+(unicorn) process, you _must_ use memcached to store sessions, or else members
+will not be able to remain logged in.
 
 Optional (recommended) web socket server:
 

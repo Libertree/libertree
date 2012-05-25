@@ -42,6 +42,8 @@ Usage of memcached is recommended, but not required:
 
     # emerge -1atv memcached
 
+Note that it _is_ required if you intend to run more than one frontend process.
+
 ### Ruby
 
 While it is possible to use the system Ruby package, it is recommended that a
