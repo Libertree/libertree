@@ -220,7 +220,7 @@ Response Structure:
     |
     {
       "code": "NOT FOUND",
-      "missing": "MEMBER"
+      "missing": ["MEMBER"]
     }
     |
     {
@@ -282,12 +282,17 @@ Response Structure:
     |
     {
       "code": "NOT FOUND",
-      "missing": "MEMBER",
+      "missing": ["MEMBER"]
     }
     |
     {
       "code": "NOT FOUND",
-      "missing": "POST",
+      "missing": ["POST"]
+    }
+    |
+    {
+      "code": "NOT FOUND",
+      "missing": ["MEMBER", "POST"]
     }
     |
     {
@@ -344,12 +349,17 @@ Response Structure:
     |
     {
       "code": "NOT FOUND",
-      "missing": "MEMBER"
+      "missing": ["MEMBER"]
     }
     |
     {
       "code": "NOT FOUND",
-      "missing": "POST"
+      "missing": ["POST"]
+    }
+    |
+    {
+      "code": "NOT FOUND",
+      "missing": ["MEMBER", "POST"]
     }
     |
     {
@@ -407,12 +417,17 @@ Response Structure:
     |
     {
       "code": "NOT FOUND",
-      "missing": "MEMBER"
+      "missing": ["MEMBER"]
     }
     |
     {
       "code": "NOT FOUND",
-      "missing": "COMMENT"
+      "missing": ["COMMENT"]
+    }
+    |
+    {
+      "code": "NOT FOUND",
+      "missing": ["MEMBER", "COMMENT"]
     }
     |
     {
