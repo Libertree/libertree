@@ -160,7 +160,7 @@ class JobProcessor
               log_error "Invalid avatar file type: #{ext}"
               # TODO: mark this job as failed
             else
-              File.open( "#{Libertree::Server.conf['avatar_dir']}/#{member.id}#{ext}", 'wb' ) { |file|
+              File.open( "#{@conf['avatar_dir']}/#{member.id}#{ext}", 'wb' ) { |file|
                 file.write(resp.body)
               }
               member.avatar_path = "/images/avatars/#{member.id}#{ext}"
