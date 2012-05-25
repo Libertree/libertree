@@ -1,5 +1,7 @@
 require 'libertree/client'
 require 'libertree/model'
+require 'net/http'
+require 'uri'
 
 class JobProcessor
   def initialize(config_filename)
