@@ -12,6 +12,13 @@ LIBERTREE_FRONTEND_PATH=${LIBERTREE_FRONTEND_PATH:-../libertree-frontend-ramaze}
 LIBERTREE_FRONTEND_PORT=${LIBERTREE_FRONTEND_PORT:-8088}
 LIBERTREE_PID_DIR=${LIBERTREE_PID_DIR:-pid}
 LIBERTREE_LOG_PATH=${LIBERTREE_LOG_PATH:-log}
+LIBERTREE_USE_RVM=${LIBERTREE_USE_RVM:-1}
+
+if [[ $LIBERTREE_USE_RVM == 1 ]]; then
+  if [[ -s "$HOME/.rvm/scripts/rvm" ]]; then
+    source "$HOME/.rvm/scripts/rvm"
+  fi
+fi
 
 ensure_dirs_exist() {
   mkdir -p "$LIBERTREE_PID_DIR"
@@ -22,6 +29,9 @@ start_backend_server(){
   echo "Starting backend..."
   pushd "$LIBERTREE_BACKEND_PATH"
   ensure_dirs_exist
+  if [[ $LIBERTREE_USE_RVM == 1 ]]; then
+    rvm use 1.9.3@libertree-backend-rb
+  fi
   bundle exec ruby -Ilib bin/server.rb config.yaml >> $LIBERTREE_LOG_PATH/backend-startup.log &
   local rc=$(echo $?)
   local pid=$(echo $!)
@@ -38,6 +48,9 @@ start_job_server(){
   echo "Starting job processor..."
   pushd "$LIBERTREE_BACKEND_PATH"
   ensure_dirs_exist
+  if [[ $LIBERTREE_USE_RVM == 1 ]]; then
+    rvm use 1.9.3@libertree-backend-rb
+  fi
   bundle exec ruby bin/job-processor.rb config.yaml >> $LIBERTREE_LOG_PATH/backend-startup.log &
   local rc=$(echo $?)
   local pid=$(echo $!)
@@ -54,6 +67,9 @@ start_frontend_server(){
   echo "Starting frontend..."
   pushd "$LIBERTREE_FRONTEND_PATH"
   ensure_dirs_exist
+  if [[ $LIBERTREE_USE_RVM == 1 ]]; then
+    rvm use 1.9.3@libertree-frontend-ramaze
+  fi
   ./css-build.sh
   if [[ -f "$LIBERTREE_FRONTEND_PATH"/unicorn-frontend.conf ]]; then
     bundle exec unicorn -D -c "$LIBERTREE_FRONTEND_PATH"/unicorn-frontend.conf
@@ -82,6 +98,9 @@ start_websocket_server(){
   echo "Starting websocket server"
   pushd "$LIBERTREE_FRONTEND_PATH"
   ensure_dirs_exist
+  if [[ $LIBERTREE_USE_RVM == 1 ]]; then
+    rvm use 1.9.3@libertree-frontend-ramaze
+  fi
   bundle exec ruby websocket-server.rb >> $LIBERTREE_LOG_PATH/websocket.log &
   local rc=$(echo $?)
   local pid=$(echo $!)
