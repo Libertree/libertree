@@ -218,7 +218,10 @@ Response Structure:
 
     { "code": "OK" }
     |
-    { "code": "NOT FOUND" }
+    {
+      "code": "NOT FOUND",
+      "missing": "MEMBER"
+    }
     |
     {
       "code": "REJECTED",
@@ -279,7 +282,12 @@ Response Structure:
     |
     {
       "code": "NOT FOUND",
-      [[ "message": <explanatory message> ]]
+      "missing": "MEMBER",
+    }
+    |
+    {
+      "code": "NOT FOUND",
+      "missing": "POST",
     }
     |
     {
@@ -292,8 +300,7 @@ comment created at the requester.
 
 Responders SHOULD return a "NOT FOUND" code to indicate that it has no record
 of the comment author.  Responders SHOULD return a "NOT FOUND" code to indicate
-that it has no record of the given post.  Responders MAY provide an explanatary
-message with a "NOT FOUND" response.
+that it has no record of the given post.
 
 Responders MAY respond with a REJECTED code for any reason, and such a response
 MAY be accompanied by an explanatory message.  When a COMMENT request is rejected,
@@ -337,7 +344,12 @@ Response Structure:
     |
     {
       "code": "NOT FOUND",
-      [[ "message": <explanatory message> ]]
+      "missing": "MEMBER"
+    }
+    |
+    {
+      "code": "NOT FOUND",
+      "missing": "POST"
     }
     |
     {
@@ -350,8 +362,7 @@ Like created at the requester.
 
 Responders SHOULD return a "NOT FOUND" code to indicate that it has no record
 of the Liker.  Responders SHOULD return a "NOT FOUND" code to indicate
-that it has no record of the given post.  Responders MAY provide an explanatary
-message with a "NOT FOUND" response.
+that it has no record of the given post.
 
 Responders MAY respond with a REJECTED code for any reason, and such a response
 MAY be accompanied by an explanatory message.  When a POST-LIKE request is rejected,
@@ -396,7 +407,12 @@ Response Structure:
     |
     {
       "code": "NOT FOUND",
-      [[ "message": <explanatory message> ]]
+      "missing": "MEMBER"
+    }
+    |
+    {
+      "code": "NOT FOUND",
+      "missing": "COMMENT"
     }
     |
     {
@@ -409,8 +425,7 @@ Like created at the requester.
 
 Responders SHOULD return a "NOT FOUND" code to indicate that it has no record
 of the Liker.  Responders SHOULD return a "NOT FOUND" code to indicate
-that it has no record of the given comment.  Responders MAY provide an explanatary
-message with a "NOT FOUND" response.
+that it has no record of the given comment.
 
 Responders MAY respond with a REJECTED code for any reason, and such a response
 MAY be accompanied by an explanatory message.  When a COMMENT-LIKE request is rejected,
