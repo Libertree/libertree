@@ -11,63 +11,43 @@ module Libertree
           return  if require_parameters(params, 'username', 'avatar_url')
 
           begin
-            uri = URI.parse(params['avatar_url'])
-            ip = Socket.getaddrinfo(uri.host, 'http')[0][3]
+            # verify uri
+            URI.parse(params['avatar_url'])
 
-            if ip != @server.ip
-              respond( {
-                'code' => 'ERROR',
-                'message' => "avatar_url does not resolve to IP #{@server.ip}"
-              } )
-            else
-              member = Model::Member.find_or_create(
-                'username' => params['username'],
-                'server_id' => @server.id
-              )
+            member = Model::Member.find_or_create(
+              'username' => params['username'],
+              'server_id' => @server.id
+            )
 
-              profile = Libertree::Model::Profile.find_or_create( member_id: member.id )
-              if params['profile']
-                begin
-                  profile.name_display = params['profile']['name_display']
-                rescue PGError => e
-                  if e.message =~ /valid_name_display/
-                    respond( {
-                      'code' => 'ERROR',
-                      'message' => "Invalid display name: #{params['profile']['name_display'].inspect}"
-                    } )
-                    return
-                  else
-                    raise e
-                  end
-                end
-                profile.description = params['profile']['description']
-              end
+            # fetch avatar asynchronously
+            Libertree::Model::Job.create(
+              task: 'http:avatar',
+              params: {
+                'member_id'  => member.id,
+                'avatar_url' => params['avatar_url'],
+              }.to_json
+            )
 
+            profile = Libertree::Model::Profile.find_or_create( member_id: member.id )
+
+            if params['profile']
               begin
-                Timeout.timeout(5) do
-                  Net::HTTP.start(uri.host) { |http|
-                    resp = http.get(uri.path)
-                    ext = File.extname(uri.path)
-                    if ! ['.png', '.gif', '.jpg', '.jpeg'].include?(ext.downcase)
-                      respond( {
-                        'code' => 'ERROR',
-                        'message' => "Invalid avatar file type: #{ext}"
-                      } )
-                      return
-                    else
-                      File.open( "#{Libertree::Server.conf['avatar_dir']}/#{member.id}#{ext}", 'wb' ) { |file|
-                        file.write(resp.body)
-                      }
-                      member.avatar_path = "/images/avatars/#{member.id}#{ext}"
-                    end
-                  }
+                profile.name_display = params['profile']['name_display']
+              rescue PGError => e
+                if e.message =~ /valid_name_display/
+                  respond( {
+                    'code' => 'ERROR',
+                    'message' => "Invalid display name: #{params['profile']['name_display'].inspect}"
+                  } )
+                  return
+                else
+                  raise e
                 end
-              rescue Timeout::Error
-                # ignore
               end
-
-              respond_with_code 'OK'
+              profile.description = params['profile']['description']
             end
+
+            respond_with_code 'OK'
           rescue URI::InvalidURIError => e
             respond( {
               'code' => 'ERROR',
