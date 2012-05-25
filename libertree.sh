@@ -25,14 +25,10 @@ ensure_dirs_exist() {
   mkdir -p "$LIBERTREE_LOG_PATH"
 }
 
-# debugging
-ensure_dirs_exist
-exit 1
-
 start_backend_server(){
   echo "Starting backend..."
-  pushd "$LIBERTREE_BACKEND_PATH"
   ensure_dirs_exist
+  pushd "$LIBERTREE_BACKEND_PATH"
   if [[ $LIBERTREE_USE_RVM == 1 ]]; then
     rvm use 1.9.3@libertree-backend-rb
   fi
@@ -50,8 +46,8 @@ start_backend_server(){
 
 start_job_server(){
   echo "Starting job processor..."
-  pushd "$LIBERTREE_BACKEND_PATH"
   ensure_dirs_exist
+  pushd "$LIBERTREE_BACKEND_PATH"
   if [[ $LIBERTREE_USE_RVM == 1 ]]; then
     rvm use 1.9.3@libertree-backend-rb
   fi
@@ -69,8 +65,8 @@ start_job_server(){
 
 start_frontend_server(){
   echo "Starting frontend..."
-  pushd "$LIBERTREE_FRONTEND_PATH"
   ensure_dirs_exist
+  pushd "$LIBERTREE_FRONTEND_PATH"
   if [[ $LIBERTREE_USE_RVM == 1 ]]; then
     rvm use 1.9.3@libertree-frontend-ramaze
   fi
@@ -100,8 +96,8 @@ start_frontend_server(){
 
 start_websocket_server(){
   echo "Starting websocket server"
-  pushd "$LIBERTREE_FRONTEND_PATH"
   ensure_dirs_exist
+  pushd "$LIBERTREE_FRONTEND_PATH"
   if [[ $LIBERTREE_USE_RVM == 1 ]]; then
     rvm use 1.9.3@libertree-frontend-ramaze
   fi
