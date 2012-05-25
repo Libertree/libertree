@@ -46,6 +46,7 @@ written in Ruby.
 ### Recommended
 
 * A web server or other proxy (such as Nginx or Apache)
+* memcache
 
 ### Components
 
