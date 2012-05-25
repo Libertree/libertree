@@ -232,7 +232,8 @@ A requester would use the POST command to share with a remote server a new
 post created at the requester, or an update of a post on the requester.
 
 Responders SHOULD return a "NOT FOUND" code to indicate that it has no record
-of the given member.
+of the given member.  Requesters SHOULD send a request matching the "missing"
+parameter of the "NOT FOUND" response.
 
 Responders MAY respond with a REJECTED code for any reason, and such a response
 MAY be accompanied by an explanatory message.  When a POST request is rejected,
@@ -305,7 +306,8 @@ comment created at the requester.
 
 Responders SHOULD return a "NOT FOUND" code to indicate that it has no record
 of the comment author.  Responders SHOULD return a "NOT FOUND" code to indicate
-that it has no record of the given post.
+that it has no record of the given post.  Requesters SHOULD send a request
+matching the "missing" parameter of the "NOT FOUND" response.
 
 Responders MAY respond with a REJECTED code for any reason, and such a response
 MAY be accompanied by an explanatory message.  When a COMMENT request is rejected,
@@ -371,8 +373,9 @@ A requester would use the POST-LIKE command to share with a remote server a new
 Like created at the requester.
 
 Responders SHOULD return a "NOT FOUND" code to indicate that it has no record
-of the Liker.  Responders SHOULD return a "NOT FOUND" code to indicate
-that it has no record of the given post.
+of the Liker.  Responders SHOULD return a "NOT FOUND" code to indicate that it
+has no record of the given post.  Requesters SHOULD send a request matching the
+"missing" parameter of the "NOT FOUND" response.
 
 Responders MAY respond with a REJECTED code for any reason, and such a response
 MAY be accompanied by an explanatory message.  When a POST-LIKE request is rejected,
@@ -439,8 +442,9 @@ A requester would use the COMMENT-LIKE command to share with a remote server a n
 Like created at the requester.
 
 Responders SHOULD return a "NOT FOUND" code to indicate that it has no record
-of the Liker.  Responders SHOULD return a "NOT FOUND" code to indicate
-that it has no record of the given comment.
+of the Liker.  Responders SHOULD return a "NOT FOUND" code to indicate that it
+has no record of the given comment.  Requesters SHOULD send a request matching
+the "missing" parameter of the "NOT FOUND" response.
 
 Responders MAY respond with a REJECTED code for any reason, and such a response
 MAY be accompanied by an explanatory message.  When a COMMENT-LIKE request is rejected,
