@@ -1,9 +1,11 @@
 #!/bin/bash
+
 if [[ -f libertree-launcher.conf ]]; then
   . libertree-launcher.conf
 fi
-# All the below variables can be defined in libertree-launcher.conf
-# file in the same directory as the libertree-launcher.sh
+
+# All of the following variables can be defined in a libertree-launcher.conf
+# file in the same directory as this script
 LIBERTREE_ENV=${LIBERTREE_ENV:-production}
 LIBERTREE_BACKEND_PATH=${LIBERTREE_BACKEND_PATH:-../libertree-backend-rb}
 LIBERTREE_FRONTEND_PATH=${LIBERTREE_FRONTEND_PATH:-../libertree-frontend-ramaze}
@@ -12,7 +14,7 @@ LIBERTREE_RUN_DIR=${LIBERTREE_RUN_DIR:-../run}
 LIBERTREE_LOG_PATH=${LIBERTREE_LOG_PATH:-../logs}
 
 start_backend_server(){
-  echo "Starting backend server"
+  echo "Starting backend..."
   pushd "$LIBERTREE_BACKEND_PATH"
   mkdir -p "$LIBERTREE_RUN_DIR"
   mkdir -p "$LIBERTREE_LOG_PATH"
@@ -21,15 +23,15 @@ start_backend_server(){
   local pid=$(echo $!)
   if [[ $rc == 0 ]]; then
     echo $pid > "$LIBERTREE_RUN_DIR"/backend.pid
-    echo "Startup of backend server succeeded with PID $pid"
+    echo "Backend started.  PID: $pid"
 	else
-    echo "Startup failed"
+    echo "Failed to start backend."
   fi
   popd
 }
 
 start_job_server(){
-  echo "Starting job server"
+  echo "Starting job processor..."
   pushd "$LIBERTREE_BACKEND_PATH"
   mkdir -p "$LIBERTREE_RUN_DIR"
   mkdir -p "$LIBERTREE_LOG_PATH"
@@ -38,15 +40,15 @@ start_job_server(){
   local pid=$(echo $!)
   if [[ $rc == 0 ]]; then
     echo $pid > "$LIBERTREE_RUN_DIR"/job.pid
-    echo "Startup of job server succeeded with PID $pid"
+    echo "Job processor started.  PID: $pid"
 	else
-    echo "Startup failed"
+    echo "Failed to start job processor."
   fi
   popd
 }
 
 start_frontend_server(){
-  echo "Starting frontend server"
+  echo "Starting frontend..."
   pushd "$LIBERTREE_FRONTEND_PATH"
   mkdir -p "$LIBERTREE_RUN_DIR"
   mkdir -p "$LIBERTREE_LOG_PATH"
@@ -56,9 +58,9 @@ start_frontend_server(){
     local rc=$(echo $?)
     local pid=$(cat $LIBERTREE_RUN_DIR/frontend.pid)
     if [[ $rc == 0 ]]; then
-      echo "Startup of frontend server succeeded with PID $pid"
+      echo "Frontend started.  PID: $pid"
 	  else
-      echo "Startup failed"
+      echo "Failed to start frontend."
     fi
   else
     bundle exec unicorn -D -p $LIBERTREE_FRONTEND_PORT
@@ -66,9 +68,9 @@ start_frontend_server(){
     local pid=$(echo $!)
     if [[ $rc == 0 ]]; then
       echo $pid > "$LIBERTREE_RUN_DIR"/frontend.pid
-      echo "Startup of frontend server succeeded with PID $pid"
+      echo "Frontend started.  PID: $pid"
     else
-      echo "Startup failed"
+      echo "Failed to start frontend"
     fi
   fi
   popd
@@ -84,38 +86,38 @@ start_websocket_server(){
   local pid=$(echo $!)
   if [[ $rc == 0 ]]; then
     echo $pid > "$LIBERTREE_RUN_DIR"/websocket.pid
-    echo "Startup of websocket server succeeded with PID $pid"
+    echo "Websocket server started.  PID: $pid"
 	else
-    echo "Startup failed"
+    echo "Failed to start websocket server."
   fi
   popd
 }
 
 stop_backend_server(){
-  echo "Stopping backend server"
+  echo "Stopping backend..."
   kill -15 $(cat "$LIBERTREE_RUN_DIR"/backend.pid) &&
-	echo "Stopped backend server, cleaning pid file" &&
+	echo "Backend stopped." &&
   rm "$LIBERTREE_RUN_DIR"/backend.pid
 }
 
 stop_job_server(){
-  echo "Stopping job server"
+  echo "Stopping job processor..."
   kill -15 $(cat "$LIBERTREE_RUN_DIR"/job.pid) &&
-	echo "Stopped job server, cleaning pid file" &&
+	echo "Job processor stopped." &&
   rm "$LIBERTREE_RUN_DIR"/job.pid
 }
 
 stop_frontend_server(){
-  echo "Stopping frontend server"
+  echo "Stopping frontend..."
   kill -15 $(cat "$LIBERTREE_RUN_DIR"/frontend.pid) &&
-	echo "Stopped frontend server, cleaning pid file" &&
+	echo "Frontend stopped." &&
   rm "$LIBERTREE_RUN_DIR"/frontend.pid
 }
 
 stop_websocket_server(){
-  echo "Stopping websocket server"
+  echo "Stopping websocket server..."
   kill -15 $(cat "$LIBERTREE_RUN_DIR"/websocket.pid) &&
-	echo "Stopped websocket server, cleaning pid file" &&
+	echo "Websocket server stopped." &&
   rm "$LIBERTREE_RUN_DIR"/websocket.pid
 }
 
