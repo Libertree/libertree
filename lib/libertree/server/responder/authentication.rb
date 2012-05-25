@@ -39,7 +39,7 @@ module Libertree
             key = OpenSSL::PKey::RSA.new public_key
             challenge_encrypted = Base64.encode64(key.public_encrypt(@server.challenge, OpenSSL::PKey::RSA::PKCS1_OAEP_PADDING))
 
-            log "#{@ip_remote} provided public key of #{@server.name_given || 'server ' + @server.id} ."
+            log "#{@ip_remote} provided public key of #{@server.name_given || 'server ' + @server.id.to_s} ."
 
             respond( {
               'code' => 'OK',
