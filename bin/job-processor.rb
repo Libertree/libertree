@@ -146,7 +146,7 @@ class JobProcessor
       end
       job.time_finished = Time.now
     when 'http:avatar'
-      member = Model::Member[ job.params['member_id'] ]
+      member = Libertree::Model::Member[ job.params['member_id'] ]
 
       begin
         uri = URI.parse(job.params['avatar_url'])
