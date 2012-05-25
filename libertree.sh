@@ -13,12 +13,16 @@ LIBERTREE_FRONTEND_PORT=${LIBERTREE_FRONTEND_PORT:-8088}
 LIBERTREE_PID_DIR=${LIBERTREE_PID_DIR:-pid}
 LIBERTREE_LOG_PATH=${LIBERTREE_LOG_PATH:-log}
 
+ensure_dirs_exist() {
+  mkdir -p "$LIBERTREE_PID_DIR"
+  mkdir -p "$LIBERTREE_LOG_PATH"
+}
+
 start_backend_server(){
   echo "Starting backend..."
   pushd "$LIBERTREE_BACKEND_PATH"
-  mkdir -p "$LIBERTREE_PID_DIR"
-  mkdir -p "$LIBERTREE_LOG_PATH"
-  bundle exec ruby -Ilib bin/server.rb config.yaml >> $LIBERTREE_LOG_PATH/backend.log &
+  ensure_dirs_exist
+  bundle exec ruby -Ilib bin/server.rb config.yaml >> $LIBERTREE_LOG_PATH/backend-startup.log &
   local rc=$(echo $?)
   local pid=$(echo $!)
   if [[ $rc == 0 ]]; then
@@ -33,9 +37,8 @@ start_backend_server(){
 start_job_server(){
   echo "Starting job processor..."
   pushd "$LIBERTREE_BACKEND_PATH"
-  mkdir -p "$LIBERTREE_PID_DIR"
-  mkdir -p "$LIBERTREE_LOG_PATH"
-  bundle exec ruby bin/job-processor.rb config.yaml >> $LIBERTREE_LOG_PATH/backend.log &
+  ensure_dirs_exist
+  bundle exec ruby bin/job-processor.rb config.yaml >> $LIBERTREE_LOG_PATH/backend-startup.log &
   local rc=$(echo $?)
   local pid=$(echo $!)
   if [[ $rc == 0 ]]; then
@@ -50,8 +53,7 @@ start_job_server(){
 start_frontend_server(){
   echo "Starting frontend..."
   pushd "$LIBERTREE_FRONTEND_PATH"
-  mkdir -p "$LIBERTREE_PID_DIR"
-  mkdir -p "$LIBERTREE_LOG_PATH"
+  ensure_dirs_exist
   ./css-build.sh
   if [[ -f "$LIBERTREE_FRONTEND_PATH"/unicorn-frontend.conf ]]; then
     bundle exec unicorn -D -c "$LIBERTREE_FRONTEND_PATH"/unicorn-frontend.conf
@@ -79,8 +81,7 @@ start_frontend_server(){
 start_websocket_server(){
   echo "Starting websocket server"
   pushd "$LIBERTREE_FRONTEND_PATH"
-  mkdir -p "$LIBERTREE_PID_DIR"
-  mkdir -p "$LIBERTREE_LOG_PATH"
+  ensure_dirs_exist
   bundle exec ruby websocket-server.rb >> $LIBERTREE_LOG_PATH/websocket.log &
   local rc=$(echo $?)
   local pid=$(echo $!)
