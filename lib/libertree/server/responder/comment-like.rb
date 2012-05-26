@@ -52,7 +52,6 @@ module Libertree
               'comment_id' => comment.id,
               'remote_id' => params['id'],
             )
-            comment.notify_about_like like
 
             respond_with_code 'OK'
           rescue PGError => e
