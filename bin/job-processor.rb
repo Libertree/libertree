@@ -157,7 +157,7 @@ class JobProcessor
       begin
         uri = URI.parse(job.params['avatar_url'])
         Timeout.timeout(10) do
-          Net::HTTP.start(uri.host) { |http|
+          Net::HTTP.start(uri.host, uri.port) { |http|
             resp = http.get(uri.path)
             ext = File.extname(uri.path)
             if ! ['.png', '.gif', '.jpg', '.jpeg'].include?(ext.downcase)
