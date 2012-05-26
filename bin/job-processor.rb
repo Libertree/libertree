@@ -81,11 +81,15 @@ class JobProcessor
             retry_later = true
             case response['message']
             when /post/
-              tree.req_post comment.post
+              if comment.post.local?
+                tree.req_post comment.post
+              end
             when /member/
               tree.req_member comment.member
             else
-              tree.req_post comment.post
+              if comment.post.local?
+                tree.req_post comment.post
+              end
               tree.req_member comment.member
             end
           end
