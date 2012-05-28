@@ -92,21 +92,52 @@ module Libertree
     end
 
     def self.run(config_filename)
-      load_config config_filename
-      if @conf['log_path']
-        @log = File.open( @conf['log_path'], 'a+' )
-        @log.sync = true
-      else
-        @log = $stdout
+      quit = false
+
+      Signal.trap("USR1") do
+        puts "\nRestarting server."
+        EventMachine.stop_event_loop
       end
 
-      EventMachine.run do
-        host = @conf['host_listen'] || '127.0.0.1'
-        EventMachine.start_server( host, PORT, self )
-        puts "Libertree started."
-        puts "Listening on #{host}, port #{PORT}."
+      terminate = Proc.new {
+        quit = true
+        puts "Terminating server."
+        EventMachine.stop_event_loop
+      }
+      Signal.trap("TERM", &terminate)
+      Signal.trap("INT" , &terminate)
+
+      until quit
+        begin
+          load_config config_filename
+          if @conf['log_path']
+            @log = File.open( @conf['log_path'], 'a+' )
+            @log.sync = true
+          else
+            @log = $stdout
+          end
+        rescue Exception => e
+          $stderr.puts e.message
+          if @conf
+            puts "Ignoring changes to configuration."
+          else
+            puts "Aborting."
+            exit(1)
+          end
+        end
+
+        EventMachine.run do
+          host = @conf['host_listen'] || '127.0.0.1'
+          EventMachine.start_server( host, PORT, self )
+          puts "Libertree started."
+          puts "Listening on #{host}, port #{PORT}."
+          if @log.respond_to? :path
+            puts "Logging to #{File.absolute_path(@log.path)}"
+          end
+        end
+
         if @log.respond_to? :path
-          puts "Logging to #{File.absolute_path(@log.path)}"
+          @log.close
         end
       end
     end
