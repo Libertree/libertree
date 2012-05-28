@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'net/http'
 
 describe Libertree::Server::Responder::Member do
   describe 'rsp_member' do
