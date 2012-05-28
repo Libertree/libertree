@@ -54,8 +54,6 @@ module Libertree
               # TODO: Sanitize with Loofah
               'text' => params['text']
             )
-            post.mark_as_unread_by_all
-            post.notify_about_comment comment
 
             respond_with_code 'OK'
           rescue PGError => e
