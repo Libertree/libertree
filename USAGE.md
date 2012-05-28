@@ -67,6 +67,10 @@ Optional (recommended) web socket server:
     % rvm use 1.9.3@libertree-frontend-ramaze
     % LIBERTREE_ENV=production bundle exec ruby websocket-server.rb
 
+Note: to run processes in the background, add nohup and & to all the commands above, e.g.:
+
+    % LIBERTREE_ENV=production nohup bundle exec ruby websocket-server.rb &
+
 ## Maintenance
 
 Multiple job processing and frontend processes can be started, but almost all
