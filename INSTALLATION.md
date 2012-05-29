@@ -171,6 +171,9 @@ frontend process would need to be run as root.
 Any web server proxy will do.  Nginx or Apache would suffice.  Below are
 example configuration snippets for them.
 
+You may need to make your distro install specific modules for Nginx or Apache,
+such as the proxy pass and proxy balancer modules.
+
 ### Nginx
 
     upstream unicorn_cluster {
@@ -230,3 +233,12 @@ example configuration snippets for them.
             Allow from all
         </Directory>
     </VirtualHost>
+
+You may need this config for proxy balancer, depending on your distro and setup:
+
+    <IfModule mod_proxy_balancer.c>
+        <Proxy *>
+            Order deny,allow
+            Allow from all
+        </Proxy>
+    </IfModule>
