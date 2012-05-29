@@ -5,6 +5,7 @@ require 'uri'
 
 class JobProcessor
   def initialize(config_filename)
+    @config_filename = config_filename
     @conf = YAML.load( File.read(config_filename) )
     if @conf['log_path']
       @log = File.open( @conf['log_path'], 'a+' )
@@ -56,12 +57,26 @@ class JobProcessor
   end
 
   def run
-    while 1+1 == 2
+    quit = false
+
+    terminate = Proc.new {
+      quit = true
+      puts "Quitting."
+    }
+    Signal.trap("TERM", &terminate)
+    Signal.trap("INT" , &terminate)
+    Signal.trap("USR1") do
+      puts "\nReloading configuration."
+      @log.close
+      self.send(:initialize, @config_filename)
+    end
+
+    until quit
       job = reserve
       if job
         process job
       end
-      sleep 3
+      3.times { sleep 1 unless quit }
     end
   end
 
