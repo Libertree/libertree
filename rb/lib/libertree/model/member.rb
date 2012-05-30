@@ -21,11 +21,6 @@ module Libertree
         end
       end
 
-      def avatar_path
-        # TODO: It feels icky to have this frontend-related code in here (the default image path)
-        self['avatar_path'] || '/images/avatar-default.png'
-      end
-
       def username
         self['username'] || account.username
       end
