@@ -65,7 +65,7 @@ class JobProcessor
     }
     Signal.trap("TERM", &terminate)
     Signal.trap("INT" , &terminate)
-    Signal.trap("USR1") do
+    Signal.trap("HUP") do
       puts "\nReloading configuration."
       @log.close
       self.send(:initialize, @config_filename)

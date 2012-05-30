@@ -94,7 +94,7 @@ module Libertree
     def self.run(config_filename)
       quit = false
 
-      Signal.trap("USR1") do
+      Signal.trap("HUP") do
         puts "\nRestarting server."
         EventMachine.stop_event_loop
       end
