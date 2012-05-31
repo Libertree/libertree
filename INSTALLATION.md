@@ -102,6 +102,10 @@ As the libertree user:
     % bundle install
     % LIBERTREE_ENV=production ./migrate.sh
 
+If a password is required for connecting to PostgreSQL, use a pgpass file:
+
+  http://www.postgresql.org/docs/current/static/libpq-pgpass.html
+
 It is recommended to ensure the created database is encoded with UTF-8.  This
 can be checked with:
 
