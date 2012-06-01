@@ -238,7 +238,7 @@ class JobProcessor
         lt_client(host) do |client|
           yield client
         end
-      rescue Errno::ETIMEDOUT => e
+      rescue Errno::ETIMEDOUT, Errno::ECONNREFUSED => e
         log_error "With #{host}: #{e.message}"
       end
     end
