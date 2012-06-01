@@ -189,7 +189,7 @@ class JobProcessor
         end
       rescue URI::InvalidURIError, ArgumentError => e
         # TODO: mark this job as failed, because the URL cannot be parsed
-        log_error "Invalid URI: #{params['avatar_url']}"
+        log_error "Invalid URI: #{job.params['avatar_url']}"
       rescue Timeout::Error
         # ignore
       end
