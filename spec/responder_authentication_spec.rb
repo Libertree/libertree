@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Libertree::Server::Responder::Authentication do
   describe 'rsp_introduce' do
-    it 'returns MISSING PARAMETER when the pubic_key is missing' do
+    it 'returns MISSING PARAMETER when the public_key is missing' do
       @s.process 'INTRODUCE { }'
       @s.should have_responded_with_code('MISSING PARAMETER')
       @s.process 'INTRODUCE { "public_key": "" }'
