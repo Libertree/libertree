@@ -171,21 +171,25 @@ class JobProcessor
 
       begin
         uri = URI.parse(job.params['avatar_url'])
-        Timeout.timeout(10) do
-          Net::HTTP.start(uri.host, uri.port) { |http|
-            resp = http.get(uri.path)
-            ext = File.extname(uri.path)
-            if ! ['.png', '.gif', '.jpg', '.jpeg'].include?(ext.downcase)
-              log_error "Invalid avatar file type: #{ext}"
-              # TODO: mark this job as failed
-            else
-              File.open( "#{@conf['avatar_dir']}/#{member.id}#{ext}", 'wb' ) { |file|
-                file.write(resp.body)
-              }
-              member.avatar_path = "/images/avatars/#{member.id}#{ext}"
-              job.time_finished = Time.now
-            end
-          }
+        if uri.path.empty?
+          log_error "URL contains no path: #{job.params['avatar_url']}"
+        else
+          Timeout.timeout(10) do
+            Net::HTTP.start(uri.host, uri.port) { |http|
+              resp = http.get(uri.path)
+              ext = File.extname(uri.path)
+              if ! ['.png', '.gif', '.jpg', '.jpeg'].include?(ext.downcase)
+                log_error "Invalid avatar file type: #{ext}"
+                # TODO: mark this job as failed
+              else
+                File.open( "#{@conf['avatar_dir']}/#{member.id}#{ext}", 'wb' ) { |file|
+                  file.write(resp.body)
+                }
+                member.avatar_path = "/images/avatars/#{member.id}#{ext}"
+                job.time_finished = Time.now
+              end
+            }
+          end
         end
       rescue URI::InvalidURIError, ArgumentError => e
         # TODO: mark this job as failed, because the URL cannot be parsed
