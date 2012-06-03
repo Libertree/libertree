@@ -6,6 +6,7 @@ Libertree::DB.dbh
 require_relative 'model/account'
 require_relative 'model/comment'
 require_relative 'model/comment-like'
+require_relative 'model/forest'
 require_relative 'model/invitation'
 require_relative 'model/job'
 require_relative 'model/member'

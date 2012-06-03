@@ -131,6 +131,10 @@ module Libertree
         @notifications_unseen = nil
         @num_notifications_unseen = nil
       end
+
+      def admin?
+        self.admin
+      end
     end
   end
 end
