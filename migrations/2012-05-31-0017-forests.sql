@@ -15,6 +15,7 @@ COMMENT ON COLUMN forests.local_is_member IS
 CREATE TABLE forests_servers (
       forest_id INTEGER NOT NULL REFERENCES forests(id)
     , server_id INTEGER NOT NULL REFERENCES servers(id)
+    , UNIQUE( forest_id, server_id )
 );
 
 ALTER TABLE servers ALTER COLUMN public_key DROP NOT NULL;

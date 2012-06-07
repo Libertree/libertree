@@ -16,6 +16,18 @@ module Libertree
           self.id
         )
       end
+
+      def add(server)
+        DB.dbh.i  "INSERT INTO forests_servers ( forest_id, server_id ) VALUES ( ?, ? )", self.id, server.id
+      end
+
+      def remove(server)
+        DB.dbh.d  "DELETE FROM forests_servers WHERE forest_id = ? AND server_id = ?", self.id, server.id
+      end
+
+      def local?
+        ! origin_server_id
+      end
     end
   end
 end
