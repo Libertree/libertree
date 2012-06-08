@@ -27,6 +27,10 @@ module Libertree
       @conn = Libertree::Connection.new(host: remote_host, log: @log, log_identifier: @log_identifier)
 
       response = @conn.request('INTRODUCE', @intro_params)
+      if response.nil?
+        raise "No response to INTRODUCE"
+      end
+
       challenge_encrypted = response['challenge']
 
       if challenge_encrypted && response['code'] == 'OK'
