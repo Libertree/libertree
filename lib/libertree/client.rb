@@ -95,6 +95,17 @@ module Libertree
       )
     end
 
+    def req_forest(forest)
+      @conn.request(
+        'FOREST',
+        'id'    => forest.id,
+        'name'  => forest.name,
+        'trees' => forest.trees.map { |t|
+          { 'ip' => t.ip }
+        }
+      )
+    end
+
     def req_member(member)
       @conn.request(
         'MEMBER',
