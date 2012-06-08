@@ -21,6 +21,8 @@ module Libertree
             end
 
             forest.set_trees_by_ip params['trees']
+
+            respond_with_code 'OK'
           rescue PGError => e
             respond_with_code 'ERROR'
           end
