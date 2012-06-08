@@ -97,13 +97,14 @@ module Libertree
     end
 
     def req_forest(forest)
+      return  if ! forest.local_is_member?
       @conn.request(
         'FOREST',
         'id'    => forest.id,
         'name'  => forest.name,
         'trees' => forest.trees.map { |t|
           { 'ip' => t.ip }
-        }
+        } + { 'ip' => @server_ip }
       )
     end
 
