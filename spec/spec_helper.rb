@@ -1,3 +1,4 @@
+require 'ruby-debug'
 require 'libertree/server'
 require_relative 'factories'
 
