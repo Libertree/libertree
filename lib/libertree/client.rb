@@ -13,6 +13,7 @@ module Libertree
       @public_key = params[:public_key] or raise ":public_key required by Libertree::Client"
       @private_key = params[:private_key] or raise ":private_key required by Libertree::Client"
       @avatar_url_base = params[:avatar_url_base]
+      @server_ip = params[:server_ip]
       @server_name = params[:server_name]
       @log = params[:log] || $stdout
       @log_identifier = params[:log_identifier] || "pid #{Process.pid}"
