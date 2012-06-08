@@ -143,6 +143,16 @@ class JobProcessor
       with_forest(forest) do |tree|
         tree.req_forest forest
       end
+      if job.params['server_ids']
+        job.params['server_ids'].each do |sid|
+          s = Libertree::Model::Server[sid.to_i]
+          if s
+            with_tree(s) do |tree|
+              tree.req_forest forest
+            end
+          end
+        end
+      end
       job.time_finished = Time.now
     when 'request:MEMBER'
       member = Libertree::Model::Member[job.params['member_id'].to_i]
@@ -264,13 +274,19 @@ class JobProcessor
 
   def with_forest(f)
     f.trees.each do |tree|
-      begin
-        lt_client(tree.ip) do |client|
-          yield client
-        end
-      rescue Errno::ETIMEDOUT, Errno::ECONNREFUSED => e
-        log_error "With #{tree.name_display} (#{tree.ip}): #{e.message}"
+      with_tree(tree) do |client|
+        yield client
       end
+    end
+  end
+
+  def with_tree(tree)
+    begin
+      lt_client(tree.ip) do |client|
+        yield client
+      end
+    rescue Errno::ETIMEDOUT, Errno::ECONNREFUSED => e
+      log_error "With #{tree.name_display} (#{tree.ip}): #{e.message}"
     end
   end
 end
