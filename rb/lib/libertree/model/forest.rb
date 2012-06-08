@@ -1,8 +1,8 @@
 module Libertree
   module Model
     class Forest < M4DBI::Model(:forests)
-      def servers
-        Server.s(
+      def trees
+        @trees ||= Server.s(
           %{
             SELECT
               s.*
@@ -16,6 +16,7 @@ module Libertree
           self.id
         )
       end
+      alias :servers :trees
 
       def add(server)
         DB.dbh.i  "INSERT INTO forests_servers ( forest_id, server_id ) VALUES ( ?, ? )", self.id, server.id
