@@ -104,7 +104,7 @@ module Libertree
         'name'  => forest.name,
         'trees' => forest.trees.map { |t|
           { 'ip' => t.ip }
-        } + { 'ip' => @server_ip }
+        } + [ { 'ip' => @server_ip } ]
       )
     end
 
