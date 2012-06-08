@@ -20,9 +20,6 @@ private_key_path: /path/to/private.key
 # from this server
 avatar_url_base: 'http://domain-or-ip-without-trailing-slash'
 
-# To not distribute to any other trees, set the forest to an empty array, like this:
-# forest: []
-
 # For more verbose output, set debug to true.
 debug: false
 
