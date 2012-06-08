@@ -30,6 +30,10 @@ module Libertree
         ! origin_server_id
       end
 
+      def local_is_member?
+        local_is_member
+      end
+
       # @param [Array] trees An Array of Hashes, each having an 'ip' key.
       def set_trees_by_ip( trees )
         DB.dbh.d  "DELETE FROM forests_servers WHERE forest_id = ?", self.id
