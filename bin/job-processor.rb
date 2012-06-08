@@ -235,6 +235,7 @@ class JobProcessor
       public_key: key.public_key,
       private_key: key,
       avatar_url_base: @conf['avatar_url_base'],
+      server_ip: @conf['ip_public'],
       server_name: @conf['server_name'],
       log: @log,
       log_identifier: @log_identifier

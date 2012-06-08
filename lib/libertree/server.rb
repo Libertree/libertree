@@ -127,7 +127,7 @@ module Libertree
         end
 
         EventMachine.run do
-          host = @conf['host_listen'] || '127.0.0.1'
+          host = @conf['ip_listen'] || '127.0.0.1'
           EventMachine.start_server( host, PORT, self )
           puts "Libertree started."
           puts "Listening on #{host}, port #{PORT}."

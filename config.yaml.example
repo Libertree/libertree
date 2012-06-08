@@ -1,5 +1,7 @@
 # The public IP address of this server
-host_listen: 99.76.54.132
+ip_public: 99.76.54.132
+# The IP to listen on for incoming requests.  Usually the same as ip_public.
+ip_listen: 99.76.54.132
 
 # The path to the avatars directory of the frontend
 avatar_dir: '/path/to/public/images/avatars'
