@@ -2,6 +2,8 @@ require 'libertree/client'
 require 'readline'
 require 'openssl'
 
+Tree = Struct.new(:ip)
+Forest = Struct.new(:id, :name, :trees)
 Member = Struct.new(:username, :avatar_path)
 
 if ARGV.size < 1
@@ -17,11 +19,22 @@ client = Libertree::Client.new(
 )
 
 while input = Readline.readline("libertree> ", true)
+  next  if input.nil? || input.empty?
+
   command, *params = input.split(/\s+/)
   param = params[0]
   case command.downcase
   when /^c/  # connect
     client.connect param
+  when /^f/  # forest
+    forest = Forest.new(
+      rand(99),
+      params[0],
+      params[1..-1].map { |p|
+        Tree.new(p)
+      }
+    )
+    client.req_forest forest
   when /^m/  # member
     member = Member.new(params[0], params[1])
     client.req_member member
