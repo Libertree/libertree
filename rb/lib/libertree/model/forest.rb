@@ -29,6 +29,14 @@ module Libertree
       def local?
         ! origin_server_id
       end
+
+      # @param [Array] trees An Array of Hashes, each having an 'ip' key.
+      def set_trees_by_ip( trees )
+        DB.dbh.d  "DELETE FROM forests_servers WHERE forest_id = ?", self.id
+        trees.each do |tree|
+          add  Model::Server.find_or_create( ip: tree['ip'] )
+        end
+      end
     end
   end
 end
