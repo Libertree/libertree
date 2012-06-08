@@ -30,6 +30,10 @@ module Libertree
         ! origin_server_id
       end
 
+      def origin
+        Server[origin_server_id]
+      end
+
       def local_is_member?
         local_is_member
       end
