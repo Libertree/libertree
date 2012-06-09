@@ -88,7 +88,12 @@ class JobProcessor
       comment = Libertree::Model::Comment[job.params['comment_id'].to_i]
       retry_later = false
       if comment
-        with_forests(comment.post.server.forests) do |tree|
+        if comment.post.remote?
+          forests = comment.post.server.forests
+        else
+          forests = Libertree::Model::Forest.all_local_is_member
+        end
+        with_forests(forests) do |tree|
           response = tree.req_comment(comment)
           if response['code'] == 'NOT FOUND'
             # Remote didn't recognize the comment author or the referenced post
@@ -117,7 +122,12 @@ class JobProcessor
     when 'request:COMMENT-DELETE'
       comment = Libertree::Model::Comment[job.params['comment_id'].to_i]
       if comment
-        with_forests(comment.post.server.forests) do |tree|
+        if comment.post.remote?
+          forests = comment.post.server.forests
+        else
+          forests = Libertree::Model::Forest.all_local_is_member
+        end
+        with_forests(forests) do |tree|
           tree.req_comment_delete job.params['comment_id']
         end
       end
@@ -125,7 +135,12 @@ class JobProcessor
     when 'request:COMMENT-LIKE'
       like = Libertree::Model::CommentLike[job.params['comment_like_id'].to_i]
       if like
-        with_forests(like.comment.post.server.forests) do |tree|
+        if like.comment.post.remote?
+          forests = like.comment.post.server.forests
+        else
+          forests = Libertree::Model::Forest.all_local_is_member
+        end
+        with_forests(forests) do |tree|
           tree.req_comment_like like
         end
       end
@@ -133,7 +148,12 @@ class JobProcessor
     when 'request:COMMENT-LIKE-DELETE'
       like = Libertree::Model::CommentLike[job.params['comment_like_id'].to_i]
       if like
-        with_forests(like.comment.post.server.forests) do |tree|
+        if like.comment.post.remote?
+          forests = like.comment.post.server.forests
+        else
+          forests = Libertree::Model::Forest.all_local_is_member
+        end
+        with_forests(forests) do |tree|
           tree.req_comment_like_delete job.params['comment_like_id']
         end
       end
@@ -178,7 +198,12 @@ class JobProcessor
     when 'request:POST-LIKE'
       like = Libertree::Model::PostLike[job.params['post_like_id'].to_i]
       if like
-        with_forests(like.post.server.forests) do |tree|
+        if like.post.remote?
+          forests = like.post.server.forests
+        else
+          forests = Libertree::Model::Forest.all_local_is_member
+        end
+        with_forests(forests) do |tree|
           tree.req_post_like like
         end
       end
@@ -186,7 +211,12 @@ class JobProcessor
     when 'request:POST-LIKE-DELETE'
       like = Libertree::Model::PostLike[job.params['post_like_id'].to_i]
       if like
-        with_forests(like.post.server.forests) do |tree|
+        if like.post.remote?
+          forests = like.post.server.forests
+        else
+          forests = Libertree::Model::Forest.all_local_is_member
+        end
+        with_forests(forests) do |tree|
           tree.req_post_like_delete job.params['post_like_id']
         end
       end
@@ -262,7 +292,7 @@ class JobProcessor
     c
   end
 
-  def with_forests(forests = Libertree::Model::Forest.all)
+  def with_forests(forests = Libertree::Model::Forest.all_local_is_member)
     forests.each do |f|
       if f.local_is_member?
         with_forest(f) do |client|
