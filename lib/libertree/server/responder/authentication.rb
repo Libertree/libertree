@@ -14,6 +14,11 @@ module Libertree
         end
 
         def rsp_introduce(params)
+          if @ip_remote == Server.conf['ip_public'] || @ip_remote == Server.conf['ip_listen']
+            respond_with_code 'ERROR'
+            return
+          end
+
           public_key = params['public_key']
           if public_key.nil? || public_key.strip.empty?
             respond_with_code 'MISSING PARAMETER'

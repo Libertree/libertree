@@ -9,6 +9,12 @@ describe Libertree::Server::Responder::Authentication do
       @s.should have_responded_with_code('MISSING PARAMETER')
     end
 
+    it 'returns ERROR on self connection' do
+      Libertree::Server.conf = { 'ip_public' => '192.168.0.100' }
+      @s.process 'INTRODUCE { "public_key": "some brand new public key"}'
+      @s.should have_responded_with_code('ERROR')
+    end
+
     it 'returns OK when the public_key is unrecognized' do
       @s.process 'INTRODUCE { "public_key": "some brand new public key"}'
       @s.should have_responded_with_code('OK')

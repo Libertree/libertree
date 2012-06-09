@@ -20,7 +20,10 @@ module Libertree
               )
             end
 
-            forest.set_trees_by_ip params['trees']
+            trees = params['trees'].reject { |t|
+              t['ip'] == Server.conf['ip_public']
+            }
+            forest.set_trees_by_ip trees
 
             respond_with_code 'OK'
           rescue PGError => e
