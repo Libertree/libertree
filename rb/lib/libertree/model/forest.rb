@@ -29,6 +29,9 @@ module Libertree
       def local?
         ! origin_server_id
       end
+      def self.all_local_is_member
+        where  local_is_member: true
+      end
 
       def origin
         Server[origin_server_id]
