@@ -293,11 +293,15 @@ class JobProcessor
   end
 
   def with_forests(forests = Libertree::Model::Forest.all_local_is_member)
+    trees = Set.new
     forests.each do |f|
       if f.local_is_member?
-        with_forest(f) do |client|
-          yield client
-        end
+        trees += f.trees
+      end
+    end
+    trees.each do |tree|
+      with_tree(tree) do |client|
+        yield client
       end
     end
   end
