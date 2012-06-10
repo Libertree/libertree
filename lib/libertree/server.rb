@@ -12,6 +12,9 @@ module Libertree
   module Server
     PORT = 14404
 
+    class ConfigurationError < StandardError
+    end
+
     class << self
       attr_accessor :conf
       attr_accessor :log
@@ -83,11 +86,19 @@ module Libertree
 
     def self.load_config(config_filename)
       @conf = YAML.load( File.read(config_filename) )
+      missing = []
       [
+        'ip_listen',
+        'ip_public',
+        'private_key_path',
       ].each do |required_key|
         if @conf[required_key].nil?
-          raise "Configuration error: #{required_key} is required."
+          missing << required_key
         end
+      end
+
+      if missing.any?
+        raise ConfigurationError.new("Configuration error: Missing required configuration keys: #{missing.join(', ')}")
       end
     end
 
@@ -116,13 +127,16 @@ module Libertree
           else
             @log = $stdout
           end
-        rescue Exception => e
+        rescue ConfigurationError => e
+          $stderr.puts e.message
+          exit 2
+        rescue StandardError => e
           $stderr.puts e.message
           if @conf
             puts "Ignoring changes to configuration."
           else
             puts "Aborting."
-            exit(1)
+            exit 1
           end
         end
 
