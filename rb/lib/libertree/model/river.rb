@@ -60,7 +60,9 @@ module Libertree
       end
 
       def try_post(post)
+        # TODO: We may be able to fold these two EXISTS clauses into the INSERT query at the end of this method
         return  if DB.dbh.sc "SELECT EXISTS( SELECT 1 FROM river_posts WHERE river_id = ? AND post_id = ? LIMIT 1 )", self.id, post.id
+        return  if DB.dbh.sc "SELECT EXISTS( SELECT 1 FROM post_ignores WHERE account_id = ? AND post_id = ? LIMIT 1 )", self.account.id, post.id
 
         parts = query_components
         return  if parts.include?(':tree') && post.member.account.nil?
