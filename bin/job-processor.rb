@@ -90,7 +90,7 @@ class JobProcessor
       comment = Libertree::Model::Comment[job.params['comment_id'].to_i]
       retry_later = false
       if comment
-        with_tree(params['server_id']) do |tree|
+        with_tree(job.params['server_id']) do |tree|
           response = tree.req_comment(comment)
           if response['code'] == 'NOT FOUND'
             # Remote didn't recognize the comment author or the referenced post
@@ -117,39 +117,33 @@ class JobProcessor
         job.time_finished = Time.now
       end
     when 'request:COMMENT-DELETE'
-      comment = Libertree::Model::Comment[job.params['comment_id'].to_i]
-      if comment
-        with_tree(params['server_id']) do |tree|
-          tree.req_comment_delete job.params['comment_id']
-        end
+      with_tree(job.params['server_id']) do |tree|
+        tree.req_comment_delete job.params['comment_id']
       end
       job.time_finished = Time.now
     when 'request:COMMENT-LIKE'
       like = Libertree::Model::CommentLike[job.params['comment_like_id'].to_i]
       if like
-        with_tree(params['server_id']) do |tree|
+        with_tree(job.params['server_id']) do |tree|
           tree.req_comment_like like
         end
       end
       job.time_finished = Time.now
     when 'request:COMMENT-LIKE-DELETE'
-      like = Libertree::Model::CommentLike[job.params['comment_like_id'].to_i]
-      if like
-        with_tree(params['server_id']) do |tree|
-          tree.req_comment_like_delete job.params['comment_like_id']
-        end
+      with_tree(job.params['server_id']) do |tree|
+        tree.req_comment_like_delete job.params['comment_like_id']
       end
       job.time_finished = Time.now
     when 'request:FOREST'
       forest = Libertree::Model::Forest[job.params['forest_id'].to_i]
-      with_tree(params['server_id']) do |tree|
+      with_tree(job.params['server_id']) do |tree|
         tree.req_forest forest
       end
       job.time_finished = Time.now
     when 'request:MEMBER'
       member = Libertree::Model::Member[job.params['member_id'].to_i]
       if member
-        with_tree(params['server_id']) do |tree|
+        with_tree(job.params['server_id']) do |tree|
           tree.req_member member
         end
       end
@@ -157,30 +151,27 @@ class JobProcessor
     when 'request:POST'
       post = Libertree::Model::Post[job.params['post_id'].to_i]
       if post
-        with_tree(params['server_id']) do |tree|
+        with_tree(job.params['server_id']) do |tree|
           tree.req_post post
         end
       end
       job.time_finished = Time.now
     when 'request:POST-DELETE'
-      with_tree(params['server_id']) do |tree|
+      with_tree(job.params['server_id']) do |tree|
         tree.req_post_delete job.params['post_id']
       end
       job.time_finished = Time.now
     when 'request:POST-LIKE'
       like = Libertree::Model::PostLike[job.params['post_like_id'].to_i]
       if like
-        with_tree(params['server_id']) do |tree|
+        with_tree(job.params['server_id']) do |tree|
           tree.req_post_like like
         end
       end
       job.time_finished = Time.now
     when 'request:POST-LIKE-DELETE'
-      like = Libertree::Model::PostLike[job.params['post_like_id'].to_i]
-      if like
-        with_tree(params['server_id']) do |tree|
-          tree.req_post_like_delete job.params['post_like_id']
-        end
+      with_tree(job.params['server_id']) do |tree|
+        tree.req_post_like_delete job.params['post_like_id']
       end
       job.time_finished = Time.now
     when 'http:avatar'
