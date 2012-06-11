@@ -2,7 +2,7 @@ module Libertree
   module Model
     class Forest < M4DBI::Model(:forests)
       def trees
-        @trees ||= Server.s(
+        Server.s(
           %{
             SELECT
               s.*
