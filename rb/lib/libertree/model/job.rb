@@ -6,6 +6,32 @@ module Libertree
       def params
         JSON.parse self['params']
       end
+
+      # First parameter can be a Forest Array.
+      # Otherwise, assumed to create for all member forests.
+      def self.create_for_forests(*args)
+        if args.count == 2
+          forests, create_args = *args
+        else
+          forests = Forest.all_local_is_member
+          create_args = args
+        end
+
+        trees = Set.new
+        forests.each do |f|
+          if f.local_is_member?
+            trees += f.trees
+          end
+        end
+        trees.each do |tree|
+          params = ( create_args[:params] || create_args['params'] || Hash.new )
+          params['server_id'] = tree.id
+          Libertree::Model::Job.create(
+            task: 'request:MEMBER',
+            params: params.to_json
+          )
+        end
+      end
     end
   end
 end
