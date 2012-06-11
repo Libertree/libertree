@@ -22,13 +22,21 @@ module Libertree
                   p.id = rp.post_id
                   AND rp.river_id = ?
                   AND p.time_updated_overall < ?
+                  AND NOT EXISTS(
+                    SELECT 1
+                    FROM post_ignores pi
+                    WHERE
+                      pi.account_id = ?
+                      AND pi.post_id = rp.post_id
+                  )
                 ORDER BY p.time_updated_overall DESC
                 LIMIT #{limit}
               ) AS x
               ORDER BY time_updated_overall
             },
             self.id,
-            older_than.strftime("%Y-%m-%d %H:%M:%S.%6N%z")
+            older_than.strftime("%Y-%m-%d %H:%M:%S.%6N%z"),
+            self.account.id
           )
         else
           Post.s(
@@ -43,13 +51,21 @@ module Libertree
                   p.id = rp.post_id
                   AND rp.river_id = ?
                   AND p.time_created < ?
+                  AND NOT EXISTS(
+                    SELECT 1
+                    FROM post_ignores pi
+                    WHERE
+                      pi.account_id = ?
+                      AND pi.post_id = rp.post_id
+                  )
                 ORDER BY p.time_created DESC
                 LIMIT #{limit}
               ) AS x
               ORDER BY id
             },
             self.id,
-            older_than.strftime("%Y-%m-%d %H:%M:%S.%6N%z")
+            older_than.strftime("%Y-%m-%d %H:%M:%S.%6N%z"),
+            self.account.id
           )
         end
       end
