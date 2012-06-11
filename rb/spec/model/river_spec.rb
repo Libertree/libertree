@@ -19,5 +19,20 @@ describe Libertree::Model::River do
       test_one  'a b c', ['a', 'b', 'c']
       test_one  '1 _ !', ['1', '_', '!']
     end
+
+    it 'treats quoted strings as single components' do
+      test_one  %{match "as is"}, [ 'match', 'as is' ]
+    end
+
+    it 'ignores unmatched quotes' do
+      test_one  %{match "as is}, [ 'match', '"as', 'is' ]
+      test_one  %{match "as is" "hey there}, [ 'match', 'as is', '"hey', 'there' ]
+      test_one  %{match "as is" hey" there}, [ 'match', 'as is', 'hey"', 'there' ]
+    end
+
+    it 'ignores quotes inside words' do
+      test_one  %{match a"s is}, [ 'match', 'a"s', 'is' ]
+      test_one  %{match a"s i"s}, [ 'match', 'a"s', 'i"s' ]
+    end
   end
 end

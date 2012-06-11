@@ -71,7 +71,7 @@ module Libertree
       end
 
       def query_components
-        @query_components ||= self.query.split(/\s+/)
+        @query_components ||= self.query.scan(/"([^"]+)"|(\S+)/).map { |c| c[0] || c[1] }
         @query_components.dup
       end
 
