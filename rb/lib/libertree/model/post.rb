@@ -236,6 +236,14 @@ module Libertree
         )
         mark_as_unread_by_all
       end
+
+      def forests
+        if self.remote?
+          self.server.forests
+        else
+          Libertree::Model::Forest.all_local_is_member
+        end
+      end
     end
   end
 end

@@ -71,6 +71,14 @@ module Libertree
       def public_id
         self.remote_id || self.id
       end
+
+      def forests
+        if self.post.remote?
+          self.post.server.forests
+        else
+          Libertree::Model::Forest.all_local_is_member
+        end
+      end
     end
   end
 end

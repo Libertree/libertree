@@ -24,6 +24,14 @@ module Libertree
         like.comment.notify_about_like like
         like
       end
+
+      def forests
+        if self.comment.post.remote?
+          self.comment.post.server.forests
+        else
+          Libertree::Model::Forest.all_local_is_member
+        end
+      end
     end
   end
 end
