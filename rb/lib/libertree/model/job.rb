@@ -27,7 +27,7 @@ module Libertree
           params = ( create_args[:params] || create_args['params'] || Hash.new )
           params['server_id'] = tree.id
           Libertree::Model::Job.create(
-            task: 'request:MEMBER',
+            task: create_args[:task],
             params: params.to_json
           )
         end
