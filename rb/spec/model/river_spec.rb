@@ -34,5 +34,9 @@ describe Libertree::Model::River do
       test_one  %{match a"s is}, [ 'match', 'a"s', 'is' ]
       test_one  %{match a"s i"s}, [ 'match', 'a"s', 'i"s' ]
     end
+
+    it 'treats "minused" quoted strings as single components' do
+      test_one  %{match -"as is" yo}, [ 'match', '-as is', 'yo' ]
+    end
   end
 end
