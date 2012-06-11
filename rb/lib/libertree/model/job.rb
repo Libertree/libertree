@@ -9,13 +9,8 @@ module Libertree
 
       # First parameter can be a Forest Array.
       # Otherwise, assumed to create for all member forests.
-      def self.create_for_forests(*args)
-        if args.count == 2
-          forests, create_args = *args
-        else
-          forests = Forest.all_local_is_member
-          create_args = args
-        end
+      def self.create_for_forests(create_args, *forests)
+        forests ||= Forest.all_local_is_member
 
         trees = Set.new
         forests.each do |f|
