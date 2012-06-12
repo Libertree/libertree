@@ -76,5 +76,32 @@ describe Libertree::Model::River do
       try_one  'test', 'test', true
       try_one  'test', 'and test', true
     end
+
+    it 'only matches whole words' do
+      try_one  'test', 'testing', false
+      try_one  'test', 'It was tested.', false
+    end
+
+    it 'avoids matching when a minus term matches' do
+      try_one  'test -foo', 'This is where we test foo', false
+    end
+
+    it 'matches quoted text' do
+      try_one  '"foo bar"', 'foo and bar', false
+      try_one  '"foo bar"', 'bar foo', false
+      try_one  '"foo bar"', 'foo bar', true
+      try_one  '"foo bar"', 'and foo bar', true
+      try_one  '"foo bar"', 'foo bar and', true
+      try_one  '"foo bar"', 'andfoo bar', false
+      try_one  '"foo bar"', 'foo barand', false
+      try_one  '"foo bar"', '.foo bar.', true
+      try_one  '"foo bar"', 'will foo bar.', true
+
+      try_one '"foo bar" baz', 'foo and bar baz', true
+
+      try_one '-"foo bar"', 'foo and bar', true
+      try_one 'hey -"foo bar"', 'foo and bar hey', true
+      try_one 'hey -"foo bar"', 'foo bar hey', false
+    end
   end
 end
