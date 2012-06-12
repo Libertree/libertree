@@ -1,6 +1,6 @@
 module Libertree
   module Model
-    class PostIgnore < M4DBI::Model(:post_ignores)
+    class PostHidden < M4DBI::Model(:posts_hidden)
       def account
         @account ||= Account[self.account_id]
       end

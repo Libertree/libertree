@@ -146,7 +146,7 @@ module Libertree
         accounts.compact!
         accounts.delete comment_author
         accounts.each do |a|
-          if ! comment.post.ignored_by?(a)
+          if ! comment.post.hidden_by?(a)
             a.notify_about notification_attributes
           end
         end
@@ -247,8 +247,8 @@ module Libertree
         end
       end
 
-      def ignored_by?(account)
-        DB.dbh.sc  "SELECT EXISTS( SELECT 1 FROM post_ignores WHERE account_id = ? AND post_id = ? )", account.id, self.id
+      def hidden_by?(account)
+        DB.dbh.sc  "SELECT EXISTS( SELECT 1 FROM posts_hidden WHERE account_id = ? AND post_id = ? )", account.id, self.id
       end
     end
   end

@@ -24,7 +24,7 @@ module Libertree
                   AND p.time_updated_overall < ?
                   AND NOT EXISTS(
                     SELECT 1
-                    FROM post_ignores pi
+                    FROM posts_hidden pi
                     WHERE
                       pi.account_id = ?
                       AND pi.post_id = rp.post_id
@@ -53,7 +53,7 @@ module Libertree
                   AND p.time_created < ?
                   AND NOT EXISTS(
                     SELECT 1
-                    FROM post_ignores pi
+                    FROM posts_hidden pi
                     WHERE
                       pi.account_id = ?
                       AND pi.post_id = rp.post_id
@@ -80,7 +80,7 @@ module Libertree
       def try_post(post)
         # TODO: We may be able to fold these two EXISTS clauses into the INSERT query at the end of this method
         return  if DB.dbh.sc "SELECT EXISTS( SELECT 1 FROM river_posts WHERE river_id = ? AND post_id = ? LIMIT 1 )", self.id, post.id
-        return  if DB.dbh.sc "SELECT EXISTS( SELECT 1 FROM post_ignores WHERE account_id = ? AND post_id = ? LIMIT 1 )", self.account.id, post.id
+        return  if DB.dbh.sc "SELECT EXISTS( SELECT 1 FROM posts_hidden WHERE account_id = ? AND post_id = ? LIMIT 1 )", self.account.id, post.id
 
         parts = query_components
         return  if parts.include?(':tree') && post.member.account.nil?
