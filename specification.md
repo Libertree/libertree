@@ -73,37 +73,17 @@ a command not specified in this protocol, servers MUST respond with an
     { "code": "UNKNOWN COMMAND" }
 
 Given request data that conforms to the required format, contains a valid
-command, but whose parameter data is not valid JSON, responders MUST respond
-with a "BAD PARAMETER" code.  Servers MAY provide a message element to assist
-request debugging.  Response structure:
+command, but whose parameter data (a) is not valid JSON, (b) is missing
+required parameters, or (c) has parameters of the wrong data type, responders
+MUST respond with a "BAD PARAMETER" code.  Unless otherwise specified, a
+parameter which is present but blank MUST be considered missing.  Servers MAY
+provide a message element to assist request debugging.  Response structure:
 
     {
       "code": "BAD PARAMETER",
       [[ "message": <explanatory text> ]]
     }
 
-Given a request parameter structure which is valid JSON, but which is missing
-any required parameter, responders MUST respond with a "MISSING PARAMETER" code
-and the name of the missing element.  Unless otherwise specified, a parameter
-which is present but blank MUST be considered missing.  Responders MAY provide
-a message element to assist request debugging.  Response structure:
-
-    {
-      "code": "MISSING PARAMETER",
-      "parameter": <field name>,
-      [[ "message": <explanatory text> ]]
-    }
-
-Given a request parameter structure which has a parameter of the wrong data
-type, responders MUST respond with an "WRONG TYPE" error code and the name of
-the offending element.  Responders MAY provide a message element to assist
-request debugging.  Response structure:
-
-    {
-      "code": "WRONG TYPE",
-      "parameter": <field name>,
-      [[ "message": <explanatory text> ]]
-    }
 
 ### INTRODUCE
 
