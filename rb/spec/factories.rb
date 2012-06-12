@@ -12,7 +12,6 @@ FactoryGirl.define do
 
   factory :member, :class => Libertree::Model::Member do
     sequence(:username) { |n| "member#{n}" }
-    server
   end
 
   factory :river, :class => Libertree::Model::River do
