@@ -145,7 +145,7 @@ module Libertree
 
       def revise( params )
         self.label = params['label']
-        self.query = params['query'].downcase
+        self.query = params['query']
         refresh_posts
       end
 
