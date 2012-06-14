@@ -5,5 +5,5 @@ CONSTRAINT valid_excerpt_max_height CHECK (
     excerpt_max_height >= 200
 );
 
-COMMENT ON COLUMN accounts.excerpt_height IS
+COMMENT ON COLUMN accounts.excerpt_max_height IS
 'The maximum height in pixels of excerpts on the home page.';
