@@ -71,8 +71,8 @@ module Libertree
       end
 
       def query_components
-        @query_components ||= self.query.scan(/(-?"[^"]+")|(\S+)/).map { |c|
-          c[1] || c[0].gsub(/^-"/, '-').gsub(/^"|"$/, '')
+        @query_components ||= self.query.scan(/(-?"[^"]+")|(:from ".+?")|(\S+)/).map { |c|
+          c[2] || c[1] || c[0].gsub(/^-"/, '-').gsub(/^"|"$/, '')
         }
         @query_components.dup
       end
@@ -102,7 +102,11 @@ module Libertree
         if parts.any?
           term_match = false
           parts.each do |term|
-            term_match ||= ( /(?:^|\b|\s)#{term}(?:\b|\s|$)/i === post.text )
+            if term =~ /^:from "(.+?)"$/
+              term_match ||= ( post.member.name_display == $1 )
+            else
+              term_match ||= ( /(?:^|\b|\s)#{term}(?:\b|\s|$)/i === post.text )
+            end
           end
           return  if ! term_match
         end

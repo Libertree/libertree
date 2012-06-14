@@ -5,6 +5,11 @@ FactoryGirl.define do
     sequence(:name) { |n| "forest#{n}" }
   end
 
+  factory :server, :class => Libertree::Model::Server do
+    sequence(:ip) { |n| "67.67.#{n/256}.#{n%256}" }
+    sequence(:name_given) { |n| "server#{n}" }
+  end
+
   factory :account, :class => Libertree::Model::Account do
     sequence(:username) { |n| "account#{n}" }
     sequence(:password_encrypted) { |n| n }
@@ -12,6 +17,9 @@ FactoryGirl.define do
 
   factory :member, :class => Libertree::Model::Member do
     sequence(:username) { |n| "member#{n}" }
+  end
+
+  factory :profile, :class => Libertree::Model::Profile do
   end
 
   factory :river, :class => Libertree::Model::River do

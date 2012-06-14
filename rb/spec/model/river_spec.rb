@@ -39,6 +39,13 @@ describe Libertree::Model::River do
     it 'treats "minused" quoted strings as single components' do
       test_one  %{match -"as is" yo}, [ 'match', '-as is', 'yo' ]
     end
+
+    it 'treats :from "..." as a single term' do
+      test_one  %{:from "abc"}, [ ':from "abc"', ]
+      test_one  %{:from "abc def"}, [ ':from "abc def"', ]
+      test_one  %{abc :from "def"}, [ 'abc', ':from "def"', ]
+      test_one  %{abc :from "def ghi" jkl}, [ 'abc', ':from "def ghi"', 'jkl', ]
+    end
   end
 
   describe '#try_post' do
@@ -49,7 +56,7 @@ describe Libertree::Model::River do
       )
     end
 
-    def try_one( query, post_text, should_match = true )
+    def try_one( query, post_text, should_match, post_author = @member )
       Libertree::DB.dbh.d  "DELETE FROM river_posts"
       Libertree::DB.dbh.d  "DELETE FROM rivers"
       river = Libertree::Model::River.create(
@@ -59,13 +66,13 @@ describe Libertree::Model::River do
       if should_match
         expect {
           post = Libertree::Model::Post.create(
-            FactoryGirl.attributes_for( :post, member_id: @member.id, text: post_text )
+            FactoryGirl.attributes_for( :post, member_id: post_author.id, text: post_text )
           )
         }.to change { Libertree::DB.dbh.sc "SELECT COUNT(*) FROM river_posts" }.by(1)
       else
         expect {
           post = Libertree::Model::Post.create(
-            FactoryGirl.attributes_for( :post, member_id: @member.id, text: post_text )
+            FactoryGirl.attributes_for( :post, member_id: post_author.id, text: post_text )
           )
         }.not_to change { Libertree::DB.dbh.sc "SELECT COUNT(*) FROM river_posts" }
       end
@@ -84,6 +91,61 @@ describe Libertree::Model::River do
 
     it 'avoids matching when a minus term matches' do
       try_one  'test -foo', 'This is where we test foo', false
+    end
+
+    context 'given two different local posters' do
+      before do
+        @account2 = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
+        @member2 = Libertree::Model::Member.create(
+          FactoryGirl.attributes_for( :member, :account_id => @account2.id, username: nil )
+        )
+        @account3 = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
+        @member3 = Libertree::Model::Member.create(
+          FactoryGirl.attributes_for( :member, :account_id => @account3.id, username: nil )
+        )
+      end
+
+      it 'matches :from "account username"' do
+        try_one  %{:from "#{@account2.username}"}, 'Post by the second account.', true, @member2
+        try_one  %{:from "#{@account3.username}"}, 'Post by the second account.', false, @member2
+        try_one  %{:from "#{@account2.username}"}, 'Post by the third account.', false, @member3
+        try_one  %{:from "#{@account3.username}"}, 'Post by the third account.', true, @member3
+      end
+    end
+
+    context 'given two different remote posters' do
+      before do
+        server = Libertree::Model::Server.create(
+          FactoryGirl.attributes_for(:server, name_given: 'remote' )
+        )
+        @member4 = Libertree::Model::Member.create(
+          FactoryGirl.attributes_for( :member, username: 'poster3', server_id: server.id )
+        )
+        @member5 = Libertree::Model::Member.create(
+          FactoryGirl.attributes_for( :member, username: 'poster4', server_id: server.id )
+        )
+      end
+
+      it 'matches :from "member handle"' do
+        try_one  ':from "poster3@remote"', 'Post by fourth member.', true, @member4
+        try_one  ':from "poster3@remote"', 'Post by fifth member.', false, @member5
+        try_one  ':from "poster4@remote"', 'Post by fourth member.', false, @member4
+        try_one  ':from "poster4@remote"', 'Post by fifth member.', true, @member5
+      end
+
+      context 'with display names' do
+        before do
+          @member4.profile.name_display = 'First1 Last1'
+          @member5.profile.name_display = 'First2 Last2'
+        end
+
+        it 'matches :from "member display name"' do
+          try_one  ':from "First1 Last1"', 'Post by fourth member.', true, @member4
+          try_one  ':from "First1 Last1"', 'Post by fifth member.', false, @member5
+          try_one  ':from "First2 Last2"', 'Post by fourth member.', false, @member4
+          try_one  ':from "First2 Last2"', 'Post by fifth member.', true, @member5
+        end
+      end
     end
 
     it 'matches quoted text' do
