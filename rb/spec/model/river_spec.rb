@@ -46,6 +46,13 @@ describe Libertree::Model::River do
       test_one  %{abc :from "def"}, [ 'abc', ':from "def"', ]
       test_one  %{abc :from "def ghi" jkl}, [ 'abc', ':from "def ghi"', 'jkl', ]
     end
+
+    it 'treats -:from "..." as a single term' do
+      test_one  %{-:from "abc"}, [ '-:from "abc"', ]
+      test_one  %{-:from "abc def"}, [ '-:from "abc def"', ]
+      test_one  %{abc -:from "def"}, [ 'abc', '-:from "def"', ]
+      test_one  %{abc -:from "def ghi" jkl}, [ 'abc', '-:from "def ghi"', 'jkl', ]
+    end
   end
 
   describe '#try_post' do
@@ -144,6 +151,13 @@ describe Libertree::Model::River do
           try_one  ':from "First1 Last1"', 'Post by fifth member.', false, @member5
           try_one  ':from "First2 Last2"', 'Post by fourth member.', false, @member4
           try_one  ':from "First2 Last2"', 'Post by fifth member.', true, @member5
+        end
+
+        it 'does not match -:from "member display name"' do
+          try_one  '-:from "First1 Last1"', 'Post by fourth member.', false, @member4
+          try_one  '-:from "First1 Last1"', 'Post by fifth member.', true, @member5
+          try_one  '-:from "First2 Last2"', 'Post by fourth member.', true, @member4
+          try_one  '-:from "First2 Last2"', 'Post by fifth member.', false, @member5
         end
       end
     end

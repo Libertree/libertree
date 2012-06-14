@@ -71,10 +71,18 @@ module Libertree
       end
 
       def query_components
-        @query_components ||= self.query.scan(/(-?"[^"]+")|(:from ".+?")|(\S+)/).map { |c|
+        @query_components ||= self.query.scan(/(-?"[^"]+")|(-?:from ".+?")|(\S+)/).map { |c|
           c[2] || c[1] || c[0].gsub(/^-"/, '-').gsub(/^"|"$/, '')
         }
         @query_components.dup
+      end
+
+      def term_matches_post?(term, post)
+        if term =~ /^:from "(.+?)"$/
+          term_match ||= ( post.member.name_display == $1 )
+        else
+          term_match ||= ( /(?:^|\b|\s)#{term}(?:\b|\s|$)/i === post.text )
+        end
       end
 
       def try_post(post)
@@ -90,23 +98,24 @@ module Libertree
         parts.delete ':tree'
         parts.delete ':unread'
 
+        # Negations: Must not satisfy any of the conditions
+
         parts.dup.each do |term|
-          if term =~ /^-./
+          if term =~ /^-(.+)$/
+            positive_term = $1
             parts.delete term
-            if post.text =~ /(?:^|\b|\s)#{term[1..-1]}(?:\b|\s|$)/i
-              return
-            end
+            return  if term_matches_post?(positive_term, post)
           end
         end
+
+        # TODO: Requirements: Must satisfy every required condition
+
+        # Regular terms: Must satisfy at least one condition
 
         if parts.any?
           term_match = false
           parts.each do |term|
-            if term =~ /^:from "(.+?)"$/
-              term_match ||= ( post.member.name_display == $1 )
-            else
-              term_match ||= ( /(?:^|\b|\s)#{term}(?:\b|\s|$)/i === post.text )
-            end
+            term_match ||= term_matches_post?(term, post)
           end
           return  if ! term_match
         end
