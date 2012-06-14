@@ -53,6 +53,13 @@ describe Libertree::Model::River do
       test_one  %{abc -:from "def"}, [ 'abc', '-:from "def"', ]
       test_one  %{abc -:from "def ghi" jkl}, [ 'abc', '-:from "def ghi"', 'jkl', ]
     end
+
+    it 'treats +:from "..." as a single term' do
+      test_one  %{+:from "abc"}, [ '+:from "abc"', ]
+      test_one  %{+:from "abc def"}, [ '+:from "abc def"', ]
+      test_one  %{abc +:from "def"}, [ 'abc', '+:from "def"', ]
+      test_one  %{abc +:from "def ghi" jkl}, [ 'abc', '+:from "def ghi"', 'jkl', ]
+    end
   end
 
   describe '#try_post' do
@@ -98,6 +105,15 @@ describe Libertree::Model::River do
 
     it 'avoids matching when a minus term matches' do
       try_one  'test -foo', 'This is where we test foo', false
+    end
+
+    it 'requires every term with a plus in front' do
+      try_one  'test +foo', 'This is a test.', false
+      try_one  'test +foo', 'This is a test foo.', true
+      try_one  'test +foo +bar', 'This is a test foo.', false
+      try_one  'test +foo +bar', 'This is a test bar.', false
+      try_one  'test +foo +bar', 'This is a test foo bar.', true
+      try_one  'test +foo +bar', 'This is bar a test foo.', true
     end
 
     context 'given two different local posters' do
@@ -159,6 +175,14 @@ describe Libertree::Model::River do
           try_one  '-:from "First2 Last2"', 'Post by fourth member.', true, @member4
           try_one  '-:from "First2 Last2"', 'Post by fifth member.', false, @member5
         end
+
+        it 'requires authorship with +:from' do
+          try_one  '+:from "First1 Last1"', 'Post by fourth member.', true, @member4
+          try_one  '+:from "First1 Last1"', 'Post by fifth member.', false, @member5
+          try_one  '+:from "First1 Last1" foo', 'Post by fourth member.', false, @member4
+          try_one  '+:from "First1 Last1" foo', 'Post foo by fifth member.', false, @member5
+          try_one  '+:from "First1 Last1" foo', 'Post foo by fourth member.', true, @member4
+        end
       end
     end
 
@@ -178,6 +202,11 @@ describe Libertree::Model::River do
       try_one '-"foo bar"', 'foo and bar', true
       try_one 'hey -"foo bar"', 'foo and bar hey', true
       try_one 'hey -"foo bar"', 'foo bar hey', false
+
+      try_one '+"foo bar"', 'foo and bar', false
+      try_one '+"foo bar"', 'foo bar', true
+      try_one '+"foo bar" baz', 'foo bar bleh', false
+      try_one '+"foo bar" baz', 'foo bar baz', true
     end
   end
 end

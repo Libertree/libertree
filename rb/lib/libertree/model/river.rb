@@ -71,8 +71,8 @@ module Libertree
       end
 
       def query_components
-        @query_components ||= self.query.scan(/(-?"[^"]+")|(-?:from ".+?")|(\S+)/).map { |c|
-          c[2] || c[1] || c[0].gsub(/^-"/, '-').gsub(/^"|"$/, '')
+        @query_components ||= self.query.scan(/([+-]?"[^"]+")|([+-]?:from ".+?")|(\S+)/).map { |c|
+          c[2] || c[1] || c[0].gsub(/^([+-])"/, "\\1").gsub(/^"|"$/, '')
         }
         @query_components.dup
       end
@@ -91,9 +91,11 @@ module Libertree
         return  if DB.dbh.sc "SELECT EXISTS( SELECT 1 FROM posts_hidden WHERE account_id = ? AND post_id = ? LIMIT 1 )", self.account.id, post.id
 
         parts = query_components
+
+        # Scope limiters
+
         return  if parts.include?(':tree') && post.member.account.nil?
         return  if parts.include?(':unread') && post.read_by?( self.account )
-        # TODO: Maybe just delete everything starting with a colon?
         parts.delete ':forest'
         parts.delete ':tree'
         parts.delete ':unread'
@@ -108,7 +110,17 @@ module Libertree
           end
         end
 
-        # TODO: Requirements: Must satisfy every required condition
+        # Requirements: Must satisfy every required condition
+
+        matches_all = true
+        parts.dup.each do |term|
+          if term =~ /^\+(.+)$/
+            actual_term = $1
+            parts.delete term
+            matches_all &&= term_matches_post?(actual_term, post)
+          end
+        end
+        return  if ! matches_all
 
         # Regular terms: Must satisfy at least one condition
 
