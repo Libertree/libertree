@@ -136,6 +136,12 @@ module Libertree
       def admin?
         self.admin
       end
+
+      # Set which post an account is watching for new comments (for websocket+AJAX update)
+      def watch_post(post)
+        self.watched_post_id = post.id
+        self.watched_post_last_comment_id = post.comments.max_by(&:id).id
+      end
     end
   end
 end
