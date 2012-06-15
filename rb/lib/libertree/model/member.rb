@@ -34,6 +34,10 @@ module Libertree
         Profile.create( member_id: member.id )
         member
       end
+
+      def posts(n = 8)
+        Post.s  "SELECT * FROM posts WHERE member_id = ? ORDER BY id DESC LIMIT #{n.to_i}", self.id
+      end
     end
   end
 end
