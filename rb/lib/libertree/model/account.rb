@@ -63,6 +63,7 @@ module Libertree
         account = super
         member = Member.create( account_id: account.id )
         River.ensure_beginner_rivers_for account
+        account.rivers.find { |r| r.query == ':unread' }.home = true
         account
       end
 
