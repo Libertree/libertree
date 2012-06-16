@@ -144,7 +144,7 @@ module Libertree
         if max_comment
           self.watched_post_last_comment_id = max_comment.id
         else
-          self.watched_post_last_comment_id = 0
+          self.watched_post_last_comment_id = nil
         end
       end
     end
