@@ -38,6 +38,7 @@ module Libertree
         comment.post.mark_as_unread_by_all  except: [account]
         if account
           comment.post.mark_as_read_by account
+          account.subscribe_to comment.post
         end
         comment.post.notify_about_comment comment
         comment

@@ -147,6 +147,50 @@ module Libertree
           self.watched_post_last_comment_id = nil
         end
       end
+
+      def subscribe_to(post)
+        DB.dbh.i(
+          %{
+            INSERT INTO post_subscriptions (
+                account_id
+              , post_id
+            ) SELECT
+                ?
+              , ?
+            WHERE NOT EXISTS(
+              SELECT 1
+              FROM post_subscriptions ps
+              WHERE
+                ps.account_id = ?
+                AND ps.post_id = ?
+            )
+          },
+          self.id,
+          post.id,
+          self.id,
+          post.id
+        )
+      end
+
+      def subscribed_to?(post)
+        DB.dbh.sc  "SELECT EXISTS( SELECT 1 FROM post_subscriptions WHERE account_id = ? AND post_id = ? ) ", self.id, post.id
+      end
+
+      def self.subscribed_to(post)
+        s(
+          %{
+            SELECT
+              a.*
+            FROM
+                accounts a
+              , post_subscriptions ps
+            WHERE
+              ps.post_id = ?
+              AND a.id = ps.account_id
+          },
+          post.id
+        )
+      end
     end
   end
 end

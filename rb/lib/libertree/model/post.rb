@@ -133,18 +133,8 @@ module Libertree
           'type'       => 'comment',
           'comment_id' => comment.id,
         }
-        accounts = []
-        local_post_author = comment.post.member.account
-        accounts << local_post_author
-
-        comment_author = comment.member.account
-        comments.each do |c|
-          accounts << c.member.account
-        end
-
-        accounts.uniq!
-        accounts.compact!
-        accounts.delete comment_author
+        accounts = Libertree::Model::Account.subscribed_to(comment.post)
+        accounts.delete comment.member.account
         accounts.each do |a|
           if ! comment.post.hidden_by?(a)
             a.notify_about notification_attributes
@@ -201,6 +191,7 @@ module Libertree
         post.add_to_matching_rivers
         if post.member.account
           post.mark_as_read_by post.member.account
+          post.member.account.subscribe_to post
         end
         post
       end
