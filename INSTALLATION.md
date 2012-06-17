@@ -126,7 +126,7 @@ The Libertree software currently requires a valid invitation code to sign up.
 Members can generate invitation URLs from the Settings page, but the very first
 invitation needs to be created by hand:
 
-    % echo 'INSERT INTO invitations DEFAULT VALUES; SELECT code FROM invitations ORDER BY id DESC LIMIT 1;' | psql -U libertree libertree_development
+    % echo 'INSERT INTO invitations DEFAULT VALUES; SELECT code FROM invitations ORDER BY id DESC LIMIT 1;' | psql -U libertree libertree_production
 
 Then use the given code on the signup page.
 
