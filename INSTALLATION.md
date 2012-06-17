@@ -31,6 +31,9 @@ Start up the PostgreSQL server.  Under Gentoo:
 
     # /etc/init.d/postgresql-9.1 start
 
+On Debian and Ubuntu, you will likely also need to install the development
+package, libpq-dev, or the Ruby 'pg' gem may fail to install.
+
 If a web server proxy will be used (recommended), install it as well.  This
 could be Apache, or Nginx, or anything equivalent.  Under Gentoo:
 
