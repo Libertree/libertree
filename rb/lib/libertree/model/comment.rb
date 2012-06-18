@@ -15,7 +15,23 @@ module Libertree
       end
 
       def delete_cascade
-        DB.dbh.d %|DELETE FROM notifications WHERE data = '{"type":"comment","comment_id":#{self.id}}'|
+        DB.dbh.d  %|DELETE FROM notifications WHERE data = '{"type":"comment","comment_id":#{self.id}}'|
+        DB.dbh.d(
+          %{
+            UPDATE accounts
+            SET watched_post_last_comment_id = (
+              SELECT MAX(id)
+              FROM comments
+              WHERE
+                post_id = ?
+                AND id < ?
+            )
+            WHERE watched_post_last_comment_id = ?
+          },
+          self.post.id,
+          self.id,
+          self.id
+        )
         self.delete
       end
 
