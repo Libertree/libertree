@@ -172,6 +172,10 @@ module Libertree
         )
       end
 
+      def unsubscribe_from(post)
+        DB.dbh.d  "DELETE FROM post_subscriptions WHERE account_id = ? AND post_id = ?", self.id, post.id
+      end
+
       def subscribed_to?(post)
         DB.dbh.sc  "SELECT EXISTS( SELECT 1 FROM post_subscriptions WHERE account_id = ? AND post_id = ? ) ", self.id, post.id
       end
