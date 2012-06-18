@@ -166,6 +166,7 @@ module Libertree
       def delete_cascade
         DB.dbh.delete "DELETE FROM posts_read WHERE post_id = ?", self.id
         DB.dbh.delete "DELETE FROM river_posts WHERE post_id = ?", self.id
+        DB.dbh.delete "DELETE FROM post_subscriptions WHERE post_id = ?", self.id
         DB.dbh.delete(
           %{
               UPDATE accounts
