@@ -255,7 +255,7 @@ class JobProcessor
           yield client
         end
       rescue Errno::ETIMEDOUT, Errno::ECONNREFUSED => e
-        log_error "With #{tree.name_display} (#{tree.ip}): #{e.message}"
+        log_error "With #{server.name_display} (#{server.ip}): #{e.message}"
       end
     end
   end
