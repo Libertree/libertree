@@ -130,6 +130,13 @@ invitation needs to be created by hand:
 
 Then use the given code on the signup page.
 
+### Admin account
+
+After your first account is created (later, once all the daemons are running
+(see USAGE.md)), set that account to be the admin user, like this:
+
+    % echo "UPDATE accounts SET admin = 'true' WHERE username = 'youraccount';" | psql -U libertree libertree_production
+
 ## Backend
 
 As the libertree user:
