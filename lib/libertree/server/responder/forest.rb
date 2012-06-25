@@ -27,6 +27,7 @@ module Libertree
 
             respond_with_code 'OK'
           rescue PGError => e
+            log "Error on FOREST request: #{e.message}"
             respond_with_code 'ERROR'
           end
         end
