@@ -9,6 +9,10 @@ module Libertree
           else
             log "Server #{@server.id} authenticated."
             @server.authenticated = true
+            if params['name'] && ! params['name'].strip.empty?
+              @server.name_given = params['name'].strip
+            end
+            @server.ip = @ip_remote
             respond_with_code 'OK'
           end
         end
@@ -30,12 +34,11 @@ module Libertree
             @server = Model::Server.create(
               'ip'         => @ip_remote,
               'public_key' => public_key,
-              'name_given' => params['name']
             )
             @server.extend Authenticatable
             @server.authenticated = true
 
-            log "#{@ip_remote} is a new server (id: #{@server.id}, name: #{@server.name_given.inspect})."
+            log "#{@ip_remote} is a new server (id: #{@server.id})."
 
             respond_with_code 'OK'
           else

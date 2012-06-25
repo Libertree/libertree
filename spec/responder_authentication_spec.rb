@@ -21,14 +21,6 @@ describe Libertree::Server::Responder::Authentication do
       @s.response['challenge'].should be_nil
     end
 
-    it 'stores the server name when it is given' do
-      Libertree::Model::Server[name_given: 'cool-server'].should be_nil
-      @s.process 'INTRODUCE { "public_key": "some brand new public key", "name": "cool-server"}'
-      @s.should have_responded_with_code('OK')
-      @s.response['challenge'].should be_nil
-      Libertree::Model::Server[name_given: 'cool-server'].should_not be_nil
-    end
-
     context 'when the public_key is recognized' do
       before :each do
         @requester = Libertree::Model::Server.create( FactoryGirl.attributes_for(:server) )
@@ -75,6 +67,22 @@ describe Libertree::Server::Responder::Authentication do
           it 'returns OK if the requester provides the exact challenge string' do
             @s.process 'AUTHENTICATE { "response": "abcdefghijklmnopqrstuvwxyz" }'
             @s.should have_responded_with_code('OK')
+          end
+
+          it 'updates the server name when it is given' do
+            Libertree::Model::Server[name_given: 'cool-server'].should be_nil
+
+            @s.process 'AUTHENTICATE { "response": "abcdefghijklmnopqrstuvwxyz", "name": "cool-server" }'
+            @s.should have_responded_with_code('OK')
+
+            Libertree::Model::Server[name_given: 'cool-server'].should_not be_nil
+          end
+
+          it 'updates the server IP' do
+            @requester.ip = '9.8.7.6'
+            Libertree::Model::Server[@requester.id].ip.should == '9.8.7.6'
+            @s.process 'AUTHENTICATE { "response": "abcdefghijklmnopqrstuvwxyz" }'
+            Libertree::Model::Server[@requester.id].ip.should == '192.168.0.100'
           end
         end
       end
