@@ -19,7 +19,25 @@ module Libertree
       alias :servers :trees
 
       def add(server)
-        DB.dbh.i  "INSERT INTO forests_servers ( forest_id, server_id ) VALUES ( ?, ? )", self.id, server.id
+        DB.dbh.i(
+          %{
+            INSERT INTO forests_servers (
+              forest_id, server_id
+            ) SELECT
+              ?, ?
+            WHERE NOT EXISTS(
+              SELECT 1
+              FROM forests_servers fs2
+              WHERE
+                fs2.forest_id = ?
+                AND fs2.server_id = ?
+            )
+          },
+          self.id,
+          server.id,
+          self.id,
+          server.id
+        )
       end
 
       def remove(server)
