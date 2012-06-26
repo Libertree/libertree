@@ -5,6 +5,7 @@ require 'libertree/server/responder/comment'
 require 'libertree/server/responder/comment-like'
 require 'libertree/server/responder/forest'
 require 'libertree/server/responder/member'
+require 'libertree/server/responder/message'
 require 'libertree/server/responder/post'
 require 'libertree/server/responder/post-like'
 
@@ -18,6 +19,7 @@ module Libertree
       include CommentLike
       include Forest
       include Member
+      include Message
       include Post
       include PostLike
 

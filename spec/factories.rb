@@ -14,6 +14,11 @@ FactoryGirl.define do
     sequence(:name) { |n| "forest#{n}" }
   end
 
+  factory :account, :class => Libertree::Model::Account do
+    sequence(:username) { |n| "account#{n}" }
+    sequence(:password_encrypted) { |n| "%09x" % n }
+  end
+
   factory :member, :class => Libertree::Model::Member do
     sequence(:username) { |n| "member#{n}" }
     server
