@@ -82,6 +82,7 @@ repository:
     % cd ~/git/libertree-db
     % git fetch origin && git merge --ff-only @{u}
     % rvm use 1.9.3@libertree-db
+    % cd rb
     % LIBERTREE_ENV=production ./migrate.sh
     % cd ~/git/libertree-client-rb
     % git fetch origin && git merge --ff-only @{u}
@@ -96,6 +97,7 @@ release notes which may describe new settings or migrations.
 If there are SCSS changes, compile the SCSS to CSS:
 
     % cd ~/git/libertree-frontend-ramaze
+    % rvm use 1.9.3@libertree-frontend-ramaze
     % ./css-build.sh
 
 This command is safe to run, even if it is not certain whether there were SCSS
