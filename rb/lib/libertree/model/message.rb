@@ -26,14 +26,29 @@ module Libertree
         )
       end
 
+      # Pass either :recipient_member_usernames or :recipient_member_ids in args.
       def self.create_with_recipients(args)
         message = self.create(
           sender_member_id: args[:sender_member_id],
           text: args[:text]
         )
-        Array(args[:recipient_member_ids]).each do |member_id|
+
+        if args[:recipient_member_usernames].nil?
+          recipient_member_ids = Array(args[:recipient_member_ids])
+        else
+          recipient_member_ids = []
+          Array(args[:recipient_member_usernames]).each do |username|
+            account = Account[username: username]
+            if account
+              recipient_member_ids << account.member.id
+            end
+          end
+        end
+
+        recipient_member_ids.each do |member_id|
           DB.dbh.i  "INSERT INTO message_recipients ( message_id, member_id ) VALUES ( ?, ? )", message.id, member_id.to_i
         end
+
         message
       end
     end
