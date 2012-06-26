@@ -25,6 +25,17 @@ module Libertree
           self.id
         )
       end
+
+      def self.create_with_recipients(args)
+        message = self.create(
+          sender_member_id: args[:sender_member_id],
+          text: args[:text]
+        )
+        Array(args[:recipient_member_ids]).each do |member_id|
+          DB.dbh.i  "INSERT INTO message_recipients ( message_id, member_id ) VALUES ( ?, ? )", message.id, member_id.to_i
+        end
+        message
+      end
     end
   end
 end
