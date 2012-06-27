@@ -482,3 +482,48 @@ the comment.
 Responders MAY return a "NOT FOUND" code to indicate that it has no record
 of the given Like.
 
+### MESSAGE
+
+Request Parameters:
+
+    {
+      "id": <message id on requester>,
+      "username": <username of message author on requester>,
+      "recipients": [
+        { "username": <recipient's username on responder> },
+        [[ { "username": <recipient's username on responder> }, ... ]]
+      ],
+      "text": <message text>,
+    }
+
+Response Structure:
+
+    { "code": "OK" }
+    |
+    {
+      "code": "NOT FOUND",
+      "missing": ["MEMBER"]
+    }
+    |
+    { "code": "NOT FOUND" }
+    |
+    {
+      "code": "REJECTED",
+      [[ "message": <explanatory message> ]]
+    }
+
+A requester would use the MESSAGE command to share with a remote server a new
+direct message created at the requester having one or more recipients who are
+based at the responder.
+
+Responders SHOULD return a "NOT FOUND" code to indicate that it has no record
+of the message author.  Requesters SHOULD send a request for the missing MEMBER
+if a NOT FOUND with (missing: MEMBER) is sent.
+
+A responder MAY respond with a "NOT FOUND" code if it has no record of one or
+more of the recipients.
+
+Responders MAY respond with a REJECTED code for any reason, and such a response
+MAY be accompanied by an explanatory message.  When a MESSAGE request is rejected,
+the requester SHOULD retry the MESSAGE request at a future time, but MAY elect
+not to after several rejections.
