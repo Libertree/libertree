@@ -195,6 +195,18 @@ module Libertree
           post.id
         )
       end
+
+      def messages
+        Message.s(
+          %{
+            SELECT *
+            FROM view__messages_sent_and_received
+            WHERE member_id = ?
+            ORDER BY id DESC
+          },
+          self.member.id
+        )
+      end
     end
   end
 end
