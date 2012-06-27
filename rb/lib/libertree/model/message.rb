@@ -26,6 +26,10 @@ module Libertree
         )
       end
 
+      def visible_to?(account)
+        self.sender == account.member || recipients.include?(account.member)
+      end
+
       # Pass either :recipient_member_usernames or :recipient_member_ids in args.
       def self.create_with_recipients(args)
         message = self.create(
