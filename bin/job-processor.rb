@@ -148,6 +148,14 @@ class JobProcessor
         end
       end
       job.time_finished = Time.now
+    when 'request:MESSAGE'
+      message = Libertree::Model::Message[job.params['message_id'].to_i]
+      if message
+        with_tree(job.params['server_id']) do |tree|
+          tree.req_message message, job.params['recipient_usernames']
+        end
+      end
+      job.time_finished = Time.now
     when 'request:POST'
       post = Libertree::Model::Post[job.params['post_id'].to_i]
       if post
