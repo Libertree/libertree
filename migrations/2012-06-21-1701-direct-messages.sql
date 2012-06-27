@@ -47,22 +47,3 @@ CREATE OR REPLACE VIEW view__messages_sent_and_received AS
 
 COMMENT ON VIEW view__messages_sent_and_received IS
 'SELECT from this view by member_id, the member to or by whom the messages were sent.';
-
-CREATE TABLE messages_read (
-      account_id INTEGER NOT NULL REFERENCES accounts(id)
-    , message_id INTEGER NOT NULL REFERENCES messages(id)
-    , UNIQUE( account_id, message_id )
-);
-
--- ------------------
-
-
--- INSERT INTO messages ( sender_member_id, text ) VALUES ( 1, 'message 1' );
--- INSERT INTO messages ( sender_member_id, text ) VALUES ( 1, 'message 2' );
--- INSERT INTO message_recipients ( message_id, member_id ) VALUES ( 1, 2 );
--- INSERT INTO message_recipients ( message_id, member_id ) VALUES ( 2, 2 );
--- INSERT INTO messages ( sender_member_id, text ) VALUES ( 1, 'message 3' );
--- INSERT INTO message_recipients ( message_id, member_id ) VALUES ( 3, 2 );
--- INSERT INTO message_recipients ( message_id, member_id ) VALUES ( 3, 3 );
--- INSERT INTO messages ( sender_member_id, text ) VALUES ( 2, 'message 4' );
--- INSERT INTO message_recipients ( message_id, member_id ) VALUES ( 4, 3 );
