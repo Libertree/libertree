@@ -9,6 +9,7 @@ module Libertree
       def sender
         @sender ||= Member[self.sender_member_id]
       end
+      alias :member :sender
 
       def recipients
         @recipients ||= Member.s(
@@ -28,6 +29,14 @@ module Libertree
 
       def visible_to?(account)
         self.sender == account.member || recipients.include?(account.member)
+      end
+
+      def glimpse( length = 60 )
+        if self.text.length <= length
+          self.text
+        else
+          self.text[0...length] + '...'
+        end
       end
 
       # Pass either :recipient_member_usernames or :recipient_member_ids in args.
@@ -51,6 +60,10 @@ module Libertree
 
         recipient_member_ids.each do |member_id|
           DB.dbh.i  "INSERT INTO message_recipients ( message_id, member_id ) VALUES ( ?, ? )", message.id, member_id.to_i
+          m = Member[member_id]
+          if m.account
+            m.account.notify_about  'type' => 'message', 'message_id' => message.id
+          end
         end
 
         message

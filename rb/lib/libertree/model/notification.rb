@@ -88,16 +88,6 @@ module Libertree
 
         r
       end
-
-      def self.create(*args)
-        message = super
-        message.recipients.each do |recipient|
-          if recipient.account
-            recipient.account.notify_about  'type' => 'message', 'message_id' => message.id
-          end
-        end
-        message
-      end
     end
   end
 end
