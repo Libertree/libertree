@@ -135,7 +135,7 @@ module Libertree
         DB.dbh.i "INSERT INTO river_posts ( river_id, post_id ) VALUES ( ?, ? )", self.id, post.id
       end
 
-      def refresh_posts( n = 100 )
+      def refresh_posts( n = 512 )
         DB.dbh.d  "DELETE FROM river_posts WHERE river_id = ?", self.id
         posts = Post.s("SELECT * FROM posts ORDER BY id DESC LIMIT #{n.to_i}")
         posts.each do |p|
