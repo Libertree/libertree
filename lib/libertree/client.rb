@@ -120,6 +120,17 @@ module Libertree
       )
     end
 
+    def req_message(message, usernames)
+      @conn.request(
+        'MESSAGE',
+        'username' => message.sender.account.username,
+        'recipients' => usernames.map { |un|
+          { 'username' => un }
+        },
+        'text' => message.text
+      )
+    end
+
     def req_post(post)
       @conn.request(
         'POST',
