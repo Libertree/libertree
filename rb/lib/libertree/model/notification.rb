@@ -88,6 +88,20 @@ module Libertree
 
         r
       end
+
+      def self.mark_seen_for_account_and_message(account, message)
+        DB.dbh.u(
+          %|
+            UPDATE notifications
+            SET seen = TRUE
+            WHERE
+              account_id = ?
+              AND data = '{"type":"message","message_id":#{message.id.to_i}}'
+          |,
+          account.id
+        )
+        account.dirty
+      end
     end
   end
 end
