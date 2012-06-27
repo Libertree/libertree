@@ -487,7 +487,6 @@ of the given Like.
 Request Parameters:
 
     {
-      "id": <message id on requester>,
       "username": <username of message author on requester>,
       "recipients": [
         { "username": <recipient's username on responder> },
