@@ -123,11 +123,11 @@ module Libertree
     def req_message(message, usernames)
       @conn.request(
         'MESSAGE',
-        'username' => message.sender.account.username,
+        'username'   => message.sender.account.username,
         'recipients' => usernames.map { |un|
           { 'username' => un }
         },
-        'text' => message.text
+        'text'       => message.text
       )
     end
 
