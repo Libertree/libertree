@@ -8,6 +8,7 @@ module Libertree
       def server
         @server ||= Server[self.server_id]
       end
+      alias :tree :server
 
       def name_display
         @name_display ||= ( profile.name_display || self.handle )
