@@ -39,7 +39,6 @@ describe Libertree::Server::Responder::Message do
           context 'and the responder has no record of the sending member' do
             it 'responds with NOT FOUND' do
               h = {
-                'id' => 999,
                 'username' => 'sender',
                 'recipients' => [
                   { 'username' => 'recipient' },
@@ -60,7 +59,6 @@ describe Libertree::Server::Responder::Message do
 
             it 'and a parameter is missing or blank, it responds with MISSING PARAMETER' do
               h = {
-                'id' => 999,
                 'username' => @member.username,
                 'recipients' => [
                   { 'username' => 'recipient' },
@@ -91,7 +89,6 @@ describe Libertree::Server::Responder::Message do
 
               it 'responds with NOT FOUND' do
                 h = {
-                  'id' => 999,
                   'username' => @member.username,
                   'recipients' => [
                     { 'username' => 'recipient' },
@@ -115,7 +112,6 @@ describe Libertree::Server::Responder::Message do
 
               it 'with valid data it responds with OK' do
                 h = {
-                  'id' => 999,
                   'username' => @member.username,
                   'recipients' => [
                     { 'username' => @member_local.username },

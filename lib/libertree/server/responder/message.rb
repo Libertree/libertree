@@ -3,7 +3,7 @@ module Libertree
     module Responder
       module Message
         def rsp_message(params)
-          return  if require_parameters(params, 'id', 'username', 'recipients', 'text')
+          return  if require_parameters(params, 'username', 'recipients', 'text')
 
           begin
             member = Model::Member[
