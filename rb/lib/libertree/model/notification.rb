@@ -22,6 +22,8 @@ module Libertree
           Libertree::Model::Comment[ self.data['comment_id'] ]
         when 'comment-like'
           Libertree::Model::CommentLike[ self.data['comment_like_id'] ]
+        when 'message'
+          Libertree::Model::Message[ self.data['message_id'] ]
         when 'post-like'
           Libertree::Model::PostLike[ self.data['post_like_id'] ]
         end
@@ -85,6 +87,16 @@ module Libertree
         end
 
         r
+      end
+
+      def self.create(*args)
+        message = super
+        message.recipients.each do |recipient|
+          if recipient.account
+            recipient.account.notify_about  'type' => 'message', 'message_id' => message.id
+          end
+        end
+        message
       end
     end
   end
