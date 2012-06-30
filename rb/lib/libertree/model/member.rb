@@ -1,6 +1,27 @@
 module Libertree
   module Model
     class Member < M4DBI::Model(:members)
+
+      after_create do |member|
+        # TODO: only create job for local members
+        Libertree::Model::Job.create_for_forests(
+          {
+            task: 'request:MEMBER',
+            params: { 'member_id' => member.id, }
+          }
+        )
+      end
+
+      after_update do |member|
+        # TODO: only create job for local members
+        Libertree::Model::Job.create_for_forests(
+          {
+            task: 'request:MEMBER',
+            params: { 'member_id' => member.id, }
+          }
+        )
+      end
+
       def account
         @account ||= Account[self.account_id]
       end
