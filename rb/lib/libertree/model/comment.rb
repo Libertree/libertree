@@ -1,6 +1,28 @@
 module Libertree
   module Model
     class Comment < M4DBI::Model(:comments)
+      after_create do |comment|
+        # TODO: only create job for local comments
+        Libertree::Model::Job.create_for_forests(
+          {
+            task: 'request:COMMENT',
+            params: { 'comment_id' => comment.id, }
+          },
+          *comment.forests
+        )
+      end
+
+      before_destroy do |comment|
+        # TODO: only create job for local comment
+        Libertree::Model::Job.create_for_forests(
+          {
+            task: 'request:COMMENT-DELETE',
+            params: { 'comment_id' => comment.id, }
+          },
+          *comment.forests
+        )
+      end
+
       def member
         @member ||= Member[self.member_id]
       end

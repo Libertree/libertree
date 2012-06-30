@@ -1,6 +1,28 @@
 module Libertree
   module Model
     class PostLike < M4DBI::Model(:post_likes)
+      after_create do |like|
+        # TODO: only create job for local post like
+        Libertree::Model::Job.create_for_forests(
+          {
+            task: 'request:POST-LIKE',
+            params: { 'post_like_id' => like.id, }
+          },
+          *like.forests
+        )
+      end
+
+      before_destroy do |like|
+        # TODO: only create job for local post like
+        Libertree::Model::Job.create_for_forests(
+          {
+            task: 'request:POST-LIKE-DELETE',
+            params: { 'post_like_id' => like.id, }
+          },
+          *like.forests
+        )
+      end
+
       def member
         @member ||= Member[self.member_id]
       end

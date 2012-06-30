@@ -4,6 +4,39 @@ module Libertree
   module Model
     class Post < M4DBI::Model(:posts)
 
+      after_create do |post|
+        # TODO: only create job for local posts
+        Libertree::Model::Job.create_for_forests(
+          {
+            task: 'request:POST',
+            params: { 'post_id' => post.id, }
+          },
+          *post.forests
+        )
+      end
+
+      after_update do |post|
+        # TODO: only create job for local posts
+        Libertree::Model::Job.create_for_forests(
+          {
+            task: 'request:POST',
+            params: { 'post_id' => post.id, }
+          },
+          *post.forests
+        )
+      end
+
+      before_destroy do |post|
+        # TODO: only create job for local posts
+        Libertree::Model::Job.create_for_forests(
+          {
+            task: 'request:POST-DELETE',
+            params: { 'post_id' => post.id, }
+          },
+          *post.forests
+        )
+      end
+
       def member
         @member ||= Member[self.member_id]
       end
