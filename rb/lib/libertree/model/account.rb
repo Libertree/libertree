@@ -20,6 +20,19 @@ module Libertree
       # Used by Ramaze::Helper::UserHelper.
       # @return [Account] authenticated account, or nil on failure to authenticate
       def self.authenticate(creds)
+        if creds['password_reset_code']
+          account = Account.one_where(
+            %{
+              password_reset_code = ?
+              AND NOW() <= password_reset_expiry
+            },
+            creds['password_reset_code']
+          )
+          if account
+            return account
+          end
+        end
+
         account = Account[ 'username' => creds['username'] ]
         if account && account.password == creds['password']
           account
@@ -206,6 +219,16 @@ module Libertree
           },
           self.member.id
         )
+      end
+
+      # @return [Boolean] true iff password reset was successfully set up
+      def self.set_up_password_reset_for(email)
+        account = s1("SELECT * FROM accounts WHERE email = ?", email)
+        if account
+          account.password_reset_code = SecureRandom.hex(16)
+          account.password_reset_expiry = Time.now + 60 * 60
+          account
+        end
       end
     end
   end
