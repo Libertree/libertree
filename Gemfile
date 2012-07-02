@@ -7,6 +7,7 @@ gem 'rspec'
 gem 'eventmachine'
 gem 'bcrypt-ruby'
 gem 'redcarpet'
+gem 'pony'
 
 gem 'libertree-db', path: '../libertree-db/rb'
 gem 'libertree-client', path: '../libertree-client-rb'

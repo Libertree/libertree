@@ -25,3 +25,14 @@ debug: false
 
 # If no log_path is specified, the server logs to stdout
 # log_path: /path/to/libertree-backend-rb.log
+
+# What the system will use for sending email
+smtp:
+  host: mail.example.org
+  port: 25
+  username: exampleusername
+  password: examplepassword
+  authentication: plain  # plain, login, cram_md5, or comment out for no auth
+  helo_domain: localhost.localdomain
+  starttls_auto: false
+  from_address: 'exampleusername@example.org'

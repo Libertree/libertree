@@ -2,11 +2,13 @@ require 'libertree/client'
 require 'libertree/model'
 require 'net/http'
 require 'uri'
+require 'pony'
 
 class JobProcessor
   def initialize(config_filename)
     @config_filename = config_filename
     @conf = YAML.load( File.read(config_filename) )
+
     if @conf['log_path']
       @log = File.open( @conf['log_path'], 'a+' )
       @log.sync = true
@@ -19,6 +21,20 @@ class JobProcessor
     if @log.respond_to? :path
       puts "pid #{@pid} logging to #{File.absolute_path(@log.path)}"
     end
+
+    Pony.options = {
+      :via => :smtp,
+      :via_options => {
+        :address              => @conf['smtp']['host'],
+        :port                 => @conf['smtp']['port'],
+        :user_name            => @conf['smtp']['username'],
+        :password             => @conf['smtp']['password'],
+        :authentication       => @conf['smtp']['authentication'],
+        :domain               => @conf['smtp']['helo_domain'],
+        :enable_starttls_auto => @conf['smtp']['starttls_auto'],
+      },
+      :from => @conf['smtp']['from_address'],
+    }
   end
 
   def log(s, level = nil)
@@ -213,6 +229,9 @@ class JobProcessor
       rescue Timeout::Error
         # ignore
       end
+    when 'email'
+      Pony.mail  to: job.params['to'], subject: job.params['subject'], body: job.params['body']
+      job.time_finished = Time.now
     end
 
     if job.time_finished.nil?
