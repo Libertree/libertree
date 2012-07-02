@@ -1,7 +1,5 @@
 require 'libertree/client'
 require 'libertree/model'
-require 'net/http'
-require 'uri'
 require 'pony'
 
 module Helper
@@ -226,4 +224,3 @@ module Tasks
 
   end
 end
-
