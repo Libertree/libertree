@@ -59,7 +59,7 @@ module Helper
   end
 end
 
-module Tasks
+module Jobs
   class Email
     def self.perform(params)
       Pony.mail  to: params['to'], subject: params['subject'], body: params['body']
