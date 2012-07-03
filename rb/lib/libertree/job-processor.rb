@@ -1,11 +1,9 @@
 module Libertree
   class JobProcessor
-    def initialize(config_filename, queue)
+    def initialize(log_path, queue)
       @queue = queue
-      @config_filename = config_filename
-      @conf = YAML.load( File.read(config_filename) )
-      if @conf['log_path']
-        @log = File.open( @conf['log_path'], 'a+' )
+      if log_path
+        @log = File.open( log_path, 'a+' )
         @log.sync = true
       else
         @log = $stdout
@@ -62,11 +60,6 @@ module Libertree
       }
       Signal.trap("TERM", &terminate)
       Signal.trap("INT" , &terminate)
-      Signal.trap("HUP") do
-        puts "\nReloading configuration."
-        @log.close
-        self.send(:initialize, @config_filename)
-      end
 
       until quit
         job = reserve
