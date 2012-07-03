@@ -15,6 +15,7 @@ module Libertree
       end
 
       def delete_cascade
+        self.likes.each {|l| l.delete_cascade }
         DB.dbh.d  %|DELETE FROM notifications WHERE data = '{"type":"comment","comment_id":#{self.id}}'|
         DB.dbh.d(
           %{
