@@ -12,7 +12,7 @@ module Libertree
         )
       end
 
-      before_destroy do |like|
+      before_delete do |like|
         # TODO: only create job for local comment like
         Libertree::Model::Job.create_for_forests(
           {

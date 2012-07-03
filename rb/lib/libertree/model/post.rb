@@ -26,7 +26,7 @@ module Libertree
         )
       end
 
-      before_destroy do |post|
+      before_delete do |post|
         # TODO: only create job for local posts
         Libertree::Model::Job.create_for_forests(
           {
