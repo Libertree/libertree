@@ -1,11 +1,9 @@
 require 'libertree/job-processor'
 require_relative '../lib/jobs'
 
-if ARGV[0].nil?
-  $stderr.puts "#{$0} <config.yaml>"
-  exit 1
-end
+log_file = ARGV[0]
+queue = "test"
 
-jobp = JobProcessor.new( ARGV[0], "test" )
+jobp = JobProcessor.new( log_file, queue )
 jobp.extend Jobs
 jobp.run
