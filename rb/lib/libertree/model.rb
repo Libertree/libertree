@@ -4,6 +4,7 @@ require 'libertree/db'
 Libertree::DB.dbh
 
 require_relative 'model/account'
+require_relative 'model/chat-message'
 require_relative 'model/comment'
 require_relative 'model/comment-like'
 require_relative 'model/forest'

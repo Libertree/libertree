@@ -68,6 +68,67 @@ module Libertree
         @num_notifications_unseen ||= Libertree::DB.dbh.sc("SELECT COUNT(*) FROM notifications WHERE account_id = ? AND seen = FALSE", self.id)
       end
 
+      def num_chat_unseen
+        Libertree::DB.dbh.sc("SELECT COUNT(*) FROM chat_messages WHERE to_member_id = ? AND seen = FALSE", self.member.id)
+      end
+
+      def num_chat_unseen_from_partner(member)
+        Libertree::DB.dbh.sc("SELECT COUNT(*) FROM chat_messages WHERE from_member_id = ? AND to_member_id = ? AND seen = FALSE", member.id, self.member.id)
+      end
+
+      def chat_messages_unseen
+        Libertree::Model::ChatMessage.s("SELECT * FROM chat_messages WHERE to_member_id = ? AND seen = FALSE", self.member.id)
+      end
+
+      def chat_partners_current
+        Libertree::Model::Member.s(
+          %{
+            (
+              SELECT
+                    DISTINCT m.*
+                  , EXISTS(
+                    SELECT 1
+                    FROM chat_messages cm2
+                    WHERE
+                      cm2.from_member_id = cm.from_member_id
+                      AND cm2.to_member_id = cm.to_member_id
+                      AND cm2.seen = FALSE
+                  ) AS has_unseen_from_other
+              FROM
+                  chat_messages cm
+                , members m
+              WHERE
+                cm.to_member_id = ?
+                AND (
+                  cm.seen = FALSE
+                  OR cm.time_created > NOW() - '1 hour'::INTERVAL
+                )
+                AND m.id = cm.from_member_id
+            ) UNION (
+              SELECT
+                    DISTINCT m.*
+                  , EXISTS(
+                    SELECT 1
+                    FROM chat_messages cm2
+                    WHERE
+                      cm2.from_member_id = cm.to_member_id
+                      AND cm2.to_member_id = cm.from_member_id
+                      AND cm2.seen = FALSE
+                  ) AS has_unseen_from_other
+              FROM
+                  chat_messages cm
+                , members m
+              WHERE
+                cm.from_member_id = ?
+                AND cm.time_created > NOW() - '1 hour'::INTERVAL
+                AND m.id = cm.to_member_id
+            )
+          },
+          self.member.id,
+          self.member.id
+        )
+      end
+
       def rivers
         River.s "SELECT * FROM rivers WHERE account_id = ? ORDER BY position ASC, id DESC", self.id
       end
