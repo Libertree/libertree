@@ -27,19 +27,22 @@ module Libertree
 
         s(
           %{
-            SELECT
-              *
-            FROM
-              chat_messages cm
-            WHERE
-              from_member_id = ?
-              AND to_member_id = ?
-              OR
-              from_member_id = ?
-              AND to_member_id = ?
-            ORDER BY
-              time_created
-            LIMIT #{ [limit.to_i, 0].max }
+            SELECT * FROM (
+              SELECT
+                *
+              FROM
+                chat_messages cm
+              WHERE
+                from_member_id = ?
+                AND to_member_id = ?
+                OR
+                from_member_id = ?
+                AND to_member_id = ?
+              ORDER BY
+                time_created DESC
+              LIMIT #{ [limit.to_i, 0].max }
+            ) AS x
+            ORDER BY time_created
           },
           account.member.id,
           member.id,
