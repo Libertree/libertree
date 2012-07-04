@@ -55,6 +55,14 @@ module Libertree
         @num_notifications_unseen ||= Libertree::DB.dbh.sc("SELECT COUNT(*) FROM notifications WHERE account_id = ? AND seen = FALSE", self.id)
       end
 
+      def num_chat_unseen
+        @num_chat_unseen ||= Libertree::DB.dbh.sc("SELECT COUNT(*) FROM chat_messages WHERE to_member_id = ? AND seen = FALSE", self.member.id)
+      end
+
+      def chat_messages_unseen
+        Libertree::Model::ChatMessage.s("SELECT * FROM chat_messages WHERE to_member_id = ? AND seen = FALSE", self.member.id)
+      end
+
       def rivers
         River.s "SELECT * FROM rivers WHERE account_id = ? ORDER BY position ASC, id DESC", self.id
       end
