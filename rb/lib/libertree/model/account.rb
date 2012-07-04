@@ -56,7 +56,11 @@ module Libertree
       end
 
       def num_chat_unseen
-        @num_chat_unseen ||= Libertree::DB.dbh.sc("SELECT COUNT(*) FROM chat_messages WHERE to_member_id = ? AND seen = FALSE", self.member.id)
+        Libertree::DB.dbh.sc("SELECT COUNT(*) FROM chat_messages WHERE to_member_id = ? AND seen = FALSE", self.member.id)
+      end
+
+      def num_chat_unseen_from_partner(member)
+        Libertree::DB.dbh.sc("SELECT COUNT(*) FROM chat_messages WHERE from_member_id = ? AND to_member_id = ? AND seen = FALSE", member.id, self.member.id)
       end
 
       def chat_messages_unseen
