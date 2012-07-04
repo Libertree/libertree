@@ -56,6 +56,15 @@ module Libertree
 
     # ---------
 
+    def req_chat(chat_message, recipient_username)
+      @conn.request(
+        'CHAT',
+        'username'           => chat_message.sender.account.username,
+        'recipient_username' => recipient_username,
+        'text'               => chat_message.text
+      )
+    end
+
     def req_comment(comment)
       post = comment.post
       server = post.member.server
