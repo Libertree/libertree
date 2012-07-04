@@ -67,6 +67,39 @@ module Libertree
         Libertree::Model::ChatMessage.s("SELECT * FROM chat_messages WHERE to_member_id = ? AND seen = FALSE", self.member.id)
       end
 
+      def chat_partners_current
+        Libertree::Model::Member.s(
+          %{
+            (
+              SELECT
+                DISTINCT m.*
+              FROM
+                  chat_messages cm
+                , members m
+              WHERE
+                cm.to_member_id = ?
+                AND (
+                  cm.seen = FALSE
+                  OR cm.time_created > NOW() - '1 hour'::INTERVAL
+                )
+                AND m.id = cm.from_member_id
+            ) UNION (
+              SELECT
+                DISTINCT m.*
+              FROM
+                  chat_messages cm
+                , members m
+              WHERE
+                cm.from_member_id = ?
+                AND cm.time_created > NOW() - '1 hour'::INTERVAL
+                AND m.id = cm.to_member_id
+            )
+          },
+          self.member.id,
+          self.member.id
+      )
+      end
+
       def rivers
         River.s "SELECT * FROM rivers WHERE account_id = ? ORDER BY position ASC, id DESC", self.id
       end
