@@ -56,11 +56,11 @@ module Libertree
 
     # ---------
 
-    def req_chat(chat_message, recipient_username)
+    def req_chat(chat_message)
       @conn.request(
         'CHAT',
-        'username'           => chat_message.sender.account.username,
-        'recipient_username' => recipient_username,
+        'username'           => chat_message.sender.username,
+        'recipient_username' => chat_message.recipient.username,
         'text'               => chat_message.text
       )
     end
