@@ -72,7 +72,15 @@ module Libertree
           %{
             (
               SELECT
-                DISTINCT m.*
+                    DISTINCT m.*
+                  , EXISTS(
+                    SELECT 1
+                    FROM chat_messages cm2
+                    WHERE
+                      cm2.from_member_id = cm.from_member_id
+                      AND cm2.to_member_id = cm.to_member_id
+                      AND cm2.seen = FALSE
+                  ) AS has_unseen_from_other
               FROM
                   chat_messages cm
                 , members m
@@ -85,7 +93,15 @@ module Libertree
                 AND m.id = cm.from_member_id
             ) UNION (
               SELECT
-                DISTINCT m.*
+                    DISTINCT m.*
+                  , EXISTS(
+                    SELECT 1
+                    FROM chat_messages cm2
+                    WHERE
+                      cm2.from_member_id = cm.to_member_id
+                      AND cm2.to_member_id = cm.from_member_id
+                      AND cm2.seen = FALSE
+                  ) AS has_unseen_from_other
               FROM
                   chat_messages cm
                 , members m
@@ -97,7 +113,7 @@ module Libertree
           },
           self.member.id,
           self.member.id
-      )
+        )
       end
 
       def rivers
