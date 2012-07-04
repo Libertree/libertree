@@ -526,3 +526,43 @@ Responders MAY respond with a REJECTED code for any reason, and such a response
 MAY be accompanied by an explanatory message.  When a MESSAGE request is rejected,
 the requester SHOULD retry the MESSAGE request at a future time, but MAY elect
 not to after several rejections.
+
+### CHAT
+
+Request Parameters:
+
+    {
+      "username": <username of sender on requester>,
+      "recipient_username": <recipient's username on responder>,
+      "text": <chat message text>,
+    }
+
+Response Structure:
+
+    { "code": "OK" }
+    |
+    {
+      "code": "NOT FOUND",
+      "missing": ["MEMBER"]
+    }
+    |
+    { "code": "NOT FOUND" }
+    |
+    {
+      "code": "REJECTED",
+      [[ "message": <explanatory message> ]]
+    }
+
+A requester would use the CHAT command to send a chat message created at the requester
+to a recipient on the responder.
+
+Responders SHOULD return a "NOT FOUND" code to indicate that it has no record
+of the message sender.  Requesters SHOULD send a request for the missing MEMBER
+if a NOT FOUND with (missing: MEMBER) is sent.
+
+A responder MAY respond with a "NOT FOUND" code if it has no record of the recipient.
+
+Responders MAY respond with a REJECTED code for any reason, and such a response
+MAY be accompanied by an explanatory message.  When a CHAT request is rejected,
+the requester SHOULD retry the CHAT request at a future time, but MAY elect
+not to after several rejections.
