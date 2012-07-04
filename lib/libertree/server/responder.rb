@@ -1,6 +1,7 @@
 require 'libertree/server/responder/dispatcher'
 
 require 'libertree/server/responder/authentication'
+require 'libertree/server/responder/chat'
 require 'libertree/server/responder/comment'
 require 'libertree/server/responder/comment-like'
 require 'libertree/server/responder/forest'
@@ -15,6 +16,7 @@ module Libertree
       include Dispatcher
 
       include Authentication
+      include Chat
       include Comment
       include CommentLike
       include Forest

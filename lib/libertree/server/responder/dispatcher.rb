@@ -7,7 +7,7 @@ module Libertree
       module Dispatcher
 
         VALID_COMMANDS = [
-          'AUTHENTICATE', 'COMMENT', 'COMMENT-DELETE', 'COMMENT-LIKE',
+          'AUTHENTICATE', 'CHAT', 'COMMENT', 'COMMENT-DELETE', 'COMMENT-LIKE',
           'COMMENT-LIKE-DELETE', 'FOREST', 'INTRODUCE', 'MEMBER', 'MESSAGE',
           'POST', 'POST-DELETE', 'POST-LIKE', 'POST-LIKE-DELETE',
         ]

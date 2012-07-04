@@ -102,6 +102,14 @@ class JobProcessor
     # TODO: Maybe this code is too defensive, checking for nil comment, like post, etc.
     # Removing the checks would clean up the code a bit.
     case job.task
+    when 'request:CHAT'
+      chat_message = Libertree::Model::ChatMessage[ job.params['chat_message_id'].to_i ]
+      if chat_message
+        with_tree(job.params['server_id']) do |tree|
+          tree.req_chat chat_message
+        end
+        job.time_finished = Time.now
+      end
     when 'request:COMMENT'
       comment = Libertree::Model::Comment[job.params['comment_id'].to_i]
       retry_later = false
