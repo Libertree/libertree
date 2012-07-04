@@ -22,17 +22,6 @@ module Libertree
         end
       end
 
-      def self.create(args)
-        chat_message = super
-
-        m = Member[chat_message.to_member_id]
-        if m.account
-          m.account.notify_about  'type' => 'chat_message', 'chat_message_id' => chat_message.id
-        end
-
-        chat_message
-      end
-
       def self.between(account, member, limit = 32)
         return []  if account.nil? || member.nil?
 
