@@ -52,7 +52,7 @@ class JobProcessor
 
   # @return [Job] nil if no job was reserved
   def reserve
-    job = Libertree::Model::Job.s1("SELECT * FROM jobs WHERE pid IS NULL AND tries < 5 AND time_to_start <= NOW() ORDER BY time_to_start ASC LIMIT 1")
+    job = Libertree::Model::Job.s1("SELECT * FROM jobs WHERE pid IS NULL AND tries < 11 AND time_to_start <= NOW() ORDER BY time_to_start ASC LIMIT 1")
     return  if job.nil?
 
     Libertree::Model::Job.update(
@@ -244,11 +244,12 @@ class JobProcessor
 
     if job.time_finished.nil?
       # Return job to queue.
+      new_tries = job.tries+1
       job.set(
         time_started: nil,
         pid: nil,
-        tries: job.tries + 1,
-        time_to_start: Time.now + 60*5
+        tries: new_tries,
+        time_to_start: Time.now + 60 * Math::E**new_tries
       )
     end
 
