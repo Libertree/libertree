@@ -97,6 +97,16 @@ module Libertree
           Libertree::Model::Forest.all_local_is_member
         end
       end
+
+      def to_hash
+        {
+          'id'           => self.id,
+          'time_created' => self.time_created,
+          'time_updated' => self.time_updated,
+          'text'         => self.text,
+          'post_id'      => self.post_id,
+        }
+      end
     end
   end
 end

@@ -255,6 +255,15 @@ module Libertree
       def hidden_by?(account)
         DB.dbh.sc  "SELECT EXISTS( SELECT 1 FROM posts_hidden WHERE account_id = ? AND post_id = ? )", account.id, self.id
       end
+
+      def to_hash
+        {
+          'id'           => self.id,
+          'time_created' => self.time_created,
+          'time_updated' => self.time_updated,
+          'text'         => self.text,
+        }
+      end
     end
   end
 end

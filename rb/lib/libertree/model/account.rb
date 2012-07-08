@@ -291,6 +291,29 @@ module Libertree
           account
         end
       end
+
+      def data_hash
+        {
+          'account' => {
+            'username'           => self.username,
+            'time_created'       => self.time_created,
+            'email'              => self.email,
+            'custom_css'         => self.custom_css,
+            'custom_js'          => self.custom_js,
+            'custom_link'        => self.custom_link,
+            'font_css'           => self.font_css,
+            'excerpt_max_height' => self.excerpt_max_height,
+            'profile' => {
+              'name_display' => self.member.profile.name_display,
+              'description'  => self.member.profile.description,
+            },
+
+            'posts'              => self.member.posts(9999999).map(&:to_hash),
+            'comments'           => self.member.comments(9999999).map(&:to_hash),
+            'messages'           => self.messages.map(&:to_hash),
+          }
+        }
+      end
     end
   end
 end

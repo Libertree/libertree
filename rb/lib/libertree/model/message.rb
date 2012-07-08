@@ -68,6 +68,15 @@ module Libertree
 
         message
       end
+
+      def to_hash
+        {
+          'id'           => self.id,
+          'time_created' => self.time_created,
+          'to'           => self.recipients.map(&:name_display),
+          'text'         => self.text,
+        }
+      end
     end
   end
 end

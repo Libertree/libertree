@@ -39,6 +39,10 @@ module Libertree
       def posts(n = 8)
         Post.s  "SELECT * FROM posts WHERE member_id = ? ORDER BY id DESC LIMIT #{n.to_i}", self.id
       end
+
+      def comments(n = 10)
+        Comment.s  "SELECT * FROM comments WHERE member_id = ? ORDER BY id DESC LIMIT #{n.to_i}", self.id
+      end
     end
   end
 end
