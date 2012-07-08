@@ -181,6 +181,14 @@ module Libertree
       def home?
         self.home
       end
+
+      def to_hash
+        {
+          'id'    => self.id,
+          'label' => self.label,
+          'query' => self.query,
+        }
+      end
     end
   end
 end
