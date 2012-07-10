@@ -1,0 +1,29 @@
+Name:                libertree-model
+Version:             0.1.0.0
+Synopsis:            Haskell abstraction of the Libertree database
+Homepage:            http://libertreeproject.org
+License:             LGPL
+License-file:        LICENCE
+Author:              rekado
+Maintainer:          rekado@elephly.net
+Category:            Network
+Build-type:          Simple
+
+-- Extra files to be distributed with the package, such as examples or
+-- a README.
+Extra-source-files:  README
+Cabal-version:       >=1.8
+
+Library
+  Exposed-modules:   Libertree.Model
+  other-modules:     Libertree.Model.Common
+                     Libertree.Model.Comment
+                     Libertree.Model.Post
+
+  hs-source-dirs:    src
+  Build-depends:     base,
+                     iproute >= 1.2.7,
+                     bytestring,
+                     text,
+                     aeson,
+                     postgresql-simple >= 0.1.3
