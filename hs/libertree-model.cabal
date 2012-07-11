@@ -19,6 +19,7 @@ Library
   other-modules:     Libertree.Model.Common
                      Libertree.Model.Comment
                      Libertree.Model.Post
+                     Libertree.Model.PostLike
 
   hs-source-dirs:    src
   Build-depends:     base,
