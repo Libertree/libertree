@@ -18,6 +18,7 @@ Library
   Exposed-modules:   Libertree.Model
   other-modules:     Libertree.Model.Common
                      Libertree.Model.Comment
+                     Libertree.Model.CommentLike
                      Libertree.Model.Post
                      Libertree.Model.PostLike
 
