@@ -315,6 +315,15 @@ module Libertree
           }
         }
       end
+
+      # RDBI casting not working with TIMESTAMP WITH TIME ZONE ?
+      def time_heartbeat
+        DateTime.parse self['time_heartbeat']
+      end
+
+      def online?
+        Time.now - time_heartbeat.to_time < 5.01 * 60
+      end
     end
   end
 end

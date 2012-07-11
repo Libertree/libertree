@@ -43,6 +43,10 @@ module Libertree
       def comments(n = 10)
         Comment.s  "SELECT * FROM comments WHERE member_id = ? ORDER BY id DESC LIMIT #{n.to_i}", self.id
       end
+
+      def online?
+        self.account && self.account.online?
+      end
     end
   end
 end
