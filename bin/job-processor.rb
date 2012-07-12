@@ -229,7 +229,7 @@ class JobProcessor
     end
 
     log "Leaving: job #{job.id}"
-  rescue Exception => e
+  rescue StandardError => e
     log_error "Error processing job #{job.id}: #{e.class} #{e.message}\n" + e.backtrace.join("\n\t")
     job.unreserve
   end
