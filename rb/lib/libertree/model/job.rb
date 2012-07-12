@@ -29,6 +29,38 @@ module Libertree
           )
         end
       end
+
+      # @return [Job] nil if no job was reserved
+      def self.reserve
+        job = self.s1("SELECT * FROM jobs WHERE pid IS NULL AND tries < 11 AND time_to_start <= NOW() ORDER BY time_to_start ASC LIMIT 1")
+        return nil  if job.nil?
+
+        self.update(
+          {
+            id: job.id,
+            pid: nil,
+          },
+          {
+            pid: Process.pid,
+            time_started: Time.now
+          }
+        )
+
+        job = Job[job.id]
+        if job.pid == Process.pid
+          job
+        end
+      end
+
+      def unreserve
+        new_tries = self.tries+1
+        self.set(
+          time_started: nil,
+          pid: nil,
+          tries: new_tries,
+          time_to_start: Time.now + 60 * Math::E**new_tries
+        )
+      end
     end
   end
 end
