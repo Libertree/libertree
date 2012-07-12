@@ -91,8 +91,11 @@ class JobProcessor
       job = reserve
       if job
         process job
+      else
+        3.times do
+          sleep 1  if ! quit
+        end
       end
-      3.times { sleep 1 unless quit }
     end
   end
 
