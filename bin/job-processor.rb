@@ -50,28 +50,6 @@ class JobProcessor
     log s, 'ERROR'
   end
 
-  # @return [Job] nil if no job was reserved
-  def reserve
-    job = Libertree::Model::Job.s1("SELECT * FROM jobs WHERE pid IS NULL AND tries < 11 AND time_to_start <= NOW() ORDER BY time_to_start ASC LIMIT 1")
-    return  if job.nil?
-
-    Libertree::Model::Job.update(
-      {
-        id: job.id,
-        pid: nil,
-      },
-      {
-        pid: Process.pid,
-        time_started: Time.now
-      }
-    )
-
-    job = Libertree::Model::Job[job.id]
-    if job.pid == Process.pid
-      job
-    end
-  end
-
   def run
     quit = false
 
@@ -87,8 +65,8 @@ class JobProcessor
       self.send(:initialize, @config_filename)
     end
 
-    until quit
-      job = reserve
+    while ! quit
+      job = Libertree::Model::Job.reserve
       if job
         process job
       else
@@ -247,18 +225,13 @@ class JobProcessor
 
     if job.time_finished.nil?
       # Return job to queue.
-      new_tries = job.tries+1
-      job.set(
-        time_started: nil,
-        pid: nil,
-        tries: new_tries,
-        time_to_start: Time.now + 60 * Math::E**new_tries
-      )
+      job.unreserve
     end
 
     log "Leaving: job #{job.id}"
   rescue Exception => e
     log_error "Error processing job #{job.id}: #{e.class} #{e.message}\n" + e.backtrace.join("\n\t")
+    job.unreserve
   end
 
   def lt_client(remote_host)
