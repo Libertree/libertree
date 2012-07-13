@@ -6,6 +6,6 @@ if ARGV[0].nil?
   exit 1
 end
 
-jobp = JobProcessor.new( ARGV[0], "test" )
+jobp = JobProcessor.new( ARGV[0] )
 jobp.extend Jobs
 jobp.run
