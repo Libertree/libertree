@@ -324,6 +324,15 @@ module Libertree
       def online?
         Time.now - time_heartbeat.to_time < 5.01 * 60
       end
+
+      def contact_lists
+        ContactList.where  account_id: self.id
+      end
+
+      # All contacts, from all contact lists
+      def contacts
+        contact_lists.map { |list| list.members }.flatten.uniq
+      end
     end
   end
 end
