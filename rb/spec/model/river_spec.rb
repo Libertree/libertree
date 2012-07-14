@@ -92,8 +92,6 @@ describe Libertree::Model::River do
     end
 
     def try_one( query, post_text, should_match, post_author = @member )
-      Libertree::DB.dbh.d  "DELETE FROM river_posts"
-      Libertree::DB.dbh.d  "DELETE FROM rivers"
       river = Libertree::Model::River.create(
         FactoryGirl.attributes_for( :river, label: query, query: query, account_id: @account.id )
       )
@@ -109,6 +107,9 @@ describe Libertree::Model::River do
         )
         river.matches_post?(post).should be_false
       end
+
+      Libertree::DB.dbh.d  "DELETE FROM river_posts"
+      Libertree::DB.dbh.d  "DELETE FROM rivers"
     end
 
     it 'matches in basic cases' do
