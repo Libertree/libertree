@@ -20,21 +20,21 @@ module Libertree
       # Used by Ramaze::Helper::UserHelper.
       # @return [Account] authenticated account, or nil on failure to authenticate
       def self.authenticate(creds)
-        if creds['password_reset_code']
+        if creds['password_reset_code'].to_s
           account = Account.one_where(
             %{
               password_reset_code = ?
               AND NOW() <= password_reset_expiry
             },
-            creds['password_reset_code']
+            creds['password_reset_code'].to_s
           )
           if account
             return account
           end
         end
 
-        account = Account[ 'username' => creds['username'] ]
-        if account && account.password == creds['password']
+        account = Account[ 'username' => creds['username'].to_s ]
+        if account && account.password == creds['password'].to_s
           account
         end
       end

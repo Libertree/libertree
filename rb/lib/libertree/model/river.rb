@@ -143,9 +143,10 @@ module Libertree
         end
       end
 
+      # @param params Untrusted parameter Hash.  Be careful, this input comes from the outside world.
       def revise( params )
-        self.label = params['label']
-        self.query = params['query']
+        self.label = params['label'].to_s
+        self.query = params['query'].to_s
         refresh_posts
       end
 
