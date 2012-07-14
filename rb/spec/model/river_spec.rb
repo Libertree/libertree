@@ -256,6 +256,18 @@ describe Libertree::Model::River do
       try_one  'foo baz +:river "bar"', 'foo baz bar', true
       try_one  'foo baz +:river "bar"', 'foo bar', true
       try_one  'foo baz +:river "bar"', 'baz bar', true
+
+      Libertree::Model::River.create(
+        FactoryGirl.attributes_for( :river, label: 'level1', query: 'level1', account_id: @account.id )
+      )
+      Libertree::Model::River.create(
+        FactoryGirl.attributes_for( :river, label: 'composed', query: ':river "level1" level2', account_id: @account.id )
+      )
+      try_one  'foo :river "composed"', 'foo', true
+      try_one  'foo :river "composed"', 'level1', true
+      try_one  'foo :river "composed"', 'level2', true
+      try_one  'foo :river "composed"', 'foo level2', true
+      try_one  'foo :river "composed"', 'none', false
     end
   end
 end
