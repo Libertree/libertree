@@ -9,4 +9,4 @@ export LIBERTREE_DB=${LIBERTREE_DB:-libertree_test}
 dropdb -U postgres ${LIBERTREE_DB}
 createdb -U postgres -O libertree ${LIBERTREE_DB}
 bundle exec ruby ${SCRIPT_DIR}/../../libertree-db/rb/migrate.rb
-bundle exec rspec "$@"
+bundle exec rspec --format nested "$@"

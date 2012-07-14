@@ -60,6 +60,27 @@ describe Libertree::Model::River do
       test_one  %{abc +:from "def"}, [ 'abc', '+:from "def"', ]
       test_one  %{abc +:from "def ghi" jkl}, [ 'abc', '+:from "def ghi"', 'jkl', ]
     end
+
+    it 'treats :river "..." as a single term' do
+      test_one  %{:river "abc"}, [ ':river "abc"', ]
+      test_one  %{:river "abc def"}, [ ':river "abc def"', ]
+      test_one  %{abc :river "def"}, [ 'abc', ':river "def"', ]
+      test_one  %{abc :river "def ghi" jkl}, [ 'abc', ':river "def ghi"', 'jkl', ]
+    end
+
+    it 'treats -:river "..." as a single term' do
+      test_one  %{-:river "abc"}, [ '-:river "abc"', ]
+      test_one  %{-:river "abc def"}, [ '-:river "abc def"', ]
+      test_one  %{abc -:river "def"}, [ 'abc', '-:river "def"', ]
+      test_one  %{abc -:river "def ghi" jkl}, [ 'abc', '-:river "def ghi"', 'jkl', ]
+    end
+
+    it 'treats +:river "..." as a single term' do
+      test_one  %{+:river "abc"}, [ '+:river "abc"', ]
+      test_one  %{+:river "abc def"}, [ '+:river "abc def"', ]
+      test_one  %{abc +:river "def"}, [ 'abc', '+:river "def"', ]
+      test_one  %{abc +:river "def ghi" jkl}, [ 'abc', '+:river "def ghi"', 'jkl', ]
+    end
   end
 
   describe '#try_post' do

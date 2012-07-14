@@ -71,8 +71,8 @@ module Libertree
       end
 
       def query_components
-        @query_components ||= self.query.scan(/([+-]?"[^"]+")|([+-]?:from ".+?")|(\S+)/).map { |c|
-          c[2] || c[1] || c[0].gsub(/^([+-])"/, "\\1").gsub(/^"|"$/, '')
+        @query_components ||= self.query.scan(/([+-]?"[^"]+")|([+-]?:from ".+?")|([+-]?:river ".+?")|(\S+)/).map { |c|
+          c[3] || c[2] || c[1] || c[0].gsub(/^([+-])"/, "\\1").gsub(/^"|"$/, '')
         }
         @query_components.dup
       end
