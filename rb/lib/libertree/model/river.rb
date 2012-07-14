@@ -78,8 +78,12 @@ module Libertree
       end
 
       def term_matches_post?(term, post)
-        if term =~ /^:from "(.+?)"$/
+        case term
+        when /^:from "(.+?)"$/
           post.member.name_display == $1
+        when /^:river "(.+?)"$/
+          river = River[label: $1]
+          river && river.matches_post?(post)
         else
           /(?:^|\b|\s)#{term}(?:\b|\s|$)/i === post.text
         end

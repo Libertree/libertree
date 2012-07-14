@@ -228,5 +228,19 @@ describe Libertree::Model::River do
       try_one  '+"foo bar" baz', 'foo bar bleh', false
       try_one  '+"foo bar" baz', 'foo bar baz', true
     end
+
+    it 'allows composition of rivers via :river terms' do
+      Libertree::Model::River.create(
+        FactoryGirl.attributes_for( :river, label: 'foo', query: 'foo', account_id: @account.id )
+      )
+      try_one  ':river "foo"', 'foo bar', true
+      try_one  ':river "foo"', 'bar', false
+
+      Libertree::Model::River.create(
+        FactoryGirl.attributes_for( :river, label: 'Multi-word Label', query: 'foo2', account_id: @account.id )
+      )
+      try_one  ':river "Multi-word Label"', 'foo2 bar', true
+      try_one  ':river "Multi-word Label"', 'bar', false
+    end
   end
 end
