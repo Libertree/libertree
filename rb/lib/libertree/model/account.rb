@@ -333,6 +333,12 @@ module Libertree
       def contacts
         contact_lists.map { |list| list.members }.flatten.uniq
       end
+
+      def contacts_mutual
+        self.contacts.find_all { |c|
+          c.account && c.account.contacts.include?(self.member)
+        }
+      end
     end
   end
 end
