@@ -216,16 +216,16 @@ describe Libertree::Model::River do
       try_one  '"foo bar"', '.foo bar.', true
       try_one  '"foo bar"', 'will foo bar.', true
 
-      try_one '"foo bar" baz', 'foo and bar baz', true
+      try_one  '"foo bar" baz', 'foo and bar baz', true
 
-      try_one '-"foo bar"', 'foo and bar', true
-      try_one 'hey -"foo bar"', 'foo and bar hey', true
-      try_one 'hey -"foo bar"', 'foo bar hey', false
+      try_one  '-"foo bar"', 'foo and bar', true
+      try_one  'hey -"foo bar"', 'foo and bar hey', true
+      try_one  'hey -"foo bar"', 'foo bar hey', false
 
-      try_one '+"foo bar"', 'foo and bar', false
-      try_one '+"foo bar"', 'foo bar', true
-      try_one '+"foo bar" baz', 'foo bar bleh', false
-      try_one '+"foo bar" baz', 'foo bar baz', true
+      try_one  '+"foo bar"', 'foo and bar', false
+      try_one  '+"foo bar"', 'foo bar', true
+      try_one  '+"foo bar" baz', 'foo bar bleh', false
+      try_one  '+"foo bar" baz', 'foo bar baz', true
     end
   end
 end
