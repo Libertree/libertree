@@ -108,8 +108,8 @@ describe Libertree::Model::River do
         river.matches_post?(post).should be_false
       end
 
-      Libertree::DB.dbh.d  "DELETE FROM river_posts"
-      Libertree::DB.dbh.d  "DELETE FROM rivers"
+      Libertree::DB.dbh.d  "DELETE FROM river_posts WHERE river_id = ?", river.id
+      Libertree::DB.dbh.d  "DELETE FROM rivers WHERE id = ?", river.id
     end
 
     it 'matches in basic cases' do
