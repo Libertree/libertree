@@ -85,17 +85,13 @@ module Libertree
         end
       end
 
-      def try_post(post)
-        # TODO: We may be able to fold these two EXISTS clauses into the INSERT query at the end of this method
-        return  if DB.dbh.sc "SELECT EXISTS( SELECT 1 FROM river_posts WHERE river_id = ? AND post_id = ? LIMIT 1 )", self.id, post.id
-        return  if DB.dbh.sc "SELECT EXISTS( SELECT 1 FROM posts_hidden WHERE account_id = ? AND post_id = ? LIMIT 1 )", self.account.id, post.id
-
+      def matches_post?(post)
         parts = query_components
 
         # Scope limiters
 
-        return  if parts.include?(':tree') && post.member.account.nil?
-        return  if parts.include?(':unread') && post.read_by?( self.account )
+        return false  if parts.include?(':tree') && post.member.account.nil?
+        return false  if parts.include?(':unread') && post.read_by?( self.account )
         parts.delete ':forest'
         parts.delete ':tree'
         parts.delete ':unread'
@@ -106,7 +102,7 @@ module Libertree
           if term =~ /^-(.+)$/
             positive_term = $1
             parts.delete term
-            return  if term_matches_post?(positive_term, post)
+            return false  if term_matches_post?(positive_term, post)
           end
         end
 
@@ -120,7 +116,7 @@ module Libertree
             matches_all &&= term_matches_post?(actual_term, post)
           end
         end
-        return  if ! matches_all
+        return false  if ! matches_all
 
         # Regular terms: Must satisfy at least one condition
 
@@ -129,10 +125,20 @@ module Libertree
           parts.each do |term|
             term_match ||= term_matches_post?(term, post)
           end
-          return  if ! term_match
+          return false  if ! term_match
         end
 
-        DB.dbh.i "INSERT INTO river_posts ( river_id, post_id ) VALUES ( ?, ? )", self.id, post.id
+        true
+      end
+
+      def try_post(post)
+        # TODO: We may be able to fold these two EXISTS clauses into the INSERT query at the end of this method
+        return  if DB.dbh.sc "SELECT EXISTS( SELECT 1 FROM river_posts WHERE river_id = ? AND post_id = ? LIMIT 1 )", self.id, post.id
+        return  if DB.dbh.sc "SELECT EXISTS( SELECT 1 FROM posts_hidden WHERE account_id = ? AND post_id = ? LIMIT 1 )", self.account.id, post.id
+
+        if self.matches_post?(post)
+          DB.dbh.i "INSERT INTO river_posts ( river_id, post_id ) VALUES ( ?, ? )", self.id, post.id
+        end
       end
 
       def refresh_posts( n = 512 )

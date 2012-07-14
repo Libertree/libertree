@@ -83,7 +83,7 @@ describe Libertree::Model::River do
     end
   end
 
-  describe '#try_post' do
+  describe '#matches_post?' do
     before do
       other_account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
       @member = Libertree::Model::Member.create(
@@ -99,17 +99,15 @@ describe Libertree::Model::River do
       )
 
       if should_match
-        expect {
-          post = Libertree::Model::Post.create(
-            FactoryGirl.attributes_for( :post, member_id: post_author.id, text: post_text )
-          )
-        }.to change { Libertree::DB.dbh.sc "SELECT COUNT(*) FROM river_posts" }.by(1)
+        post = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: post_author.id, text: post_text )
+        )
+        river.matches_post?(post).should be_true
       else
-        expect {
-          post = Libertree::Model::Post.create(
-            FactoryGirl.attributes_for( :post, member_id: post_author.id, text: post_text )
-          )
-        }.not_to change { Libertree::DB.dbh.sc "SELECT COUNT(*) FROM river_posts" }
+        post = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: post_author.id, text: post_text )
+        )
+        river.matches_post?(post).should be_false
       end
     end
 
