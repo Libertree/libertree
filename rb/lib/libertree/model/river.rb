@@ -79,9 +79,9 @@ module Libertree
 
       def term_matches_post?(term, post)
         if term =~ /^:from "(.+?)"$/
-          term_match ||= ( post.member.name_display == $1 )
+          post.member.name_display == $1
         else
-          term_match ||= ( /(?:^|\b|\s)#{term}(?:\b|\s|$)/i === post.text )
+          /(?:^|\b|\s)#{term}(?:\b|\s|$)/i === post.text
         end
       end
 
