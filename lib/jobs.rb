@@ -67,6 +67,21 @@ module Jobs
     end
   end
 
+  module River
+    class Refresh_all
+      def self.perform(params)
+        a = Libertree::Model::Account[ params['account_id'] ]
+        if a
+          a.rivers_not_appended.each(&:refresh_posts)
+        else
+          log_error "Unknown account_id: #{params['account_id']}"
+        end
+        return true
+      end
+    end
+  end
+
+
   module Request
 
     # TODO: Maybe this code is too defensive, checking for nil comment, like post, etc.
