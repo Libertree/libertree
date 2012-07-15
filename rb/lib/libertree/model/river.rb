@@ -171,7 +171,7 @@ module Libertree
 
         n = River.num_appended_to_all
         self.appended_to_all = !! params['appended_to_all']
-        if River.num_appended_to_all != n
+        if River.num_appended_to_all != n || self.appended_to_all
           Libertree::Model::Job.create(
             task: 'river:refresh-all',
             params: {
