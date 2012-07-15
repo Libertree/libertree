@@ -133,6 +133,10 @@ module Libertree
         River.s "SELECT * FROM rivers WHERE account_id = ? ORDER BY position ASC, id DESC", self.id
       end
 
+      def rivers_appended
+        @rivers_appended ||= rivers.find_all(&:appended_to_all)
+      end
+
       def self.create(*args)
         account = super
         member = Member.create( account_id: account.id )
@@ -205,6 +209,7 @@ module Libertree
         @notifications = nil
         @notifications_unseen = nil
         @num_notifications_unseen = nil
+        @rivers_appended = nil
       end
 
       def admin?

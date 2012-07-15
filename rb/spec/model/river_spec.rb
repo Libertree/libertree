@@ -322,5 +322,22 @@ describe Libertree::Model::River do
       try_one  'foo :river "composed"', 'foo level2', true
       try_one  'foo :river "composed"', 'none', false
     end
+
+    context 'given a river set to be appended to all other rivers' do
+      before :each do
+        @river = Libertree::Model::River.create(
+          FactoryGirl.attributes_for( :river, label: 'global', query: 'foo', account_id: @account.id, appended_to_all: true )
+        )
+      end
+
+      it "appends that river's query to other rivers" do
+        try_one  'bar', 'foo', true
+        try_one  'bar', 'baz', false
+      end
+
+      after :each do
+        @river.delete_cascade
+      end
+    end
   end
 end

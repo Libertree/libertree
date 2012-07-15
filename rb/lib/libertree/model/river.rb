@@ -71,7 +71,12 @@ module Libertree
       end
 
       def query_components
-        @query_components ||= self.query.scan(/([+-]?"[^"]+")|([+-]?:from ".+?")|([+-]?:river ".+?")|(\S+)/).map { |c|
+        full_query = self.query
+        if ! self.appended_to_all
+          full_query += ' ' + self.account.rivers_appended.map(&:query).join(' ')
+          full_query.strip!
+        end
+        @query_components ||= full_query.scan(/([+-]?"[^"]+")|([+-]?:from ".+?")|([+-]?:river ".+?")|(\S+)/).map { |c|
           c[3] || c[2] || c[1] || c[0].gsub(/^([+-])"/, "\\1").gsub(/^"|"$/, '')
         }
         @query_components.dup
