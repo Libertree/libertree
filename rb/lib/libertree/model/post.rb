@@ -5,7 +5,7 @@ module Libertree
     class Post < M4DBI::Model(:posts)
 
       after_create do |post|
-        # TODO: only create job for local posts
+        return unless post.is_local?
         Libertree::Model::Job.create_for_forests(
           {
             task: 'request:POST',
@@ -17,7 +17,7 @@ module Libertree
       end
 
       after_update do |post|
-        # TODO: only create job for local posts
+        return unless post.is_local?
         Libertree::Model::Job.create_for_forests(
           {
             task: 'request:POST',
@@ -29,7 +29,7 @@ module Libertree
       end
 
       before_delete do |post|
-        # TODO: only create job for local posts
+        return unless post.is_local?
         Libertree::Model::Job.create_for_forests(
           {
             task: 'request:POST-DELETE',
@@ -38,6 +38,10 @@ module Libertree
           },
           *post.forests
         )
+      end
+
+      def is_local?
+        self.remote_id.nil?
       end
 
       def member

@@ -3,7 +3,7 @@ module Libertree
     class Member < M4DBI::Model(:members)
 
       after_create do |member|
-        # TODO: only create job for local members
+        return unless member.is_local?
         Libertree::Model::Job.create_for_forests(
           {
             task: 'request:MEMBER',
@@ -14,7 +14,7 @@ module Libertree
       end
 
       after_update do |member|
-        # TODO: only create job for local members
+        return unless member.is_local?
         Libertree::Model::Job.create_for_forests(
           {
             task: 'request:MEMBER',
@@ -22,6 +22,10 @@ module Libertree
             params: { 'member_id' => member.id, }
           }
         )
+      end
+
+      def is_local?
+        ! self.account.nil?
       end
 
       def account
