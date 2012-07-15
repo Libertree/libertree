@@ -124,6 +124,22 @@ module Libertree
         @comments ||= Comment.s("SELECT * FROM comments WHERE post_id = ? ORDER BY id", self.id)
       end
 
+      def commented_on_by?(member)
+        DB.dbh.sc(
+          %{
+            SELECT EXISTS(
+              SELECT 1
+              FROM comments
+              WHERE
+                post_id = ?
+                AND member_id = ?
+            )
+          },
+          self.id,
+          member.id
+        )
+      end
+
       def likes
         @likes ||= PostLike.s("SELECT * FROM post_likes WHERE post_id = ? ORDER BY id DESC", self.id)
       end

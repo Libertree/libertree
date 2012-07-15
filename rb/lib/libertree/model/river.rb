@@ -101,6 +101,8 @@ module Libertree
         parts.delete ':unread'
         return false  if parts.include?(':liked') && ! post.liked_by?( self.account.member )
         parts.delete ':liked'
+        return false  if parts.include?(':commented') && ! post.commented_on_by?( self.account.member )
+        parts.delete ':commented'
 
         # Negations: Must not satisfy any of the conditions
 

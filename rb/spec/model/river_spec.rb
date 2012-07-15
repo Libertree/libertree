@@ -250,6 +250,23 @@ describe Libertree::Model::River do
       river.matches_post?(post).should be_true
     end
 
+    it "matches posts commented on by the river's account" do
+      river = Libertree::Model::River.create(
+        FactoryGirl.attributes_for( :river, label: ':commented', query: ':commented', account_id: @account.id )
+      )
+      post = Libertree::Model::Post.create(
+        FactoryGirl.attributes_for( :post, member_id: @member.id, text: 'test post' )
+      )
+
+      river.matches_post?(post).should be_false
+
+      Libertree::Model::Comment.create(
+        FactoryGirl.attributes_for( :comment, member_id: @account.member.id, post_id: post.id, text: 'test comment' )
+      )
+
+      river.matches_post?(post).should be_true
+    end
+
     it 'allows composition of rivers via :river term' do
       Libertree::Model::River.create(
         FactoryGirl.attributes_for( :river, label: 'foo', query: 'foo', account_id: @account.id )
