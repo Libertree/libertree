@@ -31,8 +31,8 @@ module Libertree
       end
 
       # @return [Job] nil if no job was reserved
-      def self.reserve
-        job = self.s1("SELECT * FROM jobs WHERE pid IS NULL AND tries < 11 AND time_to_start <= NOW() ORDER BY time_to_start ASC LIMIT 1")
+      def self.reserve(queue="default")
+        job = self.s1("SELECT * FROM jobs WHERE queue = '#{queue}' AND pid IS NULL AND tries < 11 AND time_to_start <= NOW() ORDER BY time_to_start ASC LIMIT 1")
         return nil  if job.nil?
 
         self.update(
