@@ -221,6 +221,14 @@ class JobProcessor
     when 'email'
       Pony.mail  to: job.params['to'], subject: job.params['subject'], body: job.params['body']
       job.time_finished = Time.now
+    when 'river:refresh-all'
+      a = Libertree::Model::Account[ job.params['account_id'] ]
+      if a.nil?
+        log_error "Unknown account_id: #{job.params['account_id']}"
+      else
+        a.rivers_not_appended.each(&:refresh_posts)
+      end
+      job.time_finished = Time.now
     end
 
     if job.time_finished.nil?
