@@ -187,7 +187,15 @@ module Libertree
 
       def delete_cascade
         DB.dbh.delete "DELETE FROM river_posts WHERE river_id = ?", self.id
-        delete
+        if self.appended_to_all
+          Libertree::Model::Job.create(
+            task: 'river:refresh-all',
+            params: {
+              'account_id' => self.account_id,
+            }.to_json
+          )
+        end
+        self.delete
       end
 
       def self.num_appended_to_all
