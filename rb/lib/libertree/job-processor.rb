@@ -21,6 +21,10 @@ module Libertree
       @queue = @conf['queue']
     end
 
+    def conf
+      @conf
+    end
+
     def log(s, level = nil)
       t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
       if level
