@@ -1,5 +1,6 @@
 module Libertree
   class JobProcessor
+
     def initialize(config_filename)
       @config_filename = config_filename
       @conf = YAML.load( File.read(config_filename) )
@@ -58,7 +59,13 @@ module Libertree
       log "Processing: job #{job.id}"
 
       begin
-        task = job.task.split('::').reduce(JobProcessor, :const_get)
+        # Try to convert the task name into the name of a class
+        # that is defined in the Jobs module. We cannot use String#capitalize
+        # here as it would lowercase everything but the first letter.
+        task = job.task.split(':').
+                 map {|t| (t[0].upcase + t[1..-1]).gsub('-','_') }.
+                 reduce(Jobs, :const_get)
+        log "performing #{task}"
         complete = task.perform(job.params)
         if complete
           job.time_finished = Time.now
