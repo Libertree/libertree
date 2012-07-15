@@ -6,6 +6,7 @@ module Libertree
         Libertree::Model::Job.create_for_forests(
           {
             task: 'request:COMMENT',
+            queue: 'backend',
             params: { 'comment_id' => comment.id, }
           },
           *comment.forests
@@ -17,6 +18,7 @@ module Libertree
         Libertree::Model::Job.create_for_forests(
           {
             task: 'request:COMMENT-DELETE',
+            queue: 'backend',
             params: { 'comment_id' => comment.id, }
           },
           *comment.forests

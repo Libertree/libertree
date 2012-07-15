@@ -7,6 +7,7 @@ module Libertree
         Libertree::Model::Job.create_for_forests(
           {
             task: 'request:MEMBER',
+            queue: 'backend',
             params: { 'member_id' => member.id, }
           }
         )
@@ -17,6 +18,7 @@ module Libertree
         Libertree::Model::Job.create_for_forests(
           {
             task: 'request:MEMBER',
+            queue: 'backend',
             params: { 'member_id' => member.id, }
           }
         )

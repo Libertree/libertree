@@ -9,6 +9,7 @@ module Libertree
         Libertree::Model::Job.create_for_forests(
           {
             task: 'request:POST',
+            queue: 'backend',
             params: { 'post_id' => post.id, }
           },
           *post.forests
@@ -20,6 +21,7 @@ module Libertree
         Libertree::Model::Job.create_for_forests(
           {
             task: 'request:POST',
+            queue: 'backend',
             params: { 'post_id' => post.id, }
           },
           *post.forests
@@ -31,6 +33,7 @@ module Libertree
         Libertree::Model::Job.create_for_forests(
           {
             task: 'request:POST-DELETE',
+            queue: 'backend',
             params: { 'post_id' => post.id, }
           },
           *post.forests
