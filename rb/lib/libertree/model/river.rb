@@ -103,6 +103,8 @@ module Libertree
         parts.delete ':liked'
         return false  if parts.include?(':commented') && ! post.commented_on_by?( self.account.member )
         parts.delete ':commented'
+        return false  if parts.include?(':subscribed') && ! self.account.subscribed_to?(post)
+        parts.delete ':subscribed'
 
         # Negations: Must not satisfy any of the conditions
 
