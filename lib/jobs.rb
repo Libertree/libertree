@@ -3,23 +3,6 @@ require 'libertree/model'
 require 'pony'
 
 module Helper
-  # TODO: find a place for this
-  def init_mailer(conf)
-    Pony.options = {
-      :via => :smtp,
-      :via_options => {
-        :address              => conf['smtp']['host'],
-        :port                 => conf['smtp']['port'],
-        :user_name            => conf['smtp']['username'],
-        :password             => conf['smtp']['password'],
-        :authentication       => conf['smtp']['authentication'],
-        :domain               => conf['smtp']['helo_domain'],
-        :enable_starttls_auto => conf['smtp']['starttls_auto'],
-      },
-      :from => conf['smtp']['from_address'],
-    }
-  end
-
   def lt_client(remote_host)
     key = OpenSSL::PKey::RSA.new File.read(@conf['private_key_path'])
     c = Libertree::Client.new(
