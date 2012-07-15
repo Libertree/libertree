@@ -108,8 +108,8 @@ describe Libertree::Model::River do
         river.matches_post?(post).should be_false
       end
 
-      Libertree::DB.dbh.d  "DELETE FROM river_posts WHERE river_id = ?", river.id
-      Libertree::DB.dbh.d  "DELETE FROM rivers WHERE id = ?", river.id
+      river.delete_cascade
+      post.delete_cascade
     end
 
     it 'matches in basic cases' do
@@ -248,6 +248,8 @@ describe Libertree::Model::River do
       )
 
       river.matches_post?(post).should be_true
+
+      river.delete_cascade
     end
 
     it "matches posts commented on by the river's account" do
@@ -265,6 +267,8 @@ describe Libertree::Model::River do
       )
 
       river.matches_post?(post).should be_true
+
+      river.delete_cascade
     end
 
     it "matches posts subscribed to by the river's account" do
@@ -280,6 +284,8 @@ describe Libertree::Model::River do
       @account.subscribe_to post
 
       river.matches_post?(post).should be_true
+
+      river.delete_cascade
     end
 
     it 'allows composition of rivers via :river term' do
