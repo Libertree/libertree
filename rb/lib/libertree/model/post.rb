@@ -206,8 +206,12 @@ module Libertree
         end
       end
 
+      # This is a search, not a create
       def like_by(member)
         PostLike[ member_id: member.id, post_id: self.id ]
+      end
+      def liked_by?(member)
+        !! like_by(member)
       end
 
       def self.search(q)

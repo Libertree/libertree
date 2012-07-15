@@ -94,11 +94,13 @@ module Libertree
 
         # Scope limiters
 
-        return false  if parts.include?(':tree') && post.member.account.nil?
-        return false  if parts.include?(':unread') && post.read_by?( self.account )
         parts.delete ':forest'
+        return false  if parts.include?(':tree') && post.member.account.nil?
         parts.delete ':tree'
+        return false  if parts.include?(':unread') && post.read_by?( self.account )
         parts.delete ':unread'
+        return false  if parts.include?(':liked') && ! post.liked_by?( self.account.member )
+        parts.delete ':liked'
 
         # Negations: Must not satisfy any of the conditions
 

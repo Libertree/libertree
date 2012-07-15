@@ -229,6 +229,27 @@ describe Libertree::Model::River do
       try_one  '+"foo bar" baz', 'foo bar baz', true
     end
 
+    it "matches posts liked by the river's account" do
+      river = Libertree::Model::River.create(
+        FactoryGirl.attributes_for( :river, label: ':liked', query: ':liked', account_id: @account.id )
+      )
+      post = Libertree::Model::Post.create(
+        FactoryGirl.attributes_for( :post, member_id: @member.id, text: 'test post' )
+      )
+
+      river.matches_post?(post).should be_false
+
+      Libertree::Model::PostLike.create(
+        FactoryGirl.attributes_for(
+          :post_like,
+          'member_id' => @account.member.id,
+          'post_id'   => post.id
+        )
+      )
+
+      river.matches_post?(post).should be_true
+    end
+
     it 'allows composition of rivers via :river term' do
       Libertree::Model::River.create(
         FactoryGirl.attributes_for( :river, label: 'foo', query: 'foo', account_id: @account.id )
