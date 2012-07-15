@@ -20,21 +20,21 @@ module Libertree
       # Used by Ramaze::Helper::UserHelper.
       # @return [Account] authenticated account, or nil on failure to authenticate
       def self.authenticate(creds)
-        if creds['password_reset_code']
+        if creds['password_reset_code'].to_s
           account = Account.one_where(
             %{
               password_reset_code = ?
               AND NOW() <= password_reset_expiry
             },
-            creds['password_reset_code']
+            creds['password_reset_code'].to_s
           )
           if account
             return account
           end
         end
 
-        account = Account[ 'username' => creds['username'] ]
-        if account && account.password == creds['password']
+        account = Account[ 'username' => creds['username'].to_s ]
+        if account && account.password == creds['password'].to_s
           account
         end
       end
@@ -133,6 +133,14 @@ module Libertree
         River.s "SELECT * FROM rivers WHERE account_id = ? ORDER BY position ASC, id DESC", self.id
       end
 
+      def rivers_not_appended
+        rivers.reject(&:appended_to_all)
+      end
+
+      def rivers_appended
+        @rivers_appended ||= rivers.find_all(&:appended_to_all)
+      end
+
       def self.create(*args)
         account = super
         member = Member.create( account_id: account.id )
@@ -205,6 +213,7 @@ module Libertree
         @notifications = nil
         @notifications_unseen = nil
         @num_notifications_unseen = nil
+        @rivers_appended = nil
       end
 
       def admin?
@@ -332,6 +341,12 @@ module Libertree
       # All contacts, from all contact lists
       def contacts
         contact_lists.map { |list| list.members }.flatten.uniq
+      end
+
+      def contacts_mutual
+        self.contacts.find_all { |c|
+          c.account && c.account.contacts.include?(self.member)
+        }
       end
     end
   end

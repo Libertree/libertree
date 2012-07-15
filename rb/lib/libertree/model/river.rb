@@ -71,34 +71,45 @@ module Libertree
       end
 
       def query_components
-        @query_components ||= self.query.scan(/([+-]?"[^"]+")|([+-]?:from ".+?")|(\S+)/).map { |c|
-          c[2] || c[1] || c[0].gsub(/^([+-])"/, "\\1").gsub(/^"|"$/, '')
+        full_query = self.query
+        if ! self.appended_to_all
+          full_query += ' ' + self.account.rivers_appended.map(&:query).join(' ')
+          full_query.strip!
+        end
+        @query_components ||= full_query.scan(/([+-]?"[^"]+")|([+-]?:from ".+?")|([+-]?:river ".+?")|(\S+)/).map { |c|
+          c[3] || c[2] || c[1] || c[0].gsub(/^([+-])"/, "\\1").gsub(/^"|"$/, '')
         }
         @query_components.dup
       end
 
       def term_matches_post?(term, post)
-        if term =~ /^:from "(.+?)"$/
-          term_match ||= ( post.member.name_display == $1 )
+        case term
+        when /^:from "(.+?)"$/
+          post.member.name_display == $1
+        when /^:river "(.+?)"$/
+          river = River[label: $1]
+          river && river.matches_post?(post)
         else
-          term_match ||= ( /(?:^|\b|\s)#{term}(?:\b|\s|$)/i === post.text )
+          /(?:^|\b|\s)#{term}(?:\b|\s|$)/i === post.text
         end
       end
 
-      def try_post(post)
-        # TODO: We may be able to fold these two EXISTS clauses into the INSERT query at the end of this method
-        return  if DB.dbh.sc "SELECT EXISTS( SELECT 1 FROM river_posts WHERE river_id = ? AND post_id = ? LIMIT 1 )", self.id, post.id
-        return  if DB.dbh.sc "SELECT EXISTS( SELECT 1 FROM posts_hidden WHERE account_id = ? AND post_id = ? LIMIT 1 )", self.account.id, post.id
-
+      def matches_post?(post)
         parts = query_components
 
         # Scope limiters
 
-        return  if parts.include?(':tree') && post.member.account.nil?
-        return  if parts.include?(':unread') && post.read_by?( self.account )
         parts.delete ':forest'
+        return false  if parts.include?(':tree') && post.member.account.nil?
         parts.delete ':tree'
+        return false  if parts.include?(':unread') && post.read_by?( self.account )
         parts.delete ':unread'
+        return false  if parts.include?(':liked') && ! post.liked_by?( self.account.member )
+        parts.delete ':liked'
+        return false  if parts.include?(':commented') && ! post.commented_on_by?( self.account.member )
+        parts.delete ':commented'
+        return false  if parts.include?(':subscribed') && ! self.account.subscribed_to?(post)
+        parts.delete ':subscribed'
 
         # Negations: Must not satisfy any of the conditions
 
@@ -106,7 +117,7 @@ module Libertree
           if term =~ /^-(.+)$/
             positive_term = $1
             parts.delete term
-            return  if term_matches_post?(positive_term, post)
+            return false  if term_matches_post?(positive_term, post)
           end
         end
 
@@ -120,7 +131,7 @@ module Libertree
             matches_all &&= term_matches_post?(actual_term, post)
           end
         end
-        return  if ! matches_all
+        return false  if ! matches_all
 
         # Regular terms: Must satisfy at least one condition
 
@@ -129,10 +140,20 @@ module Libertree
           parts.each do |term|
             term_match ||= term_matches_post?(term, post)
           end
-          return  if ! term_match
+          return false  if ! term_match
         end
 
-        DB.dbh.i "INSERT INTO river_posts ( river_id, post_id ) VALUES ( ?, ? )", self.id, post.id
+        true
+      end
+
+      def try_post(post)
+        # TODO: We may be able to fold these two EXISTS clauses into the INSERT query at the end of this method
+        return  if DB.dbh.sc "SELECT EXISTS( SELECT 1 FROM river_posts WHERE river_id = ? AND post_id = ? LIMIT 1 )", self.id, post.id
+        return  if DB.dbh.sc "SELECT EXISTS( SELECT 1 FROM posts_hidden WHERE account_id = ? AND post_id = ? LIMIT 1 )", self.account.id, post.id
+
+        if self.matches_post?(post)
+          DB.dbh.i "INSERT INTO river_posts ( river_id, post_id ) VALUES ( ?, ? )", self.id, post.id
+        end
       end
 
       def refresh_posts( n = 512 )
@@ -143,20 +164,61 @@ module Libertree
         end
       end
 
+      # @param params Untrusted parameter Hash.  Be careful, this input usually comes from the outside world.
       def revise( params )
-        self.label = params['label']
-        self.query = params['query']
-        refresh_posts
+        self.label = params['label'].to_s
+        self.query = params['query'].to_s
+
+        n = River.num_appended_to_all
+        self.appended_to_all = !! params['appended_to_all']
+        if River.num_appended_to_all != n || self.appended_to_all
+          Libertree::Model::Job.create(
+            task: 'river:refresh-all',
+            params: {
+              'account_id' => self.account_id,
+            }.to_json
+          )
+        end
+
+        if ! self.appended_to_all
+          refresh_posts
+        end
       end
 
       def delete_cascade
         DB.dbh.delete "DELETE FROM river_posts WHERE river_id = ?", self.id
-        delete
+        if self.appended_to_all
+          Libertree::Model::Job.create(
+            task: 'river:refresh-all',
+            params: {
+              'account_id' => self.account_id,
+            }.to_json
+          )
+        end
+        self.delete
+      end
+
+      def self.num_appended_to_all
+        DB.dbh.sc "SELECT COUNT(*) FROM rivers WHERE appended_to_all"
       end
 
       def self.create(*args)
+        n = River.num_appended_to_all
         river = super
-        Post.add_recent_to_river river
+
+        if River.num_appended_to_all != n
+          Libertree::Model::Job.create(
+            task: 'river:refresh-all',
+            params: {
+              'account_id' => river.account_id,
+            }.to_json
+          )
+        end
+
+        if ! river.appended_to_all
+          Post.add_recent_to_river river
+        end
+
         river
       end
 
