@@ -164,11 +164,25 @@ module Libertree
         end
       end
 
-      # @param params Untrusted parameter Hash.  Be careful, this input comes from the outside world.
+      # @param params Untrusted parameter Hash.  Be careful, this input usually comes from the outside world.
       def revise( params )
         self.label = params['label'].to_s
         self.query = params['query'].to_s
-        refresh_posts
+
+        n = River.num_appended_to_all
+        self.appended_to_all = !! params['appended_to_all']
+        if River.num_appended_to_all != n
+          Libertree::Model::Job.create(
+            task: 'river:refresh-all',
+            params: {
+              'account_id' => self.account_id,
+            }.to_json
+          )
+        end
+
+        if ! self.appended_to_all
+          refresh_posts
+        end
       end
 
       def delete_cascade
@@ -176,9 +190,27 @@ module Libertree
         delete
       end
 
+      def self.num_appended_to_all
+        DB.dbh.sc "SELECT COUNT(*) FROM rivers WHERE appended_to_all"
+      end
+
       def self.create(*args)
+        n = River.num_appended_to_all
         river = super
-        Post.add_recent_to_river river
+
+        if River.num_appended_to_all != n
+          Libertree::Model::Job.create(
+            task: 'river:refresh-all',
+            params: {
+              'account_id' => river.account_id,
+            }.to_json
+          )
+        end
+
+        if ! river.appended_to_all
+          Post.add_recent_to_river river
+        end
+
         river
       end
 

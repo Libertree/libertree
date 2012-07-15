@@ -133,6 +133,10 @@ module Libertree
         River.s "SELECT * FROM rivers WHERE account_id = ? ORDER BY position ASC, id DESC", self.id
       end
 
+      def rivers_not_appended
+        rivers.reject(&:appended_to_all)
+      end
+
       def rivers_appended
         @rivers_appended ||= rivers.find_all(&:appended_to_all)
       end
