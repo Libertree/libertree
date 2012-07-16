@@ -17,8 +17,6 @@ module Libertree
       if @log.respond_to? :path
         puts "pid #{@pid} logging to #{File.absolute_path(@log.path)}"
       end
-
-      @queue = @conf['queue']
     end
 
     def conf
@@ -49,7 +47,7 @@ module Libertree
       Signal.trap("INT" , &terminate)
 
       until quit
-        job = Libertree::Model::Job.reserve(@queue)
+        job = Libertree::Model::Job.reserve(Jobs.list)
         if job
           process job
         end
