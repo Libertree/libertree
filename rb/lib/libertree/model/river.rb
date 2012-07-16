@@ -174,7 +174,6 @@ module Libertree
         if River.num_appended_to_all != n || self.appended_to_all
           Libertree::Model::Job.create(
             task: 'river:refresh-all',
-            queue: 'backend',
             params: {
               'account_id' => self.account_id,
             }.to_json
@@ -191,7 +190,6 @@ module Libertree
         if self.appended_to_all
           Libertree::Model::Job.create(
             task: 'river:refresh-all',
-            queue: 'backend',
             params: {
               'account_id' => self.account_id,
             }.to_json
@@ -211,7 +209,6 @@ module Libertree
         if River.num_appended_to_all != n
           Libertree::Model::Job.create(
             task: 'river:refresh-all',
-            queue: 'backend',
             params: {
               'account_id' => river.account_id,
             }.to_json
