@@ -2,7 +2,7 @@ module Libertree
   module Model
     class Comment < M4DBI::Model(:comments)
       after_create do |comment|
-        return unless comment.is_local?
+        return unless comment.local?
         Libertree::Model::Job.create_for_forests(
           {
             task: 'request:COMMENT',
@@ -13,7 +13,7 @@ module Libertree
       end
 
       before_delete do |comment|
-        return unless comment.is_local?
+        return unless comment.local?
         Libertree::Model::Job.create_for_forests(
           {
             task: 'request:COMMENT-DELETE',
@@ -23,7 +23,7 @@ module Libertree
         )
       end
 
-      def is_local?
+      def local?
         self.remote_id.nil?
       end
 
