@@ -43,6 +43,25 @@ module Helper
 end
 
 module Jobs
+  def self.list
+    [
+      "email",
+      "river:refresh-all",
+      "request:CHAT",
+      "request:COMMENT",
+      "request:COMMENT-DELETE",
+      "request:COMMENT-LIKE",
+      "request:COMMENT-LIKE-DELETE",
+      "request:FOREST",
+      "request:MEMBER",
+      "request:MESSAGE",
+      "request:POST",
+      "request:POST-DELETE",
+      "request:POST-LIKE",
+      "request:POST-LIKE-DELETE",
+    ]
+  end
+
   class Email
     def self.perform(params)
       Pony.mail  to: params['to'], subject: params['subject'], body: params['body']
