@@ -2,6 +2,16 @@ module Libertree
   class JobProcessor
 
     def initialize(config_filename)
+      pid_dir = File.join( File.dirname(__FILE__), '..', 'pids' )
+      if ! Dir.exists?(pid_dir)
+        Dir.mkdir pid_dir
+      end
+      pid_file = File.join(pid_dir, 'job-processor.pid')
+      @pid = Process.pid
+      File.open(pid_file, 'w') do |f|
+        f.print @pid
+      end
+
       @config_filename = config_filename
       @conf = YAML.load( File.read(config_filename) )
 
@@ -11,9 +21,7 @@ module Libertree
       else
         @log = $stdout
       end
-      @pid = Process.pid
       @log_identifier = "jobp #{@pid}"
-
       if @log.respond_to? :path
         puts "pid #{@pid} logging to #{File.absolute_path(@log.path)}"
       end
