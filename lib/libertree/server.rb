@@ -103,6 +103,15 @@ module Libertree
     end
 
     def self.run(config_filename)
+      pid_dir = File.join( File.dirname(__FILE__), '..', '..', 'pids' )
+      if ! Dir.exists?(pid_dir)
+        Dir.mkdir pid_dir
+      end
+      pid_file = File.join(pid_dir, 'server.pid')
+      File.open(pid_file, 'w') do |f|
+        f.print Process.pid
+      end
+
       quit = false
 
       Signal.trap("HUP") do
