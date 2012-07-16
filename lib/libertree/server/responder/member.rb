@@ -21,7 +21,6 @@ module Libertree
             # fetch avatar asynchronously
             Libertree::Model::Job.create(
               task: 'http:avatar',
-              queue: 'frontend',
               params: {
                 'member_id'  => member.id,
                 'avatar_url' => params['avatar_url'],
