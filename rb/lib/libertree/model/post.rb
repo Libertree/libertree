@@ -37,10 +37,6 @@ module Libertree
         )
       end
 
-      def local?
-        self.remote_id.nil?
-      end
-
       def member
         @member ||= Member[self.member_id]
       end
