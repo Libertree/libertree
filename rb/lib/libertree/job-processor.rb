@@ -28,7 +28,7 @@ module Libertree
     end
 
     def conf
-      @conf
+      @conf.merge({ :log_handle => @log, :log_identifier => @log_identifier })
     end
 
     def log(s, level = nil)
