@@ -3,17 +3,23 @@ require 'libertree/model'
 require 'pony'
 
 module Helper
-  def lt_client(remote_host)
-    key = OpenSSL::PKey::RSA.new File.read(@conf['private_key_path'])
-    c = Libertree::Client.new(
-      public_key: key.public_key,
-      private_key: key,
-      avatar_url_base: @conf['avatar_url_base'],
-      server_ip: @conf['ip_public'],
-      server_name: @conf['server_name'],
-      log: @log,
-      log_identifier: @log_identifier
-    )
+  def self.init_client_conf(conf)
+    key = OpenSSL::PKey::RSA.new File.read(conf['private_key_path'])
+    puts conf
+    @client_conf =
+      {
+        :public_key      => key.public_key,
+        :private_key     => key,
+        :avatar_url_base => conf['avatar_url_base'],
+        :server_ip       => conf['ip_public'],
+        :server_name     => conf['server_name'],
+        :log             => conf['log_handle'],
+        :log_identifier  => conf['log_identifier']
+      }
+  end
+
+  def self.lt_client(remote_host)
+    c = Libertree::Client.new(@client_conf)
 
     if c
       c.connect remote_host
@@ -26,7 +32,7 @@ module Helper
     c
   end
 
-  def with_tree(server_id)
+  def self.with_tree(server_id)
     server = Libertree::Model::Server[server_id]
     if server.nil?
       log_error "No server with id #{server_id.inspect}"
