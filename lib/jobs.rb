@@ -5,7 +5,6 @@ require 'pony'
 module Helper
   def self.init_client_conf(conf)
     key = OpenSSL::PKey::RSA.new File.read(conf['private_key_path'])
-    puts conf
     @client_conf =
       {
         :public_key      => key.public_key,
