@@ -44,22 +44,22 @@ end
 
 module Jobs
   def self.list
-    [
-      "email",
-      "river:refresh-all",
-      "request:CHAT",
-      "request:COMMENT",
-      "request:COMMENT-DELETE",
-      "request:COMMENT-LIKE",
-      "request:COMMENT-LIKE-DELETE",
-      "request:FOREST",
-      "request:MEMBER",
-      "request:MESSAGE",
-      "request:POST",
-      "request:POST-DELETE",
-      "request:POST-LIKE",
-      "request:POST-LIKE-DELETE",
-    ]
+    {
+      "email"                        => Email,
+      "river:refresh-all"            => River::RefreshAll,
+      "request:CHAT"                 => Request::CHAT,
+      "request:COMMENT"              => Request::COMMENT,
+      "request:COMMENT-DELETE"       => Request::COMMENT_DELETE,
+      "request:COMMENT-LIKE"         => Request::COMMENT_LIKE,
+      "request:COMMENT-LIKE-DELETE"  => Request::COMMENT_LIKE_DELETE,
+      "request:FOREST"               => Request::FOREST,
+      "request:MEMBER"               => Request::MEMBER,
+      "request:MESSAGE"              => Request::MESSAGE,
+      "request:POST"                 => Request::POST,
+      "request:POST-DELETE"          => Request::POST_DELETE,
+      "request:POST-LIKE"            => Request::POST_LIKE,
+      "request:POST-LIKE-DELETE"     => Request::POST_LIKE_DELETE,
+    }
   end
 
   class Email
@@ -70,7 +70,7 @@ module Jobs
   end
 
   module River
-    class Refresh_all
+    class RefreshAll
       def self.perform(params)
         a = Libertree::Model::Account[ params['account_id'] ]
         if a
