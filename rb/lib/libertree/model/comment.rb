@@ -24,7 +24,7 @@ module Libertree
       end
 
       def local?
-        self.remote_id.nil?
+        ! remote_id
       end
 
       def member
