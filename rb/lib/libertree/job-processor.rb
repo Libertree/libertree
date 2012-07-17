@@ -55,7 +55,7 @@ module Libertree
       Signal.trap("INT" , &terminate)
 
       until quit
-        job = Libertree::Model::Job.reserve(Jobs.list)
+        job = Libertree::Model::Job.reserve(Jobs.list.keys)
         if job
           process job
         end
@@ -69,14 +69,9 @@ module Libertree
       log "Processing: job #{job.id}"
 
       begin
-        # Try to convert the task name into the name of a class
-        # that is defined in the Jobs module. We cannot use String#capitalize
-        # here as it would lowercase everything but the first letter.
-        task = job.task.split(':').
-                 map {|t| (t[0].upcase + t[1..-1]).gsub('-','_') }.
-                 reduce(Jobs, :const_get)
-        log "performing #{task}"
-        complete = task.perform(job.params)
+        task = Jobs.list[job.task]
+        complete = task.send(:perform, job.params)
+
         if complete
           job.time_finished = Time.now
         else
