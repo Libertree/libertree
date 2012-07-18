@@ -50,8 +50,8 @@ module Libertree
         )
       end
 
-      def delete(post)
-        DB.dbh.d  "DELETE FROM pools_posts WHERE pool_id = ? AND post_id = ?", self.id, post_id
+      def remove_post(post)
+        DB.dbh.d  "DELETE FROM pools_posts WHERE pool_id = ? AND post_id = ?", self.id, post.id
       end
     end
   end
