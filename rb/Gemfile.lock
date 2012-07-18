@@ -43,7 +43,7 @@ GEM
     factory_girl (3.4.0)
       activesupport (>= 3.0.0)
     i18n (0.6.0)
-    m4dbi (0.8.4)
+    m4dbi (0.8.5)
       metaid
       rdbi
     metaid (1.0)
