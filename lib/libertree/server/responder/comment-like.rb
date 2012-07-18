@@ -65,7 +65,7 @@ module Libertree
           begin
             likes = Model::CommentLike.
               where( 'remote_id' => params['id'] ).
-              reject { |c| c.comment.server != @server }
+              find_all { |like| like.member.server == @server }
 
             if likes.empty?
               respond( {
