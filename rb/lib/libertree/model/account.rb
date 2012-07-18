@@ -141,6 +141,10 @@ module Libertree
         @rivers_appended ||= rivers.find_all(&:appended_to_all)
       end
 
+      def pools
+        @pools ||= Pool.where( account_id: self.id )
+      end
+
       def self.create(*args)
         account = super
         member = Member.create( account_id: account.id )
