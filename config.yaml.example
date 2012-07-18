@@ -33,6 +33,3 @@ smtp:
   helo_domain: localhost.localdomain
   starttls_auto: false
   from_address: 'exampleusername@example.org'
-
-# The name of the queue that should be processed
-queue: 'backend'
