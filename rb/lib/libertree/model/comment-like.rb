@@ -2,25 +2,27 @@ module Libertree
   module Model
     class CommentLike < M4DBI::Model(:comment_likes)
       after_create do |like|
-        return unless like.local?
-        Libertree::Model::Job.create_for_forests(
-          {
-            task: 'request:COMMENT-LIKE',
-            params: { 'comment_like_id' => like.id, }
-          },
-          *like.forests
-        )
+        if like.local?
+          Libertree::Model::Job.create_for_forests(
+            {
+              task: 'request:COMMENT-LIKE',
+              params: { 'comment_like_id' => like.id, }
+            },
+            *like.forests
+          )
+        end
       end
 
       before_delete do |like|
-        return unless like.local?
-        Libertree::Model::Job.create_for_forests(
-          {
-            task: 'request:COMMENT-LIKE-DELETE',
-            params: { 'comment_like_id' => like.id, }
-          },
-          *like.forests
-        )
+        if like.local?
+          Libertree::Model::Job.create_for_forests(
+            {
+              task: 'request:COMMENT-LIKE-DELETE',
+              params: { 'comment_like_id' => like.id, }
+            },
+            *like.forests
+          )
+        end
       end
 
       def local?

@@ -2,25 +2,27 @@ module Libertree
   module Model
     class Comment < M4DBI::Model(:comments)
       after_create do |comment|
-        return unless comment.local?
-        Libertree::Model::Job.create_for_forests(
-          {
-            task: 'request:COMMENT',
-            params: { 'comment_id' => comment.id, }
-          },
-          *comment.forests
-        )
+        if comment.local?
+          Libertree::Model::Job.create_for_forests(
+            {
+              task: 'request:COMMENT',
+              params: { 'comment_id' => comment.id, }
+            },
+            *comment.forests
+          )
+        end
       end
 
       before_delete do |comment|
-        return unless comment.local?
-        Libertree::Model::Job.create_for_forests(
-          {
-            task: 'request:COMMENT-DELETE',
-            params: { 'comment_id' => comment.id, }
-          },
-          *comment.forests
-        )
+        if comment.local?
+          Libertree::Model::Job.create_for_forests(
+            {
+              task: 'request:COMMENT-DELETE',
+              params: { 'comment_id' => comment.id, }
+            },
+            *comment.forests
+          )
+        end
       end
 
       def local?

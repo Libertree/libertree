@@ -3,23 +3,25 @@ module Libertree
     class Member < M4DBI::Model(:members)
 
       after_create do |member|
-        return unless member.local?
-        Libertree::Model::Job.create_for_forests(
-          {
-            task: 'request:MEMBER',
-            params: { 'member_id' => member.id, }
-          }
-        )
+        if member.local?
+          Libertree::Model::Job.create_for_forests(
+            {
+              task: 'request:MEMBER',
+              params: { 'member_id' => member.id, }
+            }
+          )
+        end
       end
 
       after_update do |member|
-        return unless member.local?
-        Libertree::Model::Job.create_for_forests(
-          {
-            task: 'request:MEMBER',
-            params: { 'member_id' => member.id, }
-          }
-        )
+        if member.local?
+          Libertree::Model::Job.create_for_forests(
+            {
+              task: 'request:MEMBER',
+              params: { 'member_id' => member.id, }
+            }
+          )
+        end
       end
 
       def local?
