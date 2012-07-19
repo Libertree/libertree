@@ -1,19 +1,22 @@
+require 'fileutils'
+
 module Libertree
   class JobProcessor
 
     def initialize(config_filename)
-      pid_dir = File.join( File.dirname(__FILE__), '..', 'pids' )
-      if ! Dir.exists?(pid_dir)
-        Dir.mkdir pid_dir
-      end
-      pid_file = File.join(pid_dir, 'job-processor.pid')
-      @pid = Process.pid
-      File.open(pid_file, 'w') do |f|
-        f.print @pid
-      end
-
       @config_filename = config_filename
       @conf = YAML.load( File.read(config_filename) )
+
+      if @conf['pid_dir']
+        if ! Dir.exists?(@conf['pid_dir'])
+          Dir.mkdir @conf['pid_dir']
+        end
+        pid_file = File.join(@conf['pid_dir'], 'job-processor.pid')
+        @pid = Process.pid
+        File.open(pid_file, 'w') do |f|
+          f.print @pid
+        end
+      end
 
       if @conf['log_path']
         @log = File.open( @conf['log_path'], 'a+' )
