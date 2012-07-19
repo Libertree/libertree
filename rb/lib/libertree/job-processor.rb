@@ -11,7 +11,7 @@ module Libertree
       @config_filename = config_filename
       @conf = YAML.load( File.read(config_filename) )
 
-      if @conf['pid_dir']
+      if @conf && @conf['pid_dir']
         if ! Dir.exists?(@conf['pid_dir'])
           Dir.mkdir @conf['pid_dir']
         end
@@ -22,7 +22,7 @@ module Libertree
         end
       end
 
-      if @conf['log_path']
+      if @conf && @conf['log_path']
         @log = File.open( @conf['log_path'], 'a+' )
         @log.sync = true
       else
