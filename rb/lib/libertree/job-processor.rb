@@ -1,6 +1,10 @@
 require 'fileutils'
 
 module Libertree
+  class RetryJob     < StandardError; end
+  class JobFailed    < StandardError; end
+  class JobUndefined < StandardError; end
+
   class JobProcessor
 
     def initialize(config_filename)
@@ -74,17 +78,20 @@ module Libertree
 
       begin
         task = Jobs.list[job.task]
-        complete = task.send(:perform, job.params)
-
-        if complete
-          job.time_finished = Time.now
-        else
-          # Return job to queue.
-          job.unreserve
-        end
+        raise Libertree::JobUndefined unless task
+        task.send(:perform, job.params)
+        job.time_finished = Time.now
 
         log "Leaving: job #{job.id}"
-      rescue NameError
+      rescue Libertree::JobFailed => e
+        log_error "Failed job #{job.id}: #{e.message}\n"
+        # TODO: mark the job as failed instead of unreserving it
+        job.unreserve
+      rescue Libertree::RetryJob => e
+        log_error "Retry job #{job.id} later: #{e.message}\n"
+        # TODO: mark the job as failed instead of unreserving it
+        job.unreserve
+      rescue Libertree::JobUndefined
         log_error "Skipping unknown task #{job.task} in job #{job.id}"
         job.unreserve
       rescue StandardError => e
