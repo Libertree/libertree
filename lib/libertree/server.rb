@@ -3,6 +3,7 @@ require 'json'
 require 'socket'
 require 'openssl'
 require 'base64'
+require 'fileutils'
 
 require 'libertree/authenticatable'
 require 'libertree/model'
@@ -103,15 +104,6 @@ module Libertree
     end
 
     def self.run(config_filename)
-      pid_dir = File.join( File.dirname(__FILE__), '..', '..', 'pids' )
-      if ! Dir.exists?(pid_dir)
-        Dir.mkdir pid_dir
-      end
-      pid_file = File.join(pid_dir, 'server.pid')
-      File.open(pid_file, 'w') do |f|
-        f.print Process.pid
-      end
-
       quit = false
 
       Signal.trap("HUP") do
@@ -130,6 +122,17 @@ module Libertree
       until quit
         begin
           load_config config_filename
+
+          if @conf['pid_dir']
+            if ! Dir.exists?(@conf['pid_dir'])
+              FileUtils.mkdir_p @conf['pid_dir']
+            end
+            pid_file = File.join(@conf['pid_dir'], 'server.pid')
+            File.open(pid_file, 'w') do |f|
+              f.print Process.pid
+            end
+          end
+
           if @conf['log_path']
             @log = File.open( @conf['log_path'], 'a+' )
             @log.sync = true
