@@ -1,5 +1,6 @@
 require 'libertree/client'
 require 'libertree/model'
+require 'libertree/job-processor'
 require 'pony'
 
 module Libertree
@@ -34,14 +35,14 @@ module Libertree
   def self.with_tree(server_id)
     server = Libertree::Model::Server[server_id]
     if server.nil?
-      log_error "No server with id #{server_id.inspect}"
+      raise Libertree::JobFailed, "No server with id #{server_id.inspect}"
     else
       begin
         lt_client(server.ip) do |client|
           yield client
         end
       rescue Errno::ETIMEDOUT, Errno::ECONNREFUSED => e
-        log_error "With #{server.name_display} (#{server.ip}): #{e.message}"
+        raise Libertree::RetryJob, "With #{server.name_display} (#{server.ip}): #{e.message}"
       end
     end
   end
@@ -70,7 +71,6 @@ module Jobs
   class Email
     def self.perform(params)
       Pony.mail  to: params['to'], subject: params['subject'], body: params['body']
-      return true
     end
   end
 
@@ -81,9 +81,8 @@ module Jobs
         if a
           a.rivers_not_appended.each(&:refresh_posts)
         else
-          log_error "Unknown account_id: #{params['account_id']}"
+          raise Libertree::JobFailed, "Unknown account_id: #{params['account_id']}"
         end
-        return true
       end
     end
   end
@@ -100,7 +99,6 @@ module Jobs
           Libertree::with_tree(params['server_id']) do |tree|
             tree.req_chat chat_message
           end
-          return true
         end
       end
     end
@@ -108,14 +106,12 @@ module Jobs
     class COMMENT
       def self.perform(params)
         comment = Libertree::Model::Comment[params['comment_id'].to_i]
-        retry_later = false
         if comment
           Libertree::with_tree(params['server_id']) do |tree|
             response = tree.req_comment(comment)
             if response['code'] == 'NOT FOUND'
               # Remote didn't recognize the comment author or the referenced post
               # Send the potentially missing data, then retry the comment later.
-              retry_later = true
               case response['message']
               when /post/
                 if comment.post.local?
@@ -129,12 +125,10 @@ module Jobs
                 end
                 tree.req_member comment.member
               end
+              raise Libertree::RetryJob, "request associated data first"
             end
           end
         end
-
-        # return true means: completed
-        return ! retry_later
       end
     end
 
@@ -143,7 +137,6 @@ module Jobs
         Libertree::with_tree(params['server_id']) do |tree|
           tree.req_comment_delete params['comment_id']
         end
-        return true
       end
     end
 
@@ -155,7 +148,6 @@ module Jobs
             tree.req_comment_like like
           end
         end
-        return true
       end
     end
 
@@ -164,7 +156,6 @@ module Jobs
         Libertree::with_tree(params['server_id']) do |tree|
           tree.req_comment_like_delete params['comment_like_id']
         end
-        return true
       end
     end
 
@@ -174,7 +165,6 @@ module Jobs
         Libertree::with_tree(params['server_id']) do |tree|
           tree.req_forest forest
         end
-        return true
       end
     end
 
@@ -186,7 +176,6 @@ module Jobs
             tree.req_member member
           end
         end
-        return true
       end
     end
 
@@ -198,7 +187,6 @@ module Jobs
             tree.req_message message, params['recipient_usernames']
           end
         end
-        return true
       end
     end
 
@@ -210,7 +198,6 @@ module Jobs
             tree.req_post post
           end
         end
-        return true
       end
     end
 
@@ -219,7 +206,6 @@ module Jobs
         Libertree::with_tree(params['server_id']) do |tree|
           tree.req_post_delete params['post_id']
         end
-        return true
       end
     end
 
@@ -231,7 +217,6 @@ module Jobs
             tree.req_post_like like
           end
         end
-        return true
       end
     end
 
@@ -240,7 +225,6 @@ module Jobs
         Libertree::with_tree(params['server_id']) do |tree|
           tree.req_post_like_delete params['post_like_id']
         end
-        return true
       end
     end
 
