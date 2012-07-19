@@ -9,7 +9,7 @@ end
 jobp = Libertree::JobProcessor.new( ARGV[0] )
 jobp.extend Jobs
 
-Libertree.init_client_conf(jobp.conf)
+Jobs::Request.init_client_conf(jobp.conf)
 Pony.options = {
   :via => :smtp,
   :via_options => {
