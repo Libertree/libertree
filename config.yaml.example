@@ -23,6 +23,9 @@ debug: false
 # If no log_path is specified, the server logs to stdout
 # log_path: /path/to/libertree-backend-rb.log
 
+# Specify a pid_dir to have the process id written to a file in that dir.
+# pid_dir: /path/to/libertree-backend-rb/pids
+
 # What the system will use for sending email
 smtp:
   host: mail.example.org
