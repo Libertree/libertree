@@ -58,9 +58,10 @@ module Libertree
         job = Libertree::Model::Job.reserve(Jobs.list.keys)
         if job
           process job
-        end
-        3.times do
-          sleep 1 unless quit
+        else
+          3.times do
+            sleep 1  if ! quit
+          end
         end
       end
     end
