@@ -2,7 +2,7 @@ require 'libertree/client'
 require 'libertree/model'
 require 'pony'
 
-module Helper
+module Libertree
   def self.init_client_conf(conf)
     key = OpenSSL::PKey::RSA.new File.read(conf['private_key_path'])
     @client_conf =
@@ -97,7 +97,7 @@ module Jobs
       def self.perform(params)
         chat_message = Libertree::Model::ChatMessage[ params['chat_message_id'].to_i ]
         if chat_message
-          Helper::with_tree(params['server_id']) do |tree|
+          Libertree::with_tree(params['server_id']) do |tree|
             tree.req_chat chat_message
           end
           return true
@@ -110,7 +110,7 @@ module Jobs
         comment = Libertree::Model::Comment[params['comment_id'].to_i]
         retry_later = false
         if comment
-          Helper::with_tree(params['server_id']) do |tree|
+          Libertree::with_tree(params['server_id']) do |tree|
             response = tree.req_comment(comment)
             if response['code'] == 'NOT FOUND'
               # Remote didn't recognize the comment author or the referenced post
@@ -140,7 +140,7 @@ module Jobs
 
     class COMMENT_DELETE
       def self.perform(params)
-        Helper::with_tree(params['server_id']) do |tree|
+        Libertree::with_tree(params['server_id']) do |tree|
           tree.req_comment_delete params['comment_id']
         end
         return true
@@ -151,7 +151,7 @@ module Jobs
       def self.perform(params)
         like = Libertree::Model::CommentLike[params['comment_like_id'].to_i]
         if like
-          Helper::with_tree(params['server_id']) do |tree|
+          Libertree::with_tree(params['server_id']) do |tree|
             tree.req_comment_like like
           end
         end
@@ -161,7 +161,7 @@ module Jobs
 
     class COMMENT_LIKE_DELETE
       def self.perform(params)
-        Helper::with_tree(params['server_id']) do |tree|
+        Libertree::with_tree(params['server_id']) do |tree|
           tree.req_comment_like_delete params['comment_like_id']
         end
         return true
@@ -171,7 +171,7 @@ module Jobs
     class FOREST
       def self.perform(params)
         forest = Libertree::Model::Forest[params['forest_id'].to_i]
-        Helper::with_tree(params['server_id']) do |tree|
+        Libertree::with_tree(params['server_id']) do |tree|
           tree.req_forest forest
         end
         return true
@@ -182,7 +182,7 @@ module Jobs
       def self.perform(params)
         member = Libertree::Model::Member[params['member_id'].to_i]
         if member
-          Helper::with_tree(params['server_id']) do |tree|
+          Libertree::with_tree(params['server_id']) do |tree|
             tree.req_member member
           end
         end
@@ -194,7 +194,7 @@ module Jobs
       def self.perform(params)
         message = Libertree::Model::Message[params['message_id'].to_i]
         if message
-          Helper::with_tree(params['server_id']) do |tree|
+          Libertree::with_tree(params['server_id']) do |tree|
             tree.req_message message, params['recipient_usernames']
           end
         end
@@ -206,7 +206,7 @@ module Jobs
       def self.perform(params)
         post = Libertree::Model::Post[params['post_id'].to_i]
         if post
-          Helper::with_tree(params['server_id']) do |tree|
+          Libertree::with_tree(params['server_id']) do |tree|
             tree.req_post post
           end
         end
@@ -216,7 +216,7 @@ module Jobs
 
     class POST_DELETE
       def self.perform(params)
-        Helper::with_tree(params['server_id']) do |tree|
+        Libertree::with_tree(params['server_id']) do |tree|
           tree.req_post_delete params['post_id']
         end
         return true
@@ -227,7 +227,7 @@ module Jobs
       def self.perform(params)
         like = Libertree::Model::PostLike[params['post_like_id'].to_i]
         if like
-          Helper::with_tree(params['server_id']) do |tree|
+          Libertree::with_tree(params['server_id']) do |tree|
             tree.req_post_like like
           end
         end
@@ -237,7 +237,7 @@ module Jobs
 
     class POST_LIKE_DELETE
       def self.perform(params)
-        Helper::with_tree(params['server_id']) do |tree|
+        Libertree::with_tree(params['server_id']) do |tree|
           tree.req_post_like_delete params['post_like_id']
         end
         return true
