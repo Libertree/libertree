@@ -60,6 +60,11 @@ module Libertree
       }
       Signal.trap("TERM", &terminate)
       Signal.trap("INT" , &terminate)
+      Signal.trap("HUP") do
+        puts "\nReloading configuration."
+        @log.close
+        self.send(:initialize, @config_filename)
+      end
 
       until quit
         job = Libertree::Model::Job.reserve(Jobs.list.keys)
