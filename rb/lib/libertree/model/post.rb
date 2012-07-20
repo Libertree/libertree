@@ -4,6 +4,42 @@ module Libertree
   module Model
     class Post < M4DBI::Model(:posts)
 
+      after_create do |post|
+        if post.local?
+          Libertree::Model::Job.create_for_forests(
+            {
+              task: 'request:POST',
+              params: { 'post_id' => post.id, }
+            },
+            *post.forests
+          )
+        end
+      end
+
+      after_update do |post|
+        if post.local?
+          Libertree::Model::Job.create_for_forests(
+            {
+              task: 'request:POST',
+              params: { 'post_id' => post.id, }
+            },
+            *post.forests
+          )
+        end
+      end
+
+      before_delete do |post|
+        if post.local?
+          Libertree::Model::Job.create_for_forests(
+            {
+              task: 'request:POST-DELETE',
+              params: { 'post_id' => post.id, }
+            },
+            *post.forests
+          )
+        end
+      end
+
       def member
         @member ||= Member[self.member_id]
       end
@@ -124,6 +160,22 @@ module Libertree
         @comments ||= Comment.s("SELECT * FROM comments WHERE post_id = ? ORDER BY id", self.id)
       end
 
+      def commented_on_by?(member)
+        DB.dbh.sc(
+          %{
+            SELECT EXISTS(
+              SELECT 1
+              FROM comments
+              WHERE
+                post_id = ?
+                AND member_id = ?
+            )
+          },
+          self.id,
+          member.id
+        )
+      end
+
       def likes
         @likes ||= PostLike.s("SELECT * FROM post_likes WHERE post_id = ? ORDER BY id DESC", self.id)
       end
@@ -164,6 +216,8 @@ module Libertree
       end
 
       def delete_cascade
+        self.comments.each {|c| c.delete_cascade }
+        self.likes.each {|l| l.delete_cascade }
         DB.dbh.delete "DELETE FROM posts_read WHERE post_id = ?", self.id
         DB.dbh.delete "DELETE FROM river_posts WHERE post_id = ?", self.id
         DB.dbh.delete "DELETE FROM post_subscriptions WHERE post_id = ?", self.id
@@ -204,8 +258,12 @@ module Libertree
         end
       end
 
+      # This is a search, not a create
       def like_by(member)
         PostLike[ member_id: member.id, post_id: self.id ]
+      end
+      def liked_by?(member)
+        !! like_by(member)
       end
 
       def self.search(q)
@@ -252,6 +310,15 @@ module Libertree
 
       def hidden_by?(account)
         DB.dbh.sc  "SELECT EXISTS( SELECT 1 FROM posts_hidden WHERE account_id = ? AND post_id = ? )", account.id, self.id
+      end
+
+      def to_hash
+        {
+          'id'           => self.id,
+          'time_created' => self.time_created,
+          'time_updated' => self.time_updated,
+          'text'         => self.text,
+        }
       end
     end
   end

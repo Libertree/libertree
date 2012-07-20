@@ -1,6 +1,34 @@
 module Libertree
   module Model
     class Comment < M4DBI::Model(:comments)
+      after_create do |comment|
+        if comment.local?
+          Libertree::Model::Job.create_for_forests(
+            {
+              task: 'request:COMMENT',
+              params: { 'comment_id' => comment.id, }
+            },
+            *comment.forests
+          )
+        end
+      end
+
+      before_delete do |comment|
+        if comment.local?
+          Libertree::Model::Job.create_for_forests(
+            {
+              task: 'request:COMMENT-DELETE',
+              params: { 'comment_id' => comment.id, }
+            },
+            *comment.forests
+          )
+        end
+      end
+
+      def local?
+        ! remote_id
+      end
+
       def member
         @member ||= Member[self.member_id]
       end
@@ -15,6 +43,7 @@ module Libertree
       end
 
       def delete_cascade
+        self.likes.each {|l| l.delete_cascade }
         DB.dbh.d  %|DELETE FROM notifications WHERE data = '{"type":"comment","comment_id":#{self.id}}'|
         DB.dbh.d(
           %{
@@ -95,6 +124,16 @@ module Libertree
         else
           Libertree::Model::Forest.all_local_is_member
         end
+      end
+
+      def to_hash
+        {
+          'id'           => self.id,
+          'time_created' => self.time_created,
+          'time_updated' => self.time_updated,
+          'text'         => self.text,
+          'post_id'      => self.post_id,
+        }
       end
     end
   end

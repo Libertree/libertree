@@ -60,9 +60,30 @@ describe Libertree::Model::River do
       test_one  %{abc +:from "def"}, [ 'abc', '+:from "def"', ]
       test_one  %{abc +:from "def ghi" jkl}, [ 'abc', '+:from "def ghi"', 'jkl', ]
     end
+
+    it 'treats :river "..." as a single term' do
+      test_one  %{:river "abc"}, [ ':river "abc"', ]
+      test_one  %{:river "abc def"}, [ ':river "abc def"', ]
+      test_one  %{abc :river "def"}, [ 'abc', ':river "def"', ]
+      test_one  %{abc :river "def ghi" jkl}, [ 'abc', ':river "def ghi"', 'jkl', ]
+    end
+
+    it 'treats -:river "..." as a single term' do
+      test_one  %{-:river "abc"}, [ '-:river "abc"', ]
+      test_one  %{-:river "abc def"}, [ '-:river "abc def"', ]
+      test_one  %{abc -:river "def"}, [ 'abc', '-:river "def"', ]
+      test_one  %{abc -:river "def ghi" jkl}, [ 'abc', '-:river "def ghi"', 'jkl', ]
+    end
+
+    it 'treats +:river "..." as a single term' do
+      test_one  %{+:river "abc"}, [ '+:river "abc"', ]
+      test_one  %{+:river "abc def"}, [ '+:river "abc def"', ]
+      test_one  %{abc +:river "def"}, [ 'abc', '+:river "def"', ]
+      test_one  %{abc +:river "def ghi" jkl}, [ 'abc', '+:river "def ghi"', 'jkl', ]
+    end
   end
 
-  describe '#try_post' do
+  describe '#matches_post?' do
     before do
       other_account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
       @member = Libertree::Model::Member.create(
@@ -71,25 +92,24 @@ describe Libertree::Model::River do
     end
 
     def try_one( query, post_text, should_match, post_author = @member )
-      Libertree::DB.dbh.d  "DELETE FROM river_posts"
-      Libertree::DB.dbh.d  "DELETE FROM rivers"
       river = Libertree::Model::River.create(
         FactoryGirl.attributes_for( :river, label: query, query: query, account_id: @account.id )
       )
 
       if should_match
-        expect {
-          post = Libertree::Model::Post.create(
-            FactoryGirl.attributes_for( :post, member_id: post_author.id, text: post_text )
-          )
-        }.to change { Libertree::DB.dbh.sc "SELECT COUNT(*) FROM river_posts" }.by(1)
+        post = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: post_author.id, text: post_text )
+        )
+        river.matches_post?(post).should be_true
       else
-        expect {
-          post = Libertree::Model::Post.create(
-            FactoryGirl.attributes_for( :post, member_id: post_author.id, text: post_text )
-          )
-        }.not_to change { Libertree::DB.dbh.sc "SELECT COUNT(*) FROM river_posts" }
+        post = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: post_author.id, text: post_text )
+        )
+        river.matches_post?(post).should be_false
       end
+
+      river.delete_cascade
+      post.delete_cascade
     end
 
     it 'matches in basic cases' do
@@ -197,16 +217,133 @@ describe Libertree::Model::River do
       try_one  '"foo bar"', '.foo bar.', true
       try_one  '"foo bar"', 'will foo bar.', true
 
-      try_one '"foo bar" baz', 'foo and bar baz', true
+      try_one  '"foo bar" baz', 'foo and bar baz', true
 
-      try_one '-"foo bar"', 'foo and bar', true
-      try_one 'hey -"foo bar"', 'foo and bar hey', true
-      try_one 'hey -"foo bar"', 'foo bar hey', false
+      try_one  '-"foo bar"', 'foo and bar', true
+      try_one  'hey -"foo bar"', 'foo and bar hey', true
+      try_one  'hey -"foo bar"', 'foo bar hey', false
 
-      try_one '+"foo bar"', 'foo and bar', false
-      try_one '+"foo bar"', 'foo bar', true
-      try_one '+"foo bar" baz', 'foo bar bleh', false
-      try_one '+"foo bar" baz', 'foo bar baz', true
+      try_one  '+"foo bar"', 'foo and bar', false
+      try_one  '+"foo bar"', 'foo bar', true
+      try_one  '+"foo bar" baz', 'foo bar bleh', false
+      try_one  '+"foo bar" baz', 'foo bar baz', true
+    end
+
+    it "matches posts liked by the river's account" do
+      river = Libertree::Model::River.create(
+        FactoryGirl.attributes_for( :river, label: ':liked', query: ':liked', account_id: @account.id )
+      )
+      post = Libertree::Model::Post.create(
+        FactoryGirl.attributes_for( :post, member_id: @member.id, text: 'test post' )
+      )
+
+      river.matches_post?(post).should be_false
+
+      Libertree::Model::PostLike.create(
+        FactoryGirl.attributes_for(
+          :post_like,
+          'member_id' => @account.member.id,
+          'post_id'   => post.id
+        )
+      )
+
+      river.matches_post?(post).should be_true
+
+      river.delete_cascade
+    end
+
+    it "matches posts commented on by the river's account" do
+      river = Libertree::Model::River.create(
+        FactoryGirl.attributes_for( :river, label: ':commented', query: ':commented', account_id: @account.id )
+      )
+      post = Libertree::Model::Post.create(
+        FactoryGirl.attributes_for( :post, member_id: @member.id, text: 'test post' )
+      )
+
+      river.matches_post?(post).should be_false
+
+      Libertree::Model::Comment.create(
+        FactoryGirl.attributes_for( :comment, member_id: @account.member.id, post_id: post.id, text: 'test comment' )
+      )
+
+      river.matches_post?(post).should be_true
+
+      river.delete_cascade
+    end
+
+    it "matches posts subscribed to by the river's account" do
+      river = Libertree::Model::River.create(
+        FactoryGirl.attributes_for( :river, label: ':subscribed', query: ':subscribed', account_id: @account.id )
+      )
+      post = Libertree::Model::Post.create(
+        FactoryGirl.attributes_for( :post, member_id: @member.id, text: 'test post' )
+      )
+
+      river.matches_post?(post).should be_false
+
+      @account.subscribe_to post
+
+      river.matches_post?(post).should be_true
+
+      river.delete_cascade
+    end
+
+    it 'allows composition of rivers via :river term' do
+      Libertree::Model::River.create(
+        FactoryGirl.attributes_for( :river, label: 'foo', query: 'foo', account_id: @account.id )
+      )
+      try_one  ':river "foo"', 'foo bar', true
+      try_one  ':river "foo"', 'bar', false
+
+      Libertree::Model::River.create(
+        FactoryGirl.attributes_for( :river, label: 'Multi-word Label', query: 'foo2', account_id: @account.id )
+      )
+      try_one  ':river "Multi-word Label"', 'foo2 bar', true
+      try_one  ':river "Multi-word Label"', 'bar', false
+
+      Libertree::Model::River.create(
+        FactoryGirl.attributes_for( :river, label: 'bar', query: 'bar', account_id: @account.id )
+      )
+      try_one  'foo :river "bar"', 'foo bar', true
+      try_one  'foo :river "bar"', 'foo baz', true
+      try_one  'foo :river "bar"', 'bin baz', false
+      try_one  'foo -:river "bar"', 'foo bar', false
+      try_one  'foo -:river "bar"', 'foo baz', true
+      try_one  'foo +:river "bar"', 'foo bar', true
+      try_one  'foo +:river "bar"', 'foo baz', false
+      try_one  'foo baz +:river "bar"', 'foo baz', false
+      try_one  'foo baz +:river "bar"', 'foo baz bar', true
+      try_one  'foo baz +:river "bar"', 'foo bar', true
+      try_one  'foo baz +:river "bar"', 'baz bar', true
+
+      Libertree::Model::River.create(
+        FactoryGirl.attributes_for( :river, label: 'level1', query: 'level1', account_id: @account.id )
+      )
+      Libertree::Model::River.create(
+        FactoryGirl.attributes_for( :river, label: 'composed', query: ':river "level1" level2', account_id: @account.id )
+      )
+      try_one  'foo :river "composed"', 'foo', true
+      try_one  'foo :river "composed"', 'level1', true
+      try_one  'foo :river "composed"', 'level2', true
+      try_one  'foo :river "composed"', 'foo level2', true
+      try_one  'foo :river "composed"', 'none', false
+    end
+
+    context 'given a river set to be appended to all other rivers' do
+      before :each do
+        @river = Libertree::Model::River.create(
+          FactoryGirl.attributes_for( :river, label: 'global', query: 'foo', account_id: @account.id, appended_to_all: true )
+        )
+      end
+
+      it "appends that river's query to other rivers" do
+        try_one  'bar', 'foo', true
+        try_one  'bar', 'baz', false
+      end
+
+      after :each do
+        @river.delete_cascade
+      end
     end
   end
 end

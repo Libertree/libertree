@@ -20,8 +20,21 @@ module Libertree
       # Used by Ramaze::Helper::UserHelper.
       # @return [Account] authenticated account, or nil on failure to authenticate
       def self.authenticate(creds)
-        account = Account[ 'username' => creds['username'] ]
-        if account && account.password == creds['password']
+        if creds['password_reset_code'].to_s
+          account = Account.one_where(
+            %{
+              password_reset_code = ?
+              AND NOW() <= password_reset_expiry
+            },
+            creds['password_reset_code'].to_s
+          )
+          if account
+            return account
+          end
+        end
+
+        account = Account[ 'username' => creds['username'].to_s ]
+        if account && account.password == creds['password'].to_s
           account
         end
       end
@@ -55,8 +68,81 @@ module Libertree
         @num_notifications_unseen ||= Libertree::DB.dbh.sc("SELECT COUNT(*) FROM notifications WHERE account_id = ? AND seen = FALSE", self.id)
       end
 
+      def num_chat_unseen
+        Libertree::DB.dbh.sc("SELECT COUNT(*) FROM chat_messages WHERE to_member_id = ? AND seen = FALSE", self.member.id)
+      end
+
+      def num_chat_unseen_from_partner(member)
+        Libertree::DB.dbh.sc("SELECT COUNT(*) FROM chat_messages WHERE from_member_id = ? AND to_member_id = ? AND seen = FALSE", member.id, self.member.id)
+      end
+
+      def chat_messages_unseen
+        Libertree::Model::ChatMessage.s("SELECT * FROM chat_messages WHERE to_member_id = ? AND seen = FALSE", self.member.id)
+      end
+
+      def chat_partners_current
+        Libertree::Model::Member.s(
+          %{
+            (
+              SELECT
+                    DISTINCT m.*
+                  , EXISTS(
+                    SELECT 1
+                    FROM chat_messages cm2
+                    WHERE
+                      cm2.from_member_id = cm.from_member_id
+                      AND cm2.to_member_id = cm.to_member_id
+                      AND cm2.seen = FALSE
+                  ) AS has_unseen_from_other
+              FROM
+                  chat_messages cm
+                , members m
+              WHERE
+                cm.to_member_id = ?
+                AND (
+                  cm.seen = FALSE
+                  OR cm.time_created > NOW() - '1 hour'::INTERVAL
+                )
+                AND m.id = cm.from_member_id
+            ) UNION (
+              SELECT
+                    DISTINCT m.*
+                  , EXISTS(
+                    SELECT 1
+                    FROM chat_messages cm2
+                    WHERE
+                      cm2.from_member_id = cm.to_member_id
+                      AND cm2.to_member_id = cm.from_member_id
+                      AND cm2.seen = FALSE
+                  ) AS has_unseen_from_other
+              FROM
+                  chat_messages cm
+                , members m
+              WHERE
+                cm.from_member_id = ?
+                AND cm.time_created > NOW() - '1 hour'::INTERVAL
+                AND m.id = cm.to_member_id
+            )
+          },
+          self.member.id,
+          self.member.id
+        )
+      end
+
       def rivers
         River.s "SELECT * FROM rivers WHERE account_id = ? ORDER BY position ASC, id DESC", self.id
+      end
+
+      def rivers_not_appended
+        rivers.reject(&:appended_to_all)
+      end
+
+      def rivers_appended
+        @rivers_appended ||= rivers.find_all(&:appended_to_all)
+      end
+
+      def pools
+        @pools ||= Pool.where( account_id: self.id )
       end
 
       def self.create(*args)
@@ -131,6 +217,7 @@ module Libertree
         @notifications = nil
         @notifications_unseen = nil
         @num_notifications_unseen = nil
+        @rivers_appended = nil
       end
 
       def admin?
@@ -206,6 +293,64 @@ module Libertree
           },
           self.member.id
         )
+      end
+
+      # @return [Boolean] true iff password reset was successfully set up
+      def self.set_up_password_reset_for(email)
+        account = s1("SELECT * FROM accounts WHERE email = ?", email)
+        if account
+          account.password_reset_code = SecureRandom.hex(16)
+          account.password_reset_expiry = Time.now + 60 * 60
+          account
+        end
+      end
+
+      def data_hash
+        {
+          'account' => {
+            'username'           => self.username,
+            'time_created'       => self.time_created,
+            'email'              => self.email,
+            'custom_css'         => self.custom_css,
+            'custom_js'          => self.custom_js,
+            'custom_link'        => self.custom_link,
+            'font_css'           => self.font_css,
+            'excerpt_max_height' => self.excerpt_max_height,
+            'profile' => {
+              'name_display' => self.member.profile.name_display,
+              'description'  => self.member.profile.description,
+            },
+
+            'rivers'             => self.rivers.map(&:to_hash),
+            'posts'              => self.member.posts(9999999).map(&:to_hash),
+            'comments'           => self.member.comments(9999999).map(&:to_hash),
+            'messages'           => self.messages.map(&:to_hash),
+          }
+        }
+      end
+
+      # RDBI casting not working with TIMESTAMP WITH TIME ZONE ?
+      def time_heartbeat
+        DateTime.parse self['time_heartbeat']
+      end
+
+      def online?
+        Time.now - time_heartbeat.to_time < 5.01 * 60
+      end
+
+      def contact_lists
+        ContactList.where  account_id: self.id
+      end
+
+      # All contacts, from all contact lists
+      def contacts
+        contact_lists.map { |list| list.members }.flatten.uniq
+      end
+
+      def contacts_mutual
+        self.contacts.find_all { |c|
+          c.account && c.account.contacts.include?(self.member)
+        }
       end
     end
   end

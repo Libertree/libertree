@@ -1,6 +1,33 @@
 module Libertree
   module Model
     class Member < M4DBI::Model(:members)
+
+      after_create do |member|
+        if member.local?
+          Libertree::Model::Job.create_for_forests(
+            {
+              task: 'request:MEMBER',
+              params: { 'member_id' => member.id, }
+            }
+          )
+        end
+      end
+
+      after_update do |member|
+        if member.local?
+          Libertree::Model::Job.create_for_forests(
+            {
+              task: 'request:MEMBER',
+              params: { 'member_id' => member.id, }
+            }
+          )
+        end
+      end
+
+      def local?
+        ! self.account.nil?
+      end
+
       def account
         @account ||= Account[self.account_id]
       end
@@ -38,6 +65,14 @@ module Libertree
 
       def posts(n = 8)
         Post.s  "SELECT * FROM posts WHERE member_id = ? ORDER BY id DESC LIMIT #{n.to_i}", self.id
+      end
+
+      def comments(n = 10)
+        Comment.s  "SELECT * FROM comments WHERE member_id = ? ORDER BY id DESC LIMIT #{n.to_i}", self.id
+      end
+
+      def online?
+        self.account && self.account.online?
       end
     end
   end
