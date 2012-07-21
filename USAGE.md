@@ -39,7 +39,7 @@ As the libertree user:
     % rvm use 1.9.3@libertree-backend-rb
     % LIBERTREE_ENV=production bundle exec ruby -Ilib bin/server.rb config.yaml
 
-#### Job Processing
+##### Processing of backend jobs
 
 As the libertree user:
 
@@ -55,6 +55,15 @@ As the libertree user:
     % rvm use 1.9.3@libertree-frontend-ramaze
     % ./css-build.sh
     % LIBERTREE_ENV=production bundle exec unicorn -p <port number>
+
+##### Processing of frontend jobs
+
+As the libertree user:
+
+    % cd ~/git/libertree-frontend-ramaze
+    % rvm use 1.9.3@libertree-frontend-ramaze
+    % LIBERTREE_ENV=production bundle exec ruby job-processor.rb config/job-processor.yaml
+
 
 Use any port number desired.  The web server proxy will proxy requests from the
 standard HTTP port (80) to this port.  If you run more than one frontend
