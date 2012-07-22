@@ -67,7 +67,7 @@ module Libertree
           begin
             comments = Model::Comment.
               where( 'remote_id' => params['id'] ).
-              reject { |c| c.post.server != @server }
+              reject { |c| c.member.server != @server }
 
             if comments.empty?
               respond( {
