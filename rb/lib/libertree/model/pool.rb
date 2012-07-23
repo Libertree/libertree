@@ -23,6 +23,10 @@ module Libertree
         )
       end
 
+      def includes?(post)
+        posts.include? post
+      end
+
       def delete_cascade
         DB.dbh.delete "DELETE FROM pools_posts WHERE pool_id = ?", self.id
         self.delete
