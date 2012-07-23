@@ -313,6 +313,10 @@ module Libertree
         DB.dbh.sc  "SELECT EXISTS( SELECT 1 FROM posts_hidden WHERE account_id = ? AND post_id = ? )", account.id, self.id
       end
 
+      def collected_by?(account)
+        account.pools.any? { |p| p.includes?(self) }
+      end
+
       def to_hash
         {
           'id'           => self.id,
