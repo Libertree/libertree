@@ -191,7 +191,7 @@ Request Parameters:
 
     {
       "username": <member username>,
-      "avatar_url": <URL to image file>,
+      [[ "avatar_url": <URL to image file>, ]]
       [[ "profile": {
         "name_display": <member's profile's display name>,
         "description": <member's profile's description>
