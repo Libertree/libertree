@@ -118,15 +118,17 @@ module Libertree
     end
 
     def req_member(member)
-      @conn.request(
-        'MEMBER',
-        'username'   => member.username,
-        'avatar_url' => "#{@avatar_url_base}#{member.avatar_path}",
-        'profile' => {
+      params = {
+        'username' => member.username,
+        'profile'  => {
           'name_display' => member.profile.name_display,
           'description'  => member.profile.description,
         }
-      )
+      }
+      if member.avatar_path
+        params.merge!('avatar_url' => "#{@avatar_url_base}#{member.avatar_path}")
+      end
+      @conn.request('MEMBER', params)
     end
 
     def req_message(message, usernames)
