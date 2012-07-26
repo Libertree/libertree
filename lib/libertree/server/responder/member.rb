@@ -7,24 +7,12 @@ module Libertree
     module Responder
       module Member
         def rsp_member(params)
-          return  if require_parameters(params, 'username', 'avatar_url')
+          return  if require_parameters(params, 'username')
 
           begin
-            # verify uri
-            URI.parse(params['avatar_url'])
-
             member = Model::Member.find_or_create(
               'username' => params['username'],
               'server_id' => @server.id
-            )
-
-            # fetch avatar asynchronously
-            Libertree::Model::Job.create(
-              task: 'http:avatar',
-              params: {
-                'member_id'  => member.id,
-                'avatar_url' => params['avatar_url'],
-              }.to_json
             )
 
             profile = Libertree::Model::Profile.find_or_create( member_id: member.id )
@@ -44,6 +32,19 @@ module Libertree
                 end
               end
               profile.description = params['profile']['description']
+            end
+
+            # fetch avatar asynchronously
+            if params['avatar_url']
+              URI.parse(params['avatar_url'])
+
+              Libertree::Model::Job.create(
+                task: 'http:avatar',
+                params: {
+                  'member_id'  => member.id,
+                  'avatar_url' => params['avatar_url'],
+                }.to_json
+              )
             end
 
             respond_with_code 'OK'
