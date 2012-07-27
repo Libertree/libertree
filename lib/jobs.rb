@@ -138,8 +138,9 @@ module Jobs
       def self.perform(params)
         comment = Libertree::Model::Comment[params['comment_id'].to_i]
         if comment
+          refs = Request::extract_references(comment.text)
           Request::with_tree(params['server_id']) do |tree|
-            response = tree.req_comment(comment)
+            response = tree.req_comment(comment, refs)
             if response['code'] == 'NOT FOUND'
               # Remote didn't recognize the comment author or the referenced post
               # Send the potentially missing data, then retry the comment later.
@@ -225,8 +226,9 @@ module Jobs
       def self.perform(params)
         post = Libertree::Model::Post[params['post_id'].to_i]
         if post
+          refs = Request::extract_references(post.text)
           Request::with_tree(params['server_id']) do |tree|
-            tree.req_post post
+            tree.req_post post, refs
           end
         end
       end
