@@ -47,12 +47,18 @@ module Libertree
               return
             end
 
+            if params.has_key? 'references'
+              comment_text = replace_references(params['text'], params['references'])
+            else
+              comment_text = params['text']
+            end
+
             comment = Model::Comment.find_or_create(
               'member_id' => member.id,
               'post_id' => post.id,
               'remote_id' => params['id'],
               # TODO: Sanitize with Loofah
-              'text' => params['text']
+              'text' => comment_text
             )
 
             respond_with_code 'OK'

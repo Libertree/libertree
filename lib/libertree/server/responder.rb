@@ -64,6 +64,11 @@ module Libertree
           true
         end
       end
+
+      def replace_references(text, refs)
+        # TODO
+        text
+      end
     end
   end
 end
