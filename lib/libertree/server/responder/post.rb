@@ -17,7 +17,7 @@ module Libertree
               } )
             else
               if params.has_key? 'references'
-                post_text = replace_references(params['text'], params['references'])
+                post_text = replace_references(params['text'], params['references'], @server.id)
               else
                 post_text = params['text']
               end

@@ -65,8 +65,34 @@ module Libertree
         end
       end
 
-      def replace_references(text, refs)
-        # TODO
+      def replace_references(text, refs, server_id)
+        refs.each do |url, segments|
+          substitution = segments.entries.reduce(url) do |res, pair|
+            segment, ref = pair
+            if ref.has_key? :origin
+              server = Model::Server[ public_key: ref[:origin] ]
+            else
+              server = Model::Server[ server_id ]
+            end
+            next res unless server
+
+            if segment =~ /posts/
+              model = Model::Post
+            else
+              model = Model::Comment
+            end
+            es = model.where( remote_id: ref[:id].to_i ).
+                       reject {|e| e.member.server != server }
+            if es.empty?
+              next res
+            else
+              next res.sub(segment, segment.sub(/\d+/, es[0].id.to_s))
+            end
+          end
+
+          text.sub!(url, substitution)
+        end
+
         text
       end
     end
