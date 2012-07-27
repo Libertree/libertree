@@ -102,17 +102,17 @@ module Jobs
         post = Libertree::Model::Post[ post_id.to_i ]
         next unless post
 
-        ref = []
+        ref = {}
 
         map = { :id => post.remote_id || post_id.to_i }
         map.merge!({ :origin => post.server.public_key }) if post.server
-        ref << map
+        ref["/posts/#{post_id}"] = map
 
         comment = Libertree::Model::Comment[ comment_id.to_i ]
         if comment
           map = { :id => comment.remote_id || comment_id.to_i }
           map.merge!({ :origin => comment.server.public_key }) if comment.server
-          ref << map
+          ref["#comment-#{comment_id}"] = map
         end
 
         refs[url] = ref unless ref.empty?
