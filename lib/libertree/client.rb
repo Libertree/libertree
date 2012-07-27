@@ -65,18 +65,19 @@ module Libertree
       )
     end
 
-    def req_comment(comment)
+    def req_comment(comment, references={})
       post = comment.post
       server = post.member.server
       public_key = server ? server.public_key : @public_key
-      @conn.request(
-        'COMMENT',
+      params = {
         'id'         => comment.id,
         'post_id'    => post.public_id,
         'public_key' => public_key,
         'username'   => comment.member.username,
         'text'       => comment.text
-      )
+      }
+      params.merge!('references' => references) unless references.empty?
+      @conn.request('COMMENT', params)
     end
 
     def req_comment_delete(comment_id)
@@ -142,14 +143,15 @@ module Libertree
       )
     end
 
-    def req_post(post)
-      @conn.request(
-        'POST',
+    def req_post(post,references={})
+      params = {
         'username' => post.member.username,
         'id'       => post.id,
         'public'   => true,
         'text'     => post.text
-      )
+      }
+      params.merge!('references' => references) unless references.empty?
+      @conn.request('POST', params)
     end
 
     def req_post_delete(post_id)
