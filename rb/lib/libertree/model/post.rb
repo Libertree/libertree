@@ -223,6 +223,8 @@ module Libertree
         DB.dbh.delete "DELETE FROM pools_posts WHERE post_id = ?", self.id
         DB.dbh.delete "DELETE FROM river_posts WHERE post_id = ?", self.id
         DB.dbh.delete "DELETE FROM post_subscriptions WHERE post_id = ?", self.id
+        # TODO: Do we want to keep these revisions?
+        DB.dbh.delete "DELETE FROM post_revisions WHERE post_id = ?", self.id
         DB.dbh.delete(
           %{
               UPDATE accounts
