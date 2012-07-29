@@ -261,6 +261,14 @@ module Libertree
           'query' => self.query,
         }
       end
+
+      def being_processed?
+        !! Job[
+          task: 'river:refresh',
+          params: %|{"river_id":#{self.id}}|,
+          time_finished: nil
+        ]
+      end
     end
   end
 end
