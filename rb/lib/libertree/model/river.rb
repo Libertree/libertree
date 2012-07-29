@@ -181,7 +181,12 @@ module Libertree
         end
 
         if ! self.appended_to_all
-          refresh_posts
+          Libertree::Model::Job.create(
+            task: 'river:refresh',
+            params: {
+              'river_id' => self.id,
+            }.to_json
+          )
         end
       end
 
@@ -216,7 +221,12 @@ module Libertree
         end
 
         if ! river.appended_to_all
-          Post.add_recent_to_river river
+          Libertree::Model::Job.create(
+            task: 'river:refresh',
+            params: {
+              'river_id' => river.id,
+            }.to_json
+          )
         end
 
         river

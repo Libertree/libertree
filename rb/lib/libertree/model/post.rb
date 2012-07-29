@@ -255,13 +255,6 @@ module Libertree
         post
       end
 
-      def self.add_recent_to_river(river, n = 1000)
-        posts = self.s("SELECT * FROM posts ORDER BY id DESC LIMIT #{n.to_i}")
-        posts.each do |p|
-          river.try_post p
-        end
-      end
-
       # This is a search, not a create
       def like_by(member)
         PostLike[ member_id: member.id, post_id: self.id ]
