@@ -12,7 +12,7 @@ module Libertree
         else
           time_comparator = '<'
         end
-        time = Time.at( opts.fetch(:time, Time.now.to_i) ).strftime("%Y-%m-%d %H:%M:%S.%6N%z")
+        time = Time.at( opts.fetch(:time, Time.now.to_f) ).strftime("%Y-%m-%d %H:%M:%S.%6N%z")
 
         if opts[:order_by] == :comment
           Post.s(
