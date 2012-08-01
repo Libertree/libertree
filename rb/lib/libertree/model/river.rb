@@ -7,7 +7,12 @@ module Libertree
 
       def posts( opts = {} )
         limit = opts.fetch(:limit, 30)
-        older_than = Time.at( opts.fetch(:older_than, Time.now.to_i) )
+        if opts[:newer]
+          time_comparator = '>'
+        else
+          time_comparator = '<'
+        end
+        time = Time.at( opts.fetch(:time, Time.now.to_i) )
 
         if opts[:order_by] == :comment
           Post.s(
@@ -21,7 +26,7 @@ module Libertree
                 WHERE
                   p.id = rp.post_id
                   AND rp.river_id = ?
-                  AND p.time_updated_overall < ?
+                  AND p.time_updated_overall #{time_comparator} ?
                   AND NOT EXISTS(
                     SELECT 1
                     FROM posts_hidden pi
@@ -35,7 +40,7 @@ module Libertree
               ORDER BY time_updated_overall
             },
             self.id,
-            older_than.strftime("%Y-%m-%d %H:%M:%S.%6N%z"),
+            time.strftime("%Y-%m-%d %H:%M:%S.%6N%z"),
             self.account.id
           )
         else
@@ -50,7 +55,7 @@ module Libertree
                 WHERE
                   p.id = rp.post_id
                   AND rp.river_id = ?
-                  AND p.time_created < ?
+                  AND p.time_created #{time_comparator} ?
                   AND NOT EXISTS(
                     SELECT 1
                     FROM posts_hidden pi
@@ -64,7 +69,7 @@ module Libertree
               ORDER BY id
             },
             self.id,
-            older_than.strftime("%Y-%m-%d %H:%M:%S.%6N%z"),
+            time.strftime("%Y-%m-%d %H:%M:%S.%6N%z"),
             self.account.id
           )
         end
