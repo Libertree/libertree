@@ -6,25 +6,30 @@
 determine_system() {
   local system="$(uname|tr a-z A-Z)"
   if [[ "$system" == "LINUX" ]] || [[ "$system" =~ *BSD* ]]; then
-    DIST=$(find /etc -maxdepth 1 -type f -name "*[-_]release" | sed -e 's|/etc/\(.*\)[-_]release|\1|')
-    case "$DIST" in
-      (arch)
-        INSTALL="pacman -S"
-        ;;
-      (gentoo)
-        INSTALL="emerge -1atv"
-        ;;
-      (fedora|redhat)
-        INSTALL="yum install"
-        ;;
-      (lsb|debian)
-        INSTALL="apt-get install"
-        ;;
-      (*)
-        INSTALL="UNKNOWN"
-        warn "Auto-install is not supported on your system. Please talk to us so that we can add support for your system."
-        ;;
-    esac
+    if   test -f /etc/fedora-release; then
+      DIST="fedora"
+      INSTALL="yum install"
+    elif test -f /etc/redhat-release; then
+      DIST="redhat"
+      INSTALL="yum install"
+    elif test -f /etc/arch-release; then
+      DIST="arch"
+      INSTALL="pacman -S"
+    elif test -f /etc/gentoo-release; then
+      DIST="gentoo"
+      INSTALL="emerge -1atv"
+    elif test -f /etc/lsb-release; then
+      DIST="ubuntu"
+      INSTALL="apt-get install"
+    elif test -f /etc/debian-release; then
+      DIST="debian"
+      INSTALL="apt-get install"
+    else
+      DIST="unknown"
+      INSTALL="UNKNOWN"
+      warn "Auto-install is not supported on your system. Please talk to us so that we can add support for your system."
+    fi
+
   elif [[ "$system" == "DARWIN" ]]; then
     DIST="mac"
     if [[ $(command -v brew) ]]; then
