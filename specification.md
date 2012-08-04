@@ -220,7 +220,6 @@ Request Parameters:
     {
       "username": <member username>,
       "id": <post id on requester>,
-      "public": <boolean>,
       "text": <post text>,
     }
 
