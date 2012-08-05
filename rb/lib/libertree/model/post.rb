@@ -285,13 +285,14 @@ module Libertree
         )
       end
 
-      def revise(text_new)
+      def revise(text_new, visibility = self.visibility)
         PostRevision.create(
           'post_id' => self.id,
           'text'    => self.text
         )
         self.set(
           'text'         => text_new,
+          'visibility'   => visibility,
           'time_updated' => Time.now
         )
         mark_as_unread_by_all
@@ -320,6 +321,13 @@ module Libertree
           'time_updated' => self.time_updated,
           'text'         => self.text,
         }
+      end
+
+      def v_internet?
+        self.visibility == 'internet'
+      end
+      def v_forest?
+        self.visibility == 'forest' || self.visibility == 'internet'
       end
     end
   end
