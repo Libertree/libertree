@@ -107,7 +107,7 @@ module Jobs
       #   line (^) or when they are preceded by a space-like character (\s)
       # - capture the matched url
       server_name = @client_conf[:server_name]
-      pattern = %r{(?<url>(https?://#{server_name}|\s|\()/posts/(?<post_id>\d+)(#comment-(?<comment_id>\d+))?)}
+      pattern = %r{(?<url>(https?://#{server_name}|\s|\()/posts/show/(?<post_id>\d+)(#comment-(?<comment_id>\d+))?)}
 
       refs = {}
       text.scan(pattern) do |url, post_id, comment_id|
@@ -120,7 +120,7 @@ module Jobs
 
         map = { :id => post.remote_id || post_id.to_i }
         map.merge!({ :origin => post.server.public_key }) if post.server
-        ref["/posts/#{post_id}"] = map
+        ref["/posts/show/#{post_id}"] = map
 
         comment = Libertree::Model::Comment[ comment_id.to_i ]
         if comment
