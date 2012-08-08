@@ -81,7 +81,7 @@ module Libertree
             else
               model = Model::Comment
             end
-            es = model.where( remote_id: ref[:id].to_i ).
+            es = model.where( remote_id: ref['id'].to_i ).
                        reject {|e| e.member.server != server }
             if es.empty?
               next res
