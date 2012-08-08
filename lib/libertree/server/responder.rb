@@ -90,6 +90,8 @@ module Libertree
             end
           end
 
+          # chop off everything before /posts/show to turn this into a relative link
+          substitution.partition("/posts/").drop(1).join("")
           text.sub!(url, substitution)
         end
 
