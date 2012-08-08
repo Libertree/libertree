@@ -7,6 +7,7 @@ module Jobs
   def self.list
     {
       "email"                        => Email,
+      "river:refresh"                => River::Refresh,
       "river:refresh-all"            => River::RefreshAll,
       "request:CHAT"                 => Request::CHAT,
       "request:COMMENT"              => Request::COMMENT,
@@ -30,11 +31,24 @@ module Jobs
   end
 
   module River
+    class Refresh
+      def self.perform(params)
+        river = Libertree::Model::River[ params['river_id'] ]
+        if river
+          river.refresh_posts( params['n'] || 4096 )
+        else
+          raise Libertree::JobFailed, "Unknown river_id: #{params['river_id']}"
+        end
+      end
+    end
+
     class RefreshAll
       def self.perform(params)
         a = Libertree::Model::Account[ params['account_id'] ]
         if a
-          a.rivers_not_appended.each(&:refresh_posts)
+          a.rivers_not_appended.each { |r|
+            r.refresh_posts( params['n'] || 4096 )
+          }
         else
           raise Libertree::JobFailed, "Unknown account_id: #{params['account_id']}"
         end
