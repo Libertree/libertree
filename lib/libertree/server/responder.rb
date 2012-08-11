@@ -64,7 +64,6 @@ module Libertree
           true
         end
       end
-
     end
   end
 end
