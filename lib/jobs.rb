@@ -106,6 +106,11 @@ module Jobs
       # - match relative links ("/posts/123") when they are beginning the
       #   line (^) or when they are preceded by a space-like character (\s)
       # - capture the matched url
+      #
+      # Known problems:
+      #   - links in verbatim sections are identified, because we extract
+      #     references from the raw markdown, not the rendered text.
+
       server_name = @client_conf[:server_name]
       pattern = %r{(?<url>(https?://#{server_name}|\s|\()/posts/show/(?<post_id>\d+)(#comment-(?<comment_id>\d+))?)}
 
