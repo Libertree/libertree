@@ -1,5 +1,5 @@
 require 'spec_helper'
-require_relative '../lib/jobs'
+require_relative '../lib/libertree/references'
 
 describe Libertree::References do
   before :each do
