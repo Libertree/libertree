@@ -11,7 +11,6 @@ describe Libertree::References do
     @member_remote = Libertree::Model::Member.create(
       FactoryGirl.attributes_for(:member, :server_id => @server_remote.id)
     )
-    Libertree::References.instance_variable_set(:@client_conf, {server_name: "never-mind.org"})
   end
   describe 'extract' do
     it 'extracts relative links to local posts' do
@@ -20,7 +19,7 @@ describe Libertree::References do
       )
       text = "This is a [relative link](/posts/show/#{post.id}). This too: /posts/show/#{post.id}"
 
-      refs = Libertree::References::extract(text)
+      refs = Libertree::References::extract(text, "never-mind.org")
       refs.keys.should include("(/posts/show/#{post.id}")
       refs.keys.should include(" /posts/show/#{post.id}")
     end
@@ -31,7 +30,7 @@ describe Libertree::References do
       )
       text = "This is an [absolute link](http://never-mind.org/posts/show/#{post.id})."
 
-      refs = Libertree::References::extract(text)
+      refs = Libertree::References::extract(text, "never-mind.org")
       refs.keys.should include("http://never-mind.org/posts/show/#{post.id}")
     end
 
@@ -41,7 +40,7 @@ describe Libertree::References do
       )
       text = "This is an [absolute link](http://some-tree.org/posts/show/#{post.id})."
 
-      refs = Libertree::References::extract(text)
+      refs = Libertree::References::extract(text, "never-mind.org")
       refs.keys.should == []
     end
   end
@@ -77,7 +76,7 @@ Link 5: [unchanged](http://remote.org/posts/show/123)
 EOF
 
       # this happens on the remote server
-      refs = Libertree::References::extract(original_text)
+      refs = Libertree::References::extract(original_text, "never-mind.org")
 
       # this happens on the receiving server
       processed_text = Libertree::References::replace(original_text, refs, @server_remote.id)

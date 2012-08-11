@@ -119,7 +119,7 @@ module Jobs
       def self.perform(params)
         comment = Libertree::Model::Comment[params['comment_id'].to_i]
         if comment
-          refs = Libertree::References::extract(comment.text)
+          refs = Libertree::References::extract(comment.text, @client_conf[:server_name])
           Request::with_tree(params['server_id']) do |tree|
             response = tree.req_comment(comment, refs)
             if response['code'] == 'NOT FOUND'
@@ -207,7 +207,7 @@ module Jobs
       def self.perform(params)
         post = Libertree::Model::Post[params['post_id'].to_i]
         if post
-          refs = Libertree::References::extract(post.text)
+          refs = Libertree::References::extract(post.text, @client_conf[:server_name])
           Request::with_tree(params['server_id']) do |tree|
             tree.req_post post, refs
           end
