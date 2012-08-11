@@ -26,8 +26,13 @@ module Libertree
           end
         end
 
-        # Chop off everything before /posts/show to turn this into a relative URL.
-        text.sub!(url, substitution.partition("/posts/").drop(1).join(""))
+        if url[/^http/]
+          # Chop off everything before /posts/show to turn this into a relative URL.
+          new_url = substitution.partition("/posts/").drop(1).join("")
+        else
+          new_url = substitution
+        end
+        text.gsub!(url, new_url)
       end
 
       text
