@@ -1,3 +1,5 @@
+require 'libertree/references'
+
 module Libertree
   module Server
     module Responder
