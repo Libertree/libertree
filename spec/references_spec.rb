@@ -50,3 +50,16 @@ describe Jobs::Request do
     end
   end
 end
+
+describe Libertree::Server::Responder do
+  describe 'replace_references' do
+    it 'rewrites links to local resources' do
+      #refs = {
+      #  '/posts/show/123' =>
+      pending "not implemented"
+    end
+    it 'does not affect other links' do
+      pending "not implemented"
+    end
+  end
+end

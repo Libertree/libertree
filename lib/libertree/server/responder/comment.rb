@@ -48,7 +48,7 @@ module Libertree
             end
 
             if params.has_key? 'references'
-              comment_text = replace_references(params['text'], params['references'], @server.id)
+              comment_text = Libertree::References::replace(params['text'], params['references'], @server.id)
             else
               comment_text = params['text']
             end

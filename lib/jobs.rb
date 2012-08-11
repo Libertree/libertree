@@ -1,6 +1,7 @@
 require 'libertree/client'
 require 'libertree/model'
 require 'libertree/job-processor'
+require_relative 'libertree/references'
 require 'pony'
 
 module Jobs
@@ -101,45 +102,6 @@ module Jobs
       end
     end
 
-    def self.extract_references(text)
-      # - match absolute links only if they mention the host of this server
-      # - match relative links ("/posts/123") when they are beginning the
-      #   line (^) or when they are preceded by a space-like character (\s)
-      # - capture the matched url
-      #
-      # Known problems:
-      #   - links in verbatim sections are identified, because we extract
-      #     references from the raw markdown, not the rendered text.
-
-      server_name = @client_conf[:server_name]
-      pattern = %r{(?<url>(https?://#{server_name}|\s|\()/posts/show/(?<post_id>\d+)(#comment-(?<comment_id>\d+))?)}
-
-      refs = {}
-      text.scan(pattern) do |url, post_id, comment_id|
-        next if post_id.nil?
-
-        post = Libertree::Model::Post[ post_id.to_i ]
-        next unless post
-
-        ref = {}
-
-        map = { :id => post.remote_id || post_id.to_i }
-        map.merge!({ :origin => post.server.public_key }) if post.server
-        ref["/posts/show/#{post_id}"] = map
-
-        comment = Libertree::Model::Comment[ comment_id.to_i ]
-        if comment
-          map = { :id => comment.remote_id || comment_id.to_i }
-          map.merge!({ :origin => comment.server.public_key }) if comment.server
-          ref["#comment-#{comment_id}"] = map
-        end
-
-        refs[url] = ref unless ref.empty?
-      end
-
-      refs
-    end
-
     # TODO: Maybe this code is too defensive, checking for nil comment, like post, etc.
     # Removing the checks would clean up the code a bit.
     class CHAT
@@ -157,7 +119,7 @@ module Jobs
       def self.perform(params)
         comment = Libertree::Model::Comment[params['comment_id'].to_i]
         if comment
-          refs = Request::extract_references(comment.text)
+          refs = Libertree::References::extract(comment.text)
           Request::with_tree(params['server_id']) do |tree|
             response = tree.req_comment(comment, refs)
             if response['code'] == 'NOT FOUND'
@@ -245,7 +207,7 @@ module Jobs
       def self.perform(params)
         post = Libertree::Model::Post[params['post_id'].to_i]
         if post
-          refs = Request::extract_references(post.text)
+          refs = Libertree::References::extract(post.text)
           Request::with_tree(params['server_id']) do |tree|
             tree.req_post post, refs
           end
