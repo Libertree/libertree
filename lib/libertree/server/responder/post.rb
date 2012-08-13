@@ -5,7 +5,7 @@ module Libertree
     module Responder
       module Post
         def rsp_post(params)
-          return  if require_parameters(params, 'username', 'id', 'public', 'text')
+          return  if require_parameters(params, 'username', 'id', 'visibility', 'text')
 
           begin
             member = Model::Member[
@@ -35,9 +35,9 @@ module Libertree
                 post.revise post_text
               else
                 Model::Post.create(
-                  'member_id' => member.id,
-                  'remote_id' => params['id'],
-                  'public' => params['public'],
+                  'member_id'  => member.id,
+                  'remote_id'  => params['id'],
+                  'visibility' => params['visibility'],
                   'text' => post_text
                 )
               end

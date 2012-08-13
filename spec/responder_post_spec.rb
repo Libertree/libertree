@@ -45,9 +45,9 @@ describe Libertree::Server::Responder::Post do
 
             it 'with a missing id it responds with MISSING PARAMETER' do
               h = {
-                'username' => @member.username,
-                'public'      => true,
-                'text'        => 'A test post.',
+                'username'   => @member.username,
+                'visibility' => 'forest',
+                'text'       => 'A test post.',
               }
               @s.process "POST #{h.to_json}"
               @s.should have_responded_with_code('MISSING PARAMETER')
@@ -55,10 +55,10 @@ describe Libertree::Server::Responder::Post do
 
             it 'with a blank id it responds with MISSING PARAMETER' do
               h = {
-                'username' => @member.username,
-                'id'        => '',
-                'public'      => true,
-                'text'        => 'A test post.',
+                'username'   => @member.username,
+                'id'         => '',
+                'visibility' => 'forest',
+                'text'       => 'A test post.',
               }
               @s.process "POST #{h.to_json}"
               @s.should have_responded_with_code('MISSING PARAMETER')
@@ -66,10 +66,10 @@ describe Libertree::Server::Responder::Post do
 
             it "with a member username that isn't found it responds with NOT FOUND" do
               h = {
-                'username' => 'nosuchusername',
-                'id'       => 4,
-                'public'   => true,
-                'text'     => 'A test post.',
+                'username'   => 'nosuchusername',
+                'id'         => 4,
+                'visibility' => 'forest',
+                'text'       => 'A test post.',
               }
               @s.process "POST #{h.to_json}"
               @s.should have_responded_with_code('NOT FOUND')
@@ -85,10 +85,10 @@ describe Libertree::Server::Responder::Post do
 
               it 'responds with NOT FOUND' do
                 h = {
-                  'username' => @member.username,
-                  'id'       => 5,
-                  'public'   => true,
-                  'text'     => 'A test post.',
+                  'username'   => @member.username,
+                  'id'         => 5,
+                  'visibility' => 'forest',
+                  'text'       => 'A test post.',
                 }
                 @s.process "POST #{h.to_json}"
                 @s.should have_responded_with_code('NOT FOUND')
@@ -97,10 +97,10 @@ describe Libertree::Server::Responder::Post do
 
             it 'with valid data it responds with OK' do
               h = {
-                'username' => @member.username,
-                'id'       => 6,
-                'public'   => true,
-                'text'     => 'A test post.',
+                'username'   => @member.username,
+                'id'         => 6,
+                'visibility' => 'forest',
+                'text'       => 'A test post.',
               }
               @s.process "POST #{h.to_json}"
               @s.should have_responded_with_code('OK')
@@ -120,10 +120,10 @@ describe Libertree::Server::Responder::Post do
                 Libertree::Model::PostRevision.where( 'post_id' => @post.id ).count.should == 0
 
                 h = {
-                  'username' => @member.username,
-                  'id'       => @post.remote_id,
-                  'public'   => true,
-                  'text'     => 'edited text',
+                  'username'   => @member.username,
+                  'id'         => @post.remote_id,
+                  'visibility' => 'forest',
+                  'text'       => 'edited text',
                 }
                 @s.process "POST #{h.to_json}"
                 @s.should have_responded_with_code('OK')
