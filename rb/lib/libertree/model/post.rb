@@ -269,7 +269,14 @@ module Libertree
 
       # TODO: Optionally restrict by account, so as not to reveal too much to browser/client
       # i.e. rivers not belonging to current account
-      def rivers_belonged_to
+      def rivers_belonged_to(account = nil)
+        query_params = [self.id]
+
+        if account
+          account_clause = "AND r.account_id = ?"
+          query_params << account.id
+        end
+
         River.s(
           %{
             SELECT
@@ -280,8 +287,9 @@ module Libertree
             WHERE
               rp.river_id = r.id
               AND rp.post_id = ?
+              #{ account_clause }
           },
-          self.id
+          *query_params
         )
       end
 

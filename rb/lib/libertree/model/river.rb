@@ -7,7 +7,12 @@ module Libertree
 
       def posts( opts = {} )
         limit = opts.fetch(:limit, 30)
-        older_than = Time.at( opts.fetch(:older_than, Time.now.to_i) )
+        if opts[:newer]
+          time_comparator = '>'
+        else
+          time_comparator = '<'
+        end
+        time = Time.at( opts.fetch(:time, Time.now.to_f) ).strftime("%Y-%m-%d %H:%M:%S.%6N%z")
 
         if opts[:order_by] == :comment
           Post.s(
@@ -21,7 +26,7 @@ module Libertree
                 WHERE
                   p.id = rp.post_id
                   AND rp.river_id = ?
-                  AND p.time_updated_overall < ?
+                  AND p.time_updated_overall #{time_comparator} ?
                   AND NOT EXISTS(
                     SELECT 1
                     FROM posts_hidden pi
@@ -35,7 +40,7 @@ module Libertree
               ORDER BY time_updated_overall
             },
             self.id,
-            older_than.strftime("%Y-%m-%d %H:%M:%S.%6N%z"),
+            time,
             self.account.id
           )
         else
@@ -50,7 +55,7 @@ module Libertree
                 WHERE
                   p.id = rp.post_id
                   AND rp.river_id = ?
-                  AND p.time_created < ?
+                  AND p.time_created #{time_comparator} ?
                   AND NOT EXISTS(
                     SELECT 1
                     FROM posts_hidden pi
@@ -64,7 +69,7 @@ module Libertree
               ORDER BY id
             },
             self.id,
-            older_than.strftime("%Y-%m-%d %H:%M:%S.%6N%z"),
+            time,
             self.account.id
           )
         end
@@ -147,9 +152,8 @@ module Libertree
       end
 
       def try_post(post)
-        # TODO: We may be able to fold these two EXISTS clauses into the INSERT query at the end of this method
-        return  if DB.dbh.sc "SELECT EXISTS( SELECT 1 FROM river_posts WHERE river_id = ? AND post_id = ? LIMIT 1 )", self.id, post.id
-        return  if DB.dbh.sc "SELECT EXISTS( SELECT 1 FROM posts_hidden WHERE account_id = ? AND post_id = ? LIMIT 1 )", self.account.id, post.id
+        return  if River.prepare("SELECT EXISTS( SELECT 1 FROM river_posts WHERE river_id = ? AND post_id = ? LIMIT 1 )").sc( self.id, post.id )
+        return  if River.prepare("SELECT EXISTS( SELECT 1 FROM posts_hidden WHERE account_id = ? AND post_id = ? LIMIT 1 )").sc( self.account.id, post.id )
 
         if self.matches_post?(post)
           DB.dbh.i "INSERT INTO river_posts ( river_id, post_id ) VALUES ( ?, ? )", self.id, post.id
