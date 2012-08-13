@@ -220,7 +220,7 @@ Request Parameters:
     {
       "username": <member username>,
       "id": <post id on requester>,
-      "public": <boolean>,
+      "visibility": <"internet" | "forest">,
       "text": <post text>,
     }
 
