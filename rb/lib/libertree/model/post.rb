@@ -329,15 +329,6 @@ module Libertree
       def v_forest?
         self.visibility == 'forest' || self.visibility == 'internet'
       end
-
-      def visibility_description
-        case self.visibility
-        when 'internet'
-          _('This post and its comments are visible to the whole Internet')
-        when 'forest'
-          _('This post and its comments are only visible to members of this Libertree forest')
-        end
-      end
     end
   end
 end
