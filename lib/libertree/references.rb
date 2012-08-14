@@ -61,7 +61,7 @@ module Libertree
       #   - links in verbatim sections are identified, because we extract
       #     references from the raw markdown, not the rendered text.
 
-      pattern = %r{(?<url>(https?://#{server_name}|\s|\()/posts/show/(?<post_id>\d+)(#comment-(?<comment_id>\d+))?)}
+      pattern = %r{(?<url>(#{server_name}|\s|\()/posts/show/(?<post_id>\d+)(#comment-(?<comment_id>\d+))?)}
 
       refs = {}
       text.scan(pattern) do |url, post_id, comment_id|

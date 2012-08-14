@@ -13,9 +13,8 @@ private_key_path: /path/to/private.key
 # domain name, but need not be.
 # server_name:
 
-# The URL base which other servers will use to retrieve avatar image files
-# from this server
-avatar_url_base: 'http://domain-or-ip-without-trailing-slash'
+# The URL base of the frontend web interface (used for URL substitution)
+frontend_url_base: 'http://domain-or-ip-without-trailing-slash'
 
 # For more verbose output, set debug to true.
 debug: false

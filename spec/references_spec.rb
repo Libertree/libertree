@@ -8,6 +8,8 @@ describe Libertree::References do
       FactoryGirl.attributes_for(:member, :server_id => @server.id)
     )
     @server_remote = Libertree::Model::Server.create( FactoryGirl.attributes_for(:server) )
+    key = OpenSSL::PKey::RSA.new(2048, 65537)
+    @server_remote.public_key = key.to_pem
     @member_remote = Libertree::Model::Member.create(
       FactoryGirl.attributes_for(:member, :server_id => @server_remote.id)
     )
@@ -21,7 +23,7 @@ describe Libertree::References do
       )
       text = "This is a [relative link](/posts/show/#{post.id}). This too: /posts/show/#{post.id}"
 
-      refs = Libertree::References::extract(text, "never-mind.org")
+      refs = Libertree::References::extract(text, "http://never-mind.org")
       refs.keys.should include("(/posts/show/#{post.id}")
       refs.keys.should include(" /posts/show/#{post.id}")
     end
@@ -32,7 +34,7 @@ describe Libertree::References do
       )
       text = "This is an [absolute link](http://never-mind.org/posts/show/#{post.id})."
 
-      refs = Libertree::References::extract(text, "never-mind.org")
+      refs = Libertree::References::extract(text, "http://never-mind.org")
       refs.keys.should include("http://never-mind.org/posts/show/#{post.id}")
     end
 
@@ -42,7 +44,7 @@ describe Libertree::References do
       )
       text = "This is an [absolute link](http://some-tree.org/posts/show/#{post.id})."
 
-      refs = Libertree::References::extract(text, "never-mind.org")
+      refs = Libertree::References::extract(text, "http://never-mind.org")
       refs.should be_empty
     end
   end
@@ -78,7 +80,7 @@ Link 5: [unchanged](http://remote.org/posts/show/123)
 EOF
 
       # this happens on the remote server
-      refs = Libertree::References::extract(original_text, "never-mind.org")
+      refs = Libertree::References::extract(original_text, "http://never-mind.org")
 
       # this happens on the receiving server
       processed_text = Libertree::References::replace(original_text, refs, @server_remote.id, @public_key)
@@ -117,7 +119,7 @@ Link 5: [unchanged](http://remote.org/posts/show/123)
 EOF
 
       # this happens on the remote server
-      refs = Libertree::References::extract(original_text, "never-mind.org")
+      refs = Libertree::References::extract(original_text, "http://never-mind.org")
 
       # this happens on the receiving server
       processed_text = Libertree::References::replace(original_text, refs, @server_remote.id, @public_key)
