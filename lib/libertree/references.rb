@@ -9,7 +9,7 @@ module Libertree
         substitution = segments.entries.reduce(url) do |res, pair|
           segment, ref = pair
           if ref.has_key? 'origin'
-            server = Model::Server[ public_key: ref['origin'] ]
+            server = Model::Server[ public_key: ref['origin'].to_s ]
           else
             server = Model::Server[ server_id ]
           end
