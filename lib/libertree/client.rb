@@ -7,12 +7,12 @@ module Libertree
     # @param [Hash] params Paramaters Hash
     # @option params [String] :public_key A public RSA key, the partner of the private key
     # @option params [String] :private_key A private RSA key, the partner of the public key
-    # @option params [String] :avatar_url_base The base to prefix before member avatar_path when sending requests with an avatar_url parameter
+    # @option params [String] :frontend_url_base The URL base of local frontend resources
     # @option params [String] :server_name a short identifier that other servers will display beside member usernames
     def initialize( params = {} )
       @public_key = params[:public_key] or raise ":public_key required by Libertree::Client"
       @private_key = params[:private_key] or raise ":private_key required by Libertree::Client"
-      @avatar_url_base = params[:avatar_url_base]
+      @frontend_url_base = params[:frontend_url_base]
       @server_ip = params[:server_ip]
       @server_name = params[:server_name]
       @log = params[:log] || $stdout
@@ -127,7 +127,7 @@ module Libertree
         }
       }
       if member.avatar_path
-        params.merge!('avatar_url' => "#{@avatar_url_base}#{member.avatar_path}")
+        params.merge!('avatar_url' => "#{@frontend_url_base}#{member.avatar_path}")
       end
       @conn.request('MEMBER', params)
     end
