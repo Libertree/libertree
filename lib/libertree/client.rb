@@ -148,6 +148,7 @@ module Libertree
         'username'   => post.member.username,
         'id'         => post.id,
         'visibility' => post.visibility,
+        'public'     => true, # FIXME: backwards compatibility
         'text'       => post.text
       }
       params.merge!('references' => references) unless references.empty?
