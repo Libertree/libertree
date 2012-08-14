@@ -2,26 +2,36 @@ module Libertree
   module References
 
     # @param refs [Hash] TODO: explain the refs param, and give an example of it
-    def self.replace(text_, refs, server_id)
+    def self.replace(text_, refs, server_id, own_pubkey)
       text = text_.dup
 
       refs.each do |url, segments|
         substitution = segments.entries.reduce(url) do |res, pair|
           segment, ref = pair
           if ref.has_key? 'origin'
-            server = Model::Server[ public_key: ref['origin'].to_s ]
+            if ref['origin'].to_s == own_pubkey
+              local = true
+            else
+              server = Model::Server[ public_key: ref['origin'].to_s ]
+            end
           else
             server = Model::Server[ server_id ]
           end
-          next res  if server.nil?
+          next res  if server.nil? && ! local
 
           if segment =~ /posts/
             model = Model::Post
           else
             model = Model::Comment
           end
-          entities = model.where( remote_id: ref['id'].to_i ).
-                     reject {|e| e.member.server != server }
+
+          if local
+            entities = model.where( id: ref['id'].to_i )
+          else
+            entities = model.where( remote_id: ref['id'].to_i ).
+                       reject {|e| e.member.server != server }
+          end
+
           if entities.empty?
             next res
           else

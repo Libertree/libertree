@@ -11,6 +11,7 @@ describe Libertree::References do
     @member_remote = Libertree::Model::Member.create(
       FactoryGirl.attributes_for(:member, :server_id => @server_remote.id)
     )
+    @public_key = @server.public_key
   end
 
   describe 'extract' do
@@ -80,7 +81,46 @@ EOF
       refs = Libertree::References::extract(original_text, "never-mind.org")
 
       # this happens on the receiving server
-      processed_text = Libertree::References::replace(original_text, refs, @server_remote.id)
+      processed_text = Libertree::References::replace(original_text, refs, @server_remote.id, @public_key)
+      processed_text.should == expected_text
+    end
+
+    it 'rewrites links that point to posts that originate here' do
+      post_original = Libertree::Model::Post.create(
+        FactoryGirl.attributes_for(:post, member_id: @member.id, remote_id: nil)
+      )
+      post_remote_copy = Libertree::Model::Post.create(
+        FactoryGirl.attributes_for(:post,
+          text: post_original.text,
+          member_id: @member.id,
+          remote_id: post_original.id
+        )
+      )
+
+      #post_original.member.server
+
+      original_text =<<EOF
+Link 1: /posts/show/#{post_remote_copy.id}
+Link 1b: /posts/show/#{post_remote_copy.id}
+Link 2: http://never-mind.org/posts/show/#{post_remote_copy.id}
+Link 3: [a post](/posts/show/#{post_remote_copy.id})
+Link 4: [a post](http://never-mind.org/posts/show/#{post_remote_copy.id})
+Link 5: [unchanged](http://remote.org/posts/show/123)
+EOF
+      expected_text =<<EOF
+Link 1: /posts/show/#{post_original.id}
+Link 1b: /posts/show/#{post_original.id}
+Link 2: /posts/show/#{post_original.id}
+Link 3: [a post](/posts/show/#{post_original.id})
+Link 4: [a post](/posts/show/#{post_original.id})
+Link 5: [unchanged](http://remote.org/posts/show/123)
+EOF
+
+      # this happens on the remote server
+      refs = Libertree::References::extract(original_text, "never-mind.org")
+
+      # this happens on the receiving server
+      processed_text = Libertree::References::replace(original_text, refs, @server_remote.id, @public_key)
       processed_text.should == expected_text
     end
   end

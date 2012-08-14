@@ -19,7 +19,7 @@ module Libertree
               } )
             else
               if params.has_key? 'references'
-                post_text = Libertree::References::replace(params['text'], params['references'], @server.id)
+                post_text = Libertree::References::replace(params['text'], params['references'], @server.id, @public_key)
               else
                 post_text = params['text']
               end
