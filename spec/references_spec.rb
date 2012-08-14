@@ -12,6 +12,7 @@ describe Libertree::References do
       FactoryGirl.attributes_for(:member, :server_id => @server_remote.id)
     )
   end
+
   describe 'extract' do
     it 'extracts relative links to local posts' do
       post = Libertree::Model::Post.create(
@@ -41,7 +42,7 @@ describe Libertree::References do
       text = "This is an [absolute link](http://some-tree.org/posts/show/#{post.id})."
 
       refs = Libertree::References::extract(text, "never-mind.org")
-      refs.keys.should == []
+      refs.should be_empty
     end
   end
 

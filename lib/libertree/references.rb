@@ -1,6 +1,7 @@
 module Libertree
   module References
 
+    # @param refs [Hash] TODO: explain the refs param, and give an example of it
     def self.replace(text, refs, server_id)
       refs.each do |url, segments|
         substitution = segments.entries.reduce(url) do |res, pair|
@@ -10,19 +11,19 @@ module Libertree
           else
             server = Model::Server[ server_id ]
           end
-          next res unless server
+          next res  if server.nil?
 
           if segment =~ /posts/
             model = Model::Post
           else
             model = Model::Comment
           end
-          es = model.where( remote_id: ref['id'].to_i ).
+          entities = model.where( remote_id: ref['id'].to_i ).
                      reject {|e| e.member.server != server }
-          if es.empty?
+          if entities.empty?
             next res
           else
-            next res.sub(segment, segment.sub(/\d+/, es[0].id.to_s))
+            next res.sub(segment, segment.sub(/\d+/, entities[0].id.to_s))
           end
         end
 
