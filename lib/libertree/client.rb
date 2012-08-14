@@ -145,10 +145,10 @@ module Libertree
 
     def req_post(post,references={})
       params = {
-        'username' => post.member.username,
-        'id'       => post.id,
-        'public'   => true,
-        'text'     => post.text
+        'username'   => post.member.username,
+        'id'         => post.id,
+        'visibility' => post.visibility,
+        'text'       => post.text
       }
       params.merge!('references' => references) unless references.empty?
       @conn.request('POST', params)
