@@ -2,7 +2,9 @@ module Libertree
   module References
 
     # @param refs [Hash] TODO: explain the refs param, and give an example of it
-    def self.replace(text, refs, server_id)
+    def self.replace(text_, refs, server_id)
+      text = text_.dup
+
       refs.each do |url, segments|
         substitution = segments.entries.reduce(url) do |res, pair|
           segment, ref = pair
