@@ -17,7 +17,7 @@ describe Libertree::Model::Post do
   describe '#glimpse' do
     context 'when the text is short' do
       before :each do
-        new_post('Short text.')
+        new_post 'Short text.'
       end
       it 'is all the text' do
         @post.glimpse.should == 'Short text.'
@@ -26,7 +26,7 @@ describe Libertree::Model::Post do
 
     context 'when the text is long' do
       before :each do
-        new_post('Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris. Maecenas congue ligula ac quam viverra nec consectetur ante hendrerit.')
+        new_post 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris. Maecenas congue ligula ac quam viverra nec consectetur ante hendrerit.'
       end
       it 'is only some of the beginning of the text when the text is long' do
         @post.glimpse.should == 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Don...'

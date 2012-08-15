@@ -66,10 +66,16 @@ module Libertree
 
       # TODO: DRY up with Post#glimpse
       def glimpse
-        if self.text.length < 61
-          self.text
+        t = self.text.lines.reject { |l| l =~ /^> / }.join("\n")
+        if t.strip.empty?
+          t = self.text
+        end
+        t.strip!
+
+        if t.length < 61
+          t
         else
-          self.text[0...60] + '...'
+          t[0...60] + '...'
         end
       end
 
