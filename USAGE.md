@@ -100,8 +100,13 @@ repository:
     % cd ~/git/libertree-frontend-ramaze
     % git fetch origin && git merge --ff-only @{u}
 
-Then restart all the services.  They can all be stopped by typing Ctrl-C. Check for
-release notes which may describe new settings or migrations.
+Then restart all the services.  They can all be stopped by typing Ctrl-C. Check
+for release notes which may describe new settings or migrations.  If there are
+migrations, all daemons should be restarted, even if there were no changes in
+some non-DB repositories.
+
+If there are changes to a Gemfile.lock in a repo, then `bundle install` will have
+to be run before restarting the daemons.
 
 If there are SCSS changes, compile the SCSS to CSS:
 
