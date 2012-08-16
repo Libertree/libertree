@@ -141,6 +141,26 @@ module Libertree
           'post_id'      => self.post_id,
         }
       end
+
+      # TODO: When more visibilities come, restrict this result set by visibility
+      def self.comments_since_id(comment_id)
+        self.prepare(
+          %{
+            SELECT
+              c.*
+            FROM
+              comments c
+            WHERE
+              c.id > ?
+            ORDER BY
+              c.id
+          }
+        ).s(
+          comment_id
+        ).map { |row|
+          self.new row
+        }
+      end
     end
   end
 end
