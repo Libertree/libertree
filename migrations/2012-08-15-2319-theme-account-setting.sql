@@ -1,0 +1,2 @@
+ALTER TABLE accounts ADD COLUMN theme VARCHAR(128);
+

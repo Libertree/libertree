@@ -145,6 +145,10 @@ module Libertree
         @pools ||= Pool.where( account_id: self.id )
       end
 
+      def theme
+        @theme ||= super
+      end
+
       def self.create(*args)
         account = super
         member = Member.create( account_id: account.id )
@@ -218,6 +222,7 @@ module Libertree
         @notifications_unseen = nil
         @num_notifications_unseen = nil
         @rivers_appended = nil
+        @theme = nil
       end
 
       def admin?
