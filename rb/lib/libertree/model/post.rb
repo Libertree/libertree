@@ -225,17 +225,6 @@ module Libertree
         DB.dbh.delete "DELETE FROM post_subscriptions WHERE post_id = ?", self.id
         # TODO: Do we want to keep these revisions?
         DB.dbh.delete "DELETE FROM post_revisions WHERE post_id = ?", self.id
-        DB.dbh.delete(
-          %{
-              UPDATE accounts
-              SET
-                  watched_post_id = NULL
-                , watched_post_last_comment_id = NULL
-              WHERE
-                watched_post_id = ?
-          },
-          self.id
-        )
         delete
       end
 
