@@ -17,17 +17,12 @@ module Libertree
       @server_name = params[:server_name]
       @log = params[:log] || $stdout
       @log_identifier = params[:log_identifier] || "pid #{Process.pid}"
-
-      @intro_params = { 'public_key' => @public_key, }
-      if @server_name
-        @intro_params['name'] = @server_name
-      end
     end
 
     def connect(remote_host)
       @conn = Libertree::Connection.new(host: remote_host, log: @log, log_identifier: @log_identifier)
 
-      response = @conn.request('INTRODUCE', @intro_params)
+      response = @conn.request('INTRODUCE', 'public_key' => @public_key)
       if response.nil?
         raise "No response to INTRODUCE"
       end
@@ -37,7 +32,11 @@ module Libertree
       if challenge_encrypted && response['code'] == 'OK'
         key = OpenSSL::PKey::RSA.new @private_key
         challenge_decrypted = key.private_decrypt(Base64.decode64(challenge_encrypted), OpenSSL::PKey::RSA::PKCS1_OAEP_PADDING)
-        response = @conn.request('AUTHENTICATE', 'response' => challenge_decrypted)
+        auth_params = { 'response' => challenge_decrypted }
+        if @server_name
+          auth_params['name'] = @server_name
+        end
+        response = @conn.request('AUTHENTICATE', auth_params)
 
         if response['code'] != 'OK'
           raise "Failed to connect: #{response.inspect}"
