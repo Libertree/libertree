@@ -7,6 +7,11 @@ module Libertree
         JSON.parse self['params']
       end
 
+      def retry!
+        self.pid = self.time_started = self.time_finished = nil
+        self.tries = 0
+      end
+
       # First parameter can be a Forest Array.
       # Otherwise, assumed to create for all member forests.
       def self.create_for_forests(create_args, *forests)
