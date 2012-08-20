@@ -12,6 +12,20 @@ module Libertree
         self.tries = 0
       end
 
+      # RDBI casting not working with TIMESTAMP WITH TIME ZONE ?
+      def time_created
+        DateTime.parse self['time_created']
+      end
+      def time_started
+        DateTime.parse self['time_started']
+      end
+      def time_to_start
+        DateTime.parse self['time_to_start']
+      end
+      def time_finished
+        DateTime.parse self['time_finished']
+      end
+
       # First parameter can be a Forest Array.
       # Otherwise, assumed to create for all member forests.
       def self.create_for_forests(create_args, *forests)
