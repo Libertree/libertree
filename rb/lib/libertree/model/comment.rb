@@ -145,6 +145,29 @@ module Libertree
           self.new row
         }
       end
+
+      # @param [Hash] opt options for restricting the comment set returned
+      # @option opts [Fixnum] :from_id Only return comments with id greater than or equal to this id
+      # @option opts [Fixnum] :to_id Only return comments with id less than this id
+      def self.on_post(post, opt = {})
+        params = [ post.id, ]
+        if opt[:from_id]
+          from_clause = "AND id >= ?"
+          params << opt[:from_id].to_i
+        end
+        if opt[:to_id]
+          to_clause = "AND id < ?"
+          params << opt[:to_id].to_i
+        end
+        if opt[:limit]
+          limit_clause = "LIMIT #{opt[:limit].to_i}"
+        end
+
+        st = Comment.prepare("SELECT * FROM comments WHERE post_id = ? #{from_clause} #{to_clause} ORDER BY id DESC #{limit_clause}")
+        st.s( *params ).map { |row|
+          self.new row
+        }.sort_by { |c| c.id }
+      end
     end
   end
 end
