@@ -17,13 +17,19 @@ module Libertree
         DateTime.parse self['time_created']
       end
       def time_started
-        DateTime.parse self['time_started']
+        if self['time_started']
+          DateTime.parse self['time_started']
+        end
       end
       def time_to_start
-        DateTime.parse self['time_to_start']
+        if self['time_to_start']
+          DateTime.parse self['time_to_start']
+        end
       end
       def time_finished
-        DateTime.parse self['time_finished']
+        if self['time_finished']
+          DateTime.parse self['time_finished']
+        end
       end
 
       # First parameter can be a Forest Array.
