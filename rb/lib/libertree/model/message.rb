@@ -12,7 +12,7 @@ module Libertree
       alias :member :sender
 
       def recipients
-        @recipients ||= Member.s(
+        @recipients ||= Member.prepare(
           %{
             SELECT
               m.*
@@ -22,9 +22,9 @@ module Libertree
             WHERE
               mr.message_id = ?
               AND m.id = mr.member_id
-          },
-          self.id
-        )
+          }
+        ).s(self.id).
+          map { |row| Member.new row }
       end
 
       def visible_to?(account)

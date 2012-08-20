@@ -64,7 +64,7 @@ module Libertree
       end
 
       def self.search(q)
-        self.s("SELECT * FROM comments WHERE text ILIKE '%' || ? || '%' ORDER BY time_created DESC LIMIT 42", q)
+        self.prepare("SELECT * FROM comments WHERE text ILIKE '%' || ? || '%' ORDER BY time_created DESC LIMIT 42").s(q).map { |row| self.new row }
       end
 
       def self.create(*args)
@@ -80,7 +80,7 @@ module Libertree
       end
 
       def likes
-        @likes ||= CommentLike.s("SELECT * FROM comment_likes WHERE comment_id = ? ORDER BY id DESC", self.id)
+        @likes ||= CommentLike.prepare("SELECT * FROM comment_likes WHERE comment_id = ? ORDER BY id DESC").s(self.id).map { |row| CommentLike.new row }
       end
 
       def notify_about_like(like)

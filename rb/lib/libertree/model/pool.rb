@@ -6,7 +6,7 @@ module Libertree
       end
 
       def posts
-        @posts ||= Post.s(
+        @posts ||= Post.prepare(
           %{
             SELECT
               p.*
@@ -18,9 +18,8 @@ module Libertree
               AND pp.pool_id = ?
             ORDER BY
               p.id DESC
-          },
-          self.id
-        )
+          }
+        ).s(self.id).map { |row| Post.new row }
       end
 
       def includes?(post)

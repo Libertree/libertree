@@ -180,7 +180,7 @@ module Libertree
       end
 
       def likes
-        @likes ||= PostLike.s("SELECT * FROM post_likes WHERE post_id = ? ORDER BY id DESC", self.id)
+        @likes ||= PostLike.prepare("SELECT * FROM post_likes WHERE post_id = ? ORDER BY id DESC").s(self.id).map { |row| PostLike.new row }
       end
 
       def notify_about_comment(comment)
@@ -256,7 +256,7 @@ module Libertree
       end
 
       def self.search(q)
-        self.s("SELECT * FROM posts WHERE text ILIKE '%' || ? || '%' ORDER BY time_created DESC LIMIT 42", q)
+        self.prepare("SELECT * FROM posts WHERE text ILIKE '%' || ? || '%' ORDER BY time_created DESC LIMIT 42").s(q).map { |row| self.new row }
       end
 
       # TODO: Optionally restrict by account, so as not to reveal too much to browser/client
@@ -269,6 +269,7 @@ module Libertree
           query_params << account.id
         end
 
+        # TODO: can this be turned into a prepared statement?
         River.s(
           %{
             SELECT

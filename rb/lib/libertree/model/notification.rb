@@ -30,16 +30,16 @@ module Libertree
       end
 
       def self.for_account_and_comment_id(account, comment_id)
-        self.s(
+        self.prepare(
           %|
             SELECT *
             FROM notifications
             WHERE
               account_id = ?
               AND data = '{"type":"comment","comment_id":#{comment_id.to_i}}'
-          |,
-          account.id
-        )
+          |
+        ).s(account.id).
+          map { |row| self.new row }
       end
 
       # TODO: We do a mass update using the result of this query
@@ -48,41 +48,41 @@ module Libertree
         r = []
 
         post.likes.each do |like|
-          r += self.s(
+          r += self.prepare(
             %|
               SELECT *
               FROM notifications
               WHERE
                 account_id = ?
                 AND data = '{"type":"post-like","post_like_id":#{like.id}}'
-            |,
-            account.id
-          )
+            |
+          ).s(account.id).
+            map { |row| self.new row }
         end
 
         post.comments.each do |comment|
-          r += self.s(
+          r += self.prepare(
             %|
               SELECT *
               FROM notifications
               WHERE
                 account_id = ?
                 AND data = '{"type":"comment","comment_id":#{comment.id}}'
-            |,
-            account.id
-          )
+            |
+          ).s(account.id).
+            map { |row| self.new row }
 
           comment.likes.each do |like|
-            r += self.s(
+            r += self.prepare(
               %|
                 SELECT *
                 FROM notifications
                 WHERE
                   account_id = ?
                   AND data = '{"type":"comment-like","comment_like_id":#{like.id}}'
-              |,
-              account.id
-            )
+              |
+            ).s(account.id).
+              map { |row| self.new row }
           end
         end
 

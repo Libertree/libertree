@@ -14,6 +14,7 @@ module Libertree
         end
         time = Time.at( opts.fetch(:time, Time.now.to_f) ).strftime("%Y-%m-%d %H:%M:%S.%6N%z")
 
+        # TODO: prepared statement?
         if opts[:order_by] == :comment
           Post.s(
             %{
@@ -162,6 +163,7 @@ module Libertree
 
       def refresh_posts( n = 512 )
         DB.dbh.d  "DELETE FROM river_posts WHERE river_id = ?", self.id
+        # TODO: prepared statement?
         posts = Post.s("SELECT * FROM posts ORDER BY id DESC LIMIT #{n.to_i}")
         posts.each do |p|
           self.try_post p

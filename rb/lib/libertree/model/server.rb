@@ -6,7 +6,7 @@ module Libertree
       end
 
       def forests
-        Forest.s(
+        Forest.prepare(
           %{
             SELECT
               f.*
@@ -16,9 +16,9 @@ module Libertree
             WHERE
               fs.server_id = ?
               AND f.id = fs.forest_id
-          },
-          self.id
-        )
+          }
+        ).s(self.id).
+          map { |row| Forest.new row }
       end
     end
   end
