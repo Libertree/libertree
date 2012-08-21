@@ -179,7 +179,10 @@ module Libertree
       end
 
       def home_river
-        River.new River.prepare("SELECT * FROM rivers WHERE account_id = ? AND home = TRUE").s1(self.id)
+        row = River.prepare("SELECT * FROM rivers WHERE account_id = ? AND home = TRUE").s1(self.id)
+        if row
+          River.new row
+        end
       end
 
       def home_river=(river)
