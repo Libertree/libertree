@@ -1,7 +1,65 @@
 module Libertree
   module References
 
-    # @param refs [Hash] TODO: explain the refs param, and give an example of it
+    # @param refs [Hash]:
+    #
+    #   The keys of the refs hash are extracted URLs, including the preceeding
+    #   character in the case of relative URLs, e.g. "http://tree.org/posts/show/123"
+    #   or "(/posts/show/123".
+    #
+    #   The value assigned to each key is another hash whose keys are URL
+    #   segments. The URL " /posts/show/366/128#comment-128" has the following
+    #   two segments:
+    #
+    #     "/posts/show/366"
+    #     "128#comment-128"
+    #
+    #   Every segment is assigned one hash that contains the id of the local copy
+    #   of the entity that is referenced by the segment ("id") and the public key
+    #   of the origin of the entity ("origin"). The public key is not included if
+    #   the server that sends the reference hash is the origin of the described
+    #   entity.
+    #
+    #   The following is an example of a refs hash for a post that contains
+    #   three URLs to local entities.
+    #
+    #     {
+    #       "(/posts/show/366" =>
+    #       {
+    #         "/posts/show/366" =>
+    #         {
+    #           "id"     => 365,
+    #           "origin" => "-----BEGIN PUBLIC KEY-----..."
+    #         }
+    #       },
+    #       " /posts/show/366/128#comment-128" =>
+    #       {
+    #         "/posts/show/366" =>
+    #         {
+    #           "id"     => 365,
+    #           "origin" => "-----BEGIN PUBLIC KEY-----..."
+    #         },
+    #         "/128#comment-128" =>
+    #         {
+    #           "id"     => 127,
+    #           "origin" => "-----BEGIN PUBLIC KEY-----..."
+    #         }
+    #       },
+    #       "http://never-mind.org/posts/show/366/128"=>
+    #       {
+    #         "/posts/show/366"=>
+    #         {
+    #           "id"     => 365,
+    #           "origin" => "-----BEGIN PUBLIC KEY-----..."
+    #         },
+    #         "/128"=>
+    #         {
+    #           "id"     => 127,
+    #           "origin" => "-----BEGIN PUBLIC KEY-----..."
+    #         }
+    #       }
+    #     }
+
     def self.replace(text_, refs, server_id, own_pubkey)
       text = text_.dup
 
