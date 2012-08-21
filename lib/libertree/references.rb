@@ -21,8 +21,14 @@ module Libertree
 
           if segment =~ /posts/
             model = Model::Post
+            target = segment
           else
             model = Model::Comment
+
+            # Look-behind does not support pattern repetition with * or +,
+            # so we have to first extract the post id from the url.
+            post_id = res.match(%r{/posts/show/(?<post_id>\d+)/})['post_id']
+            target = %r{(?<=/posts/show/#{post_id})#{Regexp.quote(segment)}}
           end
 
           if local
@@ -35,18 +41,8 @@ module Libertree
           if entities.empty?
             next res
           else
-            if model == Model::Comment
-              # Look-behind does not support pattern repetition with * or +,
-              # so we have to first extract the post id from the url.
-              post_id = res.match(%r{/posts/show/(?<post_id>\d+)/})['post_id']
-              rewrite = res.sub(
-                %r{(?<=/posts/show/#{post_id})#{Regexp.quote(segment)}},
-                segment.sub(/\d+/, entities[0].id.to_s)
-              )
-            else
-              rewrite = res.sub(segment, segment.sub(/\d+/, entities[0].id.to_s))
-            end
-            next rewrite
+            updated_segment = segment.gsub(/\d+/, entities[0].id.to_s)
+            next res.sub(target, updated_segment)
           end
         end
 
@@ -56,8 +52,9 @@ module Libertree
         else
           new_url = substitution
         end
+
         # only replace full matches
-        text.gsub!(%r{#{Regexp.quote(url)}(?!/)}, new_url)
+        text.gsub!(%r{#{Regexp.quote(url)}(?!(/|#))}, new_url)
       end
 
       text
@@ -73,10 +70,10 @@ module Libertree
       #   - links in verbatim sections are identified, because we extract
       #     references from the raw markdown, not the rendered text.
 
-      pattern = %r{(?<url>(#{server_name}|\s|\()/posts/show/(?<post_id>\d+)(/(?<comment_id>\d+))?)}
+      pattern = %r{(?<url>(#{server_name}|\s|\()(?<post_url>/posts/show/(?<post_id>\d+))(?<comment_url>/(?<comment_id>\d+)(#comment-\d+)?)?)}
 
       refs = {}
-      text.scan(pattern) do |url, post_id, comment_id|
+      text.scan(pattern) do |url, post_url, post_id, comment_url, comment_id|
         next  if post_id.nil?
 
         post = Libertree::Model::Post[ post_id.to_i ]
@@ -88,7 +85,7 @@ module Libertree
         if post.server
           map.merge!( { 'origin' => post.server.public_key } )
         end
-        ref["/posts/show/#{post_id}"] = map
+        ref[post_url] = map
 
         comment = Libertree::Model::Comment[ comment_id.to_i ]
         if comment
@@ -96,7 +93,7 @@ module Libertree
           if comment.server
             map.merge!({ 'origin' => comment.server.public_key })
           end
-          ref["/#{comment_id}"] = map
+          ref[comment_url] = map
         end
 
         refs[url] = ref  if ref.any?

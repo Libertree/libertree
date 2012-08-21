@@ -161,11 +161,12 @@ Link P5: [unchanged](http://remote.org/posts/show/123)
 
 Link C1: /posts/show/#{post_remote_copy.id}/#{comment_remote_copy.id}
 Link C2: /posts/show/#{post_remote_copy.id}/#{comment_remote_copy.id}
-Link C2: http://never-mind.org/posts/show/#{post_remote_copy.id}/#{comment_remote_copy.id}
-Link C3: [a comment](/posts/show/#{post_remote_copy.id}/#{comment_remote_copy.id})
-Link C4: [a comment](http://never-mind.org/posts/show/#{post_remote_copy.id}/#{comment_remote_copy.id})
-Link C5: [unchanged](http://remote.org/posts/show/123)
-Link C6: [unchanged](http://remote.org/posts/show/123/#{comment_remote_copy.id})
+Link C3: /posts/show/#{post_remote_copy.id}/#{comment_remote_copy.id}#comment-#{comment_remote_copy.id}
+Link C4: http://never-mind.org/posts/show/#{post_remote_copy.id}/#{comment_remote_copy.id}
+Link C5: [a comment](/posts/show/#{post_remote_copy.id}/#{comment_remote_copy.id})
+Link C6: [a comment](http://never-mind.org/posts/show/#{post_remote_copy.id}/#{comment_remote_copy.id})
+Link C7: [unchanged](http://remote.org/posts/show/123)
+Link C8: [unchanged](http://remote.org/posts/show/123/#{comment_remote_copy.id})
 EOF
       expected_text =<<EOF
 Link P1: /posts/show/#{post_original.id}
@@ -177,11 +178,12 @@ Link P5: [unchanged](http://remote.org/posts/show/123)
 
 Link C1: /posts/show/#{post_original.id}/#{comment_original.id}
 Link C2: /posts/show/#{post_original.id}/#{comment_original.id}
-Link C2: /posts/show/#{post_original.id}/#{comment_original.id}
-Link C3: [a comment](/posts/show/#{post_original.id}/#{comment_original.id})
-Link C4: [a comment](/posts/show/#{post_original.id}/#{comment_original.id})
-Link C5: [unchanged](http://remote.org/posts/show/123)
-Link C6: [unchanged](http://remote.org/posts/show/123/#{comment_remote_copy.id})
+Link C3: /posts/show/#{post_original.id}/#{comment_original.id}#comment-#{comment_original.id}
+Link C4: /posts/show/#{post_original.id}/#{comment_original.id}
+Link C5: [a comment](/posts/show/#{post_original.id}/#{comment_original.id})
+Link C6: [a comment](/posts/show/#{post_original.id}/#{comment_original.id})
+Link C7: [unchanged](http://remote.org/posts/show/123)
+Link C8: [unchanged](http://remote.org/posts/show/123/#{comment_remote_copy.id})
 EOF
 
       # this happens on the remote server
