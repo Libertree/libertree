@@ -35,7 +35,18 @@ module Libertree
           if entities.empty?
             next res
           else
-            next res.sub(segment, segment.sub(/\d+/, entities[0].id.to_s))
+            if model == Model::Comment
+              # Look-behind does not support pattern repetition with * or +,
+              # so we have to first extract the post id from the url.
+              post_id = res.match(%r{/posts/show/(?<post_id>\d+)/})['post_id']
+              rewrite = res.sub(
+                %r{(?<=/posts/show/#{post_id})#{Regexp.quote(segment)}},
+                segment.sub(/\d+/, entities[0].id.to_s)
+              )
+            else
+              rewrite = res.sub(segment, segment.sub(/\d+/, entities[0].id.to_s))
+            end
+            next rewrite
           end
         end
 
@@ -45,7 +56,8 @@ module Libertree
         else
           new_url = substitution
         end
-        text.gsub!(url, new_url)
+        # only replace full matches
+        text.gsub!(%r{#{Regexp.quote(url)}(?!/)}, new_url)
       end
 
       text
@@ -53,7 +65,7 @@ module Libertree
 
     def self.extract(text, server_name)
       # - match absolute links only if they mention the host of this server
-      # - match relative links ("/posts/123") when they are beginning the
+      # - match relative links ("/posts/show/123") when they are beginning the
       #   line (^) or when they are preceded by a space-like character (\s)
       # - capture the matched url
       #
@@ -61,7 +73,7 @@ module Libertree
       #   - links in verbatim sections are identified, because we extract
       #     references from the raw markdown, not the rendered text.
 
-      pattern = %r{(?<url>(#{server_name}|\s|\()/posts/show/(?<post_id>\d+)(#comment-(?<comment_id>\d+))?)}
+      pattern = %r{(?<url>(#{server_name}|\s|\()/posts/show/(?<post_id>\d+)(/(?<comment_id>\d+))?)}
 
       refs = {}
       text.scan(pattern) do |url, post_id, comment_id|
@@ -84,7 +96,7 @@ module Libertree
           if comment.server
             map.merge!({ 'origin' => comment.server.public_key })
           end
-          ref["#comment-#{comment_id}"] = map
+          ref["/#{comment_id}"] = map
         end
 
         refs[url] = ref  if ref.any?

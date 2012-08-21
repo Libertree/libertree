@@ -99,8 +99,6 @@ EOF
         )
       )
 
-      #post_original.member.server
-
       original_text =<<EOF
 Link 1: /posts/show/#{post_remote_copy.id}
 Link 1b: /posts/show/#{post_remote_copy.id}
@@ -116,6 +114,118 @@ Link 2: /posts/show/#{post_original.id}
 Link 3: [a post](/posts/show/#{post_original.id})
 Link 4: [a post](/posts/show/#{post_original.id})
 Link 5: [unchanged](http://remote.org/posts/show/123)
+EOF
+
+      # this happens on the remote server
+      refs = Libertree::References::extract(original_text, "http://never-mind.org")
+
+      # this happens on the receiving server
+      processed_text = Libertree::References::replace(original_text, refs, @server_remote.id, @public_key)
+      processed_text.should == expected_text
+    end
+
+    it 'rewrites links that point to comments that originate here' do
+      post_original = Libertree::Model::Post.create(
+        FactoryGirl.attributes_for(:post, member_id: @member.id, remote_id: nil)
+      )
+      comment_original = Libertree::Model::Comment.create(
+        FactoryGirl.attributes_for(:comment,
+          member_id: @member.id,
+          remote_id: nil,
+          post_id: post_original.id
+        )
+      )
+      post_remote_copy = Libertree::Model::Post.create(
+        FactoryGirl.attributes_for(:post,
+          text: post_original.text,
+          member_id: @member.id,
+          remote_id: post_original.id
+        )
+      )
+      comment_remote_copy = Libertree::Model::Comment.create(
+        FactoryGirl.attributes_for(:comment,
+          member_id: @member.id,
+          remote_id: nil,
+          post_id: post_remote_copy.id,
+          remote_id: comment_original.id,
+        )
+      )
+
+      original_text =<<EOF
+Link P1: /posts/show/#{post_remote_copy.id}
+Link P1b: /posts/show/#{post_remote_copy.id}
+Link P2: http://never-mind.org/posts/show/#{post_remote_copy.id}
+Link P3: [a post](/posts/show/#{post_remote_copy.id})
+Link P4: [a post](http://never-mind.org/posts/show/#{post_remote_copy.id})
+Link P5: [unchanged](http://remote.org/posts/show/123)
+
+Link C1: /posts/show/#{post_remote_copy.id}/#{comment_remote_copy.id}
+Link C2: /posts/show/#{post_remote_copy.id}/#{comment_remote_copy.id}
+Link C2: http://never-mind.org/posts/show/#{post_remote_copy.id}/#{comment_remote_copy.id}
+Link C3: [a comment](/posts/show/#{post_remote_copy.id}/#{comment_remote_copy.id})
+Link C4: [a comment](http://never-mind.org/posts/show/#{post_remote_copy.id}/#{comment_remote_copy.id})
+Link C5: [unchanged](http://remote.org/posts/show/123)
+Link C6: [unchanged](http://remote.org/posts/show/123/#{comment_remote_copy.id})
+EOF
+      expected_text =<<EOF
+Link P1: /posts/show/#{post_original.id}
+Link P1b: /posts/show/#{post_original.id}
+Link P2: /posts/show/#{post_original.id}
+Link P3: [a post](/posts/show/#{post_original.id})
+Link P4: [a post](/posts/show/#{post_original.id})
+Link P5: [unchanged](http://remote.org/posts/show/123)
+
+Link C1: /posts/show/#{post_original.id}/#{comment_original.id}
+Link C2: /posts/show/#{post_original.id}/#{comment_original.id}
+Link C2: /posts/show/#{post_original.id}/#{comment_original.id}
+Link C3: [a comment](/posts/show/#{post_original.id}/#{comment_original.id})
+Link C4: [a comment](/posts/show/#{post_original.id}/#{comment_original.id})
+Link C5: [unchanged](http://remote.org/posts/show/123)
+Link C6: [unchanged](http://remote.org/posts/show/123/#{comment_remote_copy.id})
+EOF
+
+      # this happens on the remote server
+      refs = Libertree::References::extract(original_text, "http://never-mind.org")
+
+      # this happens on the receiving server
+      processed_text = Libertree::References::replace(original_text, refs, @server_remote.id, @public_key)
+      processed_text.should == expected_text
+    end
+
+    it 'does not replace text that happens to be the same as a comment id' do
+      post_original = Libertree::Model::Post.create(
+        FactoryGirl.attributes_for(:post, member_id: @member.id, remote_id: nil)
+      )
+      comment_original = Libertree::Model::Comment.create(
+        FactoryGirl.attributes_for(:comment,
+          member_id: @member.id,
+          remote_id: nil,
+          post_id: post_original.id
+        )
+      )
+      post_remote_copy = Libertree::Model::Post.create(
+        FactoryGirl.attributes_for(:post,
+          text: post_original.text,
+          member_id: @member.id,
+          remote_id: post_original.id
+        )
+      )
+      comment_remote_copy = Libertree::Model::Comment.create(
+        FactoryGirl.attributes_for(:comment,
+          member_id: @member.id,
+          remote_id: nil,
+          post_id: post_remote_copy.id,
+          remote_id: comment_original.id,
+        )
+      )
+
+      original_text =<<EOF
+Link C1: /posts/show/#{post_remote_copy.id}/#{comment_remote_copy.id}
+unchanged: This looks like a part of a comment URL /#{comment_remote_copy.id}
+EOF
+      expected_text =<<EOF
+Link C1: /posts/show/#{post_original.id}/#{comment_original.id}
+unchanged: This looks like a part of a comment URL /#{comment_remote_copy.id}
 EOF
 
       # this happens on the remote server
