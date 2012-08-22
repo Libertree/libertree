@@ -42,6 +42,13 @@ module Libertree
           map { |row| self.new row }
       end
 
+      def self.mark_seen_for_account_and_comment_id(account, comment_id)
+        self.for_account_and_comment_id(account, comment_id).each do |n|
+          n.seen = true
+        end
+        account.dirty
+      end
+
       # TODO: We do a mass update using the result of this query
       # We may need to optimize this to do the UPDATE in SQL directly.
       def self.for_account_and_post(account, post)
