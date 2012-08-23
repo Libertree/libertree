@@ -54,7 +54,7 @@ module Libertree
       end
 
       def profile
-        Profile[ member_id: self.id ]
+        @profile ||= Profile[ member_id: self.id ]
       end
 
       def self.create(*args)
