@@ -96,7 +96,7 @@ module Libertree
           river = River[label: $1]
           river && river.matches_post?(post)
         else
-          /(?:^|\b|\s)#{term}(?:\b|\s|$)/i === post.text
+          /(?:^|\b|\s)#{Regexp.escape(term)}(?:\b|\s|$)/i === post.text
         end
       end
 
