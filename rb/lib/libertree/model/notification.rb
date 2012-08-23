@@ -29,40 +29,31 @@ module Libertree
         end
       end
 
-      def self.for_account_and_comment_id(account, comment_id)
-        r = []
-
-        r += self.prepare(
+      def self.mark_seen_for_account_and_comment_id(account, comment_id)
+        DB.dbh.u(
           %|
-            SELECT *
-            FROM notifications
+            UPDATE notifications
+            SET seen = TRUE
             WHERE
               account_id = ?
               AND data = '{"type":"comment","comment_id":#{comment_id.to_i}}'
-          |
-        ).s(account.id).
-          map { |row| self.new row }
+          |,
+          account.id
+        )
 
         Comment[comment_id.to_i].likes.each do |like|
-          r += self.prepare(
+          DB.dbh.u(
             %|
               SELECT *
               FROM notifications
               WHERE
                 account_id = ?
                 AND data = '{"type":"comment-like","comment_like_id":#{like.id}}'
-            |
-          ).s(account.id).
-            map { |row| self.new row }
+            |,
+            account.id
+          )
         end
 
-        r
-      end
-
-      def self.mark_seen_for_account_and_comment_id(account, comment_id)
-        self.for_account_and_comment_id(account, comment_id).each do |n|
-          n.seen = true
-        end
         account.dirty
       end
 
