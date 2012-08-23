@@ -65,7 +65,7 @@ module Libertree
       end
 
       def server
-        member.server
+        @server ||= member.server
       end
 
       def read_by?(account)
