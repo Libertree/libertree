@@ -41,7 +41,7 @@ module Libertree
       end
 
       def member
-        @member ||= Member[self.member_id]
+        @member = Member.cached_fetch(self.member_id)
       end
 
       # RDBI casting not working with TIMESTAMP WITH TIME ZONE ?

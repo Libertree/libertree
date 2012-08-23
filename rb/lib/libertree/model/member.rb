@@ -33,7 +33,7 @@ module Libertree
       end
 
       def server
-        @server ||= Server[self.server_id]
+        @server = Server.cached_fetch(self.server_id)
       end
       alias :tree :server
 
