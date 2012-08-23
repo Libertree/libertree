@@ -163,8 +163,7 @@ module Libertree
       # @param [Hash] opt options for restricting the comment set returned.  See Comment.to_post .
       def comments(opt = nil)
         opt ||= {}  # We put this here instead of in the method signature because sometimes nil is literally sent
-        @comments ||= Hash.new
-        @comments[opt.to_s] ||= Comment.on_post(self, opt)
+        Comment.on_post(self, opt)
       end
 
       def commented_on_by?(member)
