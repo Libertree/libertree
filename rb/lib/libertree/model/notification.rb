@@ -44,8 +44,8 @@ module Libertree
         Comment[comment_id.to_i].likes.each do |like|
           DB.dbh.u(
             %|
-              SELECT *
-              FROM notifications
+              UPDATE notifications
+              SET seen = TRUE
               WHERE
                 account_id = ?
                 AND data = '{"type":"comment-like","comment_like_id":#{like.id}}'
