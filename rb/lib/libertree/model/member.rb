@@ -33,7 +33,11 @@ module Libertree
       end
 
       def server
-        @server = Server.cached_fetch(self.server_id)
+        if $m4dbi_cached_fetches
+          @server = Server.cached_fetch(self.server_id)
+        else
+          @server = Server[self.server_id]
+        end
       end
       alias :tree :server
 

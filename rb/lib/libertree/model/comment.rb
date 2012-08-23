@@ -30,11 +30,19 @@ module Libertree
       end
 
       def member
-        @member = Member.cached_fetch(self.member_id)
+        if $m4dbi_cached_fetches
+          @member = Member.cached_fetch(self.member_id)
+        else
+          @member = Member[self.member_id]
+        end
       end
 
       def post
-        @post = Post.cached_fetch(self.post_id)
+        if $m4dbi_cached_fetches
+          @post = Post.cached_fetch(self.post_id)
+        else
+          @post = Post[self.post_id]
+        end
       end
 
       # RDBI casting not working with TIMESTAMP WITH TIME ZONE ?
