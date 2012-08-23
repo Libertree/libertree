@@ -29,71 +29,50 @@ module Libertree
         end
       end
 
-      def self.for_account_and_comment_id(account, comment_id)
-        self.prepare(
+      def self.mark_seen_for_account_and_comment_id(account, comment_id)
+        DB.dbh.u(
           %|
-            SELECT *
-            FROM notifications
+            UPDATE notifications
+            SET seen = TRUE
             WHERE
               account_id = ?
               AND data = '{"type":"comment","comment_id":#{comment_id.to_i}}'
-          |
-        ).s(account.id).
-          map { |row| self.new row }
-      end
+          |,
+          account.id
+        )
 
-      def self.mark_seen_for_account_and_comment_id(account, comment_id)
-        self.for_account_and_comment_id(account, comment_id).each do |n|
-          n.seen = true
+        Comment[comment_id.to_i].likes.each do |like|
+          DB.dbh.u(
+            %|
+              SELECT *
+              FROM notifications
+              WHERE
+                account_id = ?
+                AND data = '{"type":"comment-like","comment_like_id":#{like.id}}'
+            |,
+            account.id
+          )
         end
+
         account.dirty
       end
 
-      # TODO: We do a mass update using the result of this query
-      # We may need to optimize this to do the UPDATE in SQL directly.
-      def self.for_account_and_post(account, post)
-        r = []
-
+      def self.mark_seen_for_account_and_post(account, post)
+        # TODO: Is it more efficient to build a (?,?,?...) list and do the
+        # update in a single query?
         post.likes.each do |like|
-          r += self.prepare(
+          DB.dbh.u(
             %|
-              SELECT *
-              FROM notifications
+              UPDATE notifications
+              SET seen = TRUE
               WHERE
                 account_id = ?
                 AND data = '{"type":"post-like","post_like_id":#{like.id}}'
-            |
-          ).s(account.id).
-            map { |row| self.new row }
+            |,
+            account.id
+          )
         end
-
-        post.comments.each do |comment|
-          r += self.prepare(
-            %|
-              SELECT *
-              FROM notifications
-              WHERE
-                account_id = ?
-                AND data = '{"type":"comment","comment_id":#{comment.id}}'
-            |
-          ).s(account.id).
-            map { |row| self.new row }
-
-          comment.likes.each do |like|
-            r += self.prepare(
-              %|
-                SELECT *
-                FROM notifications
-                WHERE
-                  account_id = ?
-                  AND data = '{"type":"comment-like","comment_like_id":#{like.id}}'
-              |
-            ).s(account.id).
-              map { |row| self.new row }
-          end
-        end
-
-        r
+        account.dirty
       end
 
       def self.mark_seen_for_account_and_message(account, message)
