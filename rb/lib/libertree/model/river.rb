@@ -176,12 +176,23 @@ module Libertree
         n = River.num_appended_to_all
         self.appended_to_all = !! params['appended_to_all']
         if River.num_appended_to_all != n || self.appended_to_all
-          Libertree::Model::Job.create(
+          job_data = {
             task: 'river:refresh-all',
             params: {
               'account_id' => self.account_id,
             }.to_json
+          }
+          existing_jobs = Job.pending_where(
+            %{
+              task = ?
+              AND params = ?
+            },
+            job_data[:task],
+            job_data[:params]
           )
+          if existing_jobs.empty?
+            Job.create job_data
+          end
         end
 
         if ! self.appended_to_all
