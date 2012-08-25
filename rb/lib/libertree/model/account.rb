@@ -341,6 +341,7 @@ module Libertree
       end
 
       # All contacts, from all contact lists
+      # TODO: Can we collect this in SQL instead of mapping, etc. in Ruby?
       def contacts
         contact_lists.map { |list| list.members }.flatten.uniq
       end
@@ -349,6 +350,28 @@ module Libertree
         self.contacts.find_all { |c|
           c.account && c.account.contacts.include?(self.member)
         }
+      end
+
+      def has_contact_list_by_name_containing_member?(contact_list_name, member)
+        DB.dbh.prepare(
+          %{
+            SELECT EXISTS(
+              SELECT 1
+              FROM
+                  contact_lists cl
+                , contact_lists_members clm
+              WHERE
+                cl.account_id = ?
+                AND cl.name = ?
+                AND clm.contact_list_id = cl.id
+                AND clm.member_id = ?
+            )
+          }
+        ).sc(
+          self.id,
+          contact_list_name,
+          member.id
+        )
       end
     end
   end

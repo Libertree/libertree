@@ -81,6 +81,27 @@ describe Libertree::Model::River do
       test_one  %{abc +:river "def"}, [ 'abc', '+:river "def"', ]
       test_one  %{abc +:river "def ghi" jkl}, [ 'abc', '+:river "def ghi"', 'jkl', ]
     end
+
+    it 'treats :contact-list "..." as a single term' do
+      test_one  %{:contact-list "abc"}, [ ':contact-list "abc"', ]
+      test_one  %{:contact-list "abc def"}, [ ':contact-list "abc def"', ]
+      test_one  %{abc :contact-list "def"}, [ 'abc', ':contact-list "def"', ]
+      test_one  %{abc :contact-list "def ghi" jkl}, [ 'abc', ':contact-list "def ghi"', 'jkl', ]
+    end
+
+    it 'treats -:contact-list "..." as a single term' do
+      test_one  %{-:contact-list "abc"}, [ '-:contact-list "abc"', ]
+      test_one  %{-:contact-list "abc def"}, [ '-:contact-list "abc def"', ]
+      test_one  %{abc -:contact-list "def"}, [ 'abc', '-:contact-list "def"', ]
+      test_one  %{abc -:contact-list "def ghi" jkl}, [ 'abc', '-:contact-list "def ghi"', 'jkl', ]
+    end
+
+    it 'treats +:contact-list "..." as a single term' do
+      test_one  %{+:contact-list "abc"}, [ '+:contact-list "abc"', ]
+      test_one  %{+:contact-list "abc def"}, [ '+:contact-list "abc def"', ]
+      test_one  %{abc +:contact-list "def"}, [ 'abc', '+:contact-list "def"', ]
+      test_one  %{abc +:contact-list "def ghi" jkl}, [ 'abc', '+:contact-list "def ghi"', 'jkl', ]
+    end
   end
 
   describe '#matches_post?' do
@@ -409,6 +430,123 @@ describe Libertree::Model::River do
         river.matches_post?(@post_commented).should be_false
         river.matches_post?(@post_liked).should be_true
         river.matches_post?(@post_liked_and_commented).should be_false
+      end
+    end
+
+    context 'given the river owner has some contact lists' do
+      before :each do
+        account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
+        @contact1 = Libertree::Model::Member.create(
+          FactoryGirl.attributes_for( :member, :account_id => account.id, username: nil )
+        )
+        account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
+        @contact2 = Libertree::Model::Member.create(
+          FactoryGirl.attributes_for( :member, :account_id => account.id, username: nil )
+        )
+        account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
+        @contact3 = Libertree::Model::Member.create(
+          FactoryGirl.attributes_for( :member, :account_id => account.id, username: nil )
+        )
+        account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
+        @contact4 = Libertree::Model::Member.create(
+          FactoryGirl.attributes_for( :member, :account_id => account.id, username: nil )
+        )
+
+        @list1 = Libertree::Model::ContactList.create(
+          FactoryGirl.attributes_for( :contact_list, account_id: @account.id, name: 'List 1' )
+        )
+        @list1.members = [ @contact1.id, @contact2.id, ]
+        @list2 = Libertree::Model::ContactList.create(
+          FactoryGirl.attributes_for( :contact_list, account_id: @account.id, name: 'List 2' )
+        )
+        @list2.members = [ @contact3.id, @contact4.id, ]
+
+        @post1a = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: @contact1.id, text: 'test post' )
+        )
+        @post1b = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: @contact1.id, text: 'test post' )
+        )
+        @post2a = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: @contact2.id, text: 'test post' )
+        )
+        @post2b = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: @contact2.id, text: 'test post' )
+        )
+        @post3a = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: @contact3.id, text: 'test post' )
+        )
+        @post3b = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: @contact3.id, text: 'test post' )
+        )
+        @post4a = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: @contact4.id, text: 'test post' )
+        )
+        @post4b = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: @contact4.id, text: 'test post' )
+        )
+
+        account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
+        @non_contact = Libertree::Model::Member.create(
+          FactoryGirl.attributes_for( :member, :account_id => account.id, username: nil )
+        )
+        @post_other = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: @non_contact.id, text: 'test post' )
+        )
+      end
+
+      it 'matches posts by people in those contact lists, and not posts by people not in those contact lists' do
+        river = Libertree::Model::River.create(
+          FactoryGirl.attributes_for( :river, query: ':contact-list "List 1"', account_id: @account.id )
+        )
+        river.matches_post?(@post1a).should be_true
+        river.matches_post?(@post1b).should be_true
+        river.matches_post?(@post2a).should be_true
+        river.matches_post?(@post2b).should be_true
+        river.matches_post?(@post3a).should be_false
+        river.matches_post?(@post3b).should be_false
+        river.matches_post?(@post4a).should be_false
+        river.matches_post?(@post4b).should be_false
+        river.matches_post?(@post_other).should be_false
+
+        river = Libertree::Model::River.create(
+          FactoryGirl.attributes_for( :river, query: ':contact-list "List 2"', account_id: @account.id )
+        )
+        river.matches_post?(@post1a).should be_false
+        river.matches_post?(@post1b).should be_false
+        river.matches_post?(@post2a).should be_false
+        river.matches_post?(@post2b).should be_false
+        river.matches_post?(@post3a).should be_true
+        river.matches_post?(@post3b).should be_true
+        river.matches_post?(@post4a).should be_true
+        river.matches_post?(@post4b).should be_true
+        river.matches_post?(@post_other).should be_false
+
+        river = Libertree::Model::River.create(
+          FactoryGirl.attributes_for( :river, query: 'test +:contact-list "List 1"', account_id: @account.id )
+        )
+        river.matches_post?(@post1a).should be_true
+        river.matches_post?(@post1b).should be_true
+        river.matches_post?(@post2a).should be_true
+        river.matches_post?(@post2b).should be_true
+        river.matches_post?(@post3a).should be_false
+        river.matches_post?(@post3b).should be_false
+        river.matches_post?(@post4a).should be_false
+        river.matches_post?(@post4b).should be_false
+        river.matches_post?(@post_other).should be_false
+
+        river = Libertree::Model::River.create(
+          FactoryGirl.attributes_for( :river, query: 'test -:contact-list "List 1"', account_id: @account.id )
+        )
+        river.matches_post?(@post1a).should be_false
+        river.matches_post?(@post1b).should be_false
+        river.matches_post?(@post2a).should be_false
+        river.matches_post?(@post2b).should be_false
+        river.matches_post?(@post3a).should be_true
+        river.matches_post?(@post3b).should be_true
+        river.matches_post?(@post4a).should be_true
+        river.matches_post?(@post4b).should be_true
+        river.matches_post?(@post_other).should be_true
       end
     end
   end

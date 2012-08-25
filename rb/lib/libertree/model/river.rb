@@ -82,8 +82,8 @@ module Libertree
           full_query += ' ' + self.account.rivers_appended.map(&:query).join(' ')
           full_query.strip!
         end
-        @query_components ||= full_query.scan(/([+-]?"[^"]+")|([+-]?:from ".+?")|([+-]?:river ".+?")|(\S+)/).map { |c|
-          c[3] || c[2] || c[1] || c[0].gsub(/^([+-])"/, "\\1").gsub(/^"|"$/, '')
+        @query_components ||= full_query.scan(/([+-]?"[^"]+")|([+-]?:from ".+?")|([+-]?:river ".+?")|([+-]?:contact-list ".+?")|(\S+)/).map { |c|
+          c[4] || c[3] || c[2] || c[1] || c[0].gsub(/^([+-])"/, "\\1").gsub(/^"|"$/, '')
         }
         @query_components.dup
       end
@@ -102,6 +102,8 @@ module Libertree
           post.commented_on_by? self.account.member
         when /^:subscribed$/
           self.account.subscribed_to? post
+        when /^:contact-list "(.+?)"$/
+          self.account.has_contact_list_by_name_containing_member?  $1, post.member
         when /^:from "(.+?)"$/
           post.member.name_display == $1
         when /^:river "(.+?)"$/
