@@ -3,6 +3,8 @@ require 'json'
 module Libertree
   module Model
     class Job < M4DBI::Model(:jobs)
+      MAX_TRIES = 11
+
       def params
         JSON.parse self['params']
       end
@@ -58,7 +60,7 @@ module Libertree
       # @return [Job] nil if no job was reserved
       def self.reserve(tasks)
         placeholders = ( ['?'] * tasks.count ).join(', ')
-        job = self.s1("SELECT * FROM jobs WHERE task IN (#{placeholders}) AND pid IS NULL AND tries < 11 AND time_to_start <= NOW() ORDER BY time_to_start ASC LIMIT 1", *tasks)
+        job = self.s1("SELECT * FROM jobs WHERE task IN (#{placeholders}) AND pid IS NULL AND tries < #{MAX_TRIES} AND time_to_start <= NOW() ORDER BY time_to_start ASC LIMIT 1", *tasks)
         return nil  if job.nil?
 
         self.update(
@@ -85,6 +87,20 @@ module Libertree
           pid: nil,
           tries: new_tries,
           time_to_start: Time.now + 60 * Math::E**new_tries
+        )
+      end
+
+      def self.pending_where(*args)
+        query = args[0]
+        params = args[1..-1]
+
+        self.where(
+          query + %{
+            AND time_finished IS NULL
+            AND tries < ?
+          },
+          *params,
+          MAX_TRIES
         )
       end
     end

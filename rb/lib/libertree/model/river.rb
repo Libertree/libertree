@@ -90,6 +90,18 @@ module Libertree
 
       def term_matches_post?(term, post)
         case term
+        when /^:forest$/
+          true  # Every post is a post in the forest.  :forest is sort of a no-op term
+        when /^:tree$/
+          post.member.account
+        when /^:unread$/
+          ! post.read_by?(self.account)
+        when /^:liked$/
+          post.liked_by? self.account.member
+        when /^:commented$/
+          post.commented_on_by? self.account.member
+        when /^:subscribed$/
+          self.account.subscribed_to? post
         when /^:from "(.+?)"$/
           post.member.name_display == $1
         when /^:river "(.+?)"$/
@@ -102,20 +114,6 @@ module Libertree
 
       def matches_post?(post)
         parts = query_components
-
-        # Scope limiters
-
-        parts.delete ':forest'
-        return false  if parts.include?(':tree') && post.member.account.nil?
-        parts.delete ':tree'
-        return false  if parts.include?(':unread') && post.read_by?( self.account )
-        parts.delete ':unread'
-        return false  if parts.include?(':liked') && ! post.liked_by?( self.account.member )
-        parts.delete ':liked'
-        return false  if parts.include?(':commented') && ! post.commented_on_by?( self.account.member )
-        parts.delete ':commented'
-        return false  if parts.include?(':subscribed') && ! self.account.subscribed_to?(post)
-        parts.delete ':subscribed'
 
         # Negations: Must not satisfy any of the conditions
 
@@ -178,12 +176,23 @@ module Libertree
         n = River.num_appended_to_all
         self.appended_to_all = !! params['appended_to_all']
         if River.num_appended_to_all != n || self.appended_to_all
-          Libertree::Model::Job.create(
+          job_data = {
             task: 'river:refresh-all',
             params: {
               'account_id' => self.account_id,
             }.to_json
+          }
+          existing_jobs = Job.pending_where(
+            %{
+              task = ?
+              AND params = ?
+            },
+            job_data[:task],
+            job_data[:params]
           )
+          if existing_jobs.empty?
+            Job.create job_data
+          end
         end
 
         if ! self.appended_to_all
@@ -241,18 +250,13 @@ module Libertree
       def self.ensure_beginner_rivers_for(account)
         River.find_or_create(
           account_id: account.id,
-          label: 'Posts from my tree',
-          query: ':tree'
-        )
-        River.find_or_create(
-          account_id: account.id,
           label: 'Posts from the forest',
           query: ':forest'
         )
         River.find_or_create(
           account_id: account.id,
           label: 'Unread posts from the forest',
-          query: ':unread'
+          query: '+:unread'
         )
       end
 

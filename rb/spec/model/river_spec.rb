@@ -345,5 +345,71 @@ describe Libertree::Model::River do
         @river.delete_cascade
       end
     end
+
+    context 'given some liked and commented on posts' do
+      before :each do
+        @post_liked = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: @member.id, text: 'test post' )
+        )
+        Libertree::Model::PostLike.create(
+          FactoryGirl.attributes_for(
+            :post_like,
+            'member_id' => @account.member.id,
+            'post_id'   => @post_liked.id
+          )
+        )
+
+        @post_commented = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: @member.id, text: 'test post' )
+        )
+        Libertree::Model::Comment.create(
+          FactoryGirl.attributes_for( :comment, member_id: @account.member.id, post_id: @post_commented.id, text: 'test comment' )
+        )
+
+        @post_liked_and_commented = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: @member.id, text: 'test post' )
+        )
+        Libertree::Model::PostLike.create(
+          FactoryGirl.attributes_for(
+            :post_like,
+            'member_id' => @account.member.id,
+            'post_id'   => @post_liked_and_commented.id
+          )
+        )
+        Libertree::Model::Comment.create(
+          FactoryGirl.attributes_for( :comment, member_id: @account.member.id, post_id: @post_liked_and_commented.id, text: 'test comment' )
+        )
+      end
+
+      it 'matches correctly with combinations of :liked and :commented' do
+        river = Libertree::Model::River.create(
+          FactoryGirl.attributes_for( :river, label: 'r1', query: ':liked :commented', account_id: @account.id )
+        )
+        river.matches_post?(@post_commented).should be_true
+        river.matches_post?(@post_liked).should be_true
+        river.matches_post?(@post_liked_and_commented).should be_true
+
+        river = Libertree::Model::River.create(
+          FactoryGirl.attributes_for( :river, label: 'r2', query: '+:liked +:commented', account_id: @account.id )
+        )
+        river.matches_post?(@post_commented).should be_false
+        river.matches_post?(@post_liked).should be_false
+        river.matches_post?(@post_liked_and_commented).should be_true
+
+        river = Libertree::Model::River.create(
+          FactoryGirl.attributes_for( :river, label: 'r3', query: '+:liked :commented', account_id: @account.id )
+        )
+        river.matches_post?(@post_commented).should be_false
+        river.matches_post?(@post_liked).should be_false
+        river.matches_post?(@post_liked_and_commented).should be_true
+
+        river = Libertree::Model::River.create(
+          FactoryGirl.attributes_for( :river, label: 'r3', query: '+:liked -:commented', account_id: @account.id )
+        )
+        river.matches_post?(@post_commented).should be_false
+        river.matches_post?(@post_liked).should be_true
+        river.matches_post?(@post_liked_and_commented).should be_false
+      end
+    end
   end
 end

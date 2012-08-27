@@ -154,7 +154,11 @@ module Libertree
             WHERE
               rp.river_id = r.id
               AND r.account_id = ?
-              AND r.query LIKE '%:unread%'
+              AND (
+                r.query LIKE ':unread%'
+                OR r.query LIKE '% :unread%'
+                OR r.query LIKE '%+:unread%'
+              )
           },
           account.id
         )
