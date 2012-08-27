@@ -231,14 +231,10 @@ module Libertree
         delete
       end
 
-      def add_to_matching_rivers(account=nil)
-        if account
-          account.rivers.each do |river|
-            river.try_post self
-          end
-        else
-          River.each do |river|
-            river.try_post self
+      def add_to_matching_rivers
+        River.each do |river|
+          if river.try_post self
+            DB.dbh.i "INSERT INTO river_posts ( river_id, post_id ) VALUES ( ?, ? )", river.id, self.id
           end
         end
       end

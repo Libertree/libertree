@@ -172,21 +172,19 @@ module Libertree
       end
 
       def try_post(post)
-        return  if River.prepare("SELECT EXISTS( SELECT 1 FROM river_posts WHERE river_id = ? AND post_id = ? LIMIT 1 )").sc( self.id, post.id )
-        return  if River.prepare("SELECT EXISTS( SELECT 1 FROM posts_hidden WHERE account_id = ? AND post_id = ? LIMIT 1 )").sc( self.account.id, post.id )
+        return false if River.prepare("SELECT EXISTS( SELECT 1 FROM river_posts WHERE river_id = ? AND post_id = ? LIMIT 1 )").sc( self.id, post.id )
+        return false if River.prepare("SELECT EXISTS( SELECT 1 FROM posts_hidden WHERE account_id = ? AND post_id = ? LIMIT 1 )").sc( self.account.id, post.id )
 
-        if self.matches_post?(post)
-          DB.dbh.i "INSERT INTO river_posts ( river_id, post_id ) VALUES ( ?, ? )", self.id, post.id
-        end
+        return self.matches_post?(post)
       end
 
       def refresh_posts( n = 512 )
         DB.dbh.d  "DELETE FROM river_posts WHERE river_id = ?", self.id
         # TODO: prepared statement?
         posts = Post.s("SELECT * FROM posts ORDER BY id DESC LIMIT #{n.to_i}")
-        posts.each do |p|
-          self.try_post p
-        end
+        matching = posts.select { |p| self.try_post(p) }
+
+        DB.dbh.i "INSERT INTO river_posts SELECT ?, id FROM posts WHERE id IN (?)", self.id, matching.map(&:id)
       end
 
       # @param params Untrusted parameter Hash.  Be careful, this input usually comes from the outside world.
