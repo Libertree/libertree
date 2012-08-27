@@ -2,7 +2,7 @@
 set -o nounset # abort if we try to use an unset variable
 set -o errexit # exit if any statement returns a non-true return value
 
-CONFIG_FILE=${1=database.yaml.example}
+CONFIG_FILE=${1:-database.yaml.example}
 
 
 function parse_config 
@@ -11,7 +11,7 @@ function parse_config
   # - get lines that belong to the specified section
   # - define variables
 
-  local SECTION=${LIBERTREE_ENV=development}
+  local SECTION=${LIBERTREE_ENV:=development}
   local SAVEIFS=$IFS
   local SECTION_EXISTS="false"
   IFS=$'\n'
