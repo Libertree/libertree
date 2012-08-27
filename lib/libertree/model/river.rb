@@ -175,14 +175,14 @@ module Libertree
         return false if River.prepare("SELECT EXISTS( SELECT 1 FROM river_posts WHERE river_id = ? AND post_id = ? LIMIT 1 )").sc( self.id, post.id )
         return false if River.prepare("SELECT EXISTS( SELECT 1 FROM posts_hidden WHERE account_id = ? AND post_id = ? LIMIT 1 )").sc( self.account.id, post.id )
 
-        return self.matches_post?(post)
+        self.matches_post?(post)
       end
 
       def refresh_posts( n = 512 )
         DB.dbh.d  "DELETE FROM river_posts WHERE river_id = ?", self.id
         # TODO: prepared statement?
         posts = Post.s("SELECT * FROM posts ORDER BY id DESC LIMIT #{n.to_i}")
-        matching = posts.select { |p| self.try_post(p) }
+        matching = posts.find_all { |p| self.try_post(p) }
 
         DB.dbh.i "INSERT INTO river_posts SELECT ?, id FROM posts WHERE id IN (#{matching.map(&:id).join(",")})", self.id
       end
