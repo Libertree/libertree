@@ -27,14 +27,16 @@ accounts.each do |a|
     }.join(' ')
 
     puts "-\t#{r.query}"
-
-    if ARGV[0] == '--commit' && new_query != r.query
+    if new_query != r.query
       puts "+\t#{new_query}"
-      r.revise(
-        'label'           => r.label,
-        'query'           => new_query,
-        'appended_to_all' => r.appended_to_all
-      )
+
+      if ARGV[0] == '--commit' &&
+        r.revise(
+          'label'           => r.label,
+          'query'           => new_query,
+          'appended_to_all' => r.appended_to_all
+        )
+      end
     end
   end
 end
