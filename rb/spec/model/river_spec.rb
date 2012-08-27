@@ -579,13 +579,19 @@ describe Libertree::Model::River do
 
       it 'matches posts based on their visibility' do
         river = Libertree::Model::River.create(
-          FactoryGirl.attributes_for( :river, query: 'test :visibility internet', account_id: @account.id )
+          FactoryGirl.attributes_for( :river, query: 'test +:visibility internet', account_id: @account.id )
         )
         river.matches_post?(@post_internet).should be_true
         river.matches_post?(@post_forest).should be_false
 
         river = Libertree::Model::River.create(
-          FactoryGirl.attributes_for( :river, query: 'test :visibility forest', account_id: @account.id )
+          FactoryGirl.attributes_for( :river, query: 'test +:visibility forest', account_id: @account.id )
+        )
+        river.matches_post?(@post_internet).should be_false
+        river.matches_post?(@post_forest).should be_true
+
+        river = Libertree::Model::River.create(
+          FactoryGirl.attributes_for( :river, query: 'test -:visibility internet', account_id: @account.id )
         )
         river.matches_post?(@post_internet).should be_false
         river.matches_post?(@post_forest).should be_true

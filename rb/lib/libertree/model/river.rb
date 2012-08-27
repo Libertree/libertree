@@ -110,7 +110,6 @@ module Libertree
           river = River[label: $1]
           river && river.matches_post?(post)
         when /^:visibility ([a-z-]+)$/
-          $stderr.puts "#{post.visibility.inspect} == #{$1.inspect}"
           post.visibility == $1
         else
           /(?:^|\b|\s)#{Regexp.escape(term)}(?:\b|\s|$)/i === post.text
