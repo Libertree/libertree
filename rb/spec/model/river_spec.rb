@@ -40,6 +40,8 @@ describe Libertree::Model::River do
       test_one  %{match -"as is" yo}, [ 'match', '-as is', 'yo' ]
     end
 
+    # TODO: These :foo, +:foo, -:foo tests should be DRYed up.
+
     it 'treats :from "..." as a single term' do
       test_one  %{:from "abc"}, [ ':from "abc"', ]
       test_one  %{:from "abc def"}, [ ':from "abc def"', ]
@@ -101,6 +103,21 @@ describe Libertree::Model::River do
       test_one  %{+:contact-list "abc def"}, [ '+:contact-list "abc def"', ]
       test_one  %{abc +:contact-list "def"}, [ 'abc', '+:contact-list "def"', ]
       test_one  %{abc +:contact-list "def ghi" jkl}, [ 'abc', '+:contact-list "def ghi"', 'jkl', ]
+    end
+
+    it 'treats :visibility ... as a single term' do
+      test_one  %{:visibility abc}, [ ':visibility abc', ]
+      test_one  %{abc :visibility def}, [ 'abc', ':visibility def', ]
+    end
+
+    it 'treats -:visibility ... as a single term' do
+      test_one  %{-:visibility abc}, [ '-:visibility abc', ]
+      test_one  %{abc -:visibility def}, [ 'abc', '-:visibility def', ]
+    end
+
+    it 'treats +:visibility ... as a single term' do
+      test_one  %{+:visibility abc}, [ '+:visibility abc', ]
+      test_one  %{abc +:visibility def}, [ 'abc', '+:visibility def', ]
     end
   end
 
@@ -547,6 +564,31 @@ describe Libertree::Model::River do
         river.matches_post?(@post4a).should be_true
         river.matches_post?(@post4b).should be_true
         river.matches_post?(@post_other).should be_true
+      end
+    end
+
+    context 'given some posts with varying visibilities' do
+      before :each do
+        @post_internet = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: @member.id, text: 'test post', visibility: 'internet' )
+        )
+        @post_forest = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: @member.id, text: 'test post', visibility: 'forest' )
+        )
+      end
+
+      it 'matches posts based on their visibility' do
+        river = Libertree::Model::River.create(
+          FactoryGirl.attributes_for( :river, query: 'test :visibility internet', account_id: @account.id )
+        )
+        river.matches_post?(@post_internet).should be_true
+        river.matches_post?(@post_forest).should be_false
+
+        river = Libertree::Model::River.create(
+          FactoryGirl.attributes_for( :river, query: 'test :visibility forest', account_id: @account.id )
+        )
+        river.matches_post?(@post_internet).should be_false
+        river.matches_post?(@post_forest).should be_true
       end
     end
   end

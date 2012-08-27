@@ -82,8 +82,8 @@ module Libertree
           full_query += ' ' + self.account.rivers_appended.map(&:query).join(' ')
           full_query.strip!
         end
-        @query_components ||= full_query.scan(/([+-]?"[^"]+")|([+-]?:from ".+?")|([+-]?:river ".+?")|([+-]?:contact-list ".+?")|(\S+)/).map { |c|
-          c[4] || c[3] || c[2] || c[1] || c[0].gsub(/^([+-])"/, "\\1").gsub(/^"|"$/, '')
+        @query_components ||= full_query.scan(/([+-]?"[^"]+")|([+-]?:from ".+?")|([+-]?:river ".+?")|([+-]?:contact-list ".+?")|([+-]?:visibility [a-z-]+)|(\S+)/).map { |c|
+          c[5] || c[4] || c[3] || c[2] || c[1] || c[0].gsub(/^([+-])"/, "\\1").gsub(/^"|"$/, '')
         }
         @query_components.dup
       end
@@ -109,6 +109,9 @@ module Libertree
         when /^:river "(.+?)"$/
           river = River[label: $1]
           river && river.matches_post?(post)
+        when /^:visibility ([a-z-]+)$/
+          $stderr.puts "#{post.visibility.inspect} == #{$1.inspect}"
+          post.visibility == $1
         else
           /(?:^|\b|\s)#{Regexp.escape(term)}(?:\b|\s|$)/i === post.text
         end
