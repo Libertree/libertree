@@ -30,12 +30,17 @@ accounts.each do |a|
     if new_query != r.query
       puts "+\t#{new_query}"
 
-      if ARGV[0] == '--commit' &&
-        r.revise(
-          'label'           => r.label,
-          'query'           => new_query,
-          'appended_to_all' => r.appended_to_all
-        )
+      if ARGV[0] == '--commit'
+        begin
+          r.revise(
+            'label'           => r.label,
+            'query'           => new_query,
+            'appended_to_all' => r.appended_to_all
+          )
+        rescue StandardError => e
+          puts e.class
+          puts e.message
+        end
       end
     end
   end
