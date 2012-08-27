@@ -184,7 +184,8 @@ module Libertree
         posts = Post.s("SELECT * FROM posts ORDER BY id DESC LIMIT #{n.to_i}")
         matching = posts.find_all { |p| self.try_post(p) }
 
-        DB.dbh.i "INSERT INTO river_posts SELECT ?, id FROM posts WHERE id IN (#{matching.map(&:id).join(",")})", self.id
+        placeholders = ( ['?'] * matching.count ).join(', ')
+        DB.dbh.i "INSERT INTO river_posts SELECT ?, id FROM posts WHERE id IN (#{placeholders})", self.id, *matching.map(&:id)
       end
 
       # @param params Untrusted parameter Hash.  Be careful, this input usually comes from the outside world.
