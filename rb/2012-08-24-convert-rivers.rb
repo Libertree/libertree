@@ -27,9 +27,9 @@ accounts.each do |a|
     }.join(' ')
 
     puts "-\t#{r.query}"
-    puts "+\t#{new_query}"
 
-    if ARGV[0] == '--commit'
+    if ARGV[0] == '--commit' && new_query != r.query
+      puts "+\t#{new_query}"
       r.revise(
         'label'           => r.label,
         'query'           => new_query,
