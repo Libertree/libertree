@@ -233,7 +233,7 @@ module Libertree
 
       def add_to_matching_rivers
         River.each do |river|
-          if river.try_post self
+          if ! river.contains?(post) && ! self.hidden_by?(river.account) && river.matches_post?(self)
             DB.dbh.i "INSERT INTO river_posts ( river_id, post_id ) VALUES ( ?, ? )", river.id, self.id
           end
         end
@@ -352,7 +352,7 @@ module Libertree
       end
 
       def hidden_by?(account)
-        DB.dbh.sc  "SELECT EXISTS( SELECT 1 FROM posts_hidden WHERE account_id = ? AND post_id = ? )", account.id, self.id
+        self.prepare("SELECT EXISTS( SELECT 1 FROM posts_hidden WHERE account_id = ? AND post_id = ? )").sc(account.id, self.id)
       end
 
       def collected_by?(account_or_member)
