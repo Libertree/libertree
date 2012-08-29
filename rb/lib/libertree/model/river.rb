@@ -82,8 +82,9 @@ module Libertree
           full_query += ' ' + self.account.rivers_appended.map(&:query).join(' ')
           full_query.strip!
         end
-        @query_components ||= full_query.scan(/([+-]?"[^"]+")|([+-]?:from ".+?")|([+-]?:river ".+?")|([+-]?:contact-list ".+?")|([+-]?:visibility [a-z-]+)|(\S+)/).map { |c|
-          c[5] || c[4] || c[3] || c[2] || c[1] || c[0].gsub(/^([+-])"/, "\\1").gsub(/^"|"$/, '')
+        # TODO: This is getting bulky and ugly...
+        @query_components ||= full_query.scan(/([+-]?"[^"]+")|([+-]?:from ".+?")|([+-]?:river ".+?")|([+-]?:contact-list ".+?")|([+-]?:visibility [a-z-]+)|([+-]?:word-count [<>] ?[0-9]+)|(\S+)/).map { |c|
+          c[6] || c[5] || c[4] || c[3] || c[2] || c[1] || c[0].gsub(/^([+-])"/, "\\1").gsub(/^"|"$/, '')
         }
         @query_components.dup
       end
@@ -111,6 +112,12 @@ module Libertree
           river && river.matches_post?(post)
         when /^:visibility ([a-z-]+)$/
           post.visibility == $1
+        when /^:word-count < ?([0-9]+)$/
+          n = $1.to_i
+          post.text.scan(/\S+/).count < n
+        when /^:word-count > ?([0-9]+)$/
+          n = $1.to_i
+          post.text.scan(/\S+/).count > n
         else
           /(?:^|\b|\s)#{Regexp.escape(term)}(?:\b|\s|$)/i === post.text
         end

@@ -71,6 +71,19 @@ describe Libertree::Model::River do
       test_one  %{+:visibility abc}, [ '+:visibility abc', ]
       test_one  %{abc +:visibility def}, [ 'abc', '+:visibility def', ]
     end
+
+    it 'treats :word-count < n as a single term' do
+      test_one  %{:word-count < 5}, [ ':word-count < 5', ]
+      test_one  %{abc :word-count < 5}, [ 'abc', ':word-count < 5', ]
+      test_one  %{:word-count < 987}, [ ':word-count < 987', ]
+      test_one  %{abc :word-count < 987}, [ 'abc', ':word-count < 987', ]
+      test_one  %{:word-count > 5}, [ ':word-count > 5', ]
+      test_one  %{abc :word-count > 5}, [ 'abc', ':word-count > 5', ]
+      test_one  %{-:word-count < 5}, [ '-:word-count < 5', ]
+      test_one  %{abc -:word-count < 5}, [ 'abc', '-:word-count < 5', ]
+      test_one  %{+:word-count < 5}, [ '+:word-count < 5', ]
+      test_one  %{abc +:word-count < 5}, [ 'abc', '+:word-count < 5', ]
+    end
   end
 
   describe '#matches_post?' do
@@ -86,17 +99,10 @@ describe Libertree::Model::River do
         FactoryGirl.attributes_for( :river, label: query, query: query, account_id: @account.id )
       )
 
-      if should_match
-        post = Libertree::Model::Post.create(
-          FactoryGirl.attributes_for( :post, member_id: post_author.id, text: post_text )
-        )
-        river.matches_post?(post).should be_true
-      else
-        post = Libertree::Model::Post.create(
-          FactoryGirl.attributes_for( :post, member_id: post_author.id, text: post_text )
-        )
-        river.matches_post?(post).should be_false
-      end
+      post = Libertree::Model::Post.create(
+        FactoryGirl.attributes_for( :post, member_id: post_author.id, text: post_text )
+      )
+      river.matches_post?(post).should == should_match
 
       river.delete_cascade
       post.delete_cascade
@@ -547,6 +553,40 @@ describe Libertree::Model::River do
         )
         river.matches_post?(@post_internet).should be_false
         river.matches_post?(@post_forest).should be_true
+      end
+    end
+
+    context 'given some posts with varying numbers of words' do
+      before :each do
+        @few_words = 'few words'
+        @several_words = 'There are several words in this post.'
+        @many_words = %{
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Donec a diam lectus.
+          Sed sit amet ipsum mauris.  Maecenas congue ligula ac quam viverra nec
+          consectetur ante hendrerit.  Donec et mollis dolor.  Praesent et diam eget
+          libero egestas mattis sit amet vitae augue.
+        }
+      end
+
+      it 'matches posts based on the number of words in them' do
+        try_one  ':word-count < 4', @few_words, true
+        try_one  ':word-count < 4', @several_words, false
+        try_one  ':word-count < 4', @many_words, false
+        try_one  ':word-count < 12', @few_words, true
+        try_one  ':word-count < 12', @several_words, true
+        try_one  ':word-count < 12', @many_words, false
+        try_one  ':word-count < 100', @few_words, true
+        try_one  ':word-count < 100', @several_words, true
+        try_one  ':word-count < 100', @many_words, true
+        try_one  ':word-count > 4', @few_words, false
+        try_one  ':word-count > 4', @several_words, true
+        try_one  ':word-count > 4', @many_words, true
+        try_one  ':word-count > 12', @few_words, false
+        try_one  ':word-count > 12', @several_words, false
+        try_one  ':word-count > 12', @many_words, true
+        try_one  ':word-count > 100', @few_words, false
+        try_one  ':word-count > 100', @several_words, false
+        try_one  ':word-count > 100', @many_words, false
       end
     end
   end
