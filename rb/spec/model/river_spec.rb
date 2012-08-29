@@ -66,14 +66,8 @@ describe Libertree::Model::River do
     it 'treats :visibility ... as a single term' do
       test_one  %{:visibility abc}, [ ':visibility abc', ]
       test_one  %{abc :visibility def}, [ 'abc', ':visibility def', ]
-    end
-
-    it 'treats -:visibility ... as a single term' do
       test_one  %{-:visibility abc}, [ '-:visibility abc', ]
       test_one  %{abc -:visibility def}, [ 'abc', '-:visibility def', ]
-    end
-
-    it 'treats +:visibility ... as a single term' do
       test_one  %{+:visibility abc}, [ '+:visibility abc', ]
       test_one  %{abc +:visibility def}, [ 'abc', '+:visibility def', ]
     end
