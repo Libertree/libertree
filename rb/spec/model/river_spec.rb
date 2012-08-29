@@ -40,69 +40,27 @@ describe Libertree::Model::River do
       test_one  %{match -"as is" yo}, [ 'match', '-as is', 'yo' ]
     end
 
-    # TODO: These :foo, +:foo, -:foo tests should be DRYed up.
+    it 'treats a term with a quoted argument as a single query component' do
+      [
+        ':from',
+        ':river',
+        ':contact-list',
+      ].each do |term|
+        test_one  %{#{term} "abc"}, [ %{#{term} "abc"}, ]
+        test_one  %{#{term} "abc def"}, [ %{#{term} "abc def"}, ]
+        test_one  %{abc #{term} "def"}, [ 'abc', %{#{term} "def"}, ]
+        test_one  %{abc #{term} "def ghi" jkl}, [ 'abc', %{#{term} "def ghi"}, 'jkl', ]
 
-    it 'treats :from "..." as a single term' do
-      test_one  %{:from "abc"}, [ ':from "abc"', ]
-      test_one  %{:from "abc def"}, [ ':from "abc def"', ]
-      test_one  %{abc :from "def"}, [ 'abc', ':from "def"', ]
-      test_one  %{abc :from "def ghi" jkl}, [ 'abc', ':from "def ghi"', 'jkl', ]
-    end
+        test_one  %{-#{term} "abc"}, [ %{-#{term} "abc"}, ]
+        test_one  %{-#{term} "abc def"}, [ %{-#{term} "abc def"}, ]
+        test_one  %{abc -#{term} "def"}, [ 'abc', %{-#{term} "def"}, ]
+        test_one  %{abc -#{term} "def ghi" jkl}, [ 'abc', %{-#{term} "def ghi"}, 'jkl', ]
 
-    it 'treats -:from "..." as a single term' do
-      test_one  %{-:from "abc"}, [ '-:from "abc"', ]
-      test_one  %{-:from "abc def"}, [ '-:from "abc def"', ]
-      test_one  %{abc -:from "def"}, [ 'abc', '-:from "def"', ]
-      test_one  %{abc -:from "def ghi" jkl}, [ 'abc', '-:from "def ghi"', 'jkl', ]
-    end
-
-    it 'treats +:from "..." as a single term' do
-      test_one  %{+:from "abc"}, [ '+:from "abc"', ]
-      test_one  %{+:from "abc def"}, [ '+:from "abc def"', ]
-      test_one  %{abc +:from "def"}, [ 'abc', '+:from "def"', ]
-      test_one  %{abc +:from "def ghi" jkl}, [ 'abc', '+:from "def ghi"', 'jkl', ]
-    end
-
-    it 'treats :river "..." as a single term' do
-      test_one  %{:river "abc"}, [ ':river "abc"', ]
-      test_one  %{:river "abc def"}, [ ':river "abc def"', ]
-      test_one  %{abc :river "def"}, [ 'abc', ':river "def"', ]
-      test_one  %{abc :river "def ghi" jkl}, [ 'abc', ':river "def ghi"', 'jkl', ]
-    end
-
-    it 'treats -:river "..." as a single term' do
-      test_one  %{-:river "abc"}, [ '-:river "abc"', ]
-      test_one  %{-:river "abc def"}, [ '-:river "abc def"', ]
-      test_one  %{abc -:river "def"}, [ 'abc', '-:river "def"', ]
-      test_one  %{abc -:river "def ghi" jkl}, [ 'abc', '-:river "def ghi"', 'jkl', ]
-    end
-
-    it 'treats +:river "..." as a single term' do
-      test_one  %{+:river "abc"}, [ '+:river "abc"', ]
-      test_one  %{+:river "abc def"}, [ '+:river "abc def"', ]
-      test_one  %{abc +:river "def"}, [ 'abc', '+:river "def"', ]
-      test_one  %{abc +:river "def ghi" jkl}, [ 'abc', '+:river "def ghi"', 'jkl', ]
-    end
-
-    it 'treats :contact-list "..." as a single term' do
-      test_one  %{:contact-list "abc"}, [ ':contact-list "abc"', ]
-      test_one  %{:contact-list "abc def"}, [ ':contact-list "abc def"', ]
-      test_one  %{abc :contact-list "def"}, [ 'abc', ':contact-list "def"', ]
-      test_one  %{abc :contact-list "def ghi" jkl}, [ 'abc', ':contact-list "def ghi"', 'jkl', ]
-    end
-
-    it 'treats -:contact-list "..." as a single term' do
-      test_one  %{-:contact-list "abc"}, [ '-:contact-list "abc"', ]
-      test_one  %{-:contact-list "abc def"}, [ '-:contact-list "abc def"', ]
-      test_one  %{abc -:contact-list "def"}, [ 'abc', '-:contact-list "def"', ]
-      test_one  %{abc -:contact-list "def ghi" jkl}, [ 'abc', '-:contact-list "def ghi"', 'jkl', ]
-    end
-
-    it 'treats +:contact-list "..." as a single term' do
-      test_one  %{+:contact-list "abc"}, [ '+:contact-list "abc"', ]
-      test_one  %{+:contact-list "abc def"}, [ '+:contact-list "abc def"', ]
-      test_one  %{abc +:contact-list "def"}, [ 'abc', '+:contact-list "def"', ]
-      test_one  %{abc +:contact-list "def ghi" jkl}, [ 'abc', '+:contact-list "def ghi"', 'jkl', ]
+        test_one  %{+#{term} "abc"}, [ %{+#{term} "abc"}, ]
+        test_one  %{+#{term} "abc def"}, [ %{+#{term} "abc def"}, ]
+        test_one  %{abc +#{term} "def"}, [ 'abc', %{+#{term} "def"}, ]
+        test_one  %{abc +#{term} "def ghi" jkl}, [ 'abc', %{+#{term} "def ghi"}, 'jkl', ]
+      end
     end
 
     it 'treats :visibility ... as a single term' do
