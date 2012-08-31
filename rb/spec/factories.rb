@@ -23,6 +23,7 @@ FactoryGirl.define do
   end
 
   factory :river, :class => Libertree::Model::River do
+    sequence(:label) { |n| "River #{n}" }
   end
 
   factory :post, :class => Libertree::Model::Post do
@@ -41,5 +42,9 @@ FactoryGirl.define do
 
   factory :post_like, :class => Libertree::Model::PostLike do
     sequence(:remote_id, 1000)
+  end
+
+  factory :contact_list, :class => Libertree::Model::ContactList do
+    sequence(:name) { |n| "Contact List #{n}" }
   end
 end

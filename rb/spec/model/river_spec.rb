@@ -40,46 +40,49 @@ describe Libertree::Model::River do
       test_one  %{match -"as is" yo}, [ 'match', '-as is', 'yo' ]
     end
 
-    it 'treats :from "..." as a single term' do
-      test_one  %{:from "abc"}, [ ':from "abc"', ]
-      test_one  %{:from "abc def"}, [ ':from "abc def"', ]
-      test_one  %{abc :from "def"}, [ 'abc', ':from "def"', ]
-      test_one  %{abc :from "def ghi" jkl}, [ 'abc', ':from "def ghi"', 'jkl', ]
+    it 'treats a term with a quoted argument as a single query component' do
+      [
+        ':from',
+        ':river',
+        ':contact-list',
+      ].each do |term|
+        test_one  %{#{term} "abc"}, [ %{#{term} "abc"}, ]
+        test_one  %{#{term} "abc def"}, [ %{#{term} "abc def"}, ]
+        test_one  %{abc #{term} "def"}, [ 'abc', %{#{term} "def"}, ]
+        test_one  %{abc #{term} "def ghi" jkl}, [ 'abc', %{#{term} "def ghi"}, 'jkl', ]
+
+        test_one  %{-#{term} "abc"}, [ %{-#{term} "abc"}, ]
+        test_one  %{-#{term} "abc def"}, [ %{-#{term} "abc def"}, ]
+        test_one  %{abc -#{term} "def"}, [ 'abc', %{-#{term} "def"}, ]
+        test_one  %{abc -#{term} "def ghi" jkl}, [ 'abc', %{-#{term} "def ghi"}, 'jkl', ]
+
+        test_one  %{+#{term} "abc"}, [ %{+#{term} "abc"}, ]
+        test_one  %{+#{term} "abc def"}, [ %{+#{term} "abc def"}, ]
+        test_one  %{abc +#{term} "def"}, [ 'abc', %{+#{term} "def"}, ]
+        test_one  %{abc +#{term} "def ghi" jkl}, [ 'abc', %{+#{term} "def ghi"}, 'jkl', ]
+      end
     end
 
-    it 'treats -:from "..." as a single term' do
-      test_one  %{-:from "abc"}, [ '-:from "abc"', ]
-      test_one  %{-:from "abc def"}, [ '-:from "abc def"', ]
-      test_one  %{abc -:from "def"}, [ 'abc', '-:from "def"', ]
-      test_one  %{abc -:from "def ghi" jkl}, [ 'abc', '-:from "def ghi"', 'jkl', ]
+    it 'treats :visibility ... as a single term' do
+      test_one  %{:visibility abc}, [ ':visibility abc', ]
+      test_one  %{abc :visibility def}, [ 'abc', ':visibility def', ]
+      test_one  %{-:visibility abc}, [ '-:visibility abc', ]
+      test_one  %{abc -:visibility def}, [ 'abc', '-:visibility def', ]
+      test_one  %{+:visibility abc}, [ '+:visibility abc', ]
+      test_one  %{abc +:visibility def}, [ 'abc', '+:visibility def', ]
     end
 
-    it 'treats +:from "..." as a single term' do
-      test_one  %{+:from "abc"}, [ '+:from "abc"', ]
-      test_one  %{+:from "abc def"}, [ '+:from "abc def"', ]
-      test_one  %{abc +:from "def"}, [ 'abc', '+:from "def"', ]
-      test_one  %{abc +:from "def ghi" jkl}, [ 'abc', '+:from "def ghi"', 'jkl', ]
-    end
-
-    it 'treats :river "..." as a single term' do
-      test_one  %{:river "abc"}, [ ':river "abc"', ]
-      test_one  %{:river "abc def"}, [ ':river "abc def"', ]
-      test_one  %{abc :river "def"}, [ 'abc', ':river "def"', ]
-      test_one  %{abc :river "def ghi" jkl}, [ 'abc', ':river "def ghi"', 'jkl', ]
-    end
-
-    it 'treats -:river "..." as a single term' do
-      test_one  %{-:river "abc"}, [ '-:river "abc"', ]
-      test_one  %{-:river "abc def"}, [ '-:river "abc def"', ]
-      test_one  %{abc -:river "def"}, [ 'abc', '-:river "def"', ]
-      test_one  %{abc -:river "def ghi" jkl}, [ 'abc', '-:river "def ghi"', 'jkl', ]
-    end
-
-    it 'treats +:river "..." as a single term' do
-      test_one  %{+:river "abc"}, [ '+:river "abc"', ]
-      test_one  %{+:river "abc def"}, [ '+:river "abc def"', ]
-      test_one  %{abc +:river "def"}, [ 'abc', '+:river "def"', ]
-      test_one  %{abc +:river "def ghi" jkl}, [ 'abc', '+:river "def ghi"', 'jkl', ]
+    it 'treats :word-count < n as a single term' do
+      test_one  %{:word-count < 5}, [ ':word-count < 5', ]
+      test_one  %{abc :word-count < 5}, [ 'abc', ':word-count < 5', ]
+      test_one  %{:word-count < 987}, [ ':word-count < 987', ]
+      test_one  %{abc :word-count < 987}, [ 'abc', ':word-count < 987', ]
+      test_one  %{:word-count > 5}, [ ':word-count > 5', ]
+      test_one  %{abc :word-count > 5}, [ 'abc', ':word-count > 5', ]
+      test_one  %{-:word-count < 5}, [ '-:word-count < 5', ]
+      test_one  %{abc -:word-count < 5}, [ 'abc', '-:word-count < 5', ]
+      test_one  %{+:word-count < 5}, [ '+:word-count < 5', ]
+      test_one  %{abc +:word-count < 5}, [ 'abc', '+:word-count < 5', ]
     end
   end
 
@@ -96,17 +99,10 @@ describe Libertree::Model::River do
         FactoryGirl.attributes_for( :river, label: query, query: query, account_id: @account.id )
       )
 
-      if should_match
-        post = Libertree::Model::Post.create(
-          FactoryGirl.attributes_for( :post, member_id: post_author.id, text: post_text )
-        )
-        river.matches_post?(post).should be_true
-      else
-        post = Libertree::Model::Post.create(
-          FactoryGirl.attributes_for( :post, member_id: post_author.id, text: post_text )
-        )
-        river.matches_post?(post).should be_false
-      end
+      post = Libertree::Model::Post.create(
+        FactoryGirl.attributes_for( :post, member_id: post_author.id, text: post_text )
+      )
+      river.matches_post?(post).should == should_match
 
       river.delete_cascade
       post.delete_cascade
@@ -409,6 +405,188 @@ describe Libertree::Model::River do
         river.matches_post?(@post_commented).should be_false
         river.matches_post?(@post_liked).should be_true
         river.matches_post?(@post_liked_and_commented).should be_false
+      end
+    end
+
+    context 'given the river owner has some contact lists' do
+      before :each do
+        account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
+        @contact1 = Libertree::Model::Member.create(
+          FactoryGirl.attributes_for( :member, :account_id => account.id, username: nil )
+        )
+        account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
+        @contact2 = Libertree::Model::Member.create(
+          FactoryGirl.attributes_for( :member, :account_id => account.id, username: nil )
+        )
+        account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
+        @contact3 = Libertree::Model::Member.create(
+          FactoryGirl.attributes_for( :member, :account_id => account.id, username: nil )
+        )
+        account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
+        @contact4 = Libertree::Model::Member.create(
+          FactoryGirl.attributes_for( :member, :account_id => account.id, username: nil )
+        )
+
+        @list1 = Libertree::Model::ContactList.create(
+          FactoryGirl.attributes_for( :contact_list, account_id: @account.id, name: 'List 1' )
+        )
+        @list1.members = [ @contact1.id, @contact2.id, ]
+        @list2 = Libertree::Model::ContactList.create(
+          FactoryGirl.attributes_for( :contact_list, account_id: @account.id, name: 'List 2' )
+        )
+        @list2.members = [ @contact3.id, @contact4.id, ]
+
+        @post1a = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: @contact1.id, text: 'test post' )
+        )
+        @post1b = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: @contact1.id, text: 'test post' )
+        )
+        @post2a = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: @contact2.id, text: 'test post' )
+        )
+        @post2b = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: @contact2.id, text: 'test post' )
+        )
+        @post3a = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: @contact3.id, text: 'test post' )
+        )
+        @post3b = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: @contact3.id, text: 'test post' )
+        )
+        @post4a = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: @contact4.id, text: 'test post' )
+        )
+        @post4b = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: @contact4.id, text: 'test post' )
+        )
+
+        account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
+        @non_contact = Libertree::Model::Member.create(
+          FactoryGirl.attributes_for( :member, :account_id => account.id, username: nil )
+        )
+        @post_other = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: @non_contact.id, text: 'test post' )
+        )
+      end
+
+      it 'matches posts by people in those contact lists, and not posts by people not in those contact lists' do
+        river = Libertree::Model::River.create(
+          FactoryGirl.attributes_for( :river, query: ':contact-list "List 1"', account_id: @account.id )
+        )
+        river.matches_post?(@post1a).should be_true
+        river.matches_post?(@post1b).should be_true
+        river.matches_post?(@post2a).should be_true
+        river.matches_post?(@post2b).should be_true
+        river.matches_post?(@post3a).should be_false
+        river.matches_post?(@post3b).should be_false
+        river.matches_post?(@post4a).should be_false
+        river.matches_post?(@post4b).should be_false
+        river.matches_post?(@post_other).should be_false
+
+        river = Libertree::Model::River.create(
+          FactoryGirl.attributes_for( :river, query: ':contact-list "List 2"', account_id: @account.id )
+        )
+        river.matches_post?(@post1a).should be_false
+        river.matches_post?(@post1b).should be_false
+        river.matches_post?(@post2a).should be_false
+        river.matches_post?(@post2b).should be_false
+        river.matches_post?(@post3a).should be_true
+        river.matches_post?(@post3b).should be_true
+        river.matches_post?(@post4a).should be_true
+        river.matches_post?(@post4b).should be_true
+        river.matches_post?(@post_other).should be_false
+
+        river = Libertree::Model::River.create(
+          FactoryGirl.attributes_for( :river, query: 'test +:contact-list "List 1"', account_id: @account.id )
+        )
+        river.matches_post?(@post1a).should be_true
+        river.matches_post?(@post1b).should be_true
+        river.matches_post?(@post2a).should be_true
+        river.matches_post?(@post2b).should be_true
+        river.matches_post?(@post3a).should be_false
+        river.matches_post?(@post3b).should be_false
+        river.matches_post?(@post4a).should be_false
+        river.matches_post?(@post4b).should be_false
+        river.matches_post?(@post_other).should be_false
+
+        river = Libertree::Model::River.create(
+          FactoryGirl.attributes_for( :river, query: 'test -:contact-list "List 1"', account_id: @account.id )
+        )
+        river.matches_post?(@post1a).should be_false
+        river.matches_post?(@post1b).should be_false
+        river.matches_post?(@post2a).should be_false
+        river.matches_post?(@post2b).should be_false
+        river.matches_post?(@post3a).should be_true
+        river.matches_post?(@post3b).should be_true
+        river.matches_post?(@post4a).should be_true
+        river.matches_post?(@post4b).should be_true
+        river.matches_post?(@post_other).should be_true
+      end
+    end
+
+    context 'given some posts with varying visibilities' do
+      before :each do
+        @post_internet = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: @member.id, text: 'test post', visibility: 'internet' )
+        )
+        @post_forest = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: @member.id, text: 'test post', visibility: 'forest' )
+        )
+      end
+
+      it 'matches posts based on their visibility' do
+        river = Libertree::Model::River.create(
+          FactoryGirl.attributes_for( :river, query: 'test +:visibility internet', account_id: @account.id )
+        )
+        river.matches_post?(@post_internet).should be_true
+        river.matches_post?(@post_forest).should be_false
+
+        river = Libertree::Model::River.create(
+          FactoryGirl.attributes_for( :river, query: 'test +:visibility forest', account_id: @account.id )
+        )
+        river.matches_post?(@post_internet).should be_false
+        river.matches_post?(@post_forest).should be_true
+
+        river = Libertree::Model::River.create(
+          FactoryGirl.attributes_for( :river, query: 'test -:visibility internet', account_id: @account.id )
+        )
+        river.matches_post?(@post_internet).should be_false
+        river.matches_post?(@post_forest).should be_true
+      end
+    end
+
+    context 'given some posts with varying numbers of words' do
+      before :each do
+        @few_words = 'few words'
+        @several_words = 'There are several words in this post.'
+        @many_words = %{
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit.  Donec a diam lectus.
+          Sed sit amet ipsum mauris.  Maecenas congue ligula ac quam viverra nec
+          consectetur ante hendrerit.  Donec et mollis dolor.  Praesent et diam eget
+          libero egestas mattis sit amet vitae augue.
+        }
+      end
+
+      it 'matches posts based on the number of words in them' do
+        try_one  ':word-count < 4', @few_words, true
+        try_one  ':word-count < 4', @several_words, false
+        try_one  ':word-count < 4', @many_words, false
+        try_one  ':word-count < 12', @few_words, true
+        try_one  ':word-count < 12', @several_words, true
+        try_one  ':word-count < 12', @many_words, false
+        try_one  ':word-count < 100', @few_words, true
+        try_one  ':word-count < 100', @several_words, true
+        try_one  ':word-count < 100', @many_words, true
+        try_one  ':word-count > 4', @few_words, false
+        try_one  ':word-count > 4', @several_words, true
+        try_one  ':word-count > 4', @many_words, true
+        try_one  ':word-count > 12', @few_words, false
+        try_one  ':word-count > 12', @several_words, false
+        try_one  ':word-count > 12', @many_words, true
+        try_one  ':word-count > 100', @few_words, false
+        try_one  ':word-count > 100', @several_words, false
+        try_one  ':word-count > 100', @many_words, false
       end
     end
   end
