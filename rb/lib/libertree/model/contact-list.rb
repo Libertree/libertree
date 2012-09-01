@@ -26,6 +26,11 @@ module Libertree
           DB.dbh.i  "INSERT INTO contact_lists_members ( contact_list_id, member_id ) VALUES ( ?, ? )", self.id, member_id_s.to_i
         end
       end
+
+      def delete_cascade
+        DB.dbh.delete  "DELETE FROM contact_lists_members WHERE contact_list_id = ?", self.id
+        self.delete
+      end
     end
   end
 end
