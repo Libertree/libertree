@@ -31,6 +31,30 @@ module Libertree
         DB.dbh.delete  "DELETE FROM contact_lists_members WHERE contact_list_id = ?", self.id
         self.delete
       end
+
+      def <<(member)
+        DB.dbh.i(
+          %{
+            INSERT INTO contact_lists_members (
+                contact_list_id
+              , member_id
+            ) SELECT
+              ?, ?
+            WHERE
+              NOT EXISTS (
+                SELECT 1
+                FROM contact_lists_members
+                WHERE
+                  contact_list_id = ?
+                  AND member_id = ?
+              )
+          },
+          self.id,
+          member.id,
+          self.id,
+          member.id
+        )
+      end
     end
   end
 end
