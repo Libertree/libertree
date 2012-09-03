@@ -24,6 +24,22 @@ module Libertree
         end
       end
 
+      before_delete do |member|
+        # TODO: expand later for more granularity:
+        #       - only abandon (not delete) posts and comments
+        #       - only empty posts if they contain a discussion
+        #       - only empty and anonymise comments
+        #       - etc.
+        if member.local?
+          Libertree::Model::Job.create_for_forests(
+            {
+              task: 'request:MEMBER-DELETE',
+              params: { 'member_id' => member.id, }
+            }
+          )
+        end
+      end
+
       def local?
         ! self.account.nil?
       end
@@ -125,6 +141,13 @@ module Libertree
 
       def online?
         self.account && self.account.online?
+      end
+
+      def delete_cascade
+        self.posts.map(&:delete_cascade)
+        self.comments.map(&:delete_cascade)
+        self.profile.delete
+        self.delete
       end
     end
   end
