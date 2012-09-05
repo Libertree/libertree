@@ -23,11 +23,11 @@ module Libertree
                     p.*
                 FROM
                     river_posts rp
-                  , view__posts_with_time_updated_overall p
+                  , posts p
                 WHERE
                   p.id = rp.post_id
                   AND rp.river_id = ?
-                  AND p.time_updated_overall #{time_comparator} ?
+                  AND COALESCE(p.time_commented, p.time_updated) #{time_comparator} ?
                   AND NOT EXISTS(
                     SELECT 1
                     FROM posts_hidden pi
@@ -35,10 +35,10 @@ module Libertree
                       pi.account_id = ?
                       AND pi.post_id = rp.post_id
                   )
-                ORDER BY p.time_updated_overall DESC
+                ORDER BY COALESCE(p.time_commented, p.time_updated) DESC
                 LIMIT #{limit}
               ) AS x
-              ORDER BY time_updated_overall
+              ORDER BY COALESCE(p.time_commented, p.time_updated)
             },
             self.id,
             time,

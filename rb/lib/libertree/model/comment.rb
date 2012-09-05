@@ -50,6 +50,19 @@ module Libertree
         DateTime.parse self['time_created']
       end
 
+      def delete
+        if self.post
+          remaining_comments = self.post.comments - [self]
+          if remaining_comments.empty?
+            self.post.time_commented = nil
+          else
+            self.post.time_commented = remaining_comments.map(&:time_created).max
+          end
+        end
+
+        super
+      end
+
       def delete_cascade
         self.likes.each {|l| l.delete_cascade }
         DB.dbh.d  %|DELETE FROM notifications WHERE data = '{"type":"comment","comment_id":#{self.id}}'|
@@ -78,6 +91,7 @@ module Libertree
       def self.create(*args)
         comment = super
         account = comment.member.account
+        comment.post.time_commented = comment.time_created
         comment.post.mark_as_unread_by_all  except: [account]
         if account
           comment.post.mark_as_read_by account

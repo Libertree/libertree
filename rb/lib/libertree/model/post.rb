@@ -52,6 +52,9 @@ module Libertree
       def time_created
         DateTime.parse self['time_created']
       end
+      def time_commented
+        DateTime.parse self['time_commented']
+      end
       def time_updated
         DateTime.parse self['time_updated']
       end
