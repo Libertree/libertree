@@ -53,11 +53,7 @@ module Libertree
       def delete
         if self.post
           remaining_comments = self.post.comments - [self]
-          if remaining_comments.empty?
-            self.post.time_commented = nil
-          else
-            self.post.time_commented = remaining_comments.map(&:time_created).max
-          end
+          self.post.time_commented = remaining_comments.map(&:time_created).max
         end
 
         super
