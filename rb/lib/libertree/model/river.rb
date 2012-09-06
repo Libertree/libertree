@@ -27,7 +27,7 @@ module Libertree
                 WHERE
                   p.id = rp.post_id
                   AND rp.river_id = ?
-                  AND COALESCE(p.time_commented, p.time_updated) #{time_comparator} ?
+                  AND GREATEST(p.time_commented, p.time_updated) #{time_comparator} ?
                   AND NOT EXISTS(
                     SELECT 1
                     FROM posts_hidden pi
@@ -35,10 +35,10 @@ module Libertree
                       pi.account_id = ?
                       AND pi.post_id = rp.post_id
                   )
-                ORDER BY COALESCE(p.time_commented, p.time_updated) DESC
+                ORDER BY GREATEST(p.time_commented, p.time_updated) DESC
                 LIMIT #{limit}
               ) AS x
-              ORDER BY COALESCE(p.time_commented, p.time_updated)
+              ORDER BY GREATEST(p.time_commented, p.time_updated)
             },
             self.id,
             time,
