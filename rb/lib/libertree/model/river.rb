@@ -38,7 +38,7 @@ module Libertree
                 ORDER BY GREATEST(p.time_commented, p.time_updated) DESC
                 LIMIT #{limit}
               ) AS x
-              ORDER BY GREATEST(p.time_commented, p.time_updated)
+              ORDER BY GREATEST(time_commented, time_updated)
             },
             self.id,
             time,
