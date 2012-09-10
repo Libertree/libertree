@@ -75,6 +75,10 @@ module Libertree
         Comment.s  "SELECT * FROM comments WHERE member_id = ? ORDER BY id DESC LIMIT #{n.to_i}", self.id
       end
 
+      def pools
+        @pools ||= Pool.where( member_id: self.id )
+      end
+
       def online?
         self.account && self.account.online?
       end

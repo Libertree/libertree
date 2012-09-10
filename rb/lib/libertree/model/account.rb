@@ -141,10 +141,6 @@ module Libertree
         @rivers_appended ||= rivers.find_all(&:appended_to_all)
       end
 
-      def pools
-        @pools ||= Pool.where( account_id: self.id )
-      end
-
       def theme
         @theme ||= super
       end

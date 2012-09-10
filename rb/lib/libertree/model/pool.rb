@@ -1,8 +1,8 @@
 module Libertree
   module Model
     class Pool < M4DBI::Model(:pools)
-      def account
-        @account ||= Account[self.account_id]
+      def member
+        @member ||= Member[self.member_id]
       end
 
       def posts
