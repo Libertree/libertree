@@ -566,3 +566,136 @@ Responders MAY respond with a REJECTED code for any reason, and such a response
 MAY be accompanied by an explanatory message.  When a CHAT request is rejected,
 the requester SHOULD retry the CHAT request at a future time, but MAY elect
 not to after several rejections.
+
+### POOL
+
+Request Parameters:
+
+    {
+      "username": <member username>,
+      "id": <pool id on requester>,
+      "name": <pool name on requester>,
+    }
+
+Response Structure:
+
+    { "code": "OK" }
+    |
+    {
+      "code": "NOT FOUND",
+      "missing": ["MEMBER"]
+    }
+    |
+    {
+      "code": "REJECTED",
+      [[ "message": <explanatory message> ]]
+    }
+
+A requester would use the POOL command to share with a remote server a pool
+that was sprung at the requester, or updates made to a sprung pool originating
+at the requester.
+
+Responders SHOULD return a "NOT FOUND" code to indicate that it has no record
+of the given member.  Requesters SHOULD send a request matching the "missing"
+parameter of the "NOT FOUND" response.
+
+Responders MAY respond with a REJECTED code for any reason, and such a response
+MAY be accompanied by an explanatory message.  When a POOL request is rejected,
+the requester SHOULD retry the POOL request at a future time, but MAY elect
+not to after several rejections.
+
+If the responder has a record of a pool with the given remote id (on the
+requester) by the given remote member, it MUST update its local record with the
+given name.
+
+
+### POOL-DELETE
+
+Request Parameters:
+
+    {
+      "id": <pool id on requester>,
+    }
+
+Response Structure:
+
+    { "code": "OK" }
+    |
+    { "code": "NOT FOUND" }
+
+A requester would use the POOL-DELETE command to request that a remote server
+delete its copy of a pool that originated at the requester.  This could be done
+either when a pool is actually delete, or when it is merely unsprung.
+
+Responders MAY return a "NOT FOUND" code to indicate that it has no record
+of the given post.
+
+
+### POOL-POST
+
+Request Parameters:
+
+    {
+      "pool_id": <pool id on requester>,
+      "post_id": <post id on post origin>,
+      "public_key": <public key of post origin>,
+    }
+
+Response Structure:
+
+    { "code": "OK" }
+    |
+    {
+      "code": "NOT FOUND",
+      "missing": ["POOL"]
+    }
+    |
+    {
+      "code": "NOT FOUND",
+      "missing": ["POST"]
+    }
+    |
+    {
+      "code": "NOT FOUND",
+      "missing": ["POOL", "POST"]
+    }
+    |
+    {
+      "code": "REJECTED",
+      [[ "message": <explanatory message> ]]
+    }
+
+A requester would use the POOL-POST command to inform a remote server that a
+post was added to a pool at the requester.
+
+Responders SHOULD return a "NOT FOUND" code to indicate that it has no record
+of the pool, or the post, or both.  Requesters SHOULD send a request matching
+the "missing" parameter of the "NOT FOUND" response.
+
+Responders MAY respond with a REJECTED code for any reason, and such a response
+MAY be accompanied by an explanatory message.  When a POOL-POST request is
+rejected, the requester SHOULD retry the POOL-POST request at a future time,
+but MAY elect not to after several rejections.
+
+### POOL-POST-DELETE
+
+Request Parameters:
+
+    {
+      "pool_id": <pool id on requester>,
+      "post_id": <post id on post origin>,
+      "public_key": <public key of post origin>,
+    }
+
+Response Structure:
+
+    { "code": "OK" }
+    |
+    { "code": "NOT FOUND" }
+
+A requester would use the POOL-POST-DELETE command to request that a remote
+server delete its record of an association of a post to a pool which originated
+at the requester.
+
+Responders MAY return a "NOT FOUND" code to indicate that it has no record
+of the given pool-post association.
