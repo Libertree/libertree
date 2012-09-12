@@ -4,14 +4,6 @@ describe Libertree::Server::Responder::Forest do
   describe 'rsp_forest' do
     include_context 'with an INTRODUCEd requester'
 
-    context 'when the requester has not AUTHENTICATEd itself' do
-      it 'returns ERROR' do
-        @s.process 'FOREST { "anything": "anything" }'
-        @s.should have_responded_with_code('ERROR')
-        @s.response['message'].should =~ /authenticate/i
-      end
-    end
-
     context 'when the requester has AUTHENTICATEd itself' do
       before :each do
         @s.process 'AUTHENTICATE { "response": "abcdefghijklmnopqrstuvwxyz" }'
