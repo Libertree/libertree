@@ -19,5 +19,16 @@ describe Libertree::Server::Responder::Dispatcher do
       @s.process 'NO-SUCH-COMMAND { "data": "foo" }'
       @s.should have_responded_with_code('UNKNOWN COMMAND')
     end
+
+    context 'when the requester has not INTRODUCEd itself' do
+      it 'returns ERROR for all commands besides INTRODUCE' do
+        commands = Libertree::Server::Responder::Dispatcher::VALID_COMMANDS - ['INTRODUCE',]
+        commands.each do |command|
+          @s.process %|#{command} { "anything": "anything" }|
+          @s.should have_responded_with_code('ERROR')
+          @s.response['message'].should =~ /introduce/i
+        end
+      end
+    end
   end
 end

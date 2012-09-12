@@ -36,14 +36,6 @@ describe Libertree::Server::Responder::Authentication do
   end
 
   describe 'rsp_authenticate' do
-    context 'when the requester has not INTRODUCEd itself' do
-      it 'returns ERROR' do
-        @s.process 'AUTHENTICATE { "response": "challenge response" }'
-        @s.should have_responded_with_code('ERROR')
-        @s.response['message'].should =~ /introduce/i
-      end
-    end
-
     context 'with a known requester' do
       before :each do
         @requester = Libertree::Model::Server.create( FactoryGirl.attributes_for(:server) )

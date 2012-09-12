@@ -3,14 +3,6 @@ require 'spec_helper'
 describe Libertree::Server::Responder::Message do
   describe 'rsp_message' do
 
-    context 'when the requester has not INTRODUCEd itself' do
-      it 'returns ERROR' do
-        @s.process 'MESSAGE { "anything": "anything" }'
-        @s.should have_responded_with_code('ERROR')
-        @s.response['message'].should =~ /introduce/i
-      end
-    end
-
     context 'with a known requester' do
       before :each do
         @requester = Libertree::Model::Server.create( FactoryGirl.attributes_for(:server) )
