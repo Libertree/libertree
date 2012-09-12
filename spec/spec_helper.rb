@@ -71,3 +71,11 @@ shared_context 'with an INTRODUCEd requester' do
     @s.process %<INTRODUCE { "public_key": #{@requester.public_key.to_json} } >
   end
 end
+
+shared_context 'with an INTRODUCEd and AUTHENTICATEd requester' do
+  include_context 'with an INTRODUCEd requester'
+
+  before :each do
+    @s.process 'AUTHENTICATE { "response": "abcdefghijklmnopqrstuvwxyz" }'
+  end
+end
