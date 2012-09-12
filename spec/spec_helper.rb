@@ -56,3 +56,18 @@ RSpec.configure do |config|
     @s.unbind
   end
 end
+
+shared_context 'with a known requester' do
+  before :each do
+    @requester = Libertree::Model::Server.create( FactoryGirl.attributes_for(:server) )
+  end
+end
+
+shared_context 'with an INTRODUCEd requester' do
+  include_context 'with a known requester'
+
+  before :each do
+    @s.stub(:challenge_new) { 'abcdefghijklmnopqrstuvwxyz' }
+    @s.process %<INTRODUCE { "public_key": #{@requester.public_key.to_json} } >
+  end
+end
