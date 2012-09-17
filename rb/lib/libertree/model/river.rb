@@ -83,8 +83,8 @@ module Libertree
           full_query.strip!
         end
         # TODO: This is getting bulky and ugly...
-        @query_components ||= full_query.scan(/([+-]?"[^"]+")|([+-]?:from ".+?")|([+-]?:river ".+?")|([+-]?:contact-list ".+?")|([+-]?:visibility [a-z-]+)|([+-]?:word-count [<>] ?[0-9]+)|(\S+)/).map { |c|
-          c[6] || c[5] || c[4] || c[3] || c[2] || c[1] || c[0].gsub(/^([+-])"/, "\\1").gsub(/^"|"$/, '')
+        @query_components ||= full_query.scan(/([+-]?"[^"]+")|([+-]?:(?:from|river|contact-list) ".+?")|([+-]?:visibility [a-z-]+)|([+-]?:word-count [<>] ?[0-9]+)|(\S+)/).map { |c|
+          c[4] || c[3] || c[2] || c[1] || c[0].gsub(/^([+-])"/, "\\1").gsub(/^"|"$/, '')
         }
         @query_components.dup
       end
