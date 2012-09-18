@@ -89,9 +89,7 @@ describe Libertree::Model::River do
   describe '#matches_post?' do
     before do
       other_account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
-      @member = Libertree::Model::Member.create(
-        FactoryGirl.attributes_for( :member, :account_id => other_account.id, username: nil )
-      )
+      @member = other_account.member
     end
 
     def try_one( query, post_text, should_match, post_author = @member )
@@ -135,13 +133,9 @@ describe Libertree::Model::River do
     context 'given two different local posters' do
       before do
         @account2 = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
-        @member2 = Libertree::Model::Member.create(
-          FactoryGirl.attributes_for( :member, :account_id => @account2.id, username: nil )
-        )
+        @member2 = @account2.member
         @account3 = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
-        @member3 = Libertree::Model::Member.create(
-          FactoryGirl.attributes_for( :member, :account_id => @account3.id, username: nil )
-        )
+        @member3 = @account3.member
       end
 
       it 'matches :from "account username"' do
@@ -411,21 +405,13 @@ describe Libertree::Model::River do
     context 'given the river owner has some contact lists' do
       before :each do
         account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
-        @contact1 = Libertree::Model::Member.create(
-          FactoryGirl.attributes_for( :member, :account_id => account.id, username: nil )
-        )
+        @contact1 = account.member
         account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
-        @contact2 = Libertree::Model::Member.create(
-          FactoryGirl.attributes_for( :member, :account_id => account.id, username: nil )
-        )
+        @contact2 = account.member
         account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
-        @contact3 = Libertree::Model::Member.create(
-          FactoryGirl.attributes_for( :member, :account_id => account.id, username: nil )
-        )
+        @contact3 = account.member
         account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
-        @contact4 = Libertree::Model::Member.create(
-          FactoryGirl.attributes_for( :member, :account_id => account.id, username: nil )
-        )
+        @contact4 = account.member
 
         @list1 = Libertree::Model::ContactList.create(
           FactoryGirl.attributes_for( :contact_list, account_id: @account.id, name: 'List 1' )
@@ -462,9 +448,7 @@ describe Libertree::Model::River do
         )
 
         account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
-        @non_contact = Libertree::Model::Member.create(
-          FactoryGirl.attributes_for( :member, :account_id => account.id, username: nil )
-        )
+        @non_contact = account.member
         @post_other = Libertree::Model::Post.create(
           FactoryGirl.attributes_for( :post, member_id: @non_contact.id, text: 'test post' )
         )

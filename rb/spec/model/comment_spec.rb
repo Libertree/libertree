@@ -3,9 +3,7 @@ require 'spec_helper'
 describe Libertree::Model::Comment do
   before do
     @account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
-    @member = Libertree::Model::Member.create(
-      FactoryGirl.attributes_for(:member, account_id: @account.id, username: nil)
-    )
+    @member = @account.member
     @post = Libertree::Model::Post.create(
       FactoryGirl.attributes_for( :post, member_id: @member.id, text: 'Example post.' )
     )

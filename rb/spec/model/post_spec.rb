@@ -3,9 +3,7 @@ require 'spec_helper'
 describe Libertree::Model::Post do
   before do
     @account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
-    @member = Libertree::Model::Member.create(
-      FactoryGirl.attributes_for(:member, account_id: @account.id, username: nil)
-    )
+    @member = @account.member
   end
 
   def new_post(text)
