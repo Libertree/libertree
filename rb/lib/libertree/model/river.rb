@@ -83,8 +83,8 @@ module Libertree
           full_query.strip!
         end
         # TODO: This is getting bulky and ugly...
-        @query_components ||= full_query.scan(/([+-]?"[^"]+")|([+-]?:(?:from|river|contact-list) ".+?")|([+-]?:visibility [a-z-]+)|([+-]?:word-count [<>] ?[0-9]+)|(\S+)/).map { |c|
-          c[4] || c[3] || c[2] || c[1] || c[0].gsub(/^([+-])"/, "\\1").gsub(/^"|"$/, '')
+        @query_components ||= full_query.scan(/([+-]?"[^"]+")|([+-]?:(?:from|river|contact-list) ".+?")|([+-]?:visibility [a-z-]+)|([+-]?:word-count [<>] ?[0-9]+)|([+-]?:(?:spring) ".+?" ".+?")|(\S+)/).map { |c|
+          c[5] || c[4] || c[3] || c[2] || c[1] || c[0].gsub(/^([+-])"/, "\\1").gsub(/^"|"$/, '')
         }
         @query_components.dup
       end
@@ -118,6 +118,13 @@ module Libertree
         when /^:word-count > ?([0-9]+)$/
           n = $1.to_i
           post.text.scan(/\S+/).count > n
+        when /^:spring "(.+?)" "(.+?)"$/
+          spring_name, handle = $1, $2
+          member = Member.with_handle(handle)
+          if member
+            pool = Pool[ member_id: member.id, name: spring_name, sprung: true ]
+            pool && pool.includes?(post)
+          end
         else
           /(?:^|\b|\s)#{Regexp.escape(term)}(?:\b|\s|$)/i === post.text
         end

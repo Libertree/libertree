@@ -56,6 +56,10 @@ module Libertree
       def remove_post(post)
         DB.dbh.d  "DELETE FROM pools_posts WHERE pool_id = ? AND post_id = ?", self.id, post.id
       end
+
+      def sprung?
+        self['sprung']
+      end
     end
   end
 end

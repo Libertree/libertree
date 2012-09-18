@@ -47,4 +47,8 @@ FactoryGirl.define do
   factory :contact_list, :class => Libertree::Model::ContactList do
     sequence(:name) { |n| "Contact List #{n}" }
   end
+
+  factory :pool, :class => Libertree::Model::Pool do
+    sequence(:name) { |n| "Pool #{n}" }
+  end
 end

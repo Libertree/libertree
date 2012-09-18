@@ -84,6 +84,11 @@ describe Libertree::Model::River do
       test_one  %{+:word-count < 5}, [ '+:word-count < 5', ]
       test_one  %{abc +:word-count < 5}, [ 'abc', '+:word-count < 5', ]
     end
+
+    it 'treats :spring "..." "..." as a single term' do
+      test_one  ':spring "Spring Name" "username@treename"', [ ':spring "Spring Name" "username@treename"', ]
+      test_one  'foo :spring "Spring Name" "username@treename"', [ 'foo', ':spring "Spring Name" "username@treename"', ]
+    end
   end
 
   describe '#matches_post?' do
@@ -571,6 +576,43 @@ describe Libertree::Model::River do
         try_one  ':word-count > 100', @few_words, false
         try_one  ':word-count > 100', @several_words, false
         try_one  ':word-count > 100', @many_words, false
+      end
+    end
+
+    context 'given some posts in some pools' do
+      before :each do
+        @pool_private = Libertree::Model::Pool.create(
+          FactoryGirl.attributes_for( :pool, member_id: @member.id, name: 'My Pool' )
+        )
+        @spring = Libertree::Model::Pool.create(
+          FactoryGirl.attributes_for( :pool, member_id: @member.id, name: 'Post Feed', sprung: true )
+        )
+
+        @post_private = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: @member.id, text: 'private' )
+        )
+        @post_feed = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: @member.id, text: 'feed' )
+        )
+
+        @pool_private << @post_private
+        @spring << @post_feed
+      end
+
+      it 'does not match posts in pools that have not been sprung' do
+        river = Libertree::Model::River.create(
+          FactoryGirl.attributes_for( :river, query: %|:spring "My Pool" "#{@member.handle}"|, account_id: @account.id )
+        )
+        river.matches_post?(@post_private).should be_false
+        river.matches_post?(@post_feed).should be_false
+      end
+
+      it 'matches posts in sprung pools' do
+        river = Libertree::Model::River.create(
+          FactoryGirl.attributes_for( :river, query: %|:spring "Post Feed" "#{@member.handle}"|, account_id: @account.id )
+        )
+        river.matches_post?(@post_private).should be_false
+        river.matches_post?(@post_feed).should be_true
       end
     end
   end

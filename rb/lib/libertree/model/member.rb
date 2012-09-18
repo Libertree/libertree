@@ -53,6 +53,37 @@ module Libertree
         end
       end
 
+      def self.with_handle(h)
+        if h =~ /@/
+          row = self.prepare(
+            %{
+              SELECT m.*
+              FROM
+                  members m
+                , servers s
+              WHERE
+                s.id = m.server_id
+                AND COALESCE( s.name_given, s.ip::TEXT ) = ?
+            }
+          ).s1(h)
+          self.new(row)  if row
+        else
+          row = self.prepare(
+            %{
+              SELECT
+                m.*
+              FROM
+                  members m
+                , accounts a
+              WHERE
+                a.id = m.account_id
+                AND a.username = ?
+            },
+          ).s1(h)
+          self.new(row)  if row
+        end
+      end
+
       def username
         self['username'] || account.username
       end
