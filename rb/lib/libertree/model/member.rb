@@ -109,6 +109,9 @@ module Libertree
       def pools
         @pools ||= Pool.where( member_id: self.id )
       end
+      def springs
+        @springs ||= Pool.where( member_id: self.id, sprung: true )
+      end
 
       def online?
         self.account && self.account.online?
