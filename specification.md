@@ -624,11 +624,11 @@ Response Structure:
     { "code": "NOT FOUND" }
 
 A requester would use the POOL-DELETE command to request that a remote server
-delete its copy of a pool that originated at the requester.  This could be done
+delete its copy of a pool that originated at the requester.  This could be sent
 either when a pool is actually deleted, or when it is merely unsprung.
 
 Responders MAY return a "NOT FOUND" code to indicate that it has no record
-of the given post.
+of the given pool.
 
 
 ### POOL-POST
