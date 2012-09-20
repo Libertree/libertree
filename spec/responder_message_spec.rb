@@ -73,9 +73,7 @@ describe Libertree::Server::Responder::Message do
           @account = Libertree::Model::Account.create(
             FactoryGirl.attributes_for(:account)
           )
-          @member_local = Libertree::Model::Member.create(
-            FactoryGirl.attributes_for(:member, username: nil, account_id: @account.id)
-          )
+          @member_local = @account.member
         end
 
         it 'with valid data it responds with OK' do
