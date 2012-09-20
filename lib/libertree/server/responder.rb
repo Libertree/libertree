@@ -8,6 +8,7 @@ require 'libertree/server/responder/forest'
 require 'libertree/server/responder/member'
 require 'libertree/server/responder/message'
 require 'libertree/server/responder/pool'
+require 'libertree/server/responder/pool-post'
 require 'libertree/server/responder/post'
 require 'libertree/server/responder/post-like'
 
@@ -24,6 +25,7 @@ module Libertree
       include Member
       include Message
       include Pool
+      include PoolPost
       include Post
       include PostLike
 
