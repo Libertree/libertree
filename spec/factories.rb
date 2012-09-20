@@ -41,4 +41,9 @@ FactoryGirl.define do
   factory :post_like, :class => Libertree::Model::PostLike do
     sequence(:remote_id, 1000)
   end
+
+  factory :pool, :class => Libertree::Model::Pool do
+    sequence(:name) { |n| "Pool #{n}" }
+    sequence(:remote_id, 1000)
+  end
 end

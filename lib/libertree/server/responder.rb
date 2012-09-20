@@ -7,6 +7,7 @@ require 'libertree/server/responder/comment-like'
 require 'libertree/server/responder/forest'
 require 'libertree/server/responder/member'
 require 'libertree/server/responder/message'
+require 'libertree/server/responder/pool'
 require 'libertree/server/responder/post'
 require 'libertree/server/responder/post-like'
 
@@ -22,6 +23,7 @@ module Libertree
       include Forest
       include Member
       include Message
+      include Pool
       include Post
       include PostLike
 

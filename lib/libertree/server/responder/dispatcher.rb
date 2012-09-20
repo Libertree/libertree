@@ -9,7 +9,7 @@ module Libertree
         VALID_COMMANDS = [
           'AUTHENTICATE', 'CHAT', 'COMMENT', 'COMMENT-DELETE', 'COMMENT-LIKE',
           'COMMENT-LIKE-DELETE', 'FOREST', 'INTRODUCE', 'MEMBER', 'MESSAGE',
-          'POST', 'POST-DELETE', 'POST-LIKE', 'POST-LIKE-DELETE',
+          'POOL', 'POST', 'POST-DELETE', 'POST-LIKE', 'POST-LIKE-DELETE',
         ]
 
         def process(request_raw)
