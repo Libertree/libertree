@@ -3,6 +3,7 @@ require 'date'
 module Libertree
   module Model
     class Post < M4DBI::Model(:posts)
+      include IsRemoteOrLocal
 
       after_create do |post|
         if post.local?
@@ -62,22 +63,6 @@ module Libertree
       end
       def time_updated_overall
         [time_commented, time_updated].compact.max
-      end
-
-      def remote?
-        !! remote_id
-      end
-
-      def local?
-        ! remote_id
-      end
-
-      def public_id
-        self.remote_id || self.id
-      end
-
-      def server
-        @server ||= member.server
       end
 
       def read_by?(account)
@@ -312,14 +297,6 @@ module Libertree
           'time_updated' => Time.now
         )
         mark_as_unread_by_all
-      end
-
-      def forests
-        if self.remote?
-          self.server.forests
-        else
-          Libertree::Model::Forest.all_local_is_member
-        end
       end
 
       def hidden_by?(account)

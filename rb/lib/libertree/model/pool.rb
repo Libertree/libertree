@@ -1,6 +1,44 @@
 module Libertree
   module Model
     class Pool < M4DBI::Model(:pools)
+      include IsRemoteOrLocal
+
+      after_create do |pool|
+        if pool.local?
+          Libertree::Model::Job.create_for_forests(
+            {
+              task: 'request:POOL',
+              params: { 'pool_id' => pool.id, }
+            },
+            *pool.forests
+          )
+        end
+      end
+
+      after_update do |pool|
+        if pool.local?
+          Libertree::Model::Job.create_for_forests(
+            {
+              task: 'request:POOL',
+              params: { 'pool_id' => pool.id, }
+            },
+            *pool.forests
+          )
+        end
+      end
+
+      # before_delete do |pool|
+        # if pool.local?
+          # Libertree::Model::Job.create_for_forests(
+            # {
+              # task: 'request:POOL-DELETE',
+              # params: { 'pool_id' => pool.id, }
+            # },
+            # *pool.forests
+          # )
+        # end
+      # end
+
       def member
         @member ||= Member[self.member_id]
       end
@@ -32,7 +70,7 @@ module Libertree
       end
 
       def <<(post)
-        DB.dbh.i(
+        num_inserted = DB.dbh.i(
           %{
             INSERT INTO pools_posts (
               pool_id, post_id
@@ -51,10 +89,35 @@ module Libertree
           self.id,
           post.id
         )
+
+        if pool.local? && num_inserted > 0
+          Libertree::Model::Job.create_for_forests(
+            {
+              task: 'request:POOL-POST',
+              params: {
+                'pool_id' => self.id,
+                'post_id' => post.id,
+              }
+            },
+            *pool.forests
+          )
+        end
       end
 
       def remove_post(post)
         DB.dbh.d  "DELETE FROM pools_posts WHERE pool_id = ? AND post_id = ?", self.id, post.id
+        # if pool.local?
+          # Libertree::Model::Job.create_for_forests(
+            # {
+              # task: 'request:POOL-POST-DELETE',
+              # params: {
+                # 'pool_id' => self.id,
+                # 'post_id' => post.id,
+              # }
+            # },
+            # *pool.forests
+          # )
+        # end
       end
 
       def sprung?
