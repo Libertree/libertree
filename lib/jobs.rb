@@ -220,7 +220,7 @@ module Jobs
       end
     end
 
-    class POST_LIKE
+    class POOL_POST
       def self.perform(params)
         pool = Libertree::Model::Pool[params['pool_id'].to_i]
         post = Libertree::Model::Pool[params['post_id'].to_i]
