@@ -639,6 +639,7 @@ Request Parameters:
       "pool_id": <pool id on requester>,
       "post_id": <post id on post origin>,
       "public_key": <public key of post origin>,
+      "username": <member username of pool owner on requester>,
     }
 
 Response Structure:
@@ -647,17 +648,9 @@ Response Structure:
     |
     {
       "code": "NOT FOUND",
-      "missing": ["POOL"]
-    }
-    |
-    {
-      "code": "NOT FOUND",
-      "missing": ["POST"]
-    }
-    |
-    {
-      "code": "NOT FOUND",
-      "missing": ["POOL", "POST"]
+      "missing": ["POOL"] | ["POST"] | ["MEMBER"] | ["POOL", "POST"] |
+                 ["POOL", "MEMBER"] | ["POST", "MEMBER"] |
+                 ["POOL", "POST", "MEMBER"]
     }
     |
     {
@@ -669,8 +662,8 @@ A requester would use the POOL-POST command to inform a remote server that a
 post was added to a pool at the requester.
 
 Responders SHOULD return a "NOT FOUND" code to indicate that it has no record
-of the pool, or the post, or both.  Requesters SHOULD send a request matching
-the "missing" parameter of the "NOT FOUND" response.
+of the pool, the post, the member, or some, or each.  Requesters SHOULD send a
+request matching the "missing" parameter of the "NOT FOUND" response.
 
 Responders MAY respond with a REJECTED code for any reason, and such a response
 MAY be accompanied by an explanatory message.  When a POOL-POST request is
@@ -685,6 +678,7 @@ Request Parameters:
       "pool_id": <pool id on requester>,
       "post_id": <post id on post origin>,
       "public_key": <public key of post origin>,
+      "username": <member username of pool owner on requester>,
     }
 
 Response Structure:
@@ -698,4 +692,4 @@ server delete its record of an association of a post to a pool which originated
 at the requester.
 
 Responders MAY return a "NOT FOUND" code to indicate that it has no record
-of the given pool-post association.
+of the given member-pool-post association.
