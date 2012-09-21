@@ -154,6 +154,27 @@ module Libertree
       @conn.request('POST', params)
     end
 
+    def req_pool(pool)
+      @conn.request(
+        'POOL',
+        'username' => pool.member.username,
+        'id'       => pool.id,
+        'name'     => pool.name,
+      )
+    end
+
+    def req_pool_post(pool, post)
+      server = post.member.server
+      public_key = server ? server.public_key : @public_key
+      @conn.request(
+        'POOL-POST',
+        'username'   => pool.member.username,
+        'pool_id'    => pool.id,
+        'post_id'    => post.public_id,
+        'public_key' => public_key,
+      )
+    end
+
     def req_post_delete(post_id)
       @conn.request(
         'POST-DELETE',
