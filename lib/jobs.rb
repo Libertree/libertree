@@ -18,6 +18,8 @@ module Jobs
       "request:FOREST"               => Request::FOREST,
       "request:MEMBER"               => Request::MEMBER,
       "request:MESSAGE"              => Request::MESSAGE,
+      "request:POOL"                 => Request::POOL,
+      "request:POOL-POST"            => Request::POOL_POST,
       "request:POST"                 => Request::POST,
       "request:POST-DELETE"          => Request::POST_DELETE,
       "request:POST-LIKE"            => Request::POST_LIKE,
@@ -202,6 +204,29 @@ module Jobs
         if message
           Request::with_tree(params['server_id']) do |tree|
             tree.req_message message, params['recipient_usernames']
+          end
+        end
+      end
+    end
+
+    class POOL
+      def self.perform(params)
+        pool = Libertree::Model::Pool[params['pool_id'].to_i]
+        if pool
+          Request::with_tree(params['server_id']) do |tree|
+            tree.req_pool pool
+          end
+        end
+      end
+    end
+
+    class POST_LIKE
+      def self.perform(params)
+        pool = Libertree::Model::Pool[params['pool_id'].to_i]
+        post = Libertree::Model::Pool[params['post_id'].to_i]
+        if pool && post
+          Request::with_tree(params['server_id']) do |tree|
+            tree.req_pool_post pool, post
           end
         end
       end
