@@ -90,7 +90,7 @@ module Libertree
           post.id
         )
 
-        if pool.local? && num_inserted > 0
+        if self.local? && num_inserted > 0
           Libertree::Model::Job.create_for_forests(
             {
               task: 'request:POOL-POST',
@@ -99,7 +99,7 @@ module Libertree
                 'post_id' => post.id,
               }
             },
-            *pool.forests
+            *self.forests
           )
         end
       end
