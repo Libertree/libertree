@@ -75,7 +75,7 @@ module Libertree
       end
 
       def <<(post)
-        num_inserted = DB.dbh.i(
+        insertion_result = DB.dbh.i(
           %{
             INSERT INTO pools_posts (
               pool_id, post_id
@@ -96,7 +96,7 @@ module Libertree
         )
         self.dirty
 
-        if self.local? && num_inserted > 0
+        if self.local? && insertion_result.affected_count > 0
           Libertree::Model::Job.create_for_forests(
             {
               task: 'request:POOL-POST',
