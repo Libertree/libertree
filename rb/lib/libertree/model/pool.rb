@@ -27,17 +27,17 @@ module Libertree
         end
       end
 
-      # before_delete do |pool|
-        # if pool.local?
-          # Libertree::Model::Job.create_for_forests(
-            # {
-              # task: 'request:POOL-DELETE',
-              # params: { 'pool_id' => pool.id, }
-            # },
-            # *pool.forests
-          # )
-        # end
-      # end
+      before_delete do |pool|
+        if pool.local?
+          Libertree::Model::Job.create_for_forests(
+            {
+              task: 'request:POOL-DELETE',
+              params: { 'pool_id' => pool.id, }
+            },
+            *pool.forests
+          )
+        end
+      end
 
       def member
         @member ||= Member[self.member_id]
