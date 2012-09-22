@@ -614,6 +614,7 @@ given name.
 Request Parameters:
 
     {
+      "username": <member username>,
       "id": <pool id on requester>,
     }
 
