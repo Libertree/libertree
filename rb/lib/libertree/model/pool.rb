@@ -69,6 +69,11 @@ module Libertree
         self.delete
       end
 
+      def dirty
+        @posts = nil
+        self
+      end
+
       def <<(post)
         num_inserted = DB.dbh.i(
           %{
@@ -89,6 +94,7 @@ module Libertree
           self.id,
           post.id
         )
+        self.dirty
 
         if self.local? && num_inserted > 0
           Libertree::Model::Job.create_for_forests(
@@ -106,18 +112,19 @@ module Libertree
 
       def remove_post(post)
         DB.dbh.d  "DELETE FROM pools_posts WHERE pool_id = ? AND post_id = ?", self.id, post.id
-        # if pool.local?
-          # Libertree::Model::Job.create_for_forests(
-            # {
-              # task: 'request:POOL-POST-DELETE',
-              # params: {
-                # 'pool_id' => self.id,
-                # 'post_id' => post.id,
-              # }
-            # },
-            # *pool.forests
-          # )
-        # end
+        self.dirty
+        if self.local?
+          Libertree::Model::Job.create_for_forests(
+            {
+              task: 'request:POOL-POST-DELETE',
+              params: {
+                'pool_id' => self.id,
+                'post_id' => post.id,
+              }
+            },
+            *self.forests
+          )
+        end
       end
 
       def sprung?
