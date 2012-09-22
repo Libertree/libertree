@@ -44,27 +44,39 @@ module Libertree
           end
         end
 
-        # def rsp_pool_delete(params)
-          # return  if require_parameters(params, 'id')
+        def rsp_pool_delete(params)
+          return  if require_parameters(params, 'id', 'username')
 
-          # begin
-            # posts = Model::Post.
-              # where( 'remote_id' => params['id'] ).
-              # reject { |p| p.server != @server }
-
-            # if posts.empty?
-              # respond( {
-                # 'code' => 'NOT FOUND',
-                # 'message' => "Unrecognized post ID: #{params['id'].inspect}"
-              # } )
-            # else
-              # posts[0].delete_cascade  # there should only be one post
-              # respond_with_code 'OK'
-            # end
-          # rescue PGError => e
-            # respond_with_code 'ERROR'
-          # end
-        # end
+          begin
+            member = Model::Member[
+              'username' => params['username'],
+              'server_id' => @server.id,
+            ]
+            if member.nil?
+              respond( {
+                'code' => 'NOT FOUND',
+                'message' => "Unrecognized member username: #{params['username'].inspect}"
+              } )
+            else
+              pool = Model::Pool[
+                'member_id' => member.id,
+                'remote_id' => params['id']
+              ]
+              if pool
+                pool.delete_cascade
+                respond_with_code 'OK'
+              else
+                respond( {
+                  'code' => 'NOT FOUND',
+                  'message' => "Unrecognized pool: #{params['id']}"
+                } )
+              end
+            end
+          rescue PGError => e
+            respond_with_code 'ERROR'
+            log "ERROR on POOL request: #{e.message}"
+          end
+        end
       end
     end
   end

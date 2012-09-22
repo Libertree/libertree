@@ -9,7 +9,7 @@ module Libertree
         VALID_COMMANDS = [
           'AUTHENTICATE', 'CHAT', 'COMMENT', 'COMMENT-DELETE', 'COMMENT-LIKE',
           'COMMENT-LIKE-DELETE', 'FOREST', 'INTRODUCE', 'MEMBER', 'MESSAGE',
-          'POOL', 'POOL-POST', 'POST', 'POST-DELETE', 'POST-LIKE',
+          'POOL', 'POOL-DELETE', 'POOL-POST', 'POST', 'POST-DELETE', 'POST-LIKE',
           'POST-LIKE-DELETE',
         ]
 
