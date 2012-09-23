@@ -63,7 +63,7 @@ module Libertree
                 , servers s
               WHERE
                 s.id = m.server_id
-                AND COALESCE( s.name_given, s.ip::TEXT ) = ?
+                AND COALESCE( s.name_given, s.ip ) = ?
             }
           ).s1(h)
           self.new(row)  if row
