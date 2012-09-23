@@ -1,8 +1,19 @@
 module Libertree
   module Model
     class Profile < M4DBI::Model(:profiles)
+      after_update do |profile|
+        if profile.member.local?
+          Libertree::Model::Job.create_for_forests(
+            {
+              task: 'request:MEMBER',
+              params: { 'member_id' => profile.member.id, }
+            }
+          )
+        end
+      end
+
       def member
-        Member[ self.member_id ]
+        @member ||= Member[ self.member_id ]
       end
 
       def self.search(query)
