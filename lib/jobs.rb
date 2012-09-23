@@ -223,7 +223,7 @@ module Jobs
     class POOL_POST
       def self.perform(params)
         pool = Libertree::Model::Pool[params['pool_id'].to_i]
-        post = Libertree::Model::Pool[params['post_id'].to_i]
+        post = Libertree::Model::Post[params['post_id'].to_i]
         if pool && post
           Request::with_tree(params['server_id']) do |tree|
             tree.req_pool_post pool, post
