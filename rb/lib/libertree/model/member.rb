@@ -54,8 +54,9 @@ module Libertree
       end
 
       def self.with_handle(h)
-        if h =~ /@(.+?)$/
-          host = $1
+        if h =~ /^(.+?)@(.+?)$/
+          username = $1
+          host = $2
           row = self.prepare(
             %{
               SELECT m.*
@@ -63,13 +64,18 @@ module Libertree
                   members m
                 , servers s
               WHERE
-                s.id = m.server_id
+                m.username = ?
+                AND s.id = m.server_id
                 AND (
                   s.name_given = ?
                   OR s.ip::TEXT = ? || '/32'
                 )
             }
-          ).s1(host, host)
+          ).s1(
+            username,
+            host,
+            host
+          )
           self.new(row)  if row
         else
           row = self.prepare(
