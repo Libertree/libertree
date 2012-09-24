@@ -3,6 +3,19 @@ module Libertree
     class Pool < M4DBI::Model(:pools)
       include IsRemoteOrLocal
 
+      def create_pool_post_job(post)
+        Libertree::Model::Job.create_for_forests(
+          {
+            task: 'request:POOL-POST',
+            params: {
+              'pool_id' => self.id,
+              'post_id' => post.id,
+            }
+          },
+          *self.forests
+        )
+      end
+
       after_create do |pool|
         if pool.local? && pool.sprung?
           Libertree::Model::Job.create_for_forests(
@@ -24,6 +37,9 @@ module Libertree
             },
             *pool.forests
           )
+          pool.posts.last(16).each do |post|
+            pool.create_pool_post_job(post)
+          end
         end
       end
 
@@ -97,16 +113,7 @@ module Libertree
         self.dirty
 
         if self.local? && self.sprung? && insertion_result.affected_count > 0
-          Libertree::Model::Job.create_for_forests(
-            {
-              task: 'request:POOL-POST',
-              params: {
-                'pool_id' => self.id,
-                'post_id' => post.id,
-              }
-            },
-            *self.forests
-          )
+          create_pool_post_job(post)
         end
       end
 
