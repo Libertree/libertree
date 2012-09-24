@@ -4,7 +4,7 @@ module Libertree
       include IsRemoteOrLocal
 
       after_create do |pool|
-        if pool.local?
+        if pool.local? && pool.sprung?
           Libertree::Model::Job.create_for_forests(
             {
               task: 'request:POOL',
@@ -16,7 +16,7 @@ module Libertree
       end
 
       after_update do |pool|
-        if pool.local?
+        if pool.local? && pool.sprung?
           Libertree::Model::Job.create_for_forests(
             {
               task: 'request:POOL',
@@ -28,7 +28,7 @@ module Libertree
       end
 
       before_delete do |pool|
-        if pool.local?
+        if pool.local? && pool.sprung?
           Libertree::Model::Job.create_for_forests(
             {
               task: 'request:POOL-DELETE',
@@ -96,7 +96,7 @@ module Libertree
         )
         self.dirty
 
-        if self.local? && insertion_result.affected_count > 0
+        if self.local? && self.sprung? && insertion_result.affected_count > 0
           Libertree::Model::Job.create_for_forests(
             {
               task: 'request:POOL-POST',
@@ -113,7 +113,7 @@ module Libertree
       def remove_post(post)
         DB.dbh.d  "DELETE FROM pools_posts WHERE pool_id = ? AND post_id = ?", self.id, post.id
         self.dirty
-        if self.local?
+        if self.local? && self.sprung?
           Libertree::Model::Job.create_for_forests(
             {
               task: 'request:POOL-POST-DELETE',
