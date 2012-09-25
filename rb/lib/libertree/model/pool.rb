@@ -16,6 +16,16 @@ module Libertree
         )
       end
 
+      def create_pool_delete_job
+        Libertree::Model::Job.create_for_forests(
+          {
+            task: 'request:POOL-DELETE',
+            params: { 'pool_id' => self.id, }
+          },
+          *self.forests
+        )
+      end
+
       after_create do |pool|
         if pool.local? && pool.sprung?
           Libertree::Model::Job.create_for_forests(
@@ -29,29 +39,27 @@ module Libertree
       end
 
       after_update do |pool|
-        if pool.local? && pool.sprung?
-          Libertree::Model::Job.create_for_forests(
-            {
-              task: 'request:POOL',
-              params: { 'pool_id' => pool.id, }
-            },
-            *pool.forests
-          )
-          pool.posts.last(16).each do |post|
-            pool.create_pool_post_job(post)
+        if pool.local?
+          if ! pool.sprung?
+            pool.create_pool_delete_job
+          else
+            Libertree::Model::Job.create_for_forests(
+              {
+                task: 'request:POOL',
+                params: { 'pool_id' => pool.id, }
+              },
+              *pool.forests
+            )
+            pool.posts.last(16).each do |post|
+              pool.create_pool_post_job(post)
+            end
           end
         end
       end
 
       before_delete do |pool|
         if pool.local? && pool.sprung?
-          Libertree::Model::Job.create_for_forests(
-            {
-              task: 'request:POOL-DELETE',
-              params: { 'pool_id' => pool.id, }
-            },
-            *pool.forests
-          )
+          pool.create_pool_delete_job
         end
       end
 
