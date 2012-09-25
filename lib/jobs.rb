@@ -19,7 +19,9 @@ module Jobs
       "request:MEMBER"               => Request::MEMBER,
       "request:MESSAGE"              => Request::MESSAGE,
       "request:POOL"                 => Request::POOL,
+      "request:POOL-DELETE"          => Request::POOL_DELETE,
       "request:POOL-POST"            => Request::POOL_POST,
+      "request:POOL-POST-DELETE"     => Request::POOL_POST_DELETE,
       "request:POST"                 => Request::POST,
       "request:POST-DELETE"          => Request::POST_DELETE,
       "request:POST-LIKE"            => Request::POST_LIKE,
@@ -220,6 +222,17 @@ module Jobs
       end
     end
 
+    class POOL_DELETE
+      def self.perform(params)
+        pool = Libertree::Model::Pool[params['pool_id'].to_i]
+        if pool
+          Request::with_tree(params['server_id']) do |tree|
+            tree.req_pool_delete pool
+          end
+        end
+      end
+    end
+
     class POOL_POST
       def self.perform(params)
         pool = Libertree::Model::Pool[params['pool_id'].to_i]
@@ -227,6 +240,18 @@ module Jobs
         if pool && post
           Request::with_tree(params['server_id']) do |tree|
             tree.req_pool_post pool, post
+          end
+        end
+      end
+    end
+
+    class POOL_POST_DELETE
+      def self.perform(params)
+        pool = Libertree::Model::Pool[params['pool_id'].to_i]
+        post = Libertree::Model::Post[params['post_id'].to_i]
+        if pool && post
+          Request::with_tree(params['server_id']) do |tree|
+            tree.req_pool_post_delete pool, post
           end
         end
       end
