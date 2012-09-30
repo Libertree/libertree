@@ -57,6 +57,28 @@ module Libertree
             respond_with_code 'ERROR'
           end
         end
+
+        def rsp_member_delete(params)
+          return  if require_parameters(params, 'member_id')
+
+          begin
+            members = Model::Member.
+              where( 'id' => params['member_id'] ).
+              reject { |p| p.server != @server }
+
+            if members.empty?
+              respond( {
+                'code' => 'NOT FOUND',
+                'message' => "Unrecognized member ID: #{params['member_id'].inspect}"
+              } )
+            else
+              members[0].delete_cascade  # there should only be one member
+              respond_with_code 'OK'
+            end
+          rescue PGError => e
+            respond_with_code 'ERROR'
+          end
+        end
       end
     end
   end
