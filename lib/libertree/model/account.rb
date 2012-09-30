@@ -378,11 +378,11 @@ module Libertree
         DB.dbh.u "UPDATE invitations SET inviter_account_id = NULL WHERE inviter_account_id = ?", self.id
         DB.dbh.d "DELETE FROM sessions_accounts WHERE account_id = ?", self.id
 
-        self.rivers.map { |r| r.delete_cascade(true) }
-        self.pools.map(&:delete_cascade)
+        self.rivers.each { |r| r.delete_cascade(true) }
+        self.pools.each(&:delete_cascade)
 
         if self.member
-          self.messages.map(&:delete_cascade)
+          self.messages.each(&:delete_cascade)
           self.member.delete_cascade
         end
         self.delete
