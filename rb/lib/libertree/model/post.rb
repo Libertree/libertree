@@ -104,7 +104,7 @@ module Libertree
 
       def mark_as_unread_by(account)
         DB.dbh.execute  "DELETE FROM posts_read WHERE post_id = ? AND account_id = ?", self.id, account.id
-        self.add_to_matching_rivers
+        self.add_to_matching_rivers(account)
       end
 
       def mark_as_unread_by_all( options = {} )
@@ -231,9 +231,15 @@ module Libertree
         delete
       end
 
-      def add_to_matching_rivers
-        River.each do |river|
-          river.try_post self
+      def add_to_matching_rivers(account=nil)
+        if account
+          account.rivers.each do |river|
+            river.try_post self
+          end
+        else
+          River.each do |river|
+            river.try_post self
+          end
         end
       end
 
