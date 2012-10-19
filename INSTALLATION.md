@@ -224,10 +224,10 @@ such as the proxy pass and proxy balancer modules.
 ### Apache
 
     <VirtualHost *:80>
-        ServerName serverdomain.com
-        ServerAlias serverdomain.com
-        ErrorLog /var/log/apache2/serverdomain.com.errors
-        CustomLog /var/log/apache2/serverdomain.com.log combined
+        ServerName example.com
+        ServerAlias example.com
+        ErrorLog /var/log/apache2/example.com.errors
+        CustomLog /var/log/apache2/example.com.log combined
 
         <Proxy balancer://libertreecluster>
             BalancerMember http://127.0.0.1:8088
