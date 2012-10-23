@@ -15,6 +15,7 @@ module Jobs
       "request:COMMENT-DELETE"       => Request::COMMENT_DELETE,
       "request:COMMENT-LIKE"         => Request::COMMENT_LIKE,
       "request:COMMENT-LIKE-DELETE"  => Request::COMMENT_LIKE_DELETE,
+      "request:INTRODUCE"            => Request::INTRODUCE,
       "request:FOREST"               => Request::FOREST,
       "request:MEMBER"               => Request::MEMBER,
       "request:MESSAGE"              => Request::MESSAGE,
@@ -177,6 +178,14 @@ module Jobs
         Request::with_tree(params['server_id']) do |tree|
           tree.req_comment_like_delete params['comment_like_id']
         end
+      end
+    end
+
+    class INTRODUCE
+      def self.perform(params)
+        client = Request.lt_client(params['host'])
+        # Do nothing else.  We just want to connect, INTRODUCE and AUTHENTICATE
+        client.close
       end
     end
 
