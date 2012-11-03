@@ -292,6 +292,54 @@ module Libertree
         )
       end
 
+      def self.with_tag( opts = {} )
+        # TODO:
+        # hashtags should have their own column to improve performance and to
+        # exclude posts that contain strings in verbatim sections that only
+        # look like hashtags
+
+        limit = opts.fetch(:limit, 30)
+        if opts[:newer]
+          time_comparator = '>'
+        else
+          time_comparator = '<'
+        end
+        time = Time.at( opts.fetch(:time, Time.now.to_f) ).strftime("%Y-%m-%d %H:%M:%S.%6N%z")
+
+        # TODO: prepared statement?
+        if opts[:order_by] == :comment
+          Post.s(
+            %{
+              SELECT
+                p.*
+              FROM
+                posts p
+              WHERE
+                text LIKE '%##{opts[:tag]}%'
+                AND GREATEST(p.time_commented, p.time_updated) #{time_comparator} ?
+              ORDER BY GREATEST(p.time_commented, p.time_updated) DESC
+              LIMIT #{limit}
+            },
+            time
+          )
+        else
+          Post.s(
+            %{
+              SELECT
+                p.*
+              FROM
+                posts p
+              WHERE
+                text LIKE '%##{opts[:tag]}%'
+                AND p.time_created #{time_comparator} ?
+              ORDER BY p.time_created DESC
+              LIMIT #{limit}
+            },
+            time
+          )
+        end
+      end
+
       def revise(text_new, visibility = self.visibility)
         PostRevision.create(
           'post_id' => self.id,
