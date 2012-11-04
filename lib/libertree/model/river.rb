@@ -183,7 +183,7 @@ module Libertree
         DB.dbh.d  "DELETE FROM river_posts WHERE river_id = ?", self.id
         # TODO: prepared statement?
         posts = Post.s("SELECT * FROM posts ORDER BY id DESC LIMIT #{n.to_i}")
-        matching = posts.find_all { |post| self.should_contain? }
+        matching = posts.find_all { |post| self.should_contain? post }
 
         placeholders = ( ['?'] * matching.count ).join(', ')
         DB.dbh.i "INSERT INTO river_posts SELECT ?, id FROM posts WHERE id IN (#{placeholders})", self.id, *matching.map(&:id)
