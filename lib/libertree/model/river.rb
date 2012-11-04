@@ -5,6 +5,10 @@ module Libertree
         @account ||= Account[self.account_id]
       end
 
+      def should_contain?( post )
+        ! self.contains?(post) && ! post.hidden_by?(self.account) && self.matches_post?(post)
+      end
+
       def contains?( post )
         River.prepare("SELECT EXISTS( SELECT 1 FROM river_posts WHERE river_id = ? AND post_id = ? LIMIT 1 )").sc( self.id, post.id )
       end
@@ -180,7 +184,7 @@ module Libertree
         # TODO: prepared statement?
         posts = Post.s("SELECT * FROM posts ORDER BY id DESC LIMIT #{n.to_i}")
         matching = posts.find_all do |post|
-          ! self.contains?(post) && ! post.hidden_by?(self.account) && self.matches_post?(post)
+          self.should_contain? post
         end
 
         placeholders = ( ['?'] * matching.count ).join(', ')
