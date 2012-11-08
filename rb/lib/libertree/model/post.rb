@@ -315,7 +315,7 @@ module Libertree
               FROM
                 posts p
               WHERE
-                text LIKE '%##{opts[:tag]}%'
+                text ~ '\\Y##{opts[:tag]}\\y'
                 AND GREATEST(p.time_commented, p.time_updated) #{time_comparator} ?
               ORDER BY GREATEST(p.time_commented, p.time_updated) DESC
               LIMIT #{limit}
@@ -330,7 +330,7 @@ module Libertree
               FROM
                 posts p
               WHERE
-                text LIKE '%##{opts[:tag]}%'
+                text ~ '\\Y##{opts[:tag]}\\y'
                 AND p.time_created #{time_comparator} ?
               ORDER BY p.time_created DESC
               LIMIT #{limit}
