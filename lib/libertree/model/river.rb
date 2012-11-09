@@ -189,7 +189,7 @@ module Libertree
             WHERE NOT EXISTS ( SELECT 1 FROM river_posts  WHERE river_id   = ? AND post_id = p.id )
               AND NOT EXISTS ( SELECT 1 FROM posts_hidden WHERE account_id = ? AND post_id = p.id )
             ORDER BY id DESC LIMIT #{n.to_i}
-          }).s(self.id, account.id)
+          }).s(self.id, account.id).map { |row| Post.new row }
 
         matching = posts.find_all { |post| self.matches_post? post }
         placeholders = ( ['?'] * matching.count ).join(', ')
