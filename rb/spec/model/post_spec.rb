@@ -65,7 +65,7 @@ describe Libertree::Model::Post do
     context 'with unicode tags' do
       opts = { :tag => '你好' }
       it 'returns posts that are tagged with #你好' do
-        post = new_post 'This is tagged with #你好 .'
+        post = new_post 'This is tagged with #你好.'
         Libertree::Model::Post.with_tag( opts ).should include(post)
       end
 
@@ -76,6 +76,24 @@ describe Libertree::Model::Post do
 
       it 'does not return posts that contain "好#你好"' do
         post = new_post 'This is not tagged 好#你好.'
+        Libertree::Model::Post.with_tag( opts ).should_not include(post)
+      end
+    end
+
+    context 'with accented character tags' do
+      opts = { :tag => 'José' }
+      it 'returns posts that are tagged with #José' do
+        post = new_post 'This is tagged with #José.'
+        Libertree::Model::Post.with_tag( opts ).should include(post)
+      end
+
+      it 'does not return posts that are tagged with #Josém' do
+        post = new_post 'This is tagged with #Josém.'
+        Libertree::Model::Post.with_tag( opts ).should_not include(post)
+      end
+
+      it 'does not return posts that contain "no#José"' do
+        post = new_post 'This is not tagged no#José.'
         Libertree::Model::Post.with_tag( opts ).should_not include(post)
       end
     end
