@@ -315,11 +315,12 @@ module Libertree
               FROM
                 posts p
               WHERE
-                text ~ '(^|\\s)##{opts[:tag]}\\M'
+                text ~ (E'(^|\\\\s)#' || ? || E'\\\\M')
                 AND GREATEST(p.time_commented, p.time_updated) #{time_comparator} ?
               ORDER BY GREATEST(p.time_commented, p.time_updated) DESC
               LIMIT #{limit}
             },
+            opts[:tag],
             time
           )
         else
@@ -330,11 +331,12 @@ module Libertree
               FROM
                 posts p
               WHERE
-                text ~ '(^|\\s)##{opts[:tag]}\\M'
+                text ~ (E'(^|\\\\s)#' || ? || E'\\\\M')
                 AND p.time_created #{time_comparator} ?
               ORDER BY p.time_created DESC
               LIMIT #{limit}
             },
+            opts[:tag],
             time
           )
         end
