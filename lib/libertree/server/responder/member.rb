@@ -59,17 +59,17 @@ module Libertree
         end
 
         def rsp_member_delete(params)
-          return  if require_parameters(params, 'member_id')
+          return  if require_parameters(params, 'username')
 
           begin
             members = Model::Member.
-              where( 'id' => params['member_id'] ).
+              where( 'username' => params['username'] ).
               reject { |p| p.server != @server }
 
             if members.empty?
               respond( {
                 'code' => 'NOT FOUND',
-                'message' => "Unrecognized member ID: #{params['member_id'].inspect}"
+                'message' => "Unrecognized username: #{params['username'].inspect}"
               } )
             else
               members[0].delete_cascade  # there should only be one member
