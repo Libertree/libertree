@@ -144,8 +144,8 @@ module Libertree
       end
 
       def delete_cascade
-        self.posts.map(&:delete_cascade)
-        self.comments.map(&:delete_cascade)
+        self.posts.each(&:delete_cascade)
+        self.comments.each(&:delete_cascade)
         self.profile.delete
         self.delete
       end
