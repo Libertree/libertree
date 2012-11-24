@@ -1,0 +1,36 @@
+# Maintainer: Shammancer shammancer@hotmail.com
+# install with makepkg -s
+
+pkgname=libertree
+
+pkgver=1.0.0.0
+
+pkgrel=1
+
+pkgdesc="Checks to install libertree dependencies on linux."
+
+url="https://github.com/Libertree"
+
+arch=('x86_64' 'i686')
+
+license=('AGPLv3')
+
+depends=('ruby' 'postgresql' 'git' 'graphicsmagick')
+
+optdepends=('apache' 'nginx' 'memcached')
+
+makedepends=()
+
+conflicts=()
+
+replaces=()
+
+backup=()
+
+install=''
+
+source=()
+
+md5sums=()
+
+

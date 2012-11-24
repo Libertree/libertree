@@ -22,6 +22,9 @@ Install the required system packages:
 * GraphicsMagick (or ImageMagick)
 * git
 
+Check the /packages directory to see if there is a meta-package for you system
+to install the dependencies through your package manager.
+
 Under Gentoo Linux, this is done with this command as the root user:
 
     # emerge -1atv postgresql-server graphicsmagick git
