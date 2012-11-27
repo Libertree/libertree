@@ -5,14 +5,18 @@ require 'syck'
 module Libertree
   module DB
     def self.config
-      if @config
-        @config
-      else
-        config_file = "#{ File.dirname( __FILE__ ) }/../../database.yaml"
-        configs ||= Syck.load( IO.read(config_file) )
-        env = ENV['LIBERTREE_ENV'] || 'development'
-        @config = configs[env]
-      end
+      @config
+    end
+
+    def self.config=(hash)
+      @config = hash
+    end
+
+    def self.load_config(filename)
+      config_file = filename
+      configs ||= Syck.load( IO.read(config_file) )
+      env = ENV['LIBERTREE_ENV'] || 'development'
+      @config = configs[env]
     end
 
     def self.dbh
