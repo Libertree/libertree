@@ -87,7 +87,6 @@ As the libertree user:
     % cd ~/git
     % git clone git://github.com/Libertree/libertree-db.git
     % git clone git://github.com/Libertree/libertree-backend-rb.git
-    % git clone git://github.com/Libertree/libertree-client-rb.git
     % git clone git://github.com/Libertree/libertree-frontend-ramaze.git
 
 ## Database
