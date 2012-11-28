@@ -353,7 +353,7 @@ module Libertree
       end
 
       def hidden_by?(account)
-        self.prepare("SELECT EXISTS( SELECT 1 FROM posts_hidden WHERE account_id = ? AND post_id = ? )").sc(account.id, self.id)
+        self.prepare("SELECT post_hidden_by_account(?, ?)").sc(self.id, account.id)
       end
 
       def collected_by?(account_or_member)

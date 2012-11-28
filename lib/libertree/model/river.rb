@@ -10,7 +10,7 @@ module Libertree
       end
 
       def contains?( post )
-        River.prepare("SELECT EXISTS( SELECT 1 FROM river_posts WHERE river_id = ? AND post_id = ? LIMIT 1 )").sc( self.id, post.id )
+        River.prepare("SELECT river_contains_post(?, ?)").sc( self.id, post.id )
       end
 
       def posts( opts = {} )
@@ -36,13 +36,7 @@ module Libertree
                   p.id = rp.post_id
                   AND rp.river_id = ?
                   AND GREATEST(p.time_commented, p.time_updated) #{time_comparator} ?
-                  AND NOT EXISTS(
-                    SELECT 1
-                    FROM posts_hidden pi
-                    WHERE
-                      pi.account_id = ?
-                      AND pi.post_id = rp.post_id
-                  )
+                  AND NOT post_hidden_by_account( rp.post_id, ? )
                 ORDER BY GREATEST(p.time_commented, p.time_updated) DESC
                 LIMIT #{limit}
               ) AS x
@@ -65,13 +59,7 @@ module Libertree
                   p.id = rp.post_id
                   AND rp.river_id = ?
                   AND p.time_created #{time_comparator} ?
-                  AND NOT EXISTS(
-                    SELECT 1
-                    FROM posts_hidden pi
-                    WHERE
-                      pi.account_id = ?
-                      AND pi.post_id = rp.post_id
-                  )
+                  AND NOT post_hidden_by_account( rp.post_id, ? )
                 ORDER BY p.time_created DESC
                 LIMIT #{limit}
               ) AS x
@@ -183,11 +171,13 @@ module Libertree
         DB.dbh.d  "DELETE FROM river_posts WHERE river_id = ?", self.id
         posts = Post.prepare(
           %{
-            SELECT p.*
+            SELECT
+              p.*
             FROM
               posts p
-            WHERE NOT EXISTS ( SELECT 1 FROM river_posts  WHERE river_id   = ? AND post_id = p.id )
-              AND NOT EXISTS ( SELECT 1 FROM posts_hidden WHERE account_id = ? AND post_id = p.id )
+            WHERE
+              NOT river_contains_post( ?, p.id )
+              AND NOT post_hidden_by_account( p.id, ? )
             ORDER BY id DESC LIMIT #{n.to_i}
           }).s(self.id, account.id).map { |row| Post.new row }
 
