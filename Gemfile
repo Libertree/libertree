@@ -7,7 +7,7 @@ gem 'eventmachine'
 gem 'bcrypt-ruby'
 gem 'pony'
 
-gem 'libertree-db', path: '../libertree-db/rb'
+gem 'libertree-model', :git => 'git://github.com/Libertree/libertree-model-rb.git'
 gem 'libertree-client', :git => 'git://github.com/Libertree/libertree-client-rb.git'
 
 group 'development' do

@@ -5,6 +5,12 @@ GIT
     libertree-client (0.0.1)
 
 GIT
+  remote: git://github.com/Libertree/libertree-model-rb.git
+  revision: ef985cc5f8533d6b06bffa28c45416fe205b8888
+  specs:
+    libertree-model (0.0.1)
+
+GIT
   remote: git://github.com/RDBI/rdbi-driver-postgresql.git
   revision: 4c19912b5649bbefad20b48a378a5bf0dad60c15
   specs:
@@ -29,11 +35,6 @@ GIT
   specs:
     linecache19 (0.5.12)
       ruby_core_source (>= 0.1.4)
-
-PATH
-  remote: ../libertree-db/rb
-  specs:
-    libertree-db (0.0.1)
 
 GEM
   remote: http://rubygems.org/
@@ -102,7 +103,7 @@ DEPENDENCIES
   eventmachine
   factory_girl
   libertree-client!
-  libertree-db!
+  libertree-model!
   linecache19!
   m4dbi
   pg
