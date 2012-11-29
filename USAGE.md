@@ -90,11 +90,7 @@ repository:
 
     % cd ~/git/libertree-db
     % git fetch origin && git merge --ff-only @{u}
-    % rvm use 1.9.3@libertree-db
-    % cd rb
     % LIBERTREE_ENV=production ./migrate.sh
-    % cd ~/git/libertree-client-rb
-    % git fetch origin && git merge --ff-only @{u}
     % cd ~/git/libertree-backend-rb
     % git fetch origin && git merge --ff-only @{u}
     % cd ~/git/libertree-frontend-ramaze

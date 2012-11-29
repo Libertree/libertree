@@ -98,10 +98,6 @@ As the libertree user:
     % ./createuser.sh
     % ./createdb.sh
     % cp database.yaml.example database.yaml
-    % cd rb
-    % rvm use --create 1.9.3@libertree-db
-    % gem install bundler
-    % bundle install
     % LIBERTREE_ENV=production ./migrate.sh
 
 If a password is required for connecting to PostgreSQL, use a pgpass file:
