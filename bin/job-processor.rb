@@ -3,8 +3,7 @@ require 'libertree/job-processor'
 
 ########################
 # FIXME: M4DBI wants us to connect to the db before defining models.  As model
-# definitions are loaded when 'libertree/server' is required, we have to do
-# this first.
+# definitions are loaded when 'lib/jobs' is required, we have to do this first.
 Libertree::DB.load_config "#{File.dirname( __FILE__ ) }/../database.yaml"
 Libertree::DB.dbh
 ########################
