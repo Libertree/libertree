@@ -71,19 +71,8 @@ setup_db() {
 
   export PGHOST=localhost
   info "Creating db owner and database as user \"postgres\"."
-
-  # TODO: better move these checks to the create{user,db}.sh scripts
-  if echo "\dg" | psql -U postgres | grep -q libertree; then
-    warn "libertree database owner already exists. Skipping."
-  else
-    ./createuser.sh
-  fi
-
-  if psql -U postgres -l | grep -q libertree; then
-    warn "libertree databases already exist. Skipping."
-  else
-    ./createdb.sh
-  fi
+  ./createuser.sh
+  ./createdb.sh
 
   handle_config "database.yaml"
 
