@@ -53,10 +53,19 @@ written in Ruby.
 The components of Libertree are individual subprojects, each having its own
 source code repository.
 
-* libertree-db
+Servers:
+
 * libertree-backend-rb
-* libertree-client-rb
 * libertree-frontend-ramaze
+
+Libraries:
+
+* libertree-model-rb
+* libertree-client-rb
+
+Database schema:
+
+* libertree-db
 
 ## Installation
 
