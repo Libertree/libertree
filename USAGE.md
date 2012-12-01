@@ -27,9 +27,10 @@ If the Libertree installation is configured to use memcache, start memcached:
 
 ### Ruby services
 
-Libertree needs three Ruby services running: the frontend, the backend and job
-processing.  The websocket server is optional.  Some of these services might be
-served by more than one process or daemon.
+Libertree consists of two main components: the frontend and the backend.  In
+addition to these two services, there are job processing scripts for both
+frontend and backend.  The websocket server is optional.  Some of these
+services might be served by more than one process or daemon.
 
 #### Backend
 
