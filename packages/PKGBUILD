@@ -4,7 +4,7 @@
 pkgname=libertree
 pkgver=0.0.1
 pkgrel=1
-pkgdesc="Checks to install libertree dependencies on linux."
+pkgdesc="Meta-package to install Libertree dependencies"
 url="https://github.com/Libertree"
 arch=('x86_64' 'i686')
 license=('AGPLv3')
@@ -17,5 +17,3 @@ backup=()
 install=''
 source=()
 md5sums=()
-
-
