@@ -47,6 +47,17 @@ Usage of memcached is recommended, but not required:
 
 Note that it _is_ required if you intend to run more than one frontend process.
 
+
+### Using the installer script
+
+We provide an experimental installer script that sets up Libertree according to
+the following instructions. To use the installer, [download the latest
+version](https://github.com/Libertree/libertree/archive/master.zip) of this
+repository, unpack it and then run `./install` in the `installer` subdirectory.
+
+If you don't trust the installer, please follow the instructions below.
+
+
 ### Ruby
 
 While it is possible to use the system Ruby package, it is recommended that a
