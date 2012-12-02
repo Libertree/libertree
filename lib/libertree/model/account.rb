@@ -256,7 +256,7 @@ module Libertree
       end
 
       def subscribed_to?(post)
-        DB.dbh.sc  "SELECT EXISTS( SELECT 1 FROM post_subscriptions WHERE account_id = ? AND post_id = ? ) ", self.id, post.id
+        DB.dbh.sc  "SELECT account_subscribed_to_post( ?, ? )", self.id, post.id
       end
 
       def self.subscribed_to(post)
