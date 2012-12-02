@@ -3,7 +3,7 @@ set -o nounset # abort if we try to use an unset variable
 set -o errexit # exit if any statement returns a non-true return value
 
 CONFIG_FILE=${1:-database.yaml.example}
-
+SCRIPT_DIR="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 function parse_config 
 {
@@ -48,11 +48,11 @@ function ensure_migration_table_exists
 function apply_migrations
 {
   # apply migrations unless they exist
-  for migration in $(find migrations -name \*.sql -printf '%f\n' | sort); do
+  for migration in $(find ${SCRIPT_DIR}/migrations -name \*.sql -printf '%f\n' | sort); do
     if migration_exists $migration; then
       echo "[SKIP] $migration"
     else
-      ( psql -v ON_ERROR_STOP=1 --username $libertree_db_username -f "migrations/$migration" --single-transaction $libertree_db_database && execute "INSERT INTO schema_migrations ( filename ) VALUES ('$migration')") || { echo "ERROR: failed to apply migration \"$migration\"."; exit 1; }
+      ( psql -v ON_ERROR_STOP=1 --username $libertree_db_username -f "${SCRIPT_DIR}/migrations/$migration" --single-transaction $libertree_db_database && execute "INSERT INTO schema_migrations ( filename ) VALUES ('$migration')") || { echo "ERROR: failed to apply migration \"$migration\"."; exit 1; }
     fi
   done
 }
