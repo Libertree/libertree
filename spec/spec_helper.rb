@@ -1,4 +1,14 @@
 require 'ruby-debug'
+require_relative '../lib/libertree/db'
+
+########################
+# FIXME: M4DBI wants us to connect to the db before defining models.  As model
+# definitions are loaded when 'libertree/model' is required, we have to do
+# this first.
+Libertree::DB.load_config "#{File.dirname( __FILE__ ) }/../database.yaml"
+Libertree::DB.dbh
+########################
+
 require_relative '../lib/libertree/model'
 require_relative 'factories'
 
