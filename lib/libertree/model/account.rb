@@ -352,25 +352,8 @@ module Libertree
       end
 
       def has_contact_list_by_name_containing_member?(contact_list_name, member)
-        DB.dbh.prepare(
-          %{
-            SELECT EXISTS(
-              SELECT 1
-              FROM
-                  contact_lists cl
-                , contact_lists_members clm
-              WHERE
-                cl.account_id = ?
-                AND cl.name = ?
-                AND clm.contact_list_id = cl.id
-                AND clm.member_id = ?
-            )
-          }
-        ).sc(
-          self.id,
-          contact_list_name,
-          member.id
-        )
+        DB.dbh.sc  "SELECT account_has_contact_list_by_name_containing_member( ?, ?, ? )",
+          self.id, contact_list_name, member.id
       end
     end
   end
