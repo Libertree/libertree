@@ -70,36 +70,7 @@ module Libertree
       end
 
       def mark_as_read_by(account)
-        DB.dbh.execute(
-          %{
-            INSERT INTO posts_read ( post_id, account_id )
-            SELECT ?, ?
-            WHERE NOT EXISTS (
-              SELECT 1
-              FROM posts_read
-              WHERE
-                post_id = ?
-                AND account_id = ?
-            )
-          },
-          self.id,
-          account.id,
-          self.id,
-          account.id
-        )
-        DB.dbh.delete(
-          %{
-            DELETE FROM river_posts rp
-            USING rivers r
-            WHERE
-              rp.river_id = r.id
-              AND r.account_id = ?
-              AND r.query LIKE '%:unread%'
-              AND rp.post_id = ?
-          },
-          account.id,
-          self.id
-        )
+        DB.dbh.execute  "SELECT mark_post_as_read_by( ?, ? )", self.id, account.id
       end
 
       def mark_as_unread_by(account)
