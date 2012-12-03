@@ -70,36 +70,7 @@ module Libertree
       end
 
       def mark_as_read_by(account)
-        DB.dbh.execute(
-          %{
-            INSERT INTO posts_read ( post_id, account_id )
-            SELECT ?, ?
-            WHERE NOT EXISTS (
-              SELECT 1
-              FROM posts_read
-              WHERE
-                post_id = ?
-                AND account_id = ?
-            )
-          },
-          self.id,
-          account.id,
-          self.id,
-          account.id
-        )
-        DB.dbh.delete(
-          %{
-            DELETE FROM river_posts rp
-            USING rivers r
-            WHERE
-              rp.river_id = r.id
-              AND r.account_id = ?
-              AND r.query LIKE '%:unread%'
-              AND rp.post_id = ?
-          },
-          account.id,
-          self.id
-        )
+        DB.dbh.execute  "SELECT mark_post_as_read_by( ?, ? )", self.id, account.id
       end
 
       def mark_as_unread_by(account)
@@ -232,13 +203,10 @@ module Libertree
       end
 
       def add_to_matching_rivers(account=nil)
-        if account
-          account.rivers.each do |river|
-            river.try_post self
-          end
-        else
-          River.each do |river|
-            river.try_post self
+        rs = account ? account.rivers : River
+        rs.each do |river|
+          if river.should_contain? self
+            DB.dbh.i "INSERT INTO river_posts ( river_id, post_id ) VALUES ( ?, ? )", river.id, self.id
           end
         end
       end
@@ -356,7 +324,7 @@ module Libertree
       end
 
       def hidden_by?(account)
-        DB.dbh.sc  "SELECT EXISTS( SELECT 1 FROM posts_hidden WHERE account_id = ? AND post_id = ? )", account.id, self.id
+        self.prepare("SELECT post_hidden_by_account(?, ?)").sc(self.id, account.id)
       end
 
       def collected_by?(account_or_member)

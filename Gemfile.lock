@@ -24,11 +24,6 @@ GIT
     linecache19 (0.5.12)
       ruby_core_source (>= 0.1.4)
 
-PATH
-  remote: .
-  specs:
-    libertree-db (0.0.1)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -82,7 +77,6 @@ PLATFORMS
 DEPENDENCIES
   bcrypt-ruby
   factory_girl
-  libertree-db!
   linecache19!
   m4dbi
   pg
