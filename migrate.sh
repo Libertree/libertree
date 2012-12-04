@@ -5,6 +5,8 @@ set -o errexit # exit if any statement returns a non-true return value
 CONFIG_FILE=${1:-database.yaml.example}
 SCRIPT_DIR="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+export PGOPTIONS="--client-min-messages=warning${PGOPTIONS:+:$PGOPTIONS}"
+
 function parse_config 
 {
   # - ignore commented lines
@@ -36,6 +38,9 @@ function parse_config
   [ -n ${libertree_db_username:?"Database username undefined."} ]
   [ -n ${libertree_db_database:?"Database name undefined."} ]
 
+  # TODO: use password if it is defined
+  export psql_options="--quiet -v ON_ERROR_STOP=1 -v VERBOSITY=terse -h $libertree_db_host --username $libertree_db_username --dbname $libertree_db_database"
+
   return 0
 }
 
@@ -47,27 +52,33 @@ function ensure_migration_table_exists
 
 function apply_migrations
 {
-  # apply migrations unless they exist
-  for migration in $(find ${SCRIPT_DIR}/migrations -name \*.sql -printf '%f\n' | sort); do
-    if migration_exists $migration; then
-      echo "[SKIP] $migration"
-    else
-      ( psql -v ON_ERROR_STOP=1 --username $libertree_db_username -f "${SCRIPT_DIR}/migrations/$migration" --single-transaction $libertree_db_database && execute "INSERT INTO schema_migrations ( filename ) VALUES ('$migration')") || { echo "ERROR: failed to apply migration \"$migration\"."; exit 1; }
-    fi
-  done
+  migrations=$( migrations_to_apply )
+  if [ -z "$migrations" ]; then
+    echo "Nothing to do."
+  else
+    for migration in $migrations; do
+      echo "Applying: $migration"
+      ( psql $psql_options --single-transaction --file ${SCRIPT_DIR}/migrations/$migration \
+        && execute "INSERT INTO schema_migrations ( filename ) VALUES ('$migration')") || \
+        { echo "ERROR: failed to apply migration \"$migration\"."; exit 1; }
+    done
+    echo -e "\nDone."
+  fi
+}
+
+# return a sorted list of migrations that have not yet been applied
+function migrations_to_apply
+{
+  execute "SELECT filename FROM schema_migrations SORT" | \
+    diff --changed-group-format="%<" --unchanged-group-format='' \
+    <( find ${SCRIPT_DIR}/migrations -name \*.sql -printf '%f\n' | sort) - |\
+    sed -e 's/$/ /g'
 }
 
 function execute
 {
-  # TODO: use password only if it is defined
-  psql --tuples-only --no-align -h $libertree_db_host --username $libertree_db_username --dbname $libertree_db_database -c "$1"
+  echo "$1" | psql $psql_options --tuples-only --no-align
 }
-
-function migration_exists
-{
-  execute "SELECT 1 FROM schema_migrations WHERE filename = '$1'" | grep -q "1"
-}
-
 
 # ---------------------------------------
 parse_config
