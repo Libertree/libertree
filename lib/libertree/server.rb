@@ -1,11 +1,8 @@
 require 'eventmachine'
 require 'json'
 require 'socket'
-require 'openssl'
-require 'base64'
 require 'fileutils'
 
-require 'libertree/authenticatable'
 require 'libertree/model'
 require 'libertree/server/responder'
 
@@ -54,16 +51,6 @@ module Libertree
         @server.challenge = nil
         @server = nil
       end
-    end
-
-    # -------
-
-    def introduced?
-      @server && @server.public_key
-    end
-
-    def authenticated?
-      @server && @server.authenticated?
     end
 
     def log(s, level = nil)
