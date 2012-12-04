@@ -5,6 +5,7 @@ module Libertree
   module Server
     module Responder
       module Dispatcher
+        extend Blather::DSL
 
         VALID_COMMANDS = [
           'AUTHENTICATE', 'CHAT', 'COMMENT', 'COMMENT-DELETE', 'COMMENT-LIKE',
