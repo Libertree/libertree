@@ -360,9 +360,10 @@ module Libertree
         DB.dbh.d "DELETE FROM invitations WHERE account_id = ?", self.id
         DB.dbh.u "UPDATE invitations SET inviter_account_id = NULL WHERE inviter_account_id = ?", self.id
         DB.dbh.d "DELETE FROM sessions_accounts WHERE account_id = ?", self.id
+        DB.dbh.d "DELETE FROM notifications WHERE account_id = ?", self.id
+        DB.dbh.d "DELETE FROM post_subscriptions WHERE account_id = ?", self.id
 
         self.rivers.each { |r| r.delete_cascade(true) }
-        self.pools.each(&:delete_cascade)
 
         if self.member
           self.messages.each(&:delete_cascade)
