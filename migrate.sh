@@ -69,7 +69,7 @@ function apply_migrations
 # return a sorted list of migrations that have not yet been applied
 function migrations_to_apply
 {
-  execute "SELECT filename FROM schema_migrations SORT" | \
+  execute "SELECT filename FROM schema_migrations" | sort | \
     diff --changed-group-format="%<" --unchanged-group-format='' \
     <( find ${SCRIPT_DIR}/migrations -name \*.sql -printf '%f\n' | sort) - |\
     sed -e 's/$/ /g'
