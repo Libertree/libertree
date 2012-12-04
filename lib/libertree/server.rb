@@ -1,14 +1,12 @@
-require 'eventmachine'
 require 'json'
-require 'socket'
 require 'fileutils'
+require 'blather/client/dsl'
 
 require 'libertree/model'
 require 'libertree/server/responder'
 
 module Libertree
   module Server
-    PORT = 14404
 
     class ConfigurationError < StandardError
     end
@@ -19,39 +17,6 @@ module Libertree
     end
 
     include Responder
-
-    # EventMachine callbacks
-
-    def post_init
-      # TODO: Not sure if there isn't a better place to read in the local public key
-      key = OpenSSL::PKey::RSA.new File.read( Libertree::Server.conf['private_key_path'] )
-      @public_key = key.public_key.to_pem
-      port, @ip_remote = Socket.unpack_sockaddr_in(get_peername)
-      @data = ''
-      log "#{@ip_remote} connected."
-    end
-
-    # We're assuming this is never called simultaneously by EventMachine for
-    # the same connection.
-    def receive_data(data)
-      begin
-        @data << data
-        if data =~ /\n/
-          process @data
-          @data = ''  # needed?
-        end
-      rescue Exception => e
-        log_error( e.message + "\n" + e.backtrace.reject { |s| s =~ %r{/gems/} }[0..5].join("\n\t") )
-      end
-    end
-
-    def unbind
-      log "#{@ip_remote} disconnected."
-      if @server
-        @server.challenge = nil
-        @server = nil
-      end
-    end
 
     def log(s, level = nil)
       t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
@@ -123,6 +88,7 @@ module Libertree
           if @conf['log_path']
             @log = File.open( @conf['log_path'], 'a+' )
             @log.sync = true
+            puts "Logging to #{File.absolute_path(@log.path)}"
           else
             @log = $stdout
           end
@@ -139,15 +105,6 @@ module Libertree
           end
         end
 
-        EventMachine.run do
-          host = @conf['ip_listen'] || '127.0.0.1'
-          EventMachine.start_server( host, PORT, self )
-          puts "Libertree started."
-          puts "Listening on #{host}, port #{PORT}."
-          if @log.respond_to? :path
-            puts "Logging to #{File.absolute_path(@log.path)}"
-          end
-        end
 
         if @log.respond_to? :path
           @log.close
