@@ -283,7 +283,7 @@ module Libertree
               FROM
                 posts p
               WHERE
-                text ~ ('(^|\\s)#' || ? || '(\\M|\\s|$|[[:punct:]])')
+                text ~ (E'(^|\\s)#' || ? || E'(\\M|\\s|$|[[:punct:]])')
                 AND GREATEST(p.time_commented, p.time_updated) #{time_comparator} ?
               ORDER BY GREATEST(p.time_commented, p.time_updated) DESC
               LIMIT #{limit}
@@ -299,7 +299,7 @@ module Libertree
               FROM
                 posts p
               WHERE
-                text ~ ('(^|\\s)#' || ? || '(\\M|\\s|$|[[:punct:]])')
+                text ~ (E'(^|\\s)#' || ? || E'(\\M|\\s|$|[[:punct:]])')
                 AND p.time_created #{time_comparator} ?
               ORDER BY p.time_created DESC
               LIMIT #{limit}
