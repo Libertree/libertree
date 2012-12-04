@@ -69,6 +69,16 @@ describe Libertree::Model::Post do
         Libertree::Model::Post.with_tag( opts ).should include(post)
       end
 
+      it 'returns posts that end with the tag #你好' do
+        post = new_post 'This is tagged with #你好'
+        Libertree::Model::Post.with_tag( opts ).should include(post)
+      end
+
+      it 'returns posts that include the tag #你好' do
+        post = new_post 'This is tagged with #你好 and nothing else'
+        Libertree::Model::Post.with_tag( opts ).should include(post)
+      end
+
       it 'does not return posts that are tagged with #你好吗' do
         post = new_post 'This is tagged with #你好吗.'
         Libertree::Model::Post.with_tag( opts ).should_not include(post)
@@ -76,6 +86,11 @@ describe Libertree::Model::Post do
 
       it 'does not return posts that contain "好#你好"' do
         post = new_post 'This is not tagged 好#你好.'
+        Libertree::Model::Post.with_tag( opts ).should_not include(post)
+      end
+
+      it 'does not return posts that contain only "你好"' do
+        post = new_post 'This is not tagged 你好'
         Libertree::Model::Post.with_tag( opts ).should_not include(post)
       end
     end
