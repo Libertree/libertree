@@ -8,7 +8,7 @@ gem 'libertree-client', :git => 'git://github.com/Libertree/libertree-client-rb.
 
 group 'extensions' do
   gem 'pg'
-  gem 'eventmachine'
+  gem 'blather'
   gem 'bcrypt-ruby'
 end
 
