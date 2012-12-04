@@ -41,9 +41,9 @@ module Libertree
       @conf = YAML.load( File.read(config_filename) )
       missing = []
       [
-        'ip_listen',
-        'ip_public',
-        'private_key_path',
+        'xmpp_server',
+        'component',
+        'shared_secret',
       ].each do |required_key|
         if @conf[required_key].nil?
           missing << required_key
@@ -105,6 +105,10 @@ module Libertree
           end
         end
 
+        host   = @conf['xmpp_server']
+        domain = @conf['component']
+        secret = @conf['shared_secret']
+        port   = @conf['port'].to_i || 5347
 
         if @log.respond_to? :path
           @log.close
