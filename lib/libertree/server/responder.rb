@@ -1,5 +1,3 @@
-require 'libertree/server/responder/dispatcher'
-
 require 'libertree/server/responder/chat'
 require 'libertree/server/responder/comment'
 require 'libertree/server/responder/comment-like'
@@ -14,7 +12,7 @@ require 'libertree/server/responder/post-like'
 module Libertree
   module Server
     module Responder
-      include Dispatcher
+      extend Blather::DSL
 
       include Chat
       include Comment
@@ -26,6 +24,96 @@ module Libertree
       include PoolPost
       include Post
       include PostLike
+
+      when_ready {
+        puts "\nLibertree started."
+        puts "Send messages to #{jid.stripped}."
+      }
+
+      [ 'chat',
+        'comment',
+        'comment-delete',
+        'comment-like',
+        'comment-like-delete',
+        'forest',
+        'member',
+        'message',
+        'pool',
+        'pool-delete',
+        'pool-post',
+        'pool-post-delete',
+        'post',
+        'post-delete',
+        'post-like',
+        'post-like-delete',
+      ].each do |command|
+        client.register_handler :iq,
+          "/iq/ns:libertree/ns:#{command}", :ns => 'libertree' do |stanza, xpath_result|
+
+          server = stanza.from.domain
+          # TODO: look up the domain in the db
+          #server = Libertree::Model::Server[ :domain => stanza.from.domain ]
+
+          # when we get messages from unknown servers: abort connection
+          if ! server
+            response = error text: 'Unknown server.'
+          else
+            Libertree::Server.log "Received request: '#{command}' from #{stanza.from.stripped}"
+
+            response =
+              begin
+                process command, xpath_result.first.content; nil
+              rescue BadParameter => e
+                error code: 'BAD PARAMETER', text: e.message
+              rescue MissingParameter => e
+                error code: 'MISSING PARAMETER', text: e.message
+              rescue NotFound => e
+                error code: 'NOT FOUND', text: e.message
+              rescue InternalError => e
+                error text: e.message
+              end
+          end
+
+          respond to: stanza, with: response
+          halt # stop further processing
+        end
+      end
+
+      # catch all
+      iq do |stanza|
+        respond to: stanza, with: (error code: 'UNKNOWN COMMAND')
+      end
+
+      def self.respond(opts)
+        stanza = opts[:to]
+        response = stanza.reply
+        response.add_child opts[:with]  if opts[:with]
+
+        puts response
+        write_to_stream response
+      end
+
+      def self.process(command, parameters_raw)
+        # TODO: don't use JSON; we already have a
+        #       fully parsed XML message.
+        begin
+          parameters = JSON.parse(parameters_raw)
+        rescue JSON::ParserError => e
+          raise BadParameter, e.message, nil
+        end
+
+        method = "rsp_#{command.gsub('-', '_')}".to_sym
+        send  method, parameters
+      end
+
+      def self.error(opts={ code: 'ERROR' })
+        Nokogiri::XML::Builder.new { |xml|
+          xml.error {
+            xml.code(opts[:code])
+            xml.text_(opts[:text])  if opts[:text]
+          }
+        }.doc.root
+      end
 
       # @param [Hash] params A Hash.
       # @param [Array] required_parameters The keys which are required.

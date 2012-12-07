@@ -113,8 +113,8 @@ module Libertree
         secret = @conf['shared_secret']
         port   = @conf['port'].to_i || 5347
 
-        Dispatcher.setup domain, secret, host, port
-        EventMachine.run { Dispatcher.run }
+        Responder.setup domain, secret, host, port
+        EventMachine.run { Responder.run }
 
         if @log.respond_to? :path
           @log.close
