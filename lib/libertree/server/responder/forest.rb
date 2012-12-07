@@ -3,7 +3,7 @@ module Libertree
     module Responder
       module Forest
         def rsp_forest(params)
-          return  if require_parameters(params, 'name', 'trees')
+          require_parameters(params, 'name', 'trees')
 
           begin
             forest = Model::Forest[
@@ -24,11 +24,9 @@ module Libertree
               t['ip'] == Server.conf['ip_public']
             }
             forest.set_trees_by_ip trees
-
-            respond_with_code 'OK'
           rescue PGError => e
             log "Error on FOREST request: #{e.message}"
-            respond_with_code 'ERROR'
+            fail InternalError, '', nil
           end
         end
       end

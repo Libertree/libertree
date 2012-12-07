@@ -7,7 +7,7 @@ module Libertree
     module Responder
       module Member
         def rsp_member(params)
-          return  if require_parameters(params, 'username')
+          require_parameters(params, 'username')
 
           begin
             member = Model::Member.find_or_create(
@@ -22,11 +22,7 @@ module Libertree
                 profile.name_display = params['profile']['name_display']
               rescue PGError => e
                 if e.message =~ /valid_name_display/
-                  respond( {
-                    'code' => 'ERROR',
-                    'message' => "Invalid display name: #{params['profile']['name_display'].inspect}"
-                  } )
-                  return
+                  fail InternalError, "Invalid display name: #{params['profile']['name_display'].inspect}", nil
                 else
                   raise e
                 end
@@ -46,15 +42,11 @@ module Libertree
                 }.to_json
               )
             end
-
-            respond_with_code 'OK'
           rescue URI::InvalidURIError => e
-            respond( {
-              'code' => 'ERROR',
-              'message' => "Invalid URI: #{params['avatar_url']}"
-            } )
+            fail InternalError, "Invalid URI: #{params['avatar_url']}", nil
           rescue PGError => e
-            respond_with_code 'ERROR'
+            log "Error in rsp_member: #{e.message}"
+            fail InternalError, '', nil
           end
         end
       end

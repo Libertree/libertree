@@ -8,8 +8,11 @@ require 'libertree/server/responder'
 module Libertree
   module Server
 
-    class ConfigurationError < StandardError
-    end
+    class ConfigurationError < StandardError; end
+    class BadParameter < StandardError; end
+    class MissingParameter < StandardError; end
+    class NotFound < StandardError; end
+    class InternalError < StandardError; end
 
     class << self
       attr_accessor :conf

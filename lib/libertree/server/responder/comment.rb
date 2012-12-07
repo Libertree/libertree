@@ -5,29 +5,19 @@ module Libertree
     module Responder
       module Comment
         def rsp_comment(params)
-          return  if require_parameters(params, 'id', 'username', 'public_key', 'post_id', 'text')
+          require_parameters(params, 'id', 'username', 'public_key', 'post_id', 'text')
 
           begin
             member = Model::Member[
               'username' => params['username'],
               'server_id' => @server.id,
             ]
-            if member.nil?
-              respond( {
-                'code' => 'NOT FOUND',
-                'message' => "Unrecognized member username: #{params['username'].inspect}"
-              } )
-              return
-            end
+            assert member, "Unrecognized member username: #{params['username'].inspect}"
 
             origin = Model::Server[ public_key: params['public_key'] ]
             if origin.nil? && params['public_key'] != @public_key
               # TODO: Is this revealing too much to the requester?
-              respond( {
-                'code' => 'NOT FOUND',
-                'message' => "Unrecognized origin server."
-              } )
-              return
+              fail NotFound, 'Unrecognized origin server.', nil
             end
 
             if origin.nil?
@@ -40,14 +30,7 @@ module Libertree
               }
               post = posts[0]  # There should only be one or none
             end
-
-            if post.nil?
-              respond( {
-                'code' => 'NOT FOUND',
-                'message' => "Unrecognized post."
-              } )
-              return
-            end
+            assert post, 'Unrecognized post.'
 
             if params.has_key? 'references'
               comment_text = Libertree::References::replace(params['text'], params['references'], @server.id, @public_key)
@@ -62,32 +45,25 @@ module Libertree
               # TODO: Sanitize with Loofah
               'text' => comment_text
             )
-
-            respond_with_code 'OK'
           rescue PGError => e
-            respond_with_code 'ERROR'
+            log "Error in rsp_comment: #{e.message}"
+            fail InternalError, '', nil
           end
         end
 
         def rsp_comment_delete(params)
-          return  if require_parameters(params, 'id')
+          require_parameters(params, 'id')
 
           begin
             comments = Model::Comment.
               where( 'remote_id' => params['id'] ).
               reject { |c| c.member.server != @server }
 
-            if comments.empty?
-              respond( {
-                'code' => 'NOT FOUND',
-                'message' => "Unrecognized comment ID: #{params['id'].inspect}"
-              } )
-            else
-              comments[0].delete_cascade  # there should only be one comment
-              respond_with_code 'OK'
-            end
+            assert comments[0], "Unrecognized comment ID: #{params['id'].inspect}"
+            comments[0].delete_cascade  # there should only be one comment
           rescue PGError => e
-            respond_with_code 'ERROR'
+            log "Error in rsp_comment_delete: #{e.message}"
+            fail InternalError, '', nil
           end
         end
       end

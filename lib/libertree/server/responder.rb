@@ -27,19 +27,6 @@ module Libertree
       include Post
       include PostLike
 
-      def respond(data)
-        # TODO: Gracefully handle failure to convert to JSON
-        response = data.to_json + "\n"
-        if Server.conf['debug']
-          log response
-        end
-        send_data response
-      end
-
-      def respond_with_code(code)
-        respond 'code' => code
-      end
-
       # @param [Hash] params A Hash.
       # @param [Array] required_parameters The keys which are required.
       # @return [Array] The keys whose values are missing.
@@ -53,17 +40,20 @@ module Libertree
         missing
       end
 
-      # Calls #missing_parameters.  If any parameters are missing, responds (to
-      # the requester) with the first missing parameter.
-      # @return [Boolean] whether there were missing parameters
+      # Calls #missing_parameters.  If any parameters are missing, raises
+      # MissingParameters exception with the first missing parameter as message.
+      # @return [nil] when there are no missing parameters
+      # @raises [MissingParameter] when there is a missing parameter
       def require_parameters(*args)
         mp = missing_parameters(*args)
         if mp[0]
-          respond( {
-            'code' => 'MISSING PARAMETER',
-            'parameter' => mp[0],
-          } )
-          true
+          fail MissingParameter, mp[0], nil
+        end
+      end
+
+      def assert(obj, msg)
+        if obj.nil?
+          fail NotFound, msg, nil
         end
       end
     end
