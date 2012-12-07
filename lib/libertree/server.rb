@@ -16,12 +16,12 @@ module Libertree
 
     class << self
       attr_accessor :conf
-      attr_accessor :log
+      attr_accessor :log_handle
     end
 
     include Responder
 
-    def log(s, level = nil)
+    def self.log(s, level = nil)
       t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
       if level
         l = "#{level} "
@@ -33,11 +33,11 @@ module Libertree
         id = @ip_remote
       end
 
-      Libertree::Server.log.puts "[#{t}] (#{id}) #{l}#{s}"
+      Libertree::Server.log_handle.puts "[#{t}] (#{id}) #{l}#{s}"
     end
 
-    def log_error(s)
-      log s, 'ERROR'
+    def self.log_error(s)
+      self.log s, 'ERROR'
     end
 
     def self.load_config(config_filename)
@@ -89,11 +89,11 @@ module Libertree
           end
 
           if @conf['log_path']
-            @log = File.open( @conf['log_path'], 'a+' )
-            @log.sync = true
-            puts "Logging to #{File.absolute_path(@log.path)}"
+            @log_handle = File.open( @conf['log_path'], 'a+' )
+            @log_handle.sync = true
+            puts "Logging to #{File.absolute_path(@log_handle.path)}"
           else
-            @log = $stdout
+            @log_handle = $stdout
           end
         rescue ConfigurationError => e
           $stderr.puts e.message
@@ -116,8 +116,8 @@ module Libertree
         Responder.setup domain, secret, host, port
         EventMachine.run { Responder.run }
 
-        if @log.respond_to? :path
-          @log.close
+        if @log_handle.respond_to? :path
+          @log_handle.close
         end
       end
     end
