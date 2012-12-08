@@ -62,9 +62,7 @@ module Libertree
 
             response =
               begin
-                process command, xpath_result.first.content; nil
-              rescue BadParameter => e
-                error code: 'BAD PARAMETER', text: e.message
+                process command, xpath_result.first; nil
               rescue MissingParameter => e
                 error code: 'MISSING PARAMETER', text: e.message
               rescue NotFound => e
@@ -93,15 +91,8 @@ module Libertree
         write_to_stream response
       end
 
-      def self.process(command, parameters_raw)
-        # TODO: don't use JSON; we already have a
-        #       fully parsed XML message.
-        begin
-          parameters = JSON.parse(parameters_raw)
-        rescue JSON::ParserError => e
-          raise BadParameter, e.message, nil
-        end
-
+      def self.process(command, payload)
+        parameters = payload.children.reduce({}) {|acc, n| acc[n.name] = n.text; acc}
         method = "rsp_#{command.gsub('-', '_')}".to_sym
         send  method, parameters
       end
