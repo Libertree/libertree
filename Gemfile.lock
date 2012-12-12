@@ -1,4 +1,13 @@
 GIT
+  remote: git://github.com/Pistos/m4dbi.git
+  revision: 094db36dd6536e5eae9e74180e04045f129bae22
+  branch: after-update-previous
+  specs:
+    m4dbi (0.8.7)
+      metaid
+      rdbi
+
+GIT
   remote: git://github.com/RDBI/rdbi-driver-postgresql.git
   revision: 4c19912b5649bbefad20b48a378a5bf0dad60c15
   specs:
@@ -38,9 +47,6 @@ GEM
     factory_girl (3.4.0)
       activesupport (>= 3.0.0)
     i18n (0.6.0)
-    m4dbi (0.8.5)
-      metaid
-      rdbi
     metaid (1.0)
     methlab (0.1.0)
     multi_json (1.3.6)
@@ -78,7 +84,7 @@ DEPENDENCIES
   bcrypt-ruby
   factory_girl
   linecache19!
-  m4dbi
+  m4dbi!
   pg
   rdbi!
   rdbi-driver-postgresql!

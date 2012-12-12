@@ -13,7 +13,7 @@ module Libertree
         end
       end
 
-      after_update do |member|
+      after_update do |member_before, member|
         if member.local?
           Libertree::Model::Job.create_for_forests(
             {

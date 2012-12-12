@@ -17,7 +17,7 @@ module Libertree
         end
       end
 
-      after_update do |post|
+      after_update do |post_before, post|
         if post.local?
           Libertree::Model::Job.create_for_forests(
             {
