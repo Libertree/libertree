@@ -319,7 +319,7 @@ module Libertree
             },
 
             'rivers'             => self.rivers.map(&:to_hash),
-            'posts'              => self.member.posts(9999999).map(&:to_hash),
+            'posts'              => self.member.posts(limit: 9999999).map(&:to_hash),
             'comments'           => self.member.comments(9999999).map(&:to_hash),
             'messages'           => self.messages.map(&:to_hash),
           }
