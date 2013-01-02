@@ -11,7 +11,7 @@ $$ LANGUAGE SQL;
 CREATE FUNCTION delete_cascade_comment(comment_id INTEGER) RETURNS void AS $$
     SELECT delete_cascade_comment_like(l.id) FROM comment_likes l WHERE l.comment_id = $1;
     DELETE FROM notifications WHERE data = '{"type":"comment","comment_id":'|| $1 ||'}';
-    DELETE FROM comment_likes WHERE id = $1;
+    DELETE FROM comments WHERE id = $1;
 $$ LANGUAGE SQL;
 
 CREATE FUNCTION delete_cascade_post(post_id INTEGER) RETURNS void AS $$
