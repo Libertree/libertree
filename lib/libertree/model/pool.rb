@@ -88,9 +88,9 @@ module Libertree
         posts.include? post
       end
 
+      # NOTE: deletion is NOT distributed
       def delete_cascade
-        DB.dbh.delete "DELETE FROM pools_posts WHERE pool_id = ?", self.id
-        self.delete
+        DB.dbh.execute "SELECT delete_cascade_pool(?)", self.id
       end
 
       def dirty

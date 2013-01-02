@@ -167,11 +167,7 @@ module Libertree
       end
 
       def delete_cascade
-        self.pools.each(&:delete_cascade)
-        self.posts.each(&:delete_cascade)
-        self.comments.each(&:delete_cascade)
-        self.profile.delete
-        self.delete
+        DB.dbh.execute "SELECT delete_cascade_member(?)", self.id
       end
     end
   end

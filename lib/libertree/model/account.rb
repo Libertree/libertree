@@ -357,21 +357,7 @@ module Libertree
       end
 
       def delete_cascade
-        DB.dbh.transaction do |dbh|
-          DB.dbh.d "DELETE FROM invitations WHERE account_id = ?", self.id
-          DB.dbh.u "UPDATE invitations SET inviter_account_id = NULL WHERE inviter_account_id = ?", self.id
-          DB.dbh.d "DELETE FROM sessions_accounts WHERE account_id = ?", self.id
-          DB.dbh.d "DELETE FROM notifications WHERE account_id = ?", self.id
-          DB.dbh.d "DELETE FROM post_subscriptions WHERE account_id = ?", self.id
-
-          self.rivers.each { |r| r.delete_cascade(true) }
-
-          if self.member
-            self.messages.each(&:delete_cascade)
-            self.member.delete_cascade
-          end
-          self.delete
-        end
+        DB.dbh.execute "SELECT delete_cascade_account(?)", self.id
       end
     end
   end

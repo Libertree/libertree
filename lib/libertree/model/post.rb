@@ -189,17 +189,9 @@ module Libertree
         end
       end
 
+      # NOTE: deletion is NOT distributed
       def delete_cascade
-        self.comments.each {|c| c.delete_cascade }
-        self.likes.each {|l| l.delete_cascade }
-        DB.dbh.delete "DELETE FROM posts_read WHERE post_id = ?", self.id
-        DB.dbh.delete "DELETE FROM posts_hidden WHERE post_id = ?", self.id
-        DB.dbh.delete "DELETE FROM pools_posts WHERE post_id = ?", self.id
-        DB.dbh.delete "DELETE FROM river_posts WHERE post_id = ?", self.id
-        DB.dbh.delete "DELETE FROM post_subscriptions WHERE post_id = ?", self.id
-        # TODO: Do we want to keep these revisions?
-        DB.dbh.delete "DELETE FROM post_revisions WHERE post_id = ?", self.id
-        delete
+        DB.dbh.execute "SELECT delete_cascade_post(?)", self.id
       end
 
       def add_to_matching_rivers(account=nil)

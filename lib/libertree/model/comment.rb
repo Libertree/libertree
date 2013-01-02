@@ -59,10 +59,9 @@ module Libertree
         super
       end
 
+      # NOTE: deletion is NOT distributed
       def delete_cascade
-        self.likes.each {|l| l.delete_cascade }
-        DB.dbh.d  %|DELETE FROM notifications WHERE data = '{"type":"comment","comment_id":#{self.id}}'|
-        self.delete
+        DB.dbh.execute "SELECT delete_cascade_comment(?)", self.id
       end
 
       # TODO: DRY up with Post#glimpse
