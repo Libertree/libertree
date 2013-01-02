@@ -34,7 +34,7 @@ module Libertree
           Libertree::Model::Job.create_for_forests(
             {
               task: 'request:MEMBER-DELETE',
-              params: { 'member_id' => member.id, }
+              params: { 'username' => member.account.username, }
             }
           )
         end
