@@ -51,48 +51,6 @@ describe Libertree::Model::Account do
         Libertree::Model::Member[@member_id].should be_nil
         Libertree::Model::Account[@account_id].should be_nil
       end
-
-      context 'given a problem in account deletion' do
-        before :each do
-          class Libertree::TestException < StandardError
-          end
-
-          class Libertree::Model::Account
-            alias :old_delete :delete
-            def delete
-              raise Libertree::TestException.new('force failure')
-            end
-          end
-        end
-
-        after :each do
-          class Libertree::Model::Account
-            def delete
-              self.old_delete
-            end
-          end
-        end
-
-        it "deletes the account's subordinate entities atomically (never partially)" do
-          Libertree::Model::Post[@post1_id].should_not be_nil
-          Libertree::Model::Post[@post2_id].should_not be_nil
-          Libertree::Model::Comment[@comment1_id].should_not be_nil
-          Libertree::Model::Comment[@comment2_id].should_not be_nil
-          Libertree::Model::Member[@member_id].should_not be_nil
-          Libertree::Model::Account[@account_id].should_not be_nil
-
-          expect {
-            @account.delete_cascade
-          }.to raise_exception(Libertree::TestException)
-
-          Libertree::Model::Post[@post1_id].should_not be_nil
-          Libertree::Model::Post[@post2_id].should_not be_nil
-          Libertree::Model::Comment[@comment1_id].should_not be_nil
-          Libertree::Model::Comment[@comment2_id].should_not be_nil
-          Libertree::Model::Member[@member_id].should_not be_nil
-          Libertree::Model::Account[@account_id].should_not be_nil
-        end
-      end
     end
   end
 end
