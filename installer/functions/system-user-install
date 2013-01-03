@@ -30,6 +30,7 @@ system_user_install() {
   skip_decision "Do you want to create a new db?"             && setup_db
   skip_decision "Do you want to install the ruby backend?"    && setup_backend
   skip_decision "Do you want to install the ramaze frontend?" && setup_frontend
+  skip_decision "Do you want to generate an invitation code to create a Libertree account?" && generate_invite
 }
 
 clone_repos() {
@@ -78,6 +79,13 @@ setup_db() {
 
   info "Applying database migrations"
   LIBERTREE_ENV=production ./migrate.sh
+}
+
+generate_invite() {
+  code=$(echo 'INSERT INTO invitations DEFAULT VALUES RETURNING code;' | psql --tuples-only --no-align --quiet -U libertree libertree_production)
+  say "Your invitation code:"
+  say "    $code"
+  say "You will need this code to create a new Libertree account."
 }
 
 setup_backend() {
