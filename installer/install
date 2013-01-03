@@ -35,7 +35,8 @@ wizard() {
   intro
   create_system_user
   install_as_system_user
-  say "\nYour Libertree has been planted."
+  say "\nYour Libertree has been planted. For further instructions,"
+  say "please refer to USAGE.md in the root directory."
 }
 
 # save original working directory and always return to it on exit
