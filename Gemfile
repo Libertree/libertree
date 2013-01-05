@@ -4,7 +4,7 @@ gem 'rdbi', :git => 'git://github.com/RDBI/rdbi.git'
 gem 'rdbi-driver-postgresql', :git => 'git://github.com/RDBI/rdbi-driver-postgresql.git'
 gem 'pony'
 gem 'libertree-model', :git => 'git://github.com/Libertree/libertree-model-rb.git'
-gem 'libertree-client', :git => 'git://github.com/Libertree/libertree-client-rb.git'
+gem 'libertree-client', :git => 'git://github.com/Libertree/libertree-client-rb.git', :branch => 'xmpp'
 
 group 'extensions' do
   gem 'pg'
