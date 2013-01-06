@@ -1,4 +1,5 @@
 source 'http://rubygems.org'
+gem 'blather'
 
 group 'development' do
   gem 'rspec'
