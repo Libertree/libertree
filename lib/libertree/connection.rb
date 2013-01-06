@@ -45,6 +45,20 @@ module Libertree
       end
     end
 
+    def params_to_xml(elem)
+      case elem
+      when Array
+        elem.flat_map {|i| params_to_xml(i) }.join('')
+      when Hash
+        elem.reduce("") do |acc,i|
+          acc << ("<#{i[0]}>"+ params_to_xml(i[1]) +"</#{i[0]}>")
+          acc
+        end
+      else
+        elem.to_s
+      end
+    end
+
     def close
       @s.close
     end
