@@ -2,10 +2,13 @@ require 'spec_helper'
 require_relative '../lib/libertree/connection'
 
 describe Libertree::Connection do
+  before(:each) do
+    @c = Libertree::Connection.new({})
+  end
+
   describe 'params_to_xml' do
     it 'constructs a valid xml fragment' do
-      c = Libertree::Connection.new({})
-      xml = c.params_to_xml(
+      xml = @c.params_to_xml(
         {
           'id' => 12,
           'trees' =>
