@@ -1,11 +1,14 @@
 require 'socket'
 require 'json'
 require 'timeout'
+require 'blather/client/dsl'
 
 module Libertree
   # Lower level connection class.  Wrapper for TCPSocket.
   # @param [Hash] args
   class Connection
+    extend Blather::DSL
+
     def initialize( args )
       host = args[:host]
       port = args.fetch(:port, 14404)
@@ -43,6 +46,13 @@ module Libertree
       rescue Timeout::Error
         log_error "(timeout)"
       end
+    end
+
+    def build_stanza( target, command, params )
+      stanza = Blather::Stanza::Iq.new(:get, target)
+      content = "<libertree><#{command.downcase}>#{params_to_xml(params)}</#{command.downcase}></libertree>"
+      stanza.add_child content
+      stanza
     end
 
     def params_to_xml(elem)
