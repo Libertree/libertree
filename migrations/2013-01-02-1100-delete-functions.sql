@@ -43,13 +43,15 @@ CREATE FUNCTION delete_cascade_river(river_id INTEGER) RETURNS void AS $$
     DELETE FROM rivers WHERE id = $1;
 $$ LANGUAGE SQL;
 
-CREATE FUNCTION delete_cascade_member(member_id INTEGER) RETURNS void AS $$
+CREATE OR REPLACE FUNCTION delete_cascade_member(member_id INTEGER) RETURNS void AS $$
     SELECT delete_cascade_pool(p.id)
            FROM pools p WHERE p.member_id = $1;
     SELECT delete_cascade_post(p.id)
            FROM posts p WHERE p.member_id = $1;
     SELECT delete_cascade_comment(c.id)
            FROM comments c WHERE c.member_id = $1;
+
+    DELETE FROM contact_lists_members WHERE member_id = $1;
     DELETE FROM messages WHERE sender_member_id = $1;
     DELETE FROM message_recipients WHERE member_id = $1;
     DELETE FROM
@@ -62,10 +64,11 @@ CREATE FUNCTION delete_cascade_member(member_id INTEGER) RETURNS void AS $$
         )
     ;
     DELETE FROM profiles WHERE member_id = $1;
+
     DELETE FROM members WHERE id = $1;
 $$ LANGUAGE SQL;
 
-CREATE FUNCTION delete_cascade_account(account_id INTEGER) RETURNS void AS $$
+CREATE OR REPLACE FUNCTION delete_cascade_account(account_id INTEGER) RETURNS void AS $$
     UPDATE invitations SET inviter_account_id = NULL WHERE inviter_account_id = $1;
     DELETE FROM invitations        WHERE account_id = $1;
     DELETE FROM sessions_accounts  WHERE account_id = $1;
@@ -73,10 +76,20 @@ CREATE FUNCTION delete_cascade_account(account_id INTEGER) RETURNS void AS $$
     DELETE FROM post_subscriptions WHERE account_id = $1;
     DELETE FROM posts_read         WHERE account_id = $1;
     DELETE FROM posts_hidden       WHERE account_id = $1;
+    DELETE FROM
+        contact_lists_members clm
+    USING
+        contact_lists cl
+    WHERE
+        cl.account_id = $1
+        AND clm.contact_list_id = cl.id
+    ;
+    DELETE FROM contact_lists      WHERE account_id = $1;
 
     SELECT delete_cascade_river(r.id)
            FROM rivers r WHERE r.account_id = $1;
     SELECT delete_cascade_member(m.id)
            FROM members m WHERE m.account_id = $1;
+
     DELETE FROM accounts WHERE id = $1;
 $$ LANGUAGE SQL;
