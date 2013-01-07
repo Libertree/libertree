@@ -19,42 +19,6 @@ module Libertree
       @log_identifier = params[:log_identifier] || "pid #{Process.pid}"
     end
 
-    def connect(remote_host)
-      @conn = Libertree::Connection.new(host: remote_host, log: @log, log_identifier: @log_identifier)
-
-      response = @conn.request('INTRODUCE', 'public_key' => @public_key)
-      if response.nil?
-        raise "No response to INTRODUCE"
-      end
-
-      challenge_encrypted = response['challenge']
-
-      if challenge_encrypted && response['code'] == 'OK'
-        key = OpenSSL::PKey::RSA.new @private_key
-        challenge_decrypted = key.private_decrypt(Base64.decode64(challenge_encrypted), OpenSSL::PKey::RSA::PKCS1_OAEP_PADDING)
-        auth_params = { 'response' => challenge_decrypted }
-        if @server_name
-          auth_params['name'] = @server_name
-        end
-        response = @conn.request('AUTHENTICATE', auth_params)
-
-        if response['code'] != 'OK'
-          raise "Failed to connect: #{response.inspect}"
-        end
-      end
-
-      if block_given?
-        yield @conn
-        @conn.close
-      end
-    end
-
-    def close
-      @conn.close
-    end
-
-    # ---------
-
     def req_chat(chat_message)
       @conn.request(
         'CHAT',
