@@ -1,6 +1,6 @@
 require 'base64'
 require 'openssl'
-require 'libertree/connection'
+require 'blather/client/client'
 
 module Libertree
   class Client
@@ -62,6 +62,43 @@ module Libertree
         'recipient_username' => chat_message.recipient.username,
         'text'               => chat_message.text
       )
+    end
+
+
+    private
+
+    def log(s, level = nil)
+      t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
+      if level
+        l = "#{level} "
+      end
+
+      @log.puts "[#{t}] (#{@log_identifier}) #{l}#{s}"
+    end
+
+    def log_error(s)
+      log s, 'ERROR'
+    end
+
+    def build_stanza( target, command, params )
+      stanza = Blather::Stanza::Iq.new(:get, target)
+      content = "<libertree><#{command.downcase}>#{params_to_xml(params)}</#{command.downcase}></libertree>"
+      stanza.add_child content
+      stanza
+    end
+
+    def params_to_xml(elem)
+      case elem
+      when Array
+        elem.flat_map {|i| params_to_xml(i) }.join('')
+      when Hash
+        elem.reduce("") do |acc,i|
+          acc << ("<#{i[0]}>"+ params_to_xml(i[1]) +"</#{i[0]}>")
+          acc
+        end
+      else
+        elem.to_s
+      end
     end
 
     def req_comment(comment, references={})
