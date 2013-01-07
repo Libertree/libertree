@@ -76,45 +76,42 @@ module Libertree
         'text'       => comment.text
       }
       params.merge!('references' => references) unless references.empty?
-      @conn.request('COMMENT', params)
+      { 'comment' => params }
     end
 
     def req_comment_delete(comment_id)
-      @conn.request(
-        'COMMENT-DELETE',
-        'id' => comment_id
-      )
+      { 'comment-delete' => { 'id' => comment_id } }
     end
 
     def req_comment_like(like)
       server = like.comment.member.server
       public_key = server ? server.public_key : @public_key
-      @conn.request(
-        'COMMENT-LIKE',
-        'id'         => like.id,
-        'comment_id' => like.comment.public_id,
-        'public_key' => public_key,
-        'username'   => like.member.username,
-      )
+      {
+        'comment-like' => {
+          'id'         => like.id,
+          'comment_id' => like.comment.public_id,
+          'public_key' => public_key,
+          'username'   => like.member.username,
+        }
+      }
     end
 
     def req_comment_like_delete(like_id)
-      @conn.request(
-        'COMMENT-LIKE-DELETE',
-        'id' => like_id
-      )
+      { 'comment-like-delete' => { 'id' => like_id } }
     end
 
     def req_forest(forest)
+      # TODO: changed IP address to domain
       return  if ! forest.local_is_member?
-      @conn.request(
-        'FOREST',
-        'id'    => forest.id,
-        'name'  => forest.name,
-        'trees' => forest.trees.map { |t|
-          { 'ip' => t.ip }
-        } + [ { 'ip' => @server_ip } ]
-      )
+      {
+        'forest' => {
+          'id'    => forest.id,
+          'name'  => forest.name,
+          'trees' => forest.trees.map { |t|
+            { 'ip' => t.ip }
+          } + [ { 'ip' => @server_ip } ]
+        }
+      }
     end
 
     def req_member(member)
@@ -128,18 +125,19 @@ module Libertree
       if member.avatar_path
         params.merge!('avatar_url' => "#{@frontend_url_base}#{member.avatar_path}")
       end
-      @conn.request('MEMBER', params)
+      { 'member' => params }
     end
 
     def req_message(message, usernames)
-      @conn.request(
-        'MESSAGE',
-        'username'   => message.sender.account.username,
-        'recipients' => usernames.map { |un|
-          { 'username' => un }
-        },
-        'text'       => message.text
-      )
+      {
+        'message' => {
+          'username'   => message.sender.account.username,
+          'recipients' => usernames.map { |un|
+            { 'username' => un }
+          },
+          'text'       => message.text
+        }
+      }
     end
 
     def req_post(post,references={})
@@ -151,74 +149,73 @@ module Libertree
         'text'       => post.text
       }
       params.merge!('references' => references) unless references.empty?
-      @conn.request('POST', params)
+      { 'post' => params }
     end
 
     def req_pool(pool)
-      @conn.request(
-        'POOL',
-        'username' => pool.member.username,
-        'id'       => pool.id,
-        'name'     => pool.name,
-      )
+      {
+        'pool' => {
+          'username' => pool.member.username,
+          'id'       => pool.id,
+          'name'     => pool.name,
+        }
+      }
     end
 
     def req_pool_delete(pool)
-      @conn.request(
-        'POOL-DELETE',
-        'username' => pool.member.username,
-        'id'       => pool.id,
-      )
+      {
+        'pool-delete' => {
+          'username' => pool.member.username,
+          'id'       => pool.id,
+        }
+      }
     end
 
     def req_pool_post(pool, post)
       server = post.member.server
       public_key = server ? server.public_key : @public_key
-      @conn.request(
-        'POOL-POST',
-        'username'   => pool.member.username,
-        'pool_id'    => pool.id,
-        'post_id'    => post.public_id,
-        'public_key' => public_key,
-      )
+      {
+        'pool-post' => {
+          'username'   => pool.member.username,
+          'pool_id'    => pool.id,
+          'post_id'    => post.public_id,
+          'public_key' => public_key,
+        }
+      }
     end
 
     def req_pool_post_delete(pool, post)
       server = post.member.server
       public_key = server ? server.public_key : @public_key
-      @conn.request(
-        'POOL-POST-DELETE',
-        'username'   => pool.member.username,
-        'pool_id'    => pool.id,
-        'post_id'    => post.public_id,
-        'public_key' => public_key,
-      )
+      {
+        'pool-post-delete' => {
+          'username'   => pool.member.username,
+          'pool_id'    => pool.id,
+          'post_id'    => post.public_id,
+          'public_key' => public_key,
+        }
+      }
     end
 
     def req_post_delete(post_id)
-      @conn.request(
-        'POST-DELETE',
-        'id' => post_id
-      )
+      { 'post-delete' => { 'id' => post_id } }
     end
 
     def req_post_like(like)
       server = like.post.member.server
       public_key = server ? server.public_key : @public_key
-      @conn.request(
-        'POST-LIKE',
-        'id'         => like.id,
-        'post_id'    => like.post.public_id,
-        'public_key' => public_key,
-        'username'   => like.member.username,
-      )
+      {
+        'post-like' => {
+          'id'         => like.id,
+          'post_id'    => like.post.public_id,
+          'public_key' => public_key,
+          'username'   => like.member.username,
+        }
+      }
     end
 
     def req_post_like_delete(like_id)
-      @conn.request(
-        'POST-LIKE-DELETE',
-        'id' => like_id
-      )
+      { 'post-like-delete' => { 'id' => like_id } }
     end
   end
 end
