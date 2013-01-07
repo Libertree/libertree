@@ -50,15 +50,17 @@ CREATE FUNCTION delete_cascade_member(member_id INTEGER) RETURNS void AS $$
            FROM posts p WHERE p.member_id = $1;
     SELECT delete_cascade_comment(c.id)
            FROM comments c WHERE c.member_id = $1;
-    DELETE FROM messages WHERE id IN (
-      SELECT message_id FROM message_recipients
-      WHERE member_id = $1
-      AND message_id IN (
-        SELECT message_id FROM message_recipients
-        GROUP BY message_id HAVING COUNT(member_id) = 1
-      )
-    );
+    DELETE FROM messages WHERE sender_member_id = $1;
     DELETE FROM message_recipients WHERE member_id = $1;
+    DELETE FROM
+        messages m
+    WHERE
+        NOT EXISTS (
+            SELECT 1
+            FROM message_recipients mr
+            WHERE mr.message_id = m.id
+        )
+    ;
     DELETE FROM profiles WHERE member_id = $1;
     DELETE FROM members WHERE id = $1;
 $$ LANGUAGE SQL;
