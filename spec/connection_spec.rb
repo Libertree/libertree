@@ -1,14 +1,21 @@
 require 'spec_helper'
-require_relative '../lib/libertree/connection'
+require 'openssl'
+require_relative '../lib/libertree/client'
 
-describe Libertree::Connection do
+describe Libertree::Client do
   before(:each) do
-    @c = Libertree::Connection.new({})
+    key = OpenSSL::PKey::RSA.new File.read("private.key")
+    @c = Libertree::Client.new({
+      private_key: key,
+      public_key: key.public_key.to_pem,
+      avatar_url_base: "localhost"},
+      nil
+    )
   end
 
   describe 'build_stanza' do
     it 'constructs a valid iq stanza' do
-      stanza = @c.build_stanza(
+      stanza = @c.send(:build_stanza,
         'libertree.localhost.localdomain',
         'POST',
         {
@@ -32,7 +39,7 @@ HERE
 
   describe 'params_to_xml' do
     it 'constructs a valid xml fragment' do
-      xml = @c.params_to_xml(
+      xml = @c.send(:params_to_xml,
         {
           'id' => 12,
           'trees' =>
