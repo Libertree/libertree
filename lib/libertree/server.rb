@@ -4,6 +4,7 @@ require 'blather/client/dsl'
 
 require 'libertree/model'
 require 'libertree/server/responder'
+require 'libertree/server/relay'
 
 module Libertree
   module Server
@@ -19,6 +20,7 @@ module Libertree
     end
 
     include Responder
+    include Relay
 
     def self.log(s, level = nil)
       t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
@@ -111,9 +113,13 @@ module Libertree
         domain = @conf['component']
         secret = @conf['shared_secret']
         port   = @conf['port'].to_i || 5347
+        socket = @conf['relay_socket'] || "/tmp/libertree-relay"
 
         Responder.setup domain, secret, host, port
-        EventMachine.run { Responder.run }
+        EventMachine.run {
+          Responder.run
+          EventMachine.start_unix_domain_server socket, Relay
+        }
 
         if @log_handle.respond_to? :path
           @log_handle.close

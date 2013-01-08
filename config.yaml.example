@@ -10,6 +10,10 @@ shared_secret: 'secret'
 # The component port on the XMPP server
 port: 5347
 
+# The path to the Unix domain socket used by the XMPP relay
+# (will be created if it does not exist)
+relay_socket: '/tmp/libertree-relay'
+
 # The path to the private RSA key
 # Use generate-key-pair.rb to generate it.
 # TODO: A private key seems useful for server migration; keep this for now as a
