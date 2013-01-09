@@ -116,10 +116,15 @@ module Libertree
         socket = @conf['relay_socket'] || "/tmp/libertree-relay"
 
         Responder.setup domain, secret, host, port
-        EventMachine.run {
-          Responder.run
-          EventMachine.start_unix_domain_server socket, Relay
-        }
+        begin
+          EventMachine.run {
+            Responder.run
+            EventMachine.start_unix_domain_server socket, Relay
+          }
+        rescue Blather::Stream::ConnectionFailed
+          log_error "No connection to the XMPP server on #{host}; retrying."
+          sleep 3
+        end
 
         if @log_handle.respond_to? :path
           @log_handle.close
