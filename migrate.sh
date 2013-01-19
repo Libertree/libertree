@@ -2,7 +2,7 @@
 set -o nounset # abort if we try to use an unset variable
 set -o errexit # exit if any statement returns a non-true return value
 
-CONFIG_FILE=${1:-database.yaml.example}
+CONFIG_FILE=${1:-database.yaml}
 SCRIPT_DIR="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 export PGOPTIONS="--client-min-messages=warning${PGOPTIONS:+:$PGOPTIONS}"
