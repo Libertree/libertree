@@ -285,6 +285,46 @@ module Libertree
           time_finished: nil
         ]
       end
+
+      def mark_all_posts_as_read
+        DB.dbh.execute(
+          %{
+            INSERT INTO posts_read ( post_id, account_id )
+            SELECT
+                rp.post_id
+              , ?
+            FROM
+              river_posts rp
+            WHERE
+              river_id = ?
+              AND NOT EXISTS (
+              SELECT 1
+              FROM posts_read pr2
+              WHERE
+                pr2.post_id = rp.post_id
+                AND pr2.account_id = ?
+            )
+          },
+          self.account.id,
+          self.id,
+          self.account.id,
+        )
+        DB.dbh.delete(
+          %{
+            DELETE FROM river_posts rp
+            USING rivers r
+            WHERE
+              rp.river_id = r.id
+              AND r.id = ?
+              AND (
+                r.query LIKE ':unread%'
+                OR r.query LIKE '% :unread%'
+                OR r.query LIKE '%+:unread%'
+              )
+          },
+          self.id
+        )
+      end
     end
   end
 end
