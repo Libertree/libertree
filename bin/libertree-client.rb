@@ -13,6 +13,7 @@ end
 
 key = OpenSSL::PKey::RSA.new File.read(ARGV[0])
 socket = '/tmp/libertree-relay'
+target = 'localhost.localdomain'
 
 begin
   client = Libertree::Client.new(
@@ -36,10 +37,10 @@ begin
           Tree.new(p)
         }
       )
-      client.req_forest forest
+      client.request target, client.req_forest(forest)
     when /^m/  # member
       member = Member.new(params[0], params[1])
-      client.req_member member
+      client.request target, client.req_member(member)
     end
   end
 rescue Errno::ECONNREFUSED
