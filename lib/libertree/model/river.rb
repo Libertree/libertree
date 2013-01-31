@@ -286,7 +286,9 @@ module Libertree
         ]
       end
 
+      # TODO: turn this into a SQL function
       def mark_all_posts_as_read
+        # mark posts in this river as read
         DB.dbh.execute(
           %{
             INSERT INTO posts_read ( post_id, account_id )
@@ -310,8 +312,7 @@ module Libertree
           self.account.id,
         )
 
-        # TODO: this is the same as the second
-        # part of Post::mark_all_as_read_by(account)
+        # remove these posts from all rivers that contain ":unread"
         DB.dbh.delete(
           %{
             DELETE FROM river_posts rp
@@ -319,12 +320,20 @@ module Libertree
             WHERE
               rp.river_id = r.id
               AND r.account_id = ?
+              AND EXISTS (
+                SELECT 1
+                FROM posts_read pr2
+                WHERE
+                  pr2.post_id = rp.post_id
+                  AND pr2.account_id = ?
+              )
               AND (
                 r.query LIKE ':unread%'
                 OR r.query LIKE '% :unread%'
                 OR r.query LIKE '%+:unread%'
               )
           },
+          self.account.id,
           self.account.id
         )
       end
