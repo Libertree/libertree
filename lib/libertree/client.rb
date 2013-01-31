@@ -54,6 +54,19 @@ module Libertree
     def params_to_xml(elem)
       case elem
       when Array
+        # TODO: this squashes arrays
+        # before:
+        #   :abc => [1,2,3,4]
+        # after:
+        #   <abc>1234</abc>
+        #
+        # what this be better?
+        #   <abc>
+        #     <item>1</item>
+        #     <item>2</item>
+        #     <item>3</item>
+        #     <item>4</item>
+        #   </abc>
         elem.flat_map {|i| params_to_xml(i) }.join('')
       when Hash
         elem.reduce("") do |acc,i|
@@ -61,6 +74,7 @@ module Libertree
           acc
         end
       else
+        # TODO: encode entities
         elem.to_s
       end
     end
