@@ -46,9 +46,9 @@ module Libertree
       log s, 'ERROR'
     end
 
-    def build_stanza( target, command, params )
-      stanza = Blather::Stanza::Iq.new(:get, target)
-      content = "<libertree><#{command.downcase}>#{params_to_xml(params)}</#{command.downcase}></libertree>"
+    def build_stanza( target, params )
+      stanza = Blather::Stanza::Iq.new(:set, target)
+      content = "<libertree xmlns=\"libertree\">#{params_to_xml(params)}</libertree>"
       stanza.add_child content
       stanza
     end
