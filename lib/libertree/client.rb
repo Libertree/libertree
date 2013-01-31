@@ -21,13 +21,17 @@ module Libertree
       @socket = UNIXSocket.new params.fetch(:socket, '/tmp/libertree-relay')
     end
 
-    def req_chat(chat_message)
-      @conn.request(
-        'CHAT',
-        'username'           => chat_message.sender.username,
-        'recipient_username' => chat_message.recipient.username,
-        'text'               => chat_message.text
+    # NOTE: This is different from the other req_* methods in that it needs to
+    # be passed the target domain.  It builds a chat message directly, not an
+    # IQ stanza payload.
+    def req_chat(target, chat_message)
+      stanza = Blather::Stanza::Message.new(
+        "#{chat_message.recipient.username}@#{target}",
+        chat_message.text,
+        :chat
       )
+      stanza.from = "#{chat_message.sender.username}@#{@domain}"
+      stanza
     end
 
 
