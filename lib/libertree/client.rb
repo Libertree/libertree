@@ -87,6 +87,34 @@ module Libertree
       end
     end
 
+    public
+
+    # e.g.:
+    #   request "lt.localhost", req_comment(what, ever)
+    def request( target, params )
+      log "REQUEST: >#{params.inspect}<"
+
+      if params.class <= Blather::Stanza
+        stanza = params
+      else
+        stanza = build_stanza( target, params )
+      end
+
+      msg = stanza.serialize(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML)+"\n"
+
+      # write to socket and wait for response
+      # TODO: handle timeout
+      # TODO: adjust receive buffer
+      @socket.send msg, 0
+      response = @socket.recv 1024
+
+      log "response: #{response}"
+      # TODO: use xpath to get code; assume OK when response is empty
+      #if response['code'] != 'OK'
+      #  log_error "Not OK: #{response.inspect}"
+      #end
+    end
+
     def req_comment(comment, references={})
       post = comment.post
       server = post.member.server
