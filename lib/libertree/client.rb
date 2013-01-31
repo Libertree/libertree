@@ -1,5 +1,6 @@
 require 'base64'
 require 'openssl'
+require 'socket'
 require 'blather/client/client'
 
 module Libertree
@@ -17,6 +18,7 @@ module Libertree
       @server_name = params[:server_name]
       @log = params.fetch(:log, $stdout)
       @log_identifier = params.fetch(:log_identifier, "pid #{Process.pid}")
+      @socket = UNIXSocket.new params.fetch(:socket, '/tmp/libertree-relay')
     end
 
     def req_chat(chat_message)
