@@ -309,20 +309,23 @@ module Libertree
           self.id,
           self.account.id,
         )
+
+        # TODO: this is the same as the second
+        # part of Post::mark_all_as_read_by(account)
         DB.dbh.delete(
           %{
             DELETE FROM river_posts rp
             USING rivers r
             WHERE
               rp.river_id = r.id
-              AND r.id = ?
+              AND r.account_id = ?
               AND (
                 r.query LIKE ':unread%'
                 OR r.query LIKE '% :unread%'
                 OR r.query LIKE '%+:unread%'
               )
           },
-          self.id
+          self.account.id
         )
       end
     end
