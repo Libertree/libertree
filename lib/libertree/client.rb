@@ -15,8 +15,8 @@ module Libertree
       @frontend_url_base = params[:frontend_url_base]
       @server_ip = params[:server_ip]
       @server_name = params[:server_name]
-      @log = params[:log] || $stdout
-      @log_identifier = params[:log_identifier] || "pid #{Process.pid}"
+      @log = params.fetch(:log, $stdout)
+      @log_identifier = params.fetch(:log_identifier, "pid #{Process.pid}")
     end
 
     def req_chat(chat_message)
