@@ -10,11 +10,13 @@ module Libertree
     # @option params [String] :private_key A private RSA key, the partner of the public key
     # @option params [String] :frontend_url_base The URL base of local frontend resources
     # @option params [String] :server_name a short identifier that other servers will display beside member usernames
+    # @option params [String] :domain The XMPP component's JID domain (e.g. libertree.localhost.localdomain)
+    # TODO: there's a lot of stuff we don't use
     def initialize( params = {} )
       @public_key = params[:public_key] or raise ":public_key required by Libertree::Client"
       @private_key = params[:private_key] or raise ":private_key required by Libertree::Client"
       @frontend_url_base = params[:frontend_url_base]
-      @server_ip = params[:server_ip]
+      @domain = params[:domain]
       @server_name = params[:server_name]
       @log = params.fetch(:log, $stdout)
       @log_identifier = params.fetch(:log_identifier, "pid #{Process.pid}")
