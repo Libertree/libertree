@@ -182,8 +182,10 @@ module Libertree
           }).s(self.id, account.id).map { |row| Post.new row }
 
         matching = posts.find_all { |post| self.matches_post? post }
-        placeholders = ( ['?'] * matching.count ).join(', ')
-        DB.dbh.i "INSERT INTO river_posts SELECT ?, id FROM posts WHERE id IN (#{placeholders})", self.id, *matching.map(&:id)
+        unless matching.empty?
+          placeholders = ( ['?'] * matching.count ).join(', ')
+          DB.dbh.i "INSERT INTO river_posts SELECT ?, id FROM posts WHERE id IN (#{placeholders})", self.id, *matching.map(&:id)
+        end
       end
 
       # @param params Untrusted parameter Hash.  Be careful, this input usually comes from the outside world.
@@ -223,9 +225,8 @@ module Libertree
         end
       end
 
-      def delete_cascade
-        DB.dbh.delete "DELETE FROM river_posts WHERE river_id = ?", self.id
-        if self.appended_to_all
+      def delete_cascade(force=false)
+        if ! force && self.appended_to_all
           Libertree::Model::Job.create(
             task: 'river:refresh-all',
             params: {
@@ -233,7 +234,7 @@ module Libertree
             }.to_json
           )
         end
-        self.delete
+        DB.dbh.execute "SELECT delete_cascade_river(?)", self.id
       end
 
       def self.num_appended_to_all

@@ -193,17 +193,9 @@ module Libertree
         end
       end
 
+      # NOTE: deletion is NOT distributed
       def delete_cascade
-        self.comments.each {|c| c.delete_cascade }
-        self.likes.each {|l| l.delete_cascade }
-        DB.dbh.delete "DELETE FROM posts_read WHERE post_id = ?", self.id
-        DB.dbh.delete "DELETE FROM posts_hidden WHERE post_id = ?", self.id
-        DB.dbh.delete "DELETE FROM pools_posts WHERE post_id = ?", self.id
-        DB.dbh.delete "DELETE FROM river_posts WHERE post_id = ?", self.id
-        DB.dbh.delete "DELETE FROM post_subscriptions WHERE post_id = ?", self.id
-        # TODO: Do we want to keep these revisions?
-        DB.dbh.delete "DELETE FROM post_revisions WHERE post_id = ?", self.id
-        delete
+        DB.dbh.execute "SELECT delete_cascade_post(?)", self.id
       end
 
       def add_to_matching_rivers(account=nil)
@@ -287,7 +279,7 @@ module Libertree
               FROM
                 posts p
               WHERE
-                text ~ (E'(^|\\\\s)#' || ? || E'(\\\\M|\\\\s|$|[[:punct:]])')
+                text ~* (E'(^|\\\\s)#' || ? || E'(\\\\M|\\\\s|$|[[:punct:]])')
                 AND GREATEST(p.time_commented, p.time_updated) #{time_comparator} ?
               ORDER BY GREATEST(p.time_commented, p.time_updated) DESC
               LIMIT #{limit}
@@ -303,7 +295,7 @@ module Libertree
               FROM
                 posts p
               WHERE
-                text ~ (E'(^|\\\\s)#' || ? || E'(\\\\M|\\\\s|$|[[:punct:]])')
+                text ~* (E'(^|\\\\s)#' || ? || E'(\\\\M|\\\\s|$|[[:punct:]])')
                 AND p.time_created #{time_comparator} ?
               ORDER BY p.time_created DESC
               LIMIT #{limit}

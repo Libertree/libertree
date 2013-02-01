@@ -24,6 +24,22 @@ module Libertree
         end
       end
 
+      before_delete do |member|
+        # TODO: expand later for more granularity:
+        #       - only abandon (not delete) posts and comments
+        #       - only empty posts if they contain a discussion
+        #       - only empty and anonymise comments
+        #       - etc.
+        if member.local?
+          Libertree::Model::Job.create_for_forests(
+            {
+              task: 'request:MEMBER-DELETE',
+              params: { 'username' => member.account.username, }
+            }
+          )
+        end
+      end
+
       def local?
         ! self.account.nil?
       end
@@ -108,8 +124,31 @@ module Libertree
         member
       end
 
-      def posts(n = 8)
-        Post.s  "SELECT * FROM posts WHERE member_id = ? ORDER BY id DESC LIMIT #{n.to_i}", self.id
+      def posts( opts = {} )
+        limit = opts.fetch(:limit, 30)
+        if opts[:newer]
+          time_comparator = '>'
+        else
+          time_comparator = '<'
+        end
+        time = Time.at( opts.fetch(:time, Time.now.to_f) ).strftime("%Y-%m-%d %H:%M:%S.%6N%z")
+
+        # TODO: prepared statement?
+        Post.s(
+          %{
+            SELECT
+              p.*
+            FROM
+              posts p
+            WHERE
+              member_id = ?
+              AND p.time_created #{time_comparator} ?
+            ORDER BY p.time_created DESC
+            LIMIT #{limit}
+          },
+          self.id,
+          time
+        )
       end
 
       def comments(n = 10)
@@ -125,6 +164,10 @@ module Libertree
 
       def online?
         self.account && self.account.online?
+      end
+
+      def delete_cascade
+        DB.dbh.execute "SELECT delete_cascade_member(?)", self.id
       end
     end
   end

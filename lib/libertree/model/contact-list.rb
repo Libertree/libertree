@@ -28,8 +28,7 @@ module Libertree
       end
 
       def delete_cascade
-        DB.dbh.delete  "DELETE FROM contact_lists_members WHERE contact_list_id = ?", self.id
-        self.delete
+        DB.dbh.execute "SELECT delete_cascade_contact_list(?)", self.id
       end
 
       def <<(member)

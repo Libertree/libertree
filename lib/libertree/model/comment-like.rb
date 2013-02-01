@@ -42,9 +42,9 @@ module Libertree
         DateTime.parse self['time_created']
       end
 
+      # NOTE: deletion is NOT distributed
       def delete_cascade
-        DB.dbh.d %|DELETE FROM notifications WHERE data = '{"type":"comment-like","comment_like_id":#{self.id}}'|
-        self.delete
+        DB.dbh.execute "SELECT delete_cascade_comment_like(?)", self.id
       end
 
       def self.create(*args)
