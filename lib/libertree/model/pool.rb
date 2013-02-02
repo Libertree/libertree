@@ -38,7 +38,7 @@ module Libertree
         end
       end
 
-      after_update do |pool|
+      after_update do |pool_before, pool|
         if pool.local?
           if ! pool.sprung?
             pool.create_pool_delete_job

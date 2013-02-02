@@ -17,8 +17,12 @@ module Libertree
         end
       end
 
-      after_update do |post|
-        if post.local?
+      after_update do |post_before, post|
+        has_distributable_difference = (
+          post_before['text'] != post.text ||
+          post_before['visibility'] != post.visibility
+        )
+        if post.local? && has_distributable_difference
           Libertree::Model::Job.create_for_forests(
             {
               task: 'request:POST',
