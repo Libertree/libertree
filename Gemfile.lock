@@ -6,7 +6,7 @@ GIT
 
 GIT
   remote: git://github.com/Libertree/libertree-model-rb.git
-  revision: e27603349ce3710cc805cb7ef75adf6f0024ac9f
+  revision: bf120370b279ef402cec19390b19141207bedd35
   specs:
     libertree-model (0.0.1)
 
@@ -51,7 +51,7 @@ GEM
     factory_girl (2.6.4)
       activesupport (>= 2.3.9)
     i18n (0.6.0)
-    m4dbi (0.8.5)
+    m4dbi (0.8.7)
       metaid
       rdbi
     mail (2.4.4)
