@@ -7,7 +7,7 @@ SCRIPT_DIR="$( cd -P "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 export PGOPTIONS="--client-min-messages=warning${PGOPTIONS:+:$PGOPTIONS}"
 
-function parse_config 
+function parse_config
 {
   # - ignore commented lines
   # - get lines that belong to the specified section
@@ -46,7 +46,7 @@ function parse_config
 
 function ensure_migration_table_exists
 {
-  execute "SELECT 1 FROM pg_tables WHERE schemaname='public' AND tablename = 'schema_migrations'" | grep -q "1" || \
+  execute "SELECT 'exists' FROM pg_tables WHERE schemaname='public' AND tablename = 'schema_migrations'" | grep -q "exists" || \
     execute "CREATE TABLE schema_migrations ( filename VARCHAR(1024) NOT NULL UNIQUE )"
 }
 
