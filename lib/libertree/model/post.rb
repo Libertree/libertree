@@ -33,18 +33,6 @@ module Libertree
         end
       end
 
-      before_delete do |post|
-        if post.local?
-          Libertree::Model::Job.create_for_forests(
-            {
-              task: 'request:POST-DELETE',
-              params: { 'post_id' => post.id, }
-            },
-            *post.forests
-          )
-        end
-      end
-
       def member
         if $m4dbi_cached_fetches
           @member = Member.cached_fetch(self.member_id)
@@ -193,8 +181,26 @@ module Libertree
         end
       end
 
-      # NOTE: deletion is NOT distributed
-      def delete_cascade
+      def before_delete
+        if self.local?
+          Libertree::Model::Job.create_for_forests(
+            {
+              task: 'request:POST-DELETE',
+              params: { 'post_id' => self.id, }
+            },
+            *self.forests
+          )
+        end
+      end
+
+      def delete
+        self.before_delete
+        super
+      end
+
+      # NOTE: deletion is NOT distributed when force=true
+      def delete_cascade(force=false)
+        self.before_delete  unless force
         DB.dbh.execute "SELECT delete_cascade_post(?)", self.id
       end
 
