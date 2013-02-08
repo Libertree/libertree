@@ -13,18 +13,6 @@ module Libertree
         end
       end
 
-      before_delete do |comment|
-        if comment.local?
-          Libertree::Model::Job.create_for_forests(
-            {
-              task: 'request:COMMENT-DELETE',
-              params: { 'comment_id' => comment.id, }
-            },
-            *comment.forests
-          )
-        end
-      end
-
       def local?
         ! remote_id
       end
@@ -50,17 +38,31 @@ module Libertree
         DateTime.parse self['time_created']
       end
 
-      def delete
+      def before_delete
         if self.post
           remaining_comments = self.post.comments - [self]
           self.post.time_commented = remaining_comments.map(&:time_created).max
         end
 
+        if self.local?
+          Libertree::Model::Job.create_for_forests(
+            {
+              task: 'request:COMMENT-DELETE',
+              params: { 'comment_id' => self.id, }
+            },
+            *self.forests
+          )
+        end
+      end
+
+      def delete
+        self.before_delete
         super
       end
 
-      # NOTE: deletion is NOT distributed
-      def delete_cascade
+      # NOTE: deletion is NOT distributed when force=true
+      def delete_cascade(force=false)
+        self.before_delete  unless force
         DB.dbh.execute "SELECT delete_cascade_comment(?)", self.id
       end
 
