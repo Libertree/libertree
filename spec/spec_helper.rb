@@ -69,7 +69,9 @@ end
 
 shared_context 'with a known requester' do
   before :each do
+    @forest = Libertree::Model::Forest.create( FactoryGirl.attributes_for(:forest) )
     @requester = Libertree::Model::Server.create( FactoryGirl.attributes_for(:server) )
+    @forest.add @requester
   end
 end
 
