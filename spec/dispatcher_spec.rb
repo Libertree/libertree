@@ -43,5 +43,15 @@ describe Libertree::Server::Responder::Dispatcher do
         end
       end
     end
+
+    context "when the requester is not a member of any of the receiver's forests" do
+      include_context 'with an INTRODUCEd and AUTHENTICATEd unknown requester'
+
+      it 'responds with UNRECOGNIZED SERVER to INTRODUCE' do
+        @s.stub(:challenge_new) { 'abcdefghijklmnopqrstuvwxyz' }
+        @s.process %<INTRODUCE { "public_key": #{@requester.public_key.to_json} } >
+        @s.should have_responded_with_code('UNRECOGNIZED SERVER')
+      end
+    end
   end
 end

@@ -67,7 +67,13 @@ RSpec.configure do |config|
   end
 end
 
-shared_context 'with a known requester' do
+shared_context 'requester not in any forest' do
+  before :each do
+    @requester = Libertree::Model::Server.create( FactoryGirl.attributes_for(:server) )
+  end
+end
+
+shared_context 'requester in a forest' do
   before :each do
     @forest = Libertree::Model::Forest.create( FactoryGirl.attributes_for(:forest) )
     @requester = Libertree::Model::Server.create( FactoryGirl.attributes_for(:server) )
@@ -75,19 +81,35 @@ shared_context 'with a known requester' do
   end
 end
 
-shared_context 'with an INTRODUCEd requester' do
-  include_context 'with a known requester'
-
+shared_context 'requester sent INTRODUCE' do
   before :each do
     @s.stub(:challenge_new) { 'abcdefghijklmnopqrstuvwxyz' }
     @s.process %<INTRODUCE { "public_key": #{@requester.public_key.to_json} } >
   end
 end
 
-shared_context 'with an INTRODUCEd and AUTHENTICATEd requester' do
-  include_context 'with an INTRODUCEd requester'
-
+shared_context 'requester sent AUTHENTICATE' do
   before :each do
     @s.process 'AUTHENTICATE { "response": "abcdefghijklmnopqrstuvwxyz" }'
   end
+end
+
+shared_context 'with an INTRODUCEd requester' do
+  include_context 'requester in a forest'
+  include_context 'requester sent INTRODUCE'
+end
+
+shared_context 'with an INTRODUCEd unknown requester' do
+  include_context 'requester not in any forest'
+  include_context 'requester sent INTRODUCE'
+end
+
+shared_context 'with an INTRODUCEd and AUTHENTICATEd requester' do
+  include_context 'with an INTRODUCEd requester'
+  include_context 'requester sent AUTHENTICATE'
+end
+
+shared_context 'with an INTRODUCEd and AUTHENTICATEd unknown requester' do
+  include_context 'with an INTRODUCEd unknown requester'
+  include_context 'requester sent AUTHENTICATE'
 end

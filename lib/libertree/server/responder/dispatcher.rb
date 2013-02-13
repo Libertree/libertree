@@ -42,6 +42,8 @@ module Libertree
               respond 'code' => 'ERROR', 'message' => 'Not INTRODUCEd.'
             elsif introduced? && ! authenticated? && command != 'AUTHENTICATE'
               respond 'code' => 'ERROR', 'message' => 'Not AUTHENTICATEd.'
+            elsif introduced? && authenticated? && ! in_a_forest?
+              respond 'code' => 'UNRECOGNIZED SERVER'
             else
               method = "rsp_#{command.downcase.gsub('-', '_')}".to_sym
               send  method, parameters
