@@ -29,17 +29,17 @@ describe Libertree::Server::Responder::Dispatcher do
           @s.response['message'].should =~ /introduce/i
         end
       end
+    end
 
-      context 'when the requester has INTRODUCEd but not AUTHENTICATEd itself' do
-        include_context 'with an INTRODUCEd requester'
+    context 'when the requester has INTRODUCEd but not AUTHENTICATEd itself' do
+      include_context 'with an INTRODUCEd requester'
 
-        it 'returns ERROR' do
-          commands = Libertree::Server::Responder::Dispatcher::VALID_COMMANDS - ['INTRODUCE', 'AUTHENTICATE',]
-          commands.each do |command|
-            @s.process %|#{command} { "anything": "anything" }|
-            @s.should have_responded_with_code('ERROR')
-            @s.response['message'].should =~ /authenticate/i
-          end
+      it 'returns ERROR' do
+        commands = Libertree::Server::Responder::Dispatcher::VALID_COMMANDS - ['INTRODUCE', 'AUTHENTICATE',]
+        commands.each do |command|
+          @s.process %|#{command} { "anything": "anything" }|
+          @s.should have_responded_with_code('ERROR')
+          @s.response['message'].should =~ /authenticate/i
         end
       end
     end
