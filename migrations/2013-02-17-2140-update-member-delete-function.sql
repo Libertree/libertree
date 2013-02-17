@@ -7,6 +7,11 @@ CREATE OR REPLACE FUNCTION delete_cascade_member(member_id INTEGER) RETURNS void
            FROM comments c WHERE c.member_id = $1;
 
     DELETE FROM contact_lists_members WHERE member_id = $1;
+
+    DELETE FROM
+      message_recipients
+    WHERE message_id IN
+      (SELECT id FROM messages WHERE sender_member_id = $1);
     DELETE FROM messages WHERE sender_member_id = $1;
     DELETE FROM message_recipients WHERE member_id = $1;
     DELETE FROM
