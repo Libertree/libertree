@@ -357,7 +357,16 @@ module Libertree
       end
 
       def delete_cascade
+        handle = self.username
         DB.dbh.execute "SELECT delete_cascade_account(?)", self.id
+
+        # distribute deletion of member record
+        Libertree::Model::Job.create_for_forests(
+          {
+            task: 'request:MEMBER-DELETE',
+            params: { 'username' => handle, }
+          }
+        )
       end
     end
   end
