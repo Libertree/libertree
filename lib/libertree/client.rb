@@ -179,6 +179,13 @@ module Libertree
       { 'member' => params }
     end
 
+    def req_member_delete(username)
+      @conn.request(
+        'MEMBER-DELETE',
+        'username' => username
+      )
+    end
+
     def req_message(message, usernames)
       {
         'message' => {
