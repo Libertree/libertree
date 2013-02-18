@@ -12,6 +12,7 @@ FactoryGirl.define do
 
   factory :forest, :class => Libertree::Model::Forest do
     sequence(:name) { |n| "forest#{n}" }
+    local_is_member true
   end
 
   factory :account, :class => Libertree::Model::Account do

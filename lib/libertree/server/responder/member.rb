@@ -49,6 +49,28 @@ module Libertree
             fail InternalError, '', nil
           end
         end
+
+        def rsp_member_delete(params)
+          return  if require_parameters(params, 'username')
+
+          begin
+            members = Model::Member.
+              where( 'username' => params['username'] ).
+              reject { |p| p.server != @server }
+
+            if members.empty?
+              respond( {
+                'code' => 'NOT FOUND',
+                'message' => "Unrecognized username: #{params['username'].inspect}"
+              } )
+            else
+              members[0].delete_cascade  # there should only be one member
+              respond_with_code 'OK'
+            end
+          rescue PGError => e
+            respond_with_code 'ERROR'
+          end
+        end
       end
     end
   end

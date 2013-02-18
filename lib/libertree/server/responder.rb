@@ -40,6 +40,7 @@ module Libertree
         'comment-like-delete',
         'forest',
         'member',
+        'member-delete',
         'message',
         'pool',
         'pool-delete',
@@ -58,8 +59,9 @@ module Libertree
           #server = Libertree::Model::Server[ :domain => stanza.from.domain ]
 
           # when we get messages from unknown servers: abort connection
+          # TODO: also check using in_a_forest?
           if ! server
-            response = error text: 'Unknown server.'
+            response = error code: 'UNRECOGNIZED SERVER'
           else
             Libertree::Server.log "Received request: '#{command}' from #{stanza.from.stripped}"
 

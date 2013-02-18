@@ -4,3 +4,5 @@ private.key
 *.log
 log
 pids
+database.yaml
+
