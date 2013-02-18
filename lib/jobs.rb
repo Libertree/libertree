@@ -18,6 +18,7 @@ module Jobs
       "request:INTRODUCE"            => Request::INTRODUCE,
       "request:FOREST"               => Request::FOREST,
       "request:MEMBER"               => Request::MEMBER,
+      "request:MEMBER-DELETE"        => Request::MEMBER_DELETE,
       "request:MESSAGE"              => Request::MESSAGE,
       "request:POOL"                 => Request::POOL,
       "request:POOL-DELETE"          => Request::POOL_DELETE,
@@ -205,6 +206,14 @@ module Jobs
           Request::with_tree(params['server_id']) do |tree|
             tree.req_member member
           end
+        end
+      end
+    end
+
+    class MEMBER_DELETE
+      def self.perform(params)
+        Request::with_tree(params['server_id']) do |tree|
+          tree.req_member_delete params['username']
         end
       end
     end
