@@ -20,7 +20,7 @@ class MockServer
   def initialize
     @ip_remote = '192.168.0.100'
     @responses = []
-    Libertree::Server.log = File.open( 'test-server.log', 'a+' )
+    Libertree::Server.log_handle = File.open( 'test-server.log', 'a+' )
   end
 
   def respond(data)
