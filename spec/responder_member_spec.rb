@@ -2,8 +2,18 @@ require 'spec_helper'
 require 'net/http'
 
 describe Libertree::Server::Responder::Member do
+  let(:subject_class) { Class.new }
+  let(:subject) { subject_class.new }
+
+  before :each do
+    subject_class.class_eval {
+      include Libertree::Server::Responder::Helper
+      include Libertree::Server::Responder::Member
+    }
+  end
+
   describe 'rsp_member' do
-    include_context 'with an INTRODUCEd and AUTHENTICATEd requester'
+    include_context 'requester in a forest'
 
     context 'and the member is known' do
       before :each do
@@ -16,9 +26,10 @@ describe Libertree::Server::Responder::Member do
         Net::HTTPResponse.any_instance.stub(:body)
         Socket.stub(:getaddrinfo) { [ [nil,nil,nil,@requester.ip] ] }
         File.stub(:open)
+        subject.instance_variable_set(:@server, @requester)
       end
 
-      it 'with a missing username it responds with MISSING PARAMETER' do
+      it 'raises MissingParameter with a missing username' do
         h = {
           'avatar_url' => 'http://libertree.net/images/avatars/1.png',
           'profile' => {
@@ -26,11 +37,11 @@ describe Libertree::Server::Responder::Member do
             'description'  => '',
           }
         }
-        @s.process "MEMBER #{h.to_json}"
-        @s.should have_responded_with_code('MISSING PARAMETER')
+        expect { subject.rsp_member(h) }.
+          to raise_error( Libertree::Server::MissingParameter )
       end
 
-      it 'with a blank username it responds with MISSING PARAMETER' do
+      it 'raises MissingParameter with a blank username' do
         h = {
           'username' => '',
           'avatar_url' => 'http://libertree.net/images/avatars/1.png',
@@ -39,11 +50,11 @@ describe Libertree::Server::Responder::Member do
             'description'  => '',
           }
         }
-        @s.process "MEMBER #{h.to_json}"
-        @s.should have_responded_with_code('MISSING PARAMETER')
+        expect { subject.rsp_member(h) }.
+          to raise_error( Libertree::Server::MissingParameter )
       end
 
-      it 'with a blank profile display name, it responds with ERROR' do
+      it 'raises an error with a blank profile display name' do
         h = {
           'username' => 'someuser',
           'avatar_url' => 'http://libertree.net/images/avatars/1.png',
@@ -52,11 +63,11 @@ describe Libertree::Server::Responder::Member do
             'description'  => '',
           }
         }
-        @s.process "MEMBER #{h.to_json}"
-        @s.should have_responded_with_code('ERROR')
+        expect { subject.rsp_member(h) }.
+          to raise_error( Libertree::Server::InternalError )
       end
 
-      it 'with valid data it responds with OK' do
+      it 'raises no errors with valid data' do
         h = {
           'username' => 'someuser',
           'avatar_url' => 'http://libertree.net/images/avatars/1.png',
@@ -65,8 +76,8 @@ describe Libertree::Server::Responder::Member do
             'description'  => '',
           }
         }
-        @s.process "MEMBER #{h.to_json}"
-        @s.should have_responded_with_code('OK')
+        expect { subject.rsp_member(h) }.
+          not_to raise_error
       end
     end
   end
