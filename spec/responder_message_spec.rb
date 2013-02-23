@@ -1,11 +1,24 @@
 require 'spec_helper'
 
 describe Libertree::Server::Responder::Message do
+  let(:subject_class) { Class.new }
+  let(:subject) { subject_class.new }
+
+  before :each do
+    subject_class.class_eval {
+      include Libertree::Server::Responder::Helper
+      include Libertree::Server::Responder::Message
+    }
+  end
+
   describe 'rsp_message' do
-    include_context 'with an INTRODUCEd and AUTHENTICATEd requester'
+    include_context 'requester in a forest'
+    before :each do
+      subject.instance_variable_set(:@server, @requester)
+    end
 
     context 'and the responder has no record of the sending member' do
-      it 'responds with NOT FOUND' do
+      it 'raises NotFound' do
         h = {
           'username' => 'sender',
           'recipients' => [
@@ -13,8 +26,8 @@ describe Libertree::Server::Responder::Message do
           ],
           'text' => 'a direct message',
         }
-        @s.process "MESSAGE #{h.to_json}"
-        @s.should have_responded_with_code('NOT FOUND')
+        expect { subject.rsp_message(h) }.
+          to raise_error( Libertree::Server::NotFound )
       end
     end
 
@@ -25,7 +38,7 @@ describe Libertree::Server::Responder::Message do
         )
       end
 
-      it 'and a parameter is missing or blank, it responds with MISSING PARAMETER' do
+      it 'raises MissingParameter when a parameter is missing or blank' do
         h = {
           'username' => @member.username,
           'recipients' => [
@@ -37,13 +50,13 @@ describe Libertree::Server::Responder::Message do
         keys = h.keys
         keys.each do |key|
           h_ = h.reject { |k,v| k == key }
-          @s.process "MESSAGE #{h_.to_json}"
-          @s.should have_responded_with_code('MISSING PARAMETER')
+          expect { subject.rsp_message(h_) }.
+            to raise_error( Libertree::Server::MissingParameter )
 
           h_ = h.dup
           h_[key] = ''
-          @s.process "MESSAGE #{h_.to_json}"
-          @s.should have_responded_with_code('MISSING PARAMETER')
+          expect { subject.rsp_message(h_) }.
+            to raise_error( Libertree::Server::MissingParameter )
         end
       end
 
@@ -55,7 +68,7 @@ describe Libertree::Server::Responder::Message do
           )
         end
 
-        it 'responds with NOT FOUND' do
+        it 'raises NotFound' do
           h = {
             'username' => @member.username,
             'recipients' => [
@@ -63,8 +76,8 @@ describe Libertree::Server::Responder::Message do
             ],
             'text' => 'a direct message',
           }
-          @s.process "MESSAGE #{h.to_json}"
-          @s.should have_responded_with_code('NOT FOUND')
+          expect { subject.rsp_message(h) }.
+            to raise_error( Libertree::Server::NotFound )
         end
       end
 
@@ -76,7 +89,7 @@ describe Libertree::Server::Responder::Message do
           @member_local = @account.member
         end
 
-        it 'with valid data it responds with OK' do
+        it 'raises no errors with valid data' do
           h = {
             'username' => @member.username,
             'recipients' => [
@@ -84,8 +97,8 @@ describe Libertree::Server::Responder::Message do
             ],
             'text' => 'a direct message',
           }
-          @s.process "MESSAGE #{h.to_json}"
-          @s.should have_responded_with_code('OK')
+          expect { subject.rsp_message(h) }.
+            not_to raise_error
         end
       end
     end
