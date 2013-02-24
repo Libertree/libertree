@@ -1,21 +1,31 @@
 require 'spec_helper'
 
 describe Libertree::Server::Responder::Comment do
-  describe 'rsp_comment_delete' do
-    include_context 'with an INTRODUCEd and AUTHENTICATEd requester'
+  let(:subject_class) { Class.new }
+  let(:subject) { subject_class.new }
 
-    it 'with a missing id it responds with MISSING PARAMETER' do
+  before :each do
+    subject_class.class_eval {
+      include Libertree::Server::Responder::Helper
+      include Libertree::Server::Responder::Comment
+    }
+  end
+
+  describe 'rsp_comment_delete' do
+    include_context 'requester in a forest'
+
+    it 'raises MissingParameter with a missing id' do
       h = { }
-      @s.process "COMMENT-DELETE #{h.to_json}"
-      @s.should have_responded_with_code('MISSING PARAMETER')
+      expect { subject.rsp_comment_delete(h) }.
+        to raise_error( Libertree::Server::MissingParameter )
     end
 
-    it 'with a blank id it responds with MISSING PARAMETER' do
+    it 'raises MissingParameter with a blank id' do
       h = {
         'id' => '',
       }
-      @s.process "COMMENT-DELETE #{h.to_json}"
-      @s.should have_responded_with_code('MISSING PARAMETER')
+      expect { subject.rsp_comment_delete(h) }.
+        to raise_error( Libertree::Server::MissingParameter )
     end
 
     context 'given an existing comment' do
@@ -29,15 +39,16 @@ describe Libertree::Server::Responder::Comment do
         @comment = Libertree::Model::Comment.create(
           FactoryGirl.attributes_for(:comment, member_id: @member.id, post_id: @post.id)
         )
+        subject.instance_variable_set(:@server, @requester)
       end
 
-      it 'with valid data it responds with OK and deletes the local copy' do
+      it 'raises no errors with valid data and deletes the local copy' do
         comment_id = @comment.id
         h = {
           'id' => @comment.remote_id,
         }
-        @s.process "COMMENT-DELETE #{h.to_json}"
-        @s.should have_responded_with_code('OK')
+        expect { subject.rsp_comment_delete(h) }.
+          not_to raise_error
 
         Libertree::Model::Comment[comment_id].should be_nil
       end
