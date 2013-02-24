@@ -1,22 +1,31 @@
 require 'spec_helper'
 
 describe Libertree::Server::Responder::Post do
-  describe 'rsp_post_delete' do
-    include_context 'with an INTRODUCEd and AUTHENTICATEd requester'
+  let(:subject_class) { Class.new }
+  let(:subject) { subject_class.new }
 
-    it 'with a missing id it responds with MISSING PARAMETER' do
+  before :each do
+    subject_class.class_eval {
+      include Libertree::Server::Responder::Helper
+      include Libertree::Server::Responder::Post
+    }
+  end
+
+  describe 'rsp_post_delete' do
+    include_context 'requester in a forest'
+
+    it 'raises MissingParameter with a missing id' do
       h = { }
-      @s.process "POST-DELETE #{h.to_json}"
-      @s.should have_responded_with_code('MISSING PARAMETER')
+      expect { subject.rsp_post_delete(h) }.
+        to raise_error( Libertree::Server::MissingParameter )
     end
 
-
-    it 'with a blank id it responds with MISSING PARAMETER' do
+    it 'raises MissingParameter with a blank id' do
       h = {
         'id' => '',
       }
-      @s.process "POST-DELETE #{h.to_json}"
-      @s.should have_responded_with_code('MISSING PARAMETER')
+      expect { subject.rsp_post_delete(h) }.
+        to raise_error( Libertree::Server::MissingParameter )
     end
 
     context 'given an existing post' do
@@ -27,15 +36,16 @@ describe Libertree::Server::Responder::Post do
         @post = Libertree::Model::Post.create(
           FactoryGirl.attributes_for(:post, member_id: @member.id)
         )
+        subject.instance_variable_set(:@server, @requester)
       end
 
-      it 'with valid data it responds with OK and deletes the local copy' do
+      it 'raises no errors and deletes the local copy with valid data' do
         post_id = @post.id
         h = {
           'id' => @post.remote_id,
         }
-        @s.process "POST-DELETE #{h.to_json}"
-        @s.should have_responded_with_code('OK')
+        expect { subject.rsp_post_delete(h) }.
+          not_to raise_error
 
         Libertree::Model::Post[post_id].should be_nil
       end
