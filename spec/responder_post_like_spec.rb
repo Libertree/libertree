@@ -1,8 +1,18 @@
 require 'spec_helper'
 
 describe Libertree::Server::Responder::PostLike do
+  let(:subject_class) { Class.new }
+  let(:subject) { subject_class.new }
+
+  before :each do
+    subject_class.class_eval {
+      include Libertree::Server::Responder::Helper
+      include Libertree::Server::Responder::PostLike
+    }
+  end
+
   describe 'rsp_post_like' do
-    include_context 'with an INTRODUCEd and AUTHENTICATEd requester'
+    include_context 'requester in a forest'
 
     context 'and the responder has record of both the member and the post' do
       before :each do
@@ -12,9 +22,10 @@ describe Libertree::Server::Responder::PostLike do
         @post = Libertree::Model::Post.create(
           FactoryGirl.attributes_for(:post, member_id: @member.id)
         )
+        subject.instance_variable_set(:@server, @requester)
       end
 
-      it 'and a parameter is missing or blank, it responds with MISSING PARAMETER' do
+      it 'raises MissingParameter when a parameter is missing or blank' do
         h = {
           'id'         => 999,
           'username'   => @member.username,
@@ -25,36 +36,36 @@ describe Libertree::Server::Responder::PostLike do
         keys = h.keys
         keys.each do |key|
           h_ = h.reject { |k,v| k == key }
-          @s.process "POST-LIKE #{h_.to_json}"
-          @s.should have_responded_with_code('MISSING PARAMETER')
+          expect { subject.rsp_post_like(h_) }.
+            to raise_error( Libertree::Server::MissingParameter )
 
           h_ = h.dup
           h_[key] = ''
-          @s.process "POST-LIKE #{h_.to_json}"
-          @s.should have_responded_with_code('MISSING PARAMETER')
+          expect { subject.rsp_post_like(h_) }.
+            to raise_error( Libertree::Server::MissingParameter )
         end
       end
 
-      it "with a member username that isn't found, it responds with NOT FOUND" do
+      it "raises NotFound with a member username that isn't found" do
         h = {
           'id'         => 999,
           'username'   => 'nosuchusername',
           'public_key' => @requester.public_key,
           'post_id'    => @post.remote_id,
         }
-        @s.process "POST-LIKE #{h.to_json}"
-        @s.should have_responded_with_code('NOT FOUND')
+        expect { subject.rsp_post_like(h) }.
+          to raise_error( Libertree::Server::NotFound )
       end
 
-      it "with a post id that isn't found, it responds with NOT FOUND" do
+      it "raises NotFound with a post id that isn't found" do
         h = {
           'id'         => 999,
           'username'   => @member.username,
           'public_key' => @requester.public_key,
           'post_id'    => 99999999,
         }
-        @s.process "POST-LIKE #{h.to_json}"
-        @s.should have_responded_with_code('NOT FOUND')
+        expect { subject.rsp_post_like(h) }.
+          to raise_error( Libertree::Server::NotFound )
       end
 
       context 'with valid Like data, and a member that does not belong to the requester' do
@@ -65,15 +76,15 @@ describe Libertree::Server::Responder::PostLike do
           )
         end
 
-        it 'responds with NOT FOUND' do
+        it 'raises NotFound' do
           h = {
             'id'         => 999,
             'username'   => @member.username,
             'public_key' => @requester.public_key,
             'post_id'    => @post.remote_id,
           }
-          @s.process "POST-LIKE #{h.to_json}"
-          @s.should have_responded_with_code('NOT FOUND')
+          expect { subject.rsp_post_like(h) }.
+            to raise_error( Libertree::Server::NotFound )
         end
       end
 
@@ -88,27 +99,27 @@ describe Libertree::Server::Responder::PostLike do
           )
         end
 
-        it 'responds with OK' do
+        it 'raises no errors' do
           h = {
             'id'         => 999,
             'username'   => @member.username,
             'public_key' => @requester.public_key,
             'post_id'    => @post.remote_id,
           }
-          @s.process "POST-LIKE #{h.to_json}"
-          @s.should have_responded_with_code('OK')
+          expect { subject.rsp_post_like(h) }.
+            not_to raise_error
         end
       end
 
-      it 'with valid data it responds with OK' do
+      it 'raises no errors with valid data' do
         h = {
           'id'         => 999,
           'username'   => @member.username,
           'public_key' => @requester.public_key,
           'post_id'    => @post.remote_id,
         }
-        @s.process "POST-LIKE #{h.to_json}"
-        @s.should have_responded_with_code('OK')
+        expect { subject.rsp_post_like(h) }.
+          not_to raise_error
       end
     end
   end
