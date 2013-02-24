@@ -1,8 +1,18 @@
 require 'spec_helper'
 
 describe Libertree::Server::Responder::Pool do
+  let(:subject_class) { Class.new }
+  let(:subject) { subject_class.new }
+
+  before :each do
+    subject_class.class_eval {
+      include Libertree::Server::Responder::Helper
+      include Libertree::Server::Responder::Pool
+    }
+  end
+
   describe 'rsp_pool_delete' do
-    include_context 'with an INTRODUCEd and AUTHENTICATEd requester'
+    include_context 'requester in a forest'
 
     before :each do
       @member = Libertree::Model::Member.create(
@@ -11,9 +21,10 @@ describe Libertree::Server::Responder::Pool do
       @pool = Libertree::Model::Pool.create(
         FactoryGirl.attributes_for(:pool, member_id: @member.id, sprung: true)
       )
+      subject.instance_variable_set(:@server, @requester)
     end
 
-    it 'and a parameter is missing or blank, it responds with MISSING PARAMETER' do
+    it 'raises MissingParameter when a parameter is missing or blank' do
       h = {
         'username' => @member.username,
         'id'       => @pool.remote_id,
@@ -22,24 +33,24 @@ describe Libertree::Server::Responder::Pool do
       keys = h.keys
       keys.each do |key|
         h_ = h.reject { |k,v| k == key }
-        @s.process "POOL-DELETE #{h_.to_json}"
-        @s.should have_responded_with_code('MISSING PARAMETER')
+        expect { subject.rsp_pool_delete(h_) }.
+          to raise_error( Libertree::Server::MissingParameter )
 
         h_ = h.dup
         h_[key] = ''
-        @s.process "POOL-DELETE #{h_.to_json}"
-        @s.should have_responded_with_code('MISSING PARAMETER')
+        expect { subject.rsp_pool_delete(h_) }.
+          to raise_error( Libertree::Server::MissingParameter )
       end
     end
 
-    it 'with valid data it responds with OK and deletes the local copy' do
+    it 'deletes the local copy and raises no errors with valid data' do
       pool_id = @pool.id
       h = {
         'username' => @member.username,
         'id'       => @pool.remote_id,
       }
-      @s.process "POOL-DELETE #{h.to_json}"
-      @s.should have_responded_with_code('OK')
+      expect { subject.rsp_pool_delete(h) }.
+        not_to raise_error
 
       Libertree::Model::Pool[pool_id].should be_nil
     end
