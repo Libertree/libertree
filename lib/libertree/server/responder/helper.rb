@@ -33,6 +33,15 @@ module Libertree
           end
         end
 
+        # @param [Nokogiri TODO] payload An XML document
+        # @return [Hash]
+        def xml_to_hash(xml)
+          xml.children.reduce({}) {|acc, n|
+            acc[n.name] = n.text
+            acc
+          }
+        end
+
       end
     end
   end

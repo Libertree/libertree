@@ -95,7 +95,7 @@ module Libertree
       end
 
       def self.process(command, payload)
-        parameters = payload.children.reduce({}) {|acc, n| acc[n.name] = n.text; acc}
+        parameters = xml_to_hash payload
         method = "rsp_#{command.gsub('-', '_')}".to_sym
         send  method, parameters
       end
