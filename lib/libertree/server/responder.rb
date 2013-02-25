@@ -33,24 +33,27 @@ module Libertree
         puts "Send messages to #{jid.stripped}."
       }
 
-      [ 'chat',
-        'comment',
-        'comment-delete',
-        'comment-like',
-        'comment-like-delete',
-        'forest',
-        'member',
-        'member-delete',
-        'message',
-        'pool',
-        'pool-delete',
-        'pool-post',
-        'pool-post-delete',
-        'post',
-        'post-delete',
-        'post-like',
-        'post-like-delete',
-      ].each do |command|
+      VALID_COMMANDS =
+        [ 'chat',
+          'comment',
+          'comment-delete',
+          'comment-like',
+          'comment-like-delete',
+          'forest',
+          'member',
+          'member-delete',
+          'message',
+          'pool',
+          'pool-delete',
+          'pool-post',
+          'pool-post-delete',
+          'post',
+          'post-delete',
+          'post-like',
+          'post-like-delete',
+        ]
+
+      VALID_COMMANDS.each do |command|
         client.register_handler :iq,
           "/iq/ns:libertree/ns:#{command}", :ns => 'libertree' do |stanza, xpath_result|
 
