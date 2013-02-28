@@ -20,7 +20,10 @@ module Libertree
     end
 
     def connect(remote_host)
-      @conn = Libertree::Connection.new(host: remote_host, log: @log, log_identifier: @log_identifier)
+      @conn = Libertree::Connection.new(host: remote_host,
+                                        source: @server_ip,
+                                        log: @log,
+                                        log_identifier: @log_identifier)
 
       response = @conn.request('INTRODUCE', 'public_key' => @public_key)
       if response.nil?

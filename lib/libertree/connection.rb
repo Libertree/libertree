@@ -9,11 +9,12 @@ module Libertree
     def initialize( args )
       host = args[:host]
       port = args.fetch(:port, 14404)
+      source = args[:source]
       @log = args.fetch(:log, $stdout)
       @log_identifier = args.fetch(:log_identifier, "pid #{Process.pid}")
 
       log "Connecting to #{host}:#{port}"
-      @s = TCPSocket.new(host, port)
+      @s = TCPSocket.new(host, port, source)
     end
 
     def log(s, level = nil)
