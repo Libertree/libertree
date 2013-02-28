@@ -78,8 +78,20 @@ describe Libertree::Server::Responder do
     catch(:halt) { c.send :call_handler_for, :iq, msg }
   end
 
-  it 'handles invalid stanzas gracefully' do
-    pending "upstream bug?"
+  it 'calls the correct handler for all valid iq commands' do
+    LSR::VALID_COMMANDS.each do |command|
+      stanza = helper.build_stanza("localhost.localdomain", { command => { id: 0 }})
+      stanza.from = "test.localdomain"
+      c = LSR.send(:client)
+      c.stub :write
+      LSR.should_receive "rsp_#{command.gsub('-', '_')}".to_sym
+      catch(:halt) { c.send :call_handler_for, :iq, stanza }
+    end
+  end
+
+  # TODO
+  it 'rejects malformed stanzas with "BAD REQUEST"' do
+    pending
     #c = LSR.send(:client)
     #expect { c.receive_data "hello" }.
     #  not_to raise_error
