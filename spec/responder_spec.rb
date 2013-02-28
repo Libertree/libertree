@@ -29,6 +29,11 @@ describe Libertree::Server::Responder do
     c.send :call_handler_for, :iq, msg
   end
 
+  # TODO
+  it 'responds to any other unsupported stanza type with "UNKNOWN COMMAND"' do
+    pending
+  end
+
   it 'responds with "MISSING PARAMETER" when a handler throws MissingParameter' do
     msg = helper.build_stanza( "localhost.localdomain",
                                { 'post' => { 'id' => 10 }} )
