@@ -11,7 +11,7 @@ describe Libertree::Server::Responder::Dispatcher do
       @s.process 'SOME-COMMAND invalid;JSON'
       @s.should have_responded_with( {
         'code' => 'BAD PARAMETER',
-        'message' => "743: unexpected token at 'invalid;JSON'",
+        'message' => "746: unexpected token at 'invalid;JSON'",
       } )
     end
 
@@ -49,11 +49,17 @@ describe Libertree::Server::Responder::Dispatcher do
 
       it 'responds with UNRECOGNIZED SERVER' do
         @s.stub(:challenge_new) { 'abcdefghijklmnopqrstuvwxyz' }
-        commands = Libertree::Server::Responder::Dispatcher::VALID_COMMANDS - ['INTRODUCE', 'AUTHENTICATE',]
+        commands = Libertree::Server::Responder::Dispatcher::VALID_COMMANDS - ['INTRODUCE', 'AUTHENTICATE', 'FOREST',]
         commands.each do |command|
           @s.process %|#{command} { "anything": "anything" }|
           @s.should have_responded_with_code('UNRECOGNIZED SERVER')
         end
+      end
+
+      it 'does not respond with UNRECOGNIZED SERVER to FOREST commands' do
+        @s.stub(:challenge_new) { 'abcdefghijklmnopqrstuvwxyz' }
+        @s.process %|FOREST { "anything": "anything" }|
+        @s.should_not have_responded_with_code('UNRECOGNIZED SERVER')
       end
     end
   end
