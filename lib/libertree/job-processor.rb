@@ -4,6 +4,7 @@ module Libertree
   class RetryJob     < StandardError; end
   class JobFailed    < StandardError; end
   class JobUndefined < StandardError; end
+  class JobInvalid   < StandardError; end
 
   class JobProcessor
 
@@ -88,6 +89,9 @@ module Libertree
         job.time_finished = Time.now
 
         log "Leaving: job #{job.id}"
+      rescue Libertree::JobInvalid => e
+        log_error "Invalid job #{job.id}: #{e.message}\n"
+        job.delete
       rescue Libertree::JobFailed => e
         log_error "Failed job #{job.id}: #{e.message}\n"
         # TODO: mark the job as failed instead of unreserving it
