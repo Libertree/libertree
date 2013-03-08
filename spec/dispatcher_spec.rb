@@ -15,11 +15,6 @@ describe Libertree::Server::Responder::Dispatcher do
       } )
     end
 
-    it 'responds to unknown commands' do
-      @s.process 'NO-SUCH-COMMAND { "data": "foo" }'
-      @s.should have_responded_with_code('UNKNOWN COMMAND')
-    end
-
     context 'when the requester has not INTRODUCEd itself' do
       it 'returns ERROR for all commands besides INTRODUCE' do
         commands = Libertree::Server::Responder::Dispatcher::VALID_COMMANDS - ['INTRODUCE',]
