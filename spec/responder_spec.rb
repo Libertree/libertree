@@ -101,7 +101,7 @@ describe Libertree::Server::Responder do
     include_context 'requester not in any forest'
 
     it 'responds with UNRECOGNIZED SERVER' do
-      LSR::VALID_COMMANDS.each do |command|
+      LSR::VALID_COMMANDS.reject {|c| c == 'forest'}.each do |command|
         stanza = helper.build_stanza("localhost.localdomain", { command => { id: 0 }})
         stanza.from = "test.localdomain"
 
@@ -113,6 +113,20 @@ describe Libertree::Server::Responder do
         end
         c.send :call_handler_for, :iq, stanza
       end
+    end
+
+    it 'does not respond with UNRECOGNIZED SERVER to "forest" commands' do
+      stanza = helper.build_stanza("localhost.localdomain",
+                                   { 'forest' => { "whatever": "whatever" }})
+      stanza.from = "test.localdomain"
+
+      err = LSR.error code: 'UNRECOGNIZED SERVER'
+
+      c = LSR.send(:client)
+      LSR.should_receive(:respond) do |args|
+        args[:with].to_s.should_not eq err.to_s
+      end
+      c.send :call_handler_for, :iq, stanza
     end
   end
 

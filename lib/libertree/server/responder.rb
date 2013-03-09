@@ -63,7 +63,7 @@ module Libertree
 
           # when we get messages from unknown servers: abort connection
           # TODO: also check using in_a_forest?
-          if ! server
+          if ! server && command != 'forest'
             response = error code: 'UNRECOGNIZED SERVER'
           else
             Libertree::Server.log "Received request: '#{command}' from #{stanza.from.stripped}"
