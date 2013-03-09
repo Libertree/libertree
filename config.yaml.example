@@ -1,5 +1,13 @@
 # The public IP address of this server
 ip_public: 99.76.54.132
+
+# The fully qualified domain name of this server.
+domain: tree.mydomain.net
+
+# The administrator's email address to allow other
+# Libertree administrators to contact you. (optional)
+contact: admin@mydomain.net
+
 # The IP to listen on for incoming requests.  Usually the same as ip_public.
 ip_listen: 99.76.54.132
 

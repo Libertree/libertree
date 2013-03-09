@@ -12,6 +12,12 @@ module Libertree
             if params['name'] && ! params['name'].strip.empty?
               @server.name_given = params['name'].strip
             end
+            if params['domain'] && ! params['domain'].strip.empty?
+              @server.domain = params['domain'].strip
+            end
+            if params['contact'] && ! params['contact'].strip.empty?
+              @server.contact = params['contact'].strip
+            end
             @server.ip = @ip_remote
             respond_with_code 'OK'
           end
