@@ -15,6 +15,8 @@ module Libertree
       @frontend_url_base = params[:frontend_url_base]
       @server_ip = params[:server_ip]
       @server_name = params[:server_name]
+      @domain = params[:domain]
+      @contact = params[:contact]
       @log = params[:log] || $stdout
       @log_identifier = params[:log_identifier] || "pid #{Process.pid}"
     end
@@ -36,9 +38,11 @@ module Libertree
         key = OpenSSL::PKey::RSA.new @private_key
         challenge_decrypted = key.private_decrypt(Base64.decode64(challenge_encrypted), OpenSSL::PKey::RSA::PKCS1_OAEP_PADDING)
         auth_params = { 'response' => challenge_decrypted }
-        if @server_name
-          auth_params['name'] = @server_name
-        end
+
+        auth_params['name'] = @server_name  if @server_name
+        auth_params['domain'] = @domain     if @domain
+        auth_params['contact'] = @contact   if @contact
+
         response = @conn.request('AUTHENTICATE', auth_params)
 
         if response['code'] != 'OK'
