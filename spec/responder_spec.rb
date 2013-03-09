@@ -117,7 +117,7 @@ describe Libertree::Server::Responder do
 
     it 'does not respond with UNRECOGNIZED SERVER to "forest" commands' do
       stanza = helper.build_stanza("localhost.localdomain",
-                                   { 'forest' => { "whatever": "whatever" }})
+                                   { 'forest' => { "whatever" => "whatever" }})
       stanza.from = "test.localdomain"
 
       err = LSR.error code: 'UNRECOGNIZED SERVER'
