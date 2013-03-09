@@ -126,7 +126,8 @@ describe Libertree::Server::Responder do
       LSR.should_receive(:respond) do |args|
         args[:with].to_s.should_not eq err.to_s
       end
-      c.send :call_handler_for, :iq, stanza
+      # handler throws :halt to prevent falling through to the catch-all handler
+      catch(:halt) { c.send :call_handler_for, :iq, stanza }
     end
   end
 
