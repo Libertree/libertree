@@ -97,6 +97,25 @@ describe Libertree::Server::Responder do
     #  not_to raise_error
   end
 
+  context "when the requester is not a member of any of the receiver's forests" do
+    include_context 'requester not in any forest'
+
+    it 'responds with UNRECOGNIZED SERVER' do
+      LSR::VALID_COMMANDS.each do |command|
+        stanza = helper.build_stanza("localhost.localdomain", { command => { id: 0 }})
+        stanza.from = "test.localdomain"
+
+        err = LSR.error code: 'UNRECOGNIZED SERVER'
+
+        c = LSR.send(:client)
+        LSR.should_receive(:respond) do |args|
+          args[:with].to_s.should eq err.to_s
+        end
+        c.send :call_handler_for, :iq, stanza
+      end
+    end
+  end
+
   describe 'respond' do
     it 'writes a reply to the stream' do
       msg = Blather::Stanza::Iq.new :set

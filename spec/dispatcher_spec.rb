@@ -33,18 +33,5 @@ describe Libertree::Server::Responder::Dispatcher do
         end
       end
     end
-
-    context "when the requester is not a member of any of the receiver's forests" do
-      include_context 'with an INTRODUCEd and AUTHENTICATEd unknown requester'
-
-      it 'responds with UNRECOGNIZED SERVER' do
-        @s.stub(:challenge_new) { 'abcdefghijklmnopqrstuvwxyz' }
-        commands = Libertree::Server::Responder::Dispatcher::VALID_COMMANDS - ['INTRODUCE', 'AUTHENTICATE',]
-        commands.each do |command|
-          @s.process %|#{command} { "anything": "anything" }|
-          @s.should have_responded_with_code('UNRECOGNIZED SERVER')
-        end
-      end
-    end
   end
 end
