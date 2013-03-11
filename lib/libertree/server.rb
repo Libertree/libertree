@@ -4,6 +4,7 @@ require 'socket'
 require 'openssl'
 require 'base64'
 require 'fileutils'
+require 'yaml'
 
 require 'libertree/authenticatable'
 require 'libertree/model'
