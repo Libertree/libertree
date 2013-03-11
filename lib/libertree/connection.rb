@@ -14,7 +14,12 @@ module Libertree
       @log_identifier = args.fetch(:log_identifier, "pid #{Process.pid}")
 
       log "Connecting to #{host}:#{port}"
-      @s = TCPSocket.new(host, port, source)
+      begin
+        @s = TCPSocket.new(host, port, source)
+      rescue Errno::EADDRNOTAVAIL
+        # Failed to bind to source IP.  Retry without binding.
+        @s = TCPSocket.new(host, port)
+      end
     end
 
     def log(s, level = nil)
