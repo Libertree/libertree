@@ -12,7 +12,8 @@ GIT
 
 GIT
   remote: git://github.com/RDBI/rdbi-driver-postgresql.git
-  revision: 4c19912b5649bbefad20b48a378a5bf0dad60c15
+  revision: be571a9909f74160be8b0c638275e33fe62c75cf
+  branch: fix-execute-memory-leak
   specs:
     rdbi-driver-postgresql (0.9.1)
       epoxy (>= 0.3.1)
@@ -22,7 +23,8 @@ GIT
 
 GIT
   remote: git://github.com/RDBI/rdbi.git
-  revision: 842eb374255fe0aef97f010d163be3c0a326f1ee
+  revision: 3742c7fc3eb2876716ed5a1cf4883389be13e631
+  branch: sth-leak
   specs:
     rdbi (0.9.1)
       epoxy (>= 0.3.1)
