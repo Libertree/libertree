@@ -164,6 +164,7 @@ module Libertree
         'text'       => post.text
       }
       params.merge!('references' => references) unless references.empty?
+      params.merge!('via' => post.via) if post.via
       @conn.request('POST', params)
     end
 
