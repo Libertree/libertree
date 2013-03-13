@@ -169,6 +169,14 @@ module Libertree
       def delete_cascade
         DB.dbh.execute "SELECT delete_cascade_member(?)", self.id
       end
+
+      def dirty
+        @account = nil
+        @name_display = nil
+        @profile = nil
+        @pools = nil
+        @springs = nil
+      end
     end
   end
 end
