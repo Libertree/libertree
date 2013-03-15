@@ -27,7 +27,7 @@ describe Libertree::Model::Post do
       before :each do
         new_post 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris. Maecenas congue ligula ac quam viverra nec consectetur ante hendrerit.'
       end
-      it 'is only some of the beginning of the text when the text is long' do
+      it 'is only some of the beginning of the text' do
         @post.glimpse.should == 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Don...'
       end
     end
