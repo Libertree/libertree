@@ -89,6 +89,11 @@ describe Libertree::Model::River do
       test_one  ':spring "Spring Name" "username@treename"', [ ':spring "Spring Name" "username@treename"', ]
       test_one  'foo :spring "Spring Name" "username@treename"', [ 'foo', ':spring "Spring Name" "username@treename"', ]
     end
+
+    it 'treats :via "..." as a single term' do
+      test_one  ':via "something or other"', [ ':via "something or other"', ]
+      test_one  'foo :via "abcdef"', [ 'foo', ':via "abcdef"', ]
+    end
   end
 
   describe '#matches_post?' do
@@ -613,6 +618,64 @@ describe Libertree::Model::River do
         )
         river.matches_post?(@post_private).should be_false
         river.matches_post?(@post_feed).should be_true
+      end
+    end
+
+    context 'given some posts from remote sources' do
+      before :each do
+        @post_from_script = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: @member.id, text: 'test post', via: 'some-script.pl' )
+        )
+        @post_from_friendica = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: @member.id, text: 'test post', via: 'Some Friendica Installation' )
+        )
+        @post_local = Libertree::Model::Post.create(
+          FactoryGirl.attributes_for( :post, member_id: @member.id, text: 'test post' )
+        )
+      end
+
+      it 'matches posts based on their source' do
+        river = Libertree::Model::River.create(
+          FactoryGirl.attributes_for( :river, query: 'test +:via "foo"', account_id: @account.id )
+        )
+        river.matches_post?(@post_from_script).should be_false
+        river.matches_post?(@post_from_friendica).should be_false
+        river.matches_post?(@post_local).should be_false
+
+        river = Libertree::Model::River.create(
+          FactoryGirl.attributes_for( :river, query: 'test +:via "some-script.pl"', account_id: @account.id )
+        )
+        river.matches_post?(@post_from_script).should be_true
+        river.matches_post?(@post_from_friendica).should be_false
+        river.matches_post?(@post_local).should be_false
+
+        river = Libertree::Model::River.create(
+          FactoryGirl.attributes_for( :river, query: 'test +:via "Some Friendica Installation"', account_id: @account.id )
+        )
+        river.matches_post?(@post_from_script).should be_false
+        river.matches_post?(@post_from_friendica).should be_true
+        river.matches_post?(@post_local).should be_false
+
+        river = Libertree::Model::River.create(
+          FactoryGirl.attributes_for( :river, query: 'test -:via "foo"', account_id: @account.id )
+        )
+        river.matches_post?(@post_from_script).should be_true
+        river.matches_post?(@post_from_friendica).should be_true
+        river.matches_post?(@post_local).should be_true
+
+        river = Libertree::Model::River.create(
+          FactoryGirl.attributes_for( :river, query: 'test -:via "some-script.pl"', account_id: @account.id )
+        )
+        river.matches_post?(@post_from_script).should be_false
+        river.matches_post?(@post_from_friendica).should be_true
+        river.matches_post?(@post_local).should be_true
+
+        river = Libertree::Model::River.create(
+          FactoryGirl.attributes_for( :river, query: 'test -:via "Some Friendica Installation"', account_id: @account.id )
+        )
+        river.matches_post?(@post_from_script).should be_true
+        river.matches_post?(@post_from_friendica).should be_false
+        river.matches_post?(@post_local).should be_true
       end
     end
   end
