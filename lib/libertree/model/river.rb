@@ -79,7 +79,7 @@ module Libertree
           full_query.strip!
         end
         # TODO: This is getting bulky and ugly...
-        @query_components ||= full_query.scan(/([+-]?"[^"]+")|([+-]?:(?:from|river|contact-list) ".+?")|([+-]?:visibility [a-z-]+)|([+-]?:word-count [<>] ?[0-9]+)|([+-]?:(?:spring) ".+?" ".+?")|(\S+)/).map { |c|
+        @query_components ||= full_query.scan(/([+-]?"[^"]+")|([+-]?:(?:from|river|contact-list|via) ".+?")|([+-]?:visibility [a-z-]+)|([+-]?:word-count [<>] ?[0-9]+)|([+-]?:(?:spring) ".+?" ".+?")|(\S+)/).map { |c|
           c[5] || c[4] || c[3] || c[2] || c[1] || c[0].gsub(/^([+-])"/, "\\1").gsub(/^"|"$/, '')
         }
         @query_components.dup
@@ -124,6 +124,8 @@ module Libertree
             pool = Pool[ member_id: member.id, name: spring_name, sprung: true ]
             pool && pool.includes?(post)
           end
+        when /^:via "(.+?)"$/
+          post.via == $1
         else
           /(?:^|\b|\s)#{Regexp.escape(term)}(?:\b|\s|$)/i === post.text
         end
