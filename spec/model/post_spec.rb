@@ -113,4 +113,43 @@ describe Libertree::Model::Post do
       end
     end
   end
+
+  describe '.search' do
+    before :each do
+      Libertree::DB.dbh.execute 'TRUNCATE posts CASCADE'
+      @p1 = new_post 'This is a test post.'
+      @p2 = new_post 'This is also a test post.'
+      @p3 = new_post 'This is a post.'
+      @p4 = new_post 'That is a comment.'
+      @p5 = new_post 'me and my hat'
+      @p6 = new_post "'Twas brillig, and the slithy toves Did gyre and gimble in the wabe"
+      @p7 = new_post 'This was not good.  However, that is.'
+    end
+
+    # Expect the given query to return the given Array of Posts (in any order).
+    def expect_search_match(query, posts)
+      results = Libertree::Model::Post.search(query)
+      expect(posts - results).to be_empty, "Expected #{query.inspect} to also match #{(posts-results).map(&:text)}"
+      expect(results - posts).to be_empty, "Expected #{query.inspect} not to match #{(results-posts).map(&:text)}"
+    end
+
+    it 'matches posts to single word queries' do
+      expect_search_match 'This', [ @p1, @p2, @p3, @p7 ]
+      expect_search_match 'is', [ @p1, @p2, @p3, @p4, @p7 ]
+      expect_search_match 'test', [ @p1, @p2 ]
+      expect_search_match 'test', [ @p1, @p2 ]
+      expect_search_match 'That', [ @p4, @p7 ]
+      expect_search_match 'me', [ @p5 ]
+      expect_search_match 'Me', [ @p5 ]
+      expect_search_match 'ME', [ @p5 ]
+      expect_search_match 'Twas', [ @p6 ]
+    end
+
+    it 'matches posts to multi-word queries' do
+      expect_search_match 'This is', [ @p1, @p2, @p3, @p7 ]
+      expect_search_match 'is this', [ @p1, @p2, @p3, @p7 ]
+      expect_search_match 'that is', [ @p4, @p7 ]
+      expect_search_match 'post this', [ @p1, @p2, @p3 ]
+    end
+  end
 end
