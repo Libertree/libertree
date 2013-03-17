@@ -232,7 +232,16 @@ module Libertree
       end
 
       def self.search(q)
-        self.prepare("SELECT * FROM posts WHERE text ILIKE '%' || ? || '%' ORDER BY time_created DESC LIMIT 42").s(q).map { |row| self.new row }
+        words = q.split
+        term_expressions = words.map { |word|
+          "( text ~* ( E'\\\\m' || ? || E'\\\\M' ) )"
+        }
+        where_clause = term_expressions.join(" AND ")
+        self.prepare(
+          "SELECT * FROM posts WHERE #{where_clause} ORDER BY time_created DESC LIMIT 42"
+        ).s(*words).map { |row|
+          self.new row
+        }
       end
 
       # TODO: Optionally restrict by account, so as not to reveal too much to browser/client
