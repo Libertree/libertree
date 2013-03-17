@@ -39,7 +39,7 @@ function parse_config
   [ -n ${libertree_db_database:?"Database name undefined."} ]
 
   # TODO: use password if it is defined
-  export psql_options="--quiet -v ON_ERROR_STOP=1 -v VERBOSITY=terse -h $libertree_db_host --username $libertree_db_username --dbname $libertree_db_database"
+  export psql_options="-X --quiet -v ON_ERROR_STOP=1 -v VERBOSITY=terse -h $libertree_db_host --username $libertree_db_username --dbname $libertree_db_database"
 
   return 0
 }
