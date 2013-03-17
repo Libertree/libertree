@@ -4,6 +4,7 @@ module Libertree
   module Model
     class Post < M4DBI::Model(:posts)
       include IsRemoteOrLocal
+      extend HasSearchableText
 
       after_create do |post|
         if post.local?
@@ -229,19 +230,6 @@ module Libertree
       end
       def liked_by?(member)
         !! like_by(member)
-      end
-
-      def self.search(q)
-        words = q.split
-        term_expressions = words.map { |word|
-          "( text ~* ( E'\\\\m' || ? || E'\\\\M' ) )"
-        }
-        where_clause = term_expressions.join(" AND ")
-        self.prepare(
-          "SELECT * FROM posts WHERE #{where_clause} ORDER BY time_created DESC LIMIT 42"
-        ).s(*words).map { |row|
-          self.new row
-        }
       end
 
       # TODO: Optionally restrict by account, so as not to reveal too much to browser/client
