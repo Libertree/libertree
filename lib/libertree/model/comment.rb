@@ -1,6 +1,8 @@
 module Libertree
   module Model
     class Comment < M4DBI::Model(:comments)
+      extend HasSearchableText
+
       after_create do |comment|
         if comment.local?
           Libertree::Model::Job.create_for_forests(
@@ -79,10 +81,6 @@ module Libertree
         else
           t[0...length] + '...'
         end
-      end
-
-      def self.search(q)
-        self.prepare("SELECT * FROM comments WHERE text ILIKE '%' || ? || '%' ORDER BY time_created DESC LIMIT 42").s(q).map { |row| self.new row }
       end
 
       def self.create(*args)
