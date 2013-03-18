@@ -119,9 +119,12 @@ module Libertree
           post.id
         )
         self.dirty
+        if self.sprung?
+          post.notify_about_springing self
 
-        if self.local? && self.sprung? && insertion_result.affected_count > 0
-          create_pool_post_job(post)
+          if self.local? && insertion_result.affected_count > 0
+            create_pool_post_job(post)
+          end
         end
       end
 

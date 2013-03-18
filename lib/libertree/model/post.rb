@@ -173,6 +173,20 @@ module Libertree
         end
       end
 
+      def notify_about_springing(pool)
+        return  if ! pool.sprung
+
+        local_post_author = self.member.account
+        pool_owner = pool.member.account
+
+        if local_post_author && local_post_author != pool_owner
+          local_post_author.notify_about( {
+            'type'    => 'spring',
+            'pool_id' => pool.id,
+          } )
+        end
+      end
+
       def glimpse( length = 60 )
         if self.text.length <= length
           self.text
