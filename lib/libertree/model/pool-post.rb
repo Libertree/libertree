@@ -8,6 +8,10 @@ module Libertree
       def post
         Post[self.post_id]
       end
+
+      def member
+        pool.member
+      end
     end
   end
 end
