@@ -22,6 +22,10 @@ describe Libertree::Model::Pool do
 
     account_poster = Libertree::Model::Account[ account_poster.id ]
     expect(account_poster.notifications.count).to eq 1
-    expect( account_poster.notifications[0].subject ).to be_kind_of Libertree::Model::Pool
+
+    subject = account_poster.notifications[0].subject
+    expect(subject).to be_kind_of Libertree::Model::PoolPost
+    expect(subject.pool).to eq spring
+    expect(subject.post).to eq post
   end
 end
