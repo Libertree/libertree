@@ -26,8 +26,8 @@ module Libertree
           Libertree::Model::Message[ self.data['message_id'] ]
         when 'post-like'
           Libertree::Model::PostLike[ self.data['post_like_id'] ]
-        when 'spring'
-          Libertree::Model::Pool[ self.data['pool_id'] ]
+        when 'springing'
+          Libertree::Model::PoolPost[ self.data['pool_post_id'] ]
         end
       end
 
