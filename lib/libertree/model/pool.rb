@@ -98,29 +98,38 @@ module Libertree
         self
       end
 
-      def <<(post)
-        insertion_result = DB.dbh.i(
-          %{
-            INSERT INTO pools_posts (
-              pool_id, post_id
-            )  SELECT
-              ?, ?
-            WHERE NOT EXISTS(
-              SELECT 1
-              FROM pools_posts
-              WHERE
-                pool_id = ?
-                AND post_id = ?
-            )
-          },
-          self.id,
-          post.id,
-          self.id,
-          post.id
-        )
-        self.dirty
+      def notify_about_springing(pool_post)
+        pool = pool_post.pool
+        return  if ! pool.sprung
 
-        if self.local? && self.sprung? && insertion_result.affected_count > 0
+        post = pool_post.post
+        local_post_author = post.member.account
+        pool_owner = pool.member.account
+
+        if local_post_author && local_post_author != pool_owner
+          local_post_author.notify_about( {
+            'type'         => 'springing',
+            'pool_post_id' => pool_post.id,
+          } )
+        end
+      end
+
+      def <<(post)
+        pool_post = PoolPost[
+          'pool_id' => self.id,
+          'post_id' => post.id
+        ]
+        if pool_post.nil?
+          pool_post_created = true
+          pool_post = PoolPost.create(
+            'pool_id' => self.id,
+            'post_id' => post.id
+          )
+        end
+
+        self.dirty
+        if self.local? && self.sprung? && pool_post_created
+          self.notify_about_springing pool_post
           create_pool_post_job(post)
         end
       end
