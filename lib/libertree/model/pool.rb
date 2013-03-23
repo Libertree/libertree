@@ -67,7 +67,15 @@ module Libertree
         @member ||= Member[self.member_id]
       end
 
-      def posts
+      def posts( opts = {} )
+        limit = opts.fetch(:limit, 30)
+        if opts[:newer]
+          time_comparator = '>'
+        else
+          time_comparator = '<'
+        end
+        time = Time.at( opts.fetch(:time, Time.now.to_f) ).strftime("%Y-%m-%d %H:%M:%S.%6N%z")
+
         @posts ||= Post.prepare(
           %{
             SELECT
@@ -78,10 +86,12 @@ module Libertree
             WHERE
               p.id = pp.post_id
               AND pp.pool_id = ?
+              AND p.time_created #{time_comparator} ?
             ORDER BY
               p.id DESC
+            LIMIT #{limit}
           }
-        ).s(self.id).map { |row| Post.new row }
+        ).s(self.id, time).map { |row| Post.new row }
       end
 
       def includes?(post)
