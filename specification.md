@@ -84,6 +84,10 @@ provide a message element to assist request debugging.  Response structure:
       [[ "message": <explanatory text> ]]
     }
 
+Given a request sent from a server that is not in any forest of which the
+receiver is a member, servers MUST respond with an "UNRECOGNIZED SERVER"
+code.
+
 
 ### INTRODUCE
 
@@ -489,8 +493,11 @@ Request Parameters:
     {
       "username": <username of message author on requester>,
       "recipients": [
-        { "username": <recipient's username on responder> },
-        [[ { "username": <recipient's username on responder> }, ... ]]
+        {
+          "username": <recipient's username on responder> },
+          "public_key": <public key of recipient's server>,
+        }
+        [[ ... ]]
       ],
       "text": <message text>,
     }
@@ -512,8 +519,9 @@ Response Structure:
     }
 
 A requester would use the MESSAGE command to share with a remote server a new
-direct message created at the requester having one or more recipients who are
-based at the responder.
+direct message created at the requester having one or more recipients.
+Requesters SHOULD NOT send more than one copy of the same message and recipient
+set to any given server.
 
 Responders SHOULD return a "NOT FOUND" code to indicate that it has no record
 of the message author.  Requesters SHOULD send a request for the missing MEMBER
