@@ -33,6 +33,11 @@ module Libertree
         puts "Send messages to #{jid.stripped}."
       }
 
+      # TODO: add introduce command to set remote server's
+      # - name_given
+      # - domain
+      # - contact
+      # - public key
       VALID_COMMANDS =
         [ 'chat',
           'comment',

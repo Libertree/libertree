@@ -1,6 +1,7 @@
 require 'json'
 require 'fileutils'
 require 'blather/client/dsl'
+require 'yaml'
 
 require 'libertree/model'
 require 'libertree/server/responder'
@@ -46,7 +47,7 @@ module Libertree
       missing = []
       [
         'xmpp_server',
-        'component',
+        'domain',
         'shared_secret',
       ].each do |required_key|
         if @conf[required_key].nil?
@@ -110,7 +111,7 @@ module Libertree
         end
 
         host   = @conf['xmpp_server']
-        domain = @conf['component']
+        domain = @conf['domain']
         secret = @conf['shared_secret']
         port   = @conf['port'].to_i || 5347
         socket = @conf['relay_socket'] || "/tmp/libertree-relay"

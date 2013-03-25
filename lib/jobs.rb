@@ -73,6 +73,8 @@ module Jobs
           :frontend_url_base => conf['frontend_url_base'],
           :server_ip         => conf['ip_public'],
           :server_name       => conf['server_name'],
+          :domain            => conf['domain'],
+          :contact           => conf['contact'],
           :log               => conf['log_handle'],
           :log_identifier    => conf['log_identifier']
         }

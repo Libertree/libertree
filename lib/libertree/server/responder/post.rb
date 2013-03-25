@@ -34,7 +34,8 @@ module Libertree
                 'member_id'  => member.id,
                 'remote_id'  => params['id'],
                 'visibility' => params['visibility'],
-                'text' => post_text
+                'text'       => post_text,
+                'via'        => params['via']
               )
             end
           rescue PGError => e
