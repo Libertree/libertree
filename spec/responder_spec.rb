@@ -37,7 +37,7 @@ describe Libertree::Server::Responder do
   it 'responds with "MISSING PARAMETER" when a handler throws MissingParameter' do
     msg = helper.build_stanza( "localhost.localdomain",
                                { 'post' => { 'id' => 10 }} )
-    msg.from = "test.localdomain"
+    msg.from = @requester.domain
     response = LSR.error({ :code => 'MISSING PARAMETER',
                            :text => 'username'
                          })
@@ -64,7 +64,7 @@ describe Libertree::Server::Responder do
     subject.instance_variable_set(:@server, @server)
 
     msg = helper.build_stanza( "localhost.localdomain", h )
-    msg.from = "test.localdomain"
+    msg.from = @requester.domain
     response = LSR.error({ :code => 'NOT FOUND',
                            :text => 'Unrecognized member username: "nosuchusername"'})
 
@@ -81,7 +81,7 @@ describe Libertree::Server::Responder do
   it 'calls the correct handler for all valid iq commands' do
     LSR::VALID_COMMANDS.each do |command|
       stanza = helper.build_stanza("localhost.localdomain", { command => { id: 0 }})
-      stanza.from = "test.localdomain"
+      stanza.from = @requester.domain
       c = LSR.send(:client)
       c.stub :write
       LSR.should_receive "rsp_#{command.gsub('-', '_')}".to_sym
@@ -103,7 +103,7 @@ describe Libertree::Server::Responder do
     it 'responds with UNRECOGNIZED SERVER' do
       LSR::VALID_COMMANDS.reject {|c| c == 'forest'}.each do |command|
         stanza = helper.build_stanza("localhost.localdomain", { command => { id: 0 }})
-        stanza.from = "test.localdomain"
+        stanza.from = @requester.domain
 
         err = LSR.error code: 'UNRECOGNIZED SERVER'
 
@@ -118,7 +118,7 @@ describe Libertree::Server::Responder do
     it 'does not respond with UNRECOGNIZED SERVER to "forest" commands' do
       stanza = helper.build_stanza("localhost.localdomain",
                                    { 'forest' => { "whatever" => "whatever" }})
-      stanza.from = "test.localdomain"
+      stanza.from = @requester.domain
 
       err = LSR.error code: 'UNRECOGNIZED SERVER'
 
