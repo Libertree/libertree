@@ -57,9 +57,7 @@ module Libertree
         client.register_handler :iq,
           "/iq/ns:libertree/ns:#{command}", :ns => 'libertree' do |stanza, xpath_result|
 
-          server = stanza.from.domain
-          # TODO: look up the domain in the db
-          #server = Libertree::Model::Server[ :domain => stanza.from.domain ]
+          server = Libertree::Model::Server[ :domain => stanza.from.domain ]
 
           # when we get messages from unknown servers: abort connection
           # TODO: also check using in_a_forest?
