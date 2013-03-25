@@ -34,58 +34,62 @@ describe Libertree::Server::Responder do
     pending
   end
 
-  it 'responds with "MISSING PARAMETER" when a handler throws MissingParameter' do
-    msg = helper.build_stanza( "localhost.localdomain",
-                               { 'post' => { 'id' => 10 }} )
-    msg.from = @requester.domain
-    response = LSR.error({ :code => 'MISSING PARAMETER',
-                           :text => 'username'
-                         })
+  context "when the requester is a member of one of the receiver's forests" do
+    include_context 'requester in a forest'
 
-    c = LSR.send :client
-    LSR.should_receive(:respond) do |args|
-      args[:to].should eq msg
-      args[:with].to_s.should eq response.to_s
+    it 'responds with "MISSING PARAMETER" when a handler throws MissingParameter' do
+      msg = helper.build_stanza( "localhost.localdomain",
+                                 { 'post' => { 'id' => 10 }} )
+      msg.from = @requester.domain
+      response = LSR.error({ :code => 'MISSING PARAMETER',
+                             :text => 'username'
+                           })
+      
+      c = LSR.send :client
+      LSR.should_receive(:respond) do |args|
+        args[:to].should eq msg
+        args[:with].to_s.should eq response.to_s
+      end
+      
+      # handler throws :halt to prevent falling through to the catch-all handler
+      catch(:halt) { c.send :call_handler_for, :iq, msg }
     end
-
-    # handler throws :halt to prevent falling through to the catch-all handler
-    catch(:halt) { c.send :call_handler_for, :iq, msg }
-  end
-
-  it 'responds with "NOT FOUND" when a handler throws NotFound' do
-    h = { 'comment' => {
-        'id'         => 999,
-        'username'   => 'nosuchusername',
-        'public_key' => "WHATEVER",
-        'post_id'    => 1234,
-        'text'       => 'A test comment.',
-      }}
-
-    subject.instance_variable_set(:@server, @server)
-
-    msg = helper.build_stanza( "localhost.localdomain", h )
-    msg.from = @requester.domain
-    response = LSR.error({ :code => 'NOT FOUND',
-                           :text => 'Unrecognized member username: "nosuchusername"'})
-
-    c = LSR.send :client
-    LSR.should_receive(:respond) do |args|
-      args[:to].should eq msg
-      args[:with].to_s.should eq response.to_s
+    
+    it 'responds with "NOT FOUND" when a handler throws NotFound' do
+      h = { 'comment' => {
+          'id'         => 999,
+          'username'   => 'nosuchusername',
+          'public_key' => "WHATEVER",
+          'post_id'    => 1234,
+          'text'       => 'A test comment.',
+        }}
+      
+      subject.instance_variable_set(:@server, @server)
+      
+      msg = helper.build_stanza( "localhost.localdomain", h )
+      msg.from = @requester.domain
+      response = LSR.error({ :code => 'NOT FOUND',
+                             :text => 'Unrecognized member username: "nosuchusername"'})
+      
+      c = LSR.send :client
+      LSR.should_receive(:respond) do |args|
+        args[:to].should eq msg
+        args[:with].to_s.should eq response.to_s
+      end
+      
+      # handler throws :halt to prevent falling through to the catch-all handler
+      catch(:halt) { c.send :call_handler_for, :iq, msg }
     end
-
-    # handler throws :halt to prevent falling through to the catch-all handler
-    catch(:halt) { c.send :call_handler_for, :iq, msg }
-  end
-
-  it 'calls the correct handler for all valid iq commands' do
-    LSR::VALID_COMMANDS.each do |command|
-      stanza = helper.build_stanza("localhost.localdomain", { command => { id: 0 }})
-      stanza.from = @requester.domain
-      c = LSR.send(:client)
-      c.stub :write
-      LSR.should_receive "rsp_#{command.gsub('-', '_')}".to_sym
-      catch(:halt) { c.send :call_handler_for, :iq, stanza }
+    
+    it 'calls the correct handler for all valid iq commands' do
+      LSR::VALID_COMMANDS.each do |command|
+        stanza = helper.build_stanza("localhost.localdomain", { command => { id: 0 }})
+        stanza.from = @requester.domain
+        c = LSR.send(:client)
+        c.stub :write
+        LSR.should_receive "rsp_#{command.gsub('-', '_')}".to_sym
+        catch(:halt) { c.send :call_handler_for, :iq, stanza }
+      end
     end
   end
 
