@@ -22,10 +22,6 @@ module Libertree
     include Responder
     include Relay
 
-    def in_a_forest?
-      @server && @server.forests.any? { |forest| forest.local_is_member? }
-    end
-
     def self.log(s, level = nil)
       t = Time.now.strftime("%Y-%m-%d %H:%M:%S")
       if level

@@ -57,11 +57,11 @@ module Libertree
         client.register_handler :iq,
           "/iq/ns:libertree/ns:#{command}", :ns => 'libertree' do |stanza, xpath_result|
 
-          server = Libertree::Model::Server[ :domain => stanza.from.domain ]
+          remote_tree = Libertree::Model::Server[ :domain => stanza.from.domain ]
 
-          # when we get messages from unknown servers: abort connection
-          # TODO: also check using in_a_forest?
-          if ! server && command != 'forest'
+          # when we get messages from unknown remotes: abort connection
+          if command != 'forest' &&
+              ( ! remote_tree || remote_tree.forests.none?(&:local_is_member?) )
             response = error code: 'UNRECOGNIZED SERVER'
           else
             Libertree::Server.log "Received request: '#{command}' from #{stanza.from.stripped}"
