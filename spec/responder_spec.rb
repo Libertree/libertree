@@ -111,7 +111,7 @@ describe Libertree::Server::Responder do
         LSR.should_receive(:respond) do |args|
           args[:with].to_s.should eq err.to_s
         end
-        c.send :call_handler_for, :iq, stanza
+        catch(:halt) { c.send :call_handler_for, :iq, stanza }
       end
     end
 
