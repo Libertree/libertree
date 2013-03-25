@@ -225,7 +225,10 @@ module Jobs
         message = Libertree::Model::Message[params['message_id'].to_i]
         if message
           Request::with_tree(params['server_id']) do |tree|
-            tree.req_message message, params['recipient_usernames']
+            members = Array(params['recipient_member_ids']).map { |member_id|
+              Libertree::Model::Member[member_id.to_i]
+            }.compact
+            tree.req_message message, members
           end
         end
       end
