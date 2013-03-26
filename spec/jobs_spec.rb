@@ -32,8 +32,29 @@ describe Jobs do
   end
 
   describe Jobs::Request do
+    before :each do
+      @client = mock("Client")
+      @client.stub(:request)
+      Libertree::Client.stub(:new) {|conf| @client }
+    end
+
     describe 'CHAT#perform' do
-      pending
+      it 'calls req_chat with a valid chat message' do
+        @client.stub(:req_chat)
+        msg = LM::ChatMessage.create( from_member_id: @member.id,
+                                      to_member_id: @other_member.id,
+                                      text: "hello" )
+        params = {
+          'chat_message_id' => msg.id,
+          'server_id'       => msg.recipient.tree.id,
+        }
+
+        @client.should_receive(:req_chat)
+        @client.should_receive(:request) {|domain, args|
+          domain.should eq msg.recipient.tree.domain
+        }
+        Jobs::Request::CHAT.perform( params )
+      end
     end
 
     describe 'COMMENT#perform' do
