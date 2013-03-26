@@ -92,6 +92,12 @@ module Libertree
       iq do |stanza|
         respond to: stanza, with: (error code: 'UNKNOWN COMMAND')
       end
+      message do |stanza|
+        respond to: stanza, with: (error code: 'UNKNOWN COMMAND')
+      end
+      presence do |stanza|
+        respond to: stanza, with: (error code: 'UNKNOWN COMMAND')
+      end
 
       def self.respond(opts)
         stanza = opts[:to]
