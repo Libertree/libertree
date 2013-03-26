@@ -1,4 +1,6 @@
-require 'ruby-debug'
+if RUBY_VERSION =~ /1\.9/
+  require 'ruby-debug'
+end
 require_relative '../lib/libertree/db'
 
 ########################
