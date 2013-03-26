@@ -68,14 +68,6 @@ describe Libertree::Server::Responder do
     end
   end
 
-  # TODO
-  it 'rejects malformed stanzas with "BAD REQUEST"' do
-    pending
-    #c = LSR.send(:client)
-    #expect { c.receive_data "hello" }.
-    #  not_to raise_error
-  end
-
 
   context "when the requester is a member of one of the receiver's forests" do
     include_context 'requester in a forest'
