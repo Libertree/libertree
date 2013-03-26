@@ -29,9 +29,43 @@ describe Libertree::Server::Responder do
     c.send :call_handler_for, :iq, msg
   end
 
-  # TODO
   it 'responds to any other unsupported stanza type with "UNKNOWN COMMAND"' do
-    pending
+    response = LSR.error code: 'UNKNOWN COMMAND'
+    c = LSR.send :client
+
+    msgs = [ Blather::Stanza::Message.new('to', 'body', :chat),
+             Blather::Stanza::Message.new('to', 'body', :groupchat),
+             Blather::Stanza::Message.new('to', 'body', :headline),
+             Blather::Stanza::Message.new('to', 'body', :normal),
+             Blather::Stanza::Message.new('to', 'body', :error)
+           ]
+
+    presences = [ Blather::Stanza::Presence.new(:unavailable),
+                  Blather::Stanza::Presence.new(:subscribe),
+                  Blather::Stanza::Presence.new(:subscribed),
+                  Blather::Stanza::Presence.new(:unsubscribe),
+                  Blather::Stanza::Presence.new(:unsubscribed),
+                  Blather::Stanza::Presence.new(:probe),
+                  Blather::Stanza::Presence.new(:error)
+                ]
+
+    msgs.each do |msg|
+      LSR.should_receive(:respond) do |args|
+        args[:to].should eq msg
+        args[:with].to_s.should eq response.to_s
+      end
+
+      c.send :call_handler_for, :message, msg
+    end
+
+    presences.each do |p|
+      LSR.should_receive(:respond) do |args|
+        args[:to].should eq p
+        args[:with].to_s.should eq response.to_s
+      end
+
+      c.send :call_handler_for, :presence, p
+    end
   end
 
   # TODO
