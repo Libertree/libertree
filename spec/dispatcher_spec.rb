@@ -9,10 +9,8 @@ describe Libertree::Server::Responder::Dispatcher do
 
     it 'responds to requests with non-JSON parameters' do
       @s.process 'SOME-COMMAND invalid;JSON'
-      @s.should have_responded_with( {
-        'code' => 'BAD PARAMETER',
-        'message' => "746: unexpected token at 'invalid;JSON'",
-      } )
+      @s.should have_responded_with_code('BAD PARAMETER')
+      @s.response['message'].should =~ /unexpected token at 'invalid;JSON'/
     end
 
     it 'responds to unknown commands' do
