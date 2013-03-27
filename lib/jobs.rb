@@ -84,31 +84,19 @@ module Jobs
       @client_conf
     end
 
-    def self.lt_client(remote_host)
-      c = Libertree::Client.new(@client_conf)
-
-      if c
-        c.connect remote_host
-        if block_given?
-          yield c
-          c.close
-        end
-      end
-
-      c
-    end
-
-    def self.with_tree(server_id)
-      server = Libertree::Model::Server[server_id]
-      if server.nil?
-        raise Libertree::JobFailed, "No server with id #{server_id.inspect}"
-      else
-        begin
-          self.lt_client(server.ip) do |client|
-            yield client
+    class RequestJob
+      def self.with_tree(server_id, method_name, args)
+        server = Libertree::Model::Server[server_id]
+        if server.nil?
+          raise Libertree::JobFailed, "No server with id #{server_id.inspect}"
+        else
+          begin
+            client = Libertree::Client.new(@client_conf)
+            client.request(server.domain, client.send(method_name, *args))
+          # TODO: check what exceptions can be raised
+          rescue Errno::ETIMEDOUT, Errno::ECONNREFUSED => e
+            raise Libertree::RetryJob, "With #{server.name_display} (#{server.domain}): #{e.message}"
           end
-        rescue Errno::ETIMEDOUT, Errno::ECONNREFUSED => e
-          raise Libertree::RetryJob, "With #{server.name_display} (#{server.ip}): #{e.message}"
         end
       end
     end
