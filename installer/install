@@ -12,7 +12,7 @@ The installer will attempt to fulfill the following tasks:
   1. Create a system user for libertree
   2. Install libertree as that system user.
      This includes:
-       - install RVM and Ruby 1.9.3 in RVM
+       - install RVM and Ruby 2.0.0 in RVM
        - setup a PostgreSQL owner and databases
        - install the Libertree Ruby backend
        - install the Libertree Ramaze frontend

@@ -37,7 +37,7 @@ services might be served by more than one process or daemon.
 As the libertree user:
 
     % cd ~/git/libertree-backend-rb
-    % rvm use 1.9.3@libertree-backend-rb
+    % rvm use 2.0.0@libertree-backend-rb
     % LIBERTREE_ENV=production bundle exec ruby -Ilib bin/server.rb config.yaml
 
 ##### Processing of backend jobs
@@ -45,7 +45,7 @@ As the libertree user:
 As the libertree user:
 
     % cd ~/git/libertree-backend-rb
-    % rvm use 1.9.3@libertree-backend-rb
+    % rvm use 2.0.0@libertree-backend-rb
     % LIBERTREE_ENV=production bundle exec ruby bin/job-processor.rb config.yaml
 
 #### Frontend
@@ -53,7 +53,7 @@ As the libertree user:
 As the libertree user:
 
     % cd ~/git/libertree-frontend-ramaze
-    % rvm use 1.9.3@libertree-frontend-ramaze
+    % rvm use 2.0.0@libertree-frontend-ramaze
     % ./css-build.sh
     % LIBERTREE_ENV=production bundle exec unicorn -p <port number>
 
@@ -62,7 +62,7 @@ As the libertree user:
 As the libertree user:
 
     % cd ~/git/libertree-frontend-ramaze
-    % rvm use 1.9.3@libertree-frontend-ramaze
+    % rvm use 2.0.0@libertree-frontend-ramaze
     % LIBERTREE_ENV=production bundle exec ruby job-processor.rb config/job-processor.yaml
 
 
@@ -74,7 +74,7 @@ will not be able to remain logged in.
 Optional (recommended) web socket server:
 
     % cd ~/git/libertree-frontend-ramaze
-    % rvm use 1.9.3@libertree-frontend-ramaze
+    % rvm use 2.0.0@libertree-frontend-ramaze
     % LIBERTREE_ENV=production bundle exec ruby websocket-server.rb
 
 Note: to run processes in the background, add nohup and & to all the commands above, e.g.:
@@ -108,7 +108,7 @@ to be run before restarting the daemons.
 If there are SCSS changes, compile the SCSS to CSS:
 
     % cd ~/git/libertree-frontend-ramaze
-    % rvm use 1.9.3@libertree-frontend-ramaze
+    % rvm use 2.0.0@libertree-frontend-ramaze
     % ./css-build.sh
 
 This command is safe to run, even if it is not certain whether there were SCSS

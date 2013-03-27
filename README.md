@@ -39,7 +39,7 @@ written in Ruby.
 
 * A UNIX-compatible system (such as GNU/Linux or OSX)
 * PostgreSQL 8+
-* Ruby 1.9
+* Ruby 1.9 or 2.0
 * GraphicsMagick (or ImageMagick)
 * git
 

@@ -73,9 +73,9 @@ Install RVM using the installation instructions found on
 of this writing).
 
 Once RVM is installed (including configuration of your shell startup script),
-install Ruby 1.9 as follows:
+install Ruby 2.0 as follows:
 
-    % rvm install 1.9.3
+    % rvm install 2.0.0
 
 There are Gemfile files in the repositories.  These are used by
 [Bundler](http://gembundler.com/) to install and manage Ruby gems (Ruby
@@ -151,7 +151,7 @@ After your first account is created (later, once all the daemons are running
 As the libertree user:
 
     % cd ~/git/libertree-backend-rb
-    % rvm use --create 1.9.3@libertree-backend-rb
+    % rvm use --create 2.0.0@libertree-backend-rb
     % gem install bundler
     % bundle install
     % bundle exec ruby generate-key-pair.rb
@@ -173,7 +173,7 @@ worked out.
 As the libertree user:
 
     % cd ~/git/libertree-frontend-ramaze
-    % rvm use --create 1.9.3@libertree-frontend-ramaze
+    % rvm use --create 2.0.0@libertree-frontend-ramaze
     % gem install bundler
     % bundle install
     % ./css-build.sh
