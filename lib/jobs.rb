@@ -107,9 +107,7 @@ module Jobs
       def self.perform(params)
         chat_message = Libertree::Model::ChatMessage[ params['chat_message_id'].to_i ]
         if chat_message
-          Request::with_tree(params['server_id']) do |tree|
-            tree.req_chat chat_message
-          end
+          with_tree(params['server_id'], :req_chat, [ chat_message ])
         end
       end
     end
@@ -146,9 +144,7 @@ module Jobs
 
     class COMMENT_DELETE < RequestJob
       def self.perform(params)
-        Request::with_tree(params['server_id']) do |tree|
-          tree.req_comment_delete params['comment_id']
-        end
+        with_tree(params['server_id'], :req_comment_delete, [params['comment_id']])
       end
     end
 
@@ -156,27 +152,23 @@ module Jobs
       def self.perform(params)
         like = Libertree::Model::CommentLike[params['comment_like_id'].to_i]
         if like
-          Request::with_tree(params['server_id']) do |tree|
-            tree.req_comment_like like
-          end
+          with_tree(params['server_id'], :req_comment_like, [ like ])
         end
       end
     end
 
     class COMMENT_LIKE_DELETE < RequestJob
       def self.perform(params)
-        Request::with_tree(params['server_id']) do |tree|
-          tree.req_comment_like_delete params['comment_like_id']
-        end
+        with_tree(params['server_id'],
+                  :req_comment_like_delete,
+                  [params['comment_like_id']])
       end
     end
 
     class FOREST < RequestJob
       def self.perform(params)
         forest = Libertree::Model::Forest[params['forest_id'].to_i]
-        Request::with_tree(params['server_id']) do |tree|
-          tree.req_forest forest
-        end
+        with_tree(params['server_id'], :req_forest, [forest])
       end
     end
 
@@ -184,18 +176,14 @@ module Jobs
       def self.perform(params)
         member = Libertree::Model::Member[params['member_id'].to_i]
         if member
-          Request::with_tree(params['server_id']) do |tree|
-            tree.req_member member
-          end
+          with_tree(params['server_id'], :req_member, [ member ])
         end
       end
     end
 
     class MEMBER_DELETE < RequestJob
       def self.perform(params)
-        Request::with_tree(params['server_id']) do |tree|
-          tree.req_member_delete params['username']
-        end
+        with_tree(params['server_id'], :req_member_delete, [params['username']])
       end
     end
 
@@ -203,9 +191,7 @@ module Jobs
       def self.perform(params)
         message = Libertree::Model::Message[params['message_id'].to_i]
         if message
-          Request::with_tree(params['server_id']) do |tree|
-            tree.req_message message, params['recipient_usernames']
-          end
+          with_tree(params['server_id'], :req_message, [ params['recipient_usernames'] ])
         end
       end
     end
@@ -214,9 +200,7 @@ module Jobs
       def self.perform(params)
         pool = Libertree::Model::Pool[params['pool_id'].to_i]
         if pool
-          Request::with_tree(params['server_id']) do |tree|
-            tree.req_pool pool
-          end
+          with_tree(params['server_id'], :req_pool, [ pool ])
         end
       end
     end
@@ -225,9 +209,7 @@ module Jobs
       def self.perform(params)
         pool = Libertree::Model::Pool[params['pool_id'].to_i]
         if pool
-          Request::with_tree(params['server_id']) do |tree|
-            tree.req_pool_delete pool
-          end
+          with_tree(params['server_id'], :req_pool_delete, [ pool ])
         end
       end
     end
@@ -237,9 +219,7 @@ module Jobs
         pool = Libertree::Model::Pool[params['pool_id'].to_i]
         post = Libertree::Model::Post[params['post_id'].to_i]
         if pool && post
-          Request::with_tree(params['server_id']) do |tree|
-            tree.req_pool_post pool, post
-          end
+          with_tree(params['server_id'], :req_pool_post, [pool, post])
         end
       end
     end
@@ -249,9 +229,7 @@ module Jobs
         pool = Libertree::Model::Pool[params['pool_id'].to_i]
         post = Libertree::Model::Post[params['post_id'].to_i]
         if pool && post
-          Request::with_tree(params['server_id']) do |tree|
-            tree.req_pool_post_delete pool, post
-          end
+          with_tree(params['server_id'], :req_pool_post_delete, [pool, post])
         end
       end
     end
@@ -261,18 +239,14 @@ module Jobs
         post = Libertree::Model::Post[params['post_id'].to_i]
         if post
           refs = Libertree::References::extract(post.text, Request.conf[:frontend_url_base])
-          Request::with_tree(params['server_id']) do |tree|
-            tree.req_post post, refs
-          end
+          with_tree(params['server_id'], :req_post, [post, refs])
         end
       end
     end
 
     class POST_DELETE < RequestJob
       def self.perform(params)
-        Request::with_tree(params['server_id']) do |tree|
-          tree.req_post_delete params['post_id']
-        end
+        with_tree(params['server_id'], :req_post_delete, [params['post_id']])
       end
     end
 
@@ -280,18 +254,14 @@ module Jobs
       def self.perform(params)
         like = Libertree::Model::PostLike[params['post_like_id'].to_i]
         if like
-          Request::with_tree(params['server_id']) do |tree|
-            tree.req_post_like like
-          end
+          with_tree(params['server_id'], :req_post_like, [ like ])
         end
       end
     end
 
     class POST_LIKE_DELETE < RequestJob
       def self.perform(params)
-        Request::with_tree(params['server_id']) do |tree|
-          tree.req_post_like_delete params['post_like_id']
-        end
+        with_tree(params['server_id'], :req_post_like_delete, [params['post_like_id']])
       end
     end
 
