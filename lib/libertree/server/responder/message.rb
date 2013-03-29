@@ -18,22 +18,19 @@ module Libertree
               return
             end
 
-            member_ids = params['recipients'].map { |recipient|
+            member_ids = params['recipients'].reduce([]) { |ids, recipient|
               origin = Model::Server[ 'public_key' => recipient['public_key'] ]
               if origin
                 member = Model::Member['username' => recipient['username'], 'server_id' => origin.id]
-                member.id  if member
-              elsif origin.nil? && recipient['public_key'] != @public_key
-                # TODO: respond somehow
-                nil
-              elsif origin.nil?
-                # origin is supposedly this local server
+                ids << member.id  if member
+              elsif origin.nil? && recipient['public_key'] == @public_key
+                # origin is this local server
                 account = Model::Account['username' => recipient['username']]
                 if account
-                  account.member.id
+                  ids << account.member.id
                 end
               end
-            }.compact
+            }
 
             message = Libertree::Model::Message.create_with_recipients(
               sender_member_id: sender_member.id,
