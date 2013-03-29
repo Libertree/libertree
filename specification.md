@@ -494,7 +494,7 @@ Request Parameters:
       "username": <username of message author on requester>,
       "recipients": [
         {
-          "username": <recipient's username on responder> },
+          "username": <recipient's username> },
           "public_key": <public key of recipient's server>,
         }
         [[ ... ]]
