@@ -30,6 +30,8 @@ module Libertree
                   ids << account.member.id
                 end
               end
+
+              ids
             }
 
             message = Libertree::Model::Message.create_with_recipients(
