@@ -9,7 +9,10 @@ describe Libertree::Server::Responder::Message do
         h = {
           'username' => 'sender',
           'recipients' => [
-            { 'username' => 'recipient' },
+            {
+              'username' => 'recipient',
+              'public_key' => '69e2c3164868a8d9ba4c77db842553a13116bef8',
+            },
           ],
           'text' => 'a direct message',
         }
@@ -29,7 +32,10 @@ describe Libertree::Server::Responder::Message do
         h = {
           'username' => @member.username,
           'recipients' => [
-            { 'username' => 'recipient' },
+            {
+              'username' => 'recipient',
+              'public_key' => '69e2c3164868a8d9ba4c77db842553a13116bef8',
+            },
           ],
           'text' => 'a direct message',
         }
@@ -47,7 +53,7 @@ describe Libertree::Server::Responder::Message do
         end
       end
 
-      context 'with valid message data, and a member that does not belong to the requester' do
+      context 'with valid message data, and a sender that does not belong to the requester' do
         before :each do
           other_server = Libertree::Model::Server.create( FactoryGirl.attributes_for(:server) )
           @member = Libertree::Model::Member.create(
@@ -59,7 +65,10 @@ describe Libertree::Server::Responder::Message do
           h = {
             'username' => @member.username,
             'recipients' => [
-              { 'username' => 'recipient' },
+              {
+                'username' => 'recipient',
+                'public_key' => '69e2c3164868a8d9ba4c77db842553a13116bef8',
+              },
             ],
             'text' => 'a direct message',
           }
@@ -80,7 +89,41 @@ describe Libertree::Server::Responder::Message do
           h = {
             'username' => @member.username,
             'recipients' => [
-              { 'username' => @member_local.username },
+              {
+                'username' => @member_local.username,
+                'public_key' => 'public-key-of-mock-server',
+              },
+            ],
+            'text' => 'a direct message',
+          }
+          @s.process "MESSAGE #{h.to_json}"
+          @s.should have_responded_with_code('OK')
+        end
+      end
+
+      context 'with valid message data, and two recipients, one local, and one on the requester' do
+        before :each do
+          @account = Libertree::Model::Account.create(
+            FactoryGirl.attributes_for(:account)
+          )
+          @member_local = @account.member
+          @member_remote = Libertree::Model::Member.create(
+            FactoryGirl.attributes_for(:member, :server_id => @requester.id)
+          )
+        end
+
+        it 'with valid data it responds with OK' do
+          h = {
+            'username' => @member.username,
+            'recipients' => [
+              {
+                'username' => @member_local.username,
+                'public_key' => 'public-key-of-mock-server',
+              },
+              {
+                'username' => @member_remote.username,
+                'public_key' => @requester.public_key,
+              },
             ],
             'text' => 'a direct message',
           }

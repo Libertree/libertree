@@ -22,6 +22,7 @@ class MockServer
   def initialize
     @ip_remote = '192.168.0.100'
     @responses = []
+    @public_key = 'public-key-of-mock-server'
     Libertree::Server.log = File.open( 'test-server.log', 'a+' )
   end
 

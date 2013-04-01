@@ -6,11 +6,11 @@ module Libertree
           return  if require_parameters(params, 'username', 'recipients', 'text')
 
           begin
-            member = Model::Member[
+            sender_member = Model::Member[
               'username' => params['username'],
               'server_id' => @server.id,
             ]
-            if member.nil?
+            if sender_member.nil?
               respond( {
                 'code' => 'NOT FOUND',
                 'message' => "Unrecognized member username: #{params['username'].inspect}"
@@ -18,10 +18,26 @@ module Libertree
               return
             end
 
+            member_ids = params['recipients'].reduce([]) { |ids, recipient|
+              origin = Model::Server[ 'public_key' => recipient['public_key'] ]
+              if origin
+                member = Model::Member['username' => recipient['username'], 'server_id' => origin.id]
+                ids << member.id  if member
+              elsif origin.nil? && recipient['public_key'] == @public_key
+                # origin is this local server
+                account = Model::Account['username' => recipient['username']]
+                if account
+                  ids << account.member.id
+                end
+              end
+
+              ids
+            }
+
             message = Libertree::Model::Message.create_with_recipients(
-              sender_member_id: member.id,
+              sender_member_id: sender_member.id,
               text: params['text'],
-              recipient_member_usernames: params['recipients'].map { |r| r['username'] }
+              recipient_member_ids: member_ids
             )
 
             respond_with_code 'OK'
