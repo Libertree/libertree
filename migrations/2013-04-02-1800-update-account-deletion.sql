@@ -1,14 +1,14 @@
-CREATE INDEX ON posts(member_id);
-CREATE INDEX ON post_revisions(post_id);
-CREATE INDEX ON post_likes(post_id);
-CREATE INDEX ON posts_read(post_id);
-CREATE INDEX ON posts_hidden(post_id);
-CREATE INDEX ON post_subscriptions(post_id);
-CREATE INDEX ON pools_posts(post_id);
-CREATE INDEX ON river_posts(river_id);
-CREATE INDEX ON river_posts(post_id);
-CREATE INDEX ON comments(member_id);
-CREATE INDEX ON comment_likes(comment_id);
+CREATE INDEX posts_by_member_id            ON posts(member_id);
+CREATE INDEX post_by_post_id               ON post_revisions(post_id);
+CREATE INDEX post_likes_by_post_id         ON post_likes(post_id);
+CREATE INDEX posts_read_by_post_id         ON posts_read(post_id);
+CREATE INDEX posts_hidden_by_post_id       ON posts_hidden(post_id);
+CREATE INDEX post_subscriptions_by_post_id ON post_subscriptions(post_id);
+CREATE INDEX pool_posts_by_post_id         ON pools_posts(post_id);
+CREATE INDEX river_posts_by_river_id       ON river_posts(river_id);
+CREATE INDEX river_posts_by_post_id        ON river_posts(post_id);
+CREATE INDEX comments_by_member_id         ON comments(member_id);
+CREATE INDEX comment_likes_by_comment_id   ON comment_likes(comment_id);
 
 CREATE OR REPLACE FUNCTION delete_cascade_member(member_id INTEGER) RETURNS void AS $$
     SELECT delete_cascade_pool(p.id)
