@@ -91,7 +91,7 @@ generate_invite() {
 setup_backend() {
   safety off
     cd ~/git/libertree-backend-rb
-    rvm use --create 1.9.3@libertree-backend-rb
+    rvm use --create 2.0.0@libertree-backend-rb
   safety on
 
   gem list --local | grep -qE '^bundler' || (info "Installing bundler"; gem install bundler)
@@ -113,7 +113,7 @@ setup_frontend() {
   # TODO: untested
   safety off
     cd ~/git/libertree-frontend-ramaze
-    rvm use --create 1.9.3@libertree-frontend-ramaze
+    rvm use --create 2.0.0@libertree-frontend-ramaze
   safety on
 
   gem list --local | grep -qE '^bundler' || (info "Installing bundler"; gem install bundler)
@@ -145,21 +145,21 @@ install_rvm() {
 }
 
 install_ruby() {
-  # skip if ruby v1.9.3 is installed
-  if rvm list | grep -q "ruby-1.9.3"; then
+  # skip if ruby v2.0.0 is installed
+  if rvm list | grep -q "ruby-2.0.0"; then
     return 0
   fi
 
   clear
-  info "Installing ruby 1.9.3"
+  info "Installing ruby 2.0.0"
   info "You will see a number of requirements that your system must meet in order to install ruby."
   info "Press any key to show the requirements."
   read -n1
 
   safety off
     rvm requirements
-    info "Press any key to continue installing ruby 1.9.3."
+    info "Press any key to continue installing ruby 2.0.0."
     read -n1
-    rvm install 1.9.3
+    rvm install 2.0.0
   safety on
 }
