@@ -97,7 +97,7 @@ setup_backend() {
   gem list --local | grep -qE '^bundler' || (info "Installing bundler"; gem install bundler)
 
   info "Installing dependent gems"
-  bundle install --without development
+  bundle install
 
   [[ ! -e public.key ]] && [[ ! -e private.key ]] && bundle exec ruby generate-key-pair.rb
   handle_config "config.yaml"
