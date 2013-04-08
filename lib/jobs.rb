@@ -199,7 +199,10 @@ module Jobs
       def self.perform(params)
         message = Libertree::Model::Message[ params['message_id'].to_i ]
         if message
-          with_tree(params['server_id'], :req_message, [ params['recipient_usernames'] ])
+          members = Array(params['recipient_member_ids']).map { |member_id|
+            Libertree::Model::Member[member_id.to_i]
+          }.compact
+          with_tree(params['server_id'], :req_message, [ message, members ])
         end
       end
     end

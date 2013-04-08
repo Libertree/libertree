@@ -1,13 +1,13 @@
 GIT
   remote: git://github.com/Libertree/libertree-client-rb.git
-  revision: 010072ade9dc80f4371c053eea53b9fb4d48fdae
+  revision: 7f13f7cdf350d5deb45fed2f9dde21a48270f689
   branch: xmpp
   specs:
     libertree-client (0.0.1)
 
 GIT
   remote: git://github.com/Libertree/libertree-model-rb.git
-  revision: eccdc139b1232472838fd11e124e2b37b9374f2e
+  revision: 8de6d72dcdc9912b053a3dfdb5608dd481790632
   specs:
     libertree-model (0.0.1)
 
@@ -109,6 +109,7 @@ GEM
       ruby-debug-base19 (>= 0.11.19)
     ruby_core_source (0.1.5)
       archive-tar-minitar (>= 0.5.2)
+    syck (1.0.0)
     treetop (1.4.10)
       polyglot
       polyglot (>= 0.3.1)
@@ -132,3 +133,4 @@ DEPENDENCIES
   rspec
   ruby-debug-base19x (~> 0.11.30.pre4)
   ruby-debug19
+  syck

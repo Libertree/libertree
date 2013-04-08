@@ -1,4 +1,6 @@
-require 'ruby-debug'
+if RUBY_VERSION =~ /^1\.9/
+  require 'ruby-debug'
+end
 require 'libertree/db'
 
 ########################
@@ -20,6 +22,7 @@ class MockServer
   def initialize
     @ip_remote = '192.168.0.100'
     @responses = []
+    @public_key = 'public-key-of-mock-server'
     Libertree::Server.log_handle = File.open( 'test-server.log', 'a+' )
   end
 
