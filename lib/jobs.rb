@@ -69,7 +69,7 @@ module Jobs
       def self.perform(params)
         post = Libertree::Model::Post[ params['post_id'] ]
         if post.nil?
-          raise Libertree::JobFailed, "Unknown post_id: #{params['post_id'].inspect}"
+          raise Libertree::JobInvalid, "Unknown post_id: #{params['post_id'].inspect}"
         else
           Libertree::Model::River.each do |river|
             if river.should_contain? post
