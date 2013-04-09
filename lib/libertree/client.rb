@@ -149,10 +149,7 @@ module Libertree
     end
 
     def req_member_delete(username)
-      @conn.request(
-        'MEMBER-DELETE',
-        'username' => username
-      )
+      { 'member-delete' => { 'username' => username } }
     end
 
     # @param recipients [Array(Member)]
