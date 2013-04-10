@@ -68,7 +68,11 @@ module Libertree
 
       def mark_as_unread_by(account)
         DB.dbh.execute  "DELETE FROM posts_read WHERE post_id = ? AND account_id = ?", self.id, account.id
-        self.add_to_matching_rivers(account)
+        account.rivers.each do |river|
+          if river.should_contain? self
+            DB.dbh.i "INSERT INTO river_posts ( river_id, post_id ) VALUES ( ?, ? )", river.id, self.id
+          end
+        end
       end
 
       def mark_as_unread_by_all( options = {} )
@@ -81,7 +85,10 @@ module Libertree
           DB.dbh.execute  "DELETE FROM posts_read WHERE post_id = ?", self.id
         end
 
-        self.add_to_matching_rivers
+        Libertree::Model::Job.create(
+          'task' => 'post:add-to-rivers',
+          'params' => { 'post_id' => self.id, }.to_json
+        )
       end
 
       def self.mark_all_as_read_by(account)
@@ -205,18 +212,12 @@ module Libertree
         DB.dbh.execute "SELECT delete_cascade_post(?)", self.id
       end
 
-      def add_to_matching_rivers(account=nil)
-        rs = account ? account.rivers : River
-        rs.each do |river|
-          if river.should_contain? self
-            DB.dbh.i "INSERT INTO river_posts ( river_id, post_id ) VALUES ( ?, ? )", river.id, self.id
-          end
-        end
-      end
-
       def self.create(*args)
         post = super
-        post.add_to_matching_rivers
+        Libertree::Model::Job.create(
+          'task' => 'post:add-to-rivers',
+          'params' => { 'post_id' => post.id, }.to_json
+        )
         if post.member.account
           post.mark_as_read_by post.member.account
           post.member.account.subscribe_to post
