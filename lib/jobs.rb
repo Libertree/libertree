@@ -8,6 +8,7 @@ module Jobs
   def self.list
     {
       "email"                        => Email,
+      "post:add-to-rivers"           => Post::AddToRivers,
       "river:refresh"                => River::Refresh,
       "river:refresh-all"            => River::RefreshAll,
       "request:CHAT"                 => Request::CHAT,
@@ -63,6 +64,22 @@ module Jobs
     end
   end
 
+  module Post
+    class AddToRivers
+      def self.perform(params)
+        post = Libertree::Model::Post[ params['post_id'] ]
+        if post.nil?
+          raise Libertree::JobInvalid, "Unknown post_id: #{params['post_id'].inspect}"
+        else
+          Libertree::Model::River.each do |river|
+            if river.should_contain? post
+              Libertree::DB.dbh.i "INSERT INTO river_posts ( river_id, post_id ) VALUES ( ?, ? )", river.id, post.id
+            end
+          end
+        end
+      end
+    end
+  end
 
   module Request
     def self.init_client_conf(conf)
