@@ -138,9 +138,11 @@ module Libertree
         end
 
         self.dirty
-        if self.local? && self.sprung? && pool_post_created
+        if self.sprung? && pool_post_created
           self.notify_about_springing pool_post
-          create_pool_post_job(post)
+          if self.local?
+            create_pool_post_job(post)
+          end
         end
       end
 
