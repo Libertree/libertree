@@ -10,6 +10,12 @@ GEM
   specs:
     archive-tar-minitar (0.5.2)
     columnize (0.3.6)
+    debugger (1.5.0)
+      columnize (>= 0.3.1)
+      debugger-linecache (~> 1.2.0)
+      debugger-ruby_core_source (~> 1.2.0)
+    debugger-linecache (1.2.0)
+    debugger-ruby_core_source (1.2.0)
     rake (0.9.2.2)
     ruby-debug-base19 (0.11.25)
       columnize (>= 0.3.1)
@@ -31,6 +37,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  debugger
   linecache19!
   ruby-debug-base19x (~> 0.11.30.pre4)
   ruby-debug19
