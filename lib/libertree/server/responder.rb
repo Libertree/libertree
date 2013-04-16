@@ -33,11 +33,6 @@ module Libertree
         puts "Send messages to #{jid.stripped}."
       }
 
-      # TODO: add introduce command to set remote server's
-      # - name_given
-      # - domain
-      # - contact
-      # - public key
       VALID_COMMANDS =
         [ 'chat',
           'comment',
@@ -45,6 +40,7 @@ module Libertree
           'comment-like',
           'comment-like-delete',
           'forest',
+          'introduce',
           'member',
           'member-delete',
           'message',
@@ -65,7 +61,7 @@ module Libertree
           remote_tree = Libertree::Model::Server[ :domain => stanza.from.domain ]
 
           # when we get messages from unknown remotes: abort connection
-          if command != 'forest' &&
+          if ( ! ['forest', 'introduce'].include? command ) &&
               ( ! remote_tree || remote_tree.forests.none?(&:local_is_member?) )
             response = error code: 'UNRECOGNIZED SERVER'
           else

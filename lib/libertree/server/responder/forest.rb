@@ -29,6 +29,17 @@ module Libertree
             fail InternalError, '', nil
           end
         end
+
+        def rsp_introduce(params)
+          require_parameters(params, 'public_key')
+          # TODO: record provided parameters for this server,
+          # ignore domain parameter if provided
+          # store the following:
+          # - name_given
+          # - contact
+          # - public key
+        end
+
       end
     end
   end
