@@ -109,8 +109,8 @@ describe Libertree::Server::Responder::Message do
             ],
             'text' => 'a direct message',
           }
-          @s.process "MESSAGE #{h.to_json}"
-          @s.should have_responded_with_code('OK')
+          expect { subject.rsp_message(h.to_json) }.
+            not_to raise_error
         end
       end
 
