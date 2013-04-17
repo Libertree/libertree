@@ -132,7 +132,7 @@ describe Libertree::Server::Responder do
     include_context 'requester not in any forest'
 
     it 'responds with UNRECOGNIZED SERVER' do
-      LSR::VALID_COMMANDS.reject {|c| c == 'forest'}.each do |command|
+      (LSR::VALID_COMMANDS - ['forest', 'introduce']).each do |command|
         stanza = helper.build_stanza("localhost.localdomain", { command => { id: 0 }})
         stanza.from = @requester.domain
 
