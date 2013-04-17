@@ -58,7 +58,26 @@ describe Jobs do
     end
 
     describe 'COMMENT#perform' do
-      pending
+      it 'calls req_comment with a valid comment' do
+        # Ugly. Set this config variable because COMMENT.perform requires it.
+        Jobs::Request.instance_variable_set(:@client_conf, { :frontend_url_base => '/' })
+        # remote post
+        post = LM::Post.create( member_id: @other_member.id,
+                                text: "this is a post" )
+        comment = LM::Comment.create( member_id: @member.id,
+                                      post_id: post.id,
+                                      text: "hello" )
+        params = {
+          'comment_id' => comment.id,
+          'server_id'  => post.member.server_id,
+        }
+        @client.stub(:req_comment)
+        @client.should_receive(:req_comment)
+        @client.should_receive(:request) {|domain, args|
+          domain.should eq comment.post.member.tree.domain
+        }
+        Jobs::Request::COMMENT.perform( params )
+      end
     end
 
     describe 'COMMENT_DELETE#perform' do
