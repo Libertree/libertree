@@ -1,5 +1,9 @@
 module Libertree
   module Server
+    # Whatever is received through the relay socket is parsed as an
+    # XMPP stanza and passed through to the XMPP server. Any response
+    # from the XMPP server is written to the FIFO for the relay client
+    # (e.g. the job processor) to consume.
     module Relay
       include EM::P::LineText2
 
