@@ -33,8 +33,7 @@ module Libertree
             acc
           end
         else
-          # TODO: encode entities
-          elem.to_s
+          CGI.escapeHTML elem.to_s
         end
       end
     end
