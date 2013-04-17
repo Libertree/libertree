@@ -134,6 +134,16 @@ module Libertree
       }
     end
 
+    def req_introduce
+      params = {
+        'public_key' => @public_key
+      }
+      params.merge!('contact'     => @contact)      if @contact
+      params.merge!('server_name' => @server_name)  if @server_name
+
+      { 'introduce' => params }
+    end
+
     def req_member(member)
       params = {
         'username' => member.username,
