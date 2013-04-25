@@ -39,13 +39,14 @@ recommends that each configuration file be edited.
 .SS update
 
 Downloads updates for all Libertree components.  Updates gems (with Bundler).
-Runs database migrations.  Compiles SCSS. Recommends that components be
-restarted.
+Runs database migrations.  Compiles SCSS. Notifies about any changes to
+configurations.  Recommends that components be restarted.
 
 .SS start [frontend|backend|frontend-jobs|backend-jobs|websockets|exporter]
 
-Starts the specified Libertree server.  If no server specified, attempts to
-start all servers which do not appear to be already running.
+Attempts to start the specified Libertree server.  If no server specified,
+attempts to start all servers which do not appear to be already running.
+Reports on any failures to start.
 
 .SS stop [frontend|backend|frontend-jobs|backend-jobs|websockets|exporter]
 
@@ -53,8 +54,8 @@ Stops the specified Libertree server, or all servers if no server specified.
 
 .SS restart [frontend|backend|frontend-jobs|backend-jobs|websockets|exporter]
 
-Restarts the specified Libertree server, or all servers if no server is
-specified.
+Attemps to restart the specified Libertree server, or all servers if no server
+is specified.  Reports on any failures to start.
 
 .SS status
 
