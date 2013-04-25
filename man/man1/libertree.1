@@ -25,29 +25,41 @@ information filtering.
 
 .SH COMMANDS
 
-.SS requirements-check
+.SS install
 
-Lorem ipsum
+Checks the system for requirements and dependencies, such as git and
+PostgreSQL. Also checks for the presence of recommended software, such as
+memcached.  Offers to attempt to install anything that is not found, using sudo
+if necessary.
 
-.SS install [options]
-
-Lorem ipsum
+If all requirements are met, proceeds to download and install all components
+of Libertree into the current directory.  root access is not required.  Also
+recommends that each configuration file be edited.
 
 .SS update
 
-Lorem ipsum
+Downloads updates for all Libertree components.  Updates gems (with Bundler).
+Runs database migrations.  Compiles SCSS. Recommends that components be
+restarted.
 
-.SS start <frontend|backend|frontend-jobs|backend-jobs|websockets|exporter>
+.SS start [frontend|backend|frontend-jobs|backend-jobs|websockets|exporter]
 
-Lorem ipsum
+Starts the specified Libertree server.  If no server specified, attempts to
+start all servers which do not appear to be already running.
 
-.SS stop <frontend|backend|frontend-jobs|backend-jobs|websockets|exporter>
+.SS stop [frontend|backend|frontend-jobs|backend-jobs|websockets|exporter]
 
-Lorem ipsum
+Stops the specified Libertree server, or all servers if no server specified.
 
-.SS restart <frontend|backend|frontend-jobs|backend-jobs|websockets|exporter>
+.SS restart [frontend|backend|frontend-jobs|backend-jobs|websockets|exporter]
 
-Lorem ipsum
+Restarts the specified Libertree server, or all servers if no server is
+specified.
+
+.SS status
+
+Outputs the run state of all Libertree servers, and some information about
+the job queues.
 
 .SH ENVIRONMENT VARIABLES
 
