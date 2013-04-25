@@ -25,12 +25,15 @@ information filtering.
 
 .SH COMMANDS
 
-.SS install
+.SS install [installation directory]
 
 Checks the system for requirements and dependencies, such as git and
 PostgreSQL. Also checks for the presence of recommended software, such as
 memcached.  Offers to attempt to install anything that is not found, using sudo
-if necessary.
+if necessary.  Outputs the target directories where things will be downloaded
+and installed.  The default installation location is libertree/ under the
+current directory, but a different directory may be specified as an argument to
+the install command.
 
 If all requirements are met, proceeds to download and install all components
 of Libertree into the current directory.  root access is not required.  Also
