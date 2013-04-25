@@ -51,6 +51,25 @@ Usage of memcached is recommended, but not required:
 Note that it _is_ required if you intend to run more than one frontend process.
 
 
+### The Libertree Manager
+
+Obtain the Libertree manager:
+
+<URL for downloading the raw, runnable manager script>
+
+Run:
+
+    # ./libertree install
+
+
+
+DOCUMENTATION BELOW *MAY* BECOME OBSOLETE, DEPENDING ON THE FEATURE SET OF THE
+LIBERTREE MANAGER.
+
+
+
+
+
 ### Using the installer script
 
 We provide an experimental installer script that sets up Libertree according to
