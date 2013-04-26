@@ -36,7 +36,7 @@ current directory, but a different directory may be specified as an argument to
 the install command.
 
 If all requirements are met, proceeds to download and install all components
-of Libertree into the current directory.  root access is not required.  Also
+of Libertree into the target directory.  root access is not required.  Also
 recommends that each configuration file be edited.
 
 .SS update
@@ -64,6 +64,37 @@ is specified.  Reports on any failures to start.
 
 Outputs the run state of all Libertree servers, and some information about
 the job queues.
+
+.SH SERVERS
+
+The Libertree software is comprised of several servers (i.e. processes,
+daemons). These are controlled with the `libertree` manager script (see
+COMMANDS, above).
+
+.SS frontend
+
+The frontend server serves HTML, CSS and Javascript to web browsers.
+
+.SS backend
+
+The backend server acts as the contact point for other (remote) Libertree
+servers to connect to.
+
+.SS frontend-jobs, backend-jobs
+
+The job processing servers process various long-running tasks that the frontend
+or backend servers queue up.  Many of these jobs are for entity distribution.
+
+.SS websockets
+
+The websocket server handles websocket connections from browsers.  Websocket
+connections are used to transmit things like notifications from the frontend to
+browsers.
+
+.SS exporter
+
+Members can opt to have their data exported and emailed to them regularly (e.g.
+weekly). This server sends those emails.
 
 .SH ENVIRONMENT VARIABLES
 
