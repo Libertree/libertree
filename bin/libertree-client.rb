@@ -8,13 +8,13 @@ Member = Struct.new(:username, :avatar_path)
 Post = Struct.new(:username, :id, :visibility, :text, :member, :via)
 
 if ARGV.size < 1
-  $stderr.puts "#{$0} <private key file> [avatar_url_base]"
+  $stderr.puts "#{$0} <private key file> [receiver] [XMPP relay socket file]"
   exit 1
 end
 
 key = OpenSSL::PKey::RSA.new File.read(ARGV[0])
-socket = '/tmp/libertree-relay'
-target = 'localhost.localdomain'
+target = ARGV[1] || 'receiver.localhost.localdomain'
+socket = ARGV[2] || '/tmp/libertree-relay'
 
 begin
   client = Libertree::Client.new(
