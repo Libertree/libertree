@@ -135,15 +135,14 @@ module Libertree
     end
 
     def req_forest(forest)
-      # TODO: changed IP address to domain
       return  if ! forest.local_is_member?
       {
         'forest' => {
           'id'    => forest.id,
           'name'  => forest.name,
           'trees' => forest.trees.map { |t|
-            { 'ip' => t.ip }
-          } + [ { 'ip' => @server_ip } ]
+            { 'domain' => t.domain }
+          } + [ { 'domain' => @domain } ]
         }
       }
     end
