@@ -91,12 +91,12 @@ module Libertree
             }
           end
         end
-        rescue Timeout::Error
-          log_error "(timeout)"
-        rescue # there is no dedicated exception for a stanza parse error
-          log_error "Failed to parse: #{raw_response.inspect}"
-          # TODO: raise an exception?
-        end
+      rescue Timeout::Error
+        log_error "(timeout)"
+      rescue # there is no dedicated exception for a stanza parse error
+        log_error "Failed to parse: #{raw_response.inspect}"
+        # TODO: raise an exception?
+      end
     end
 
     def req_comment(comment, references={})
