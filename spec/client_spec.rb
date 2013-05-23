@@ -14,15 +14,12 @@ describe Libertree::Client do
     it 'constructs a valid iq stanza' do
       stanza = @c.send(:build_stanza,
         'libertree.localhost.localdomain',
-        'POST',
-        {
-          'text' => 'Hello',
-          'id'   => 123
-        }
+        { 'post' => { 'text' => 'Hello',
+                      'id'   => 123 }}
       )
       example =<<HERE
-<iq type="get" to="libertree.localhost.localdomain" id="blather0001">
-  <libertree>
+<iq type="set" to="libertree.localhost.localdomain" id="blather0001">
+  <libertree xmlns="libertree">
     <post>
       <text>Hello</text>
       <id>123</id>
