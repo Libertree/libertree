@@ -1,5 +1,6 @@
 require 'base64'
 require 'openssl'
+require 'timeout'
 require 'socket'
 require 'blather/client/client'
 require_relative 'xml/helper'
@@ -72,28 +73,30 @@ module Libertree
       msg = stanza.serialize(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML)+"\n"
 
       # write to socket and wait for response
-      # TODO: handle timeout
       @socket.send msg, 0
-      raw_response = @socket.recv 8192
-
       begin
-        response = Blather::Stanza.parse raw_response
-        log "response: #{response}"
+        Timeout.timeout(10) do
+          raw_response = @socket.recv 8192
+          response = Blather::Stanza.parse raw_response
+          log "response: #{response}"
 
-        # when the response is empty everything is okay
-        if response.xpath("//error").empty?
-          { 'code' => 'OK' }
-        else
-          log_error "Not OK: #{response.inspect}"
-          {
-            'code'    => response.xpath("//error/code").text,
-            'message' => response.xpath("//error/text").text
-          }
+          # when the response is empty everything is okay
+          if response.xpath("//error").empty?
+            { 'code' => 'OK' }
+          else
+            log_error "Not OK: #{response.inspect}"
+            {
+              'code'    => response.xpath("//error/code").text,
+              'message' => response.xpath("//error/text").text
+            }
+          end
         end
-      rescue
-        log_error "Failed to parse: #{raw_response.inspect}"
-        # TODO: raise an exception?
-      end
+        rescue Timeout::Error
+          log_error "(timeout)"
+        rescue # there is no dedicated exception for a stanza parse error
+          log_error "Failed to parse: #{raw_response.inspect}"
+          # TODO: raise an exception?
+        end
     end
 
     def req_comment(comment, references={})
