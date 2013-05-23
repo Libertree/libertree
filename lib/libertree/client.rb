@@ -10,15 +10,14 @@ module Libertree
     include Libertree::XML::Helper
 
     # @param [Hash] params Paramaters Hash
-    # @option params [String] :public_key A public RSA key, the partner of the private key
     # @option params [String] :private_key A private RSA key, the partner of the public key
     # @option params [String] :frontend_url_base The URL base of local frontend resources
     # @option params [String] :server_name a short identifier that other servers will display beside member usernames
     # @option params [String] :domain The XMPP component's JID domain (e.g. libertree.localhost.localdomain)
-    # TODO: there's a lot of stuff we don't use
     def initialize( params = {} )
-      @public_key = params[:public_key] or raise ":public_key required by Libertree::Client"
+      # TODO: not used at the moment
       @private_key = params[:private_key] or raise ":private_key required by Libertree::Client"
+      @public_key = @private_key.public_key.to_pem,
       @frontend_url_base = params[:frontend_url_base]
       @domain = params[:domain]
       @server_name = params[:server_name]

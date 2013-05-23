@@ -19,7 +19,6 @@ socket = ARGV[2] || '/tmp/libertree-relay'
 begin
   client = Libertree::Client.new(
     private_key: key,
-    public_key: key.public_key.to_pem,
     socket: socket
   )
 
