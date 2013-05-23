@@ -5,12 +5,9 @@ require_relative '../lib/libertree/client'
 describe Libertree::Client do
   before(:each) do
     key = OpenSSL::PKey::RSA.new File.read("private.key")
-    @c = Libertree::Client.new({
-      private_key: key,
-      public_key: key.public_key.to_pem,
-      avatar_url_base: "localhost"},
-      nil
-    )
+    @c = Libertree::Client.new({ private_key: key,
+                                 public_key: key.public_key.to_pem,
+                                 avatar_url_base: "localhost" })
   end
 
   describe 'build_stanza' do
