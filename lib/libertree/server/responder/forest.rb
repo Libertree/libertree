@@ -21,9 +21,9 @@ module Libertree
             end
 
             trees = params['trees'].reject { |t|
-              t['ip'] == Server.conf['ip_public']
+              t['domain'] == Server.conf['domain']
             }
-            forest.set_trees_by_ip trees
+            forest.set_trees_by_domain trees
           rescue PGError => e
             log "Error on FOREST request: #{e.message}"
             fail InternalError, '', nil
