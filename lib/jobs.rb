@@ -85,10 +85,8 @@ module Jobs
       key = OpenSSL::PKey::RSA.new File.read(conf['private_key_path'])
       @client_conf =
         {
-          :public_key        => key.public_key,
           :private_key       => key,
           :frontend_url_base => conf['frontend_url_base'],
-          :server_ip         => conf['ip_public'],
           :server_name       => conf['server_name'],
           :domain            => conf['domain'],
           :contact           => conf['contact'],
