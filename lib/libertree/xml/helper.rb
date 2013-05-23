@@ -1,4 +1,5 @@
 require 'blather/stanza'
+require 'cgi'
 
 module Libertree
   module XML
