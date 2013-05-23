@@ -73,15 +73,27 @@ module Libertree
 
       # write to socket and wait for response
       # TODO: handle timeout
-      # TODO: adjust receive buffer
       @socket.send msg, 0
-      response = @socket.recv 1024
+      raw_response = @socket.recv 8192
 
-      log "response: #{response}"
-      # TODO: use xpath to get code; assume OK when response is empty
-      #if response['code'] != 'OK'
-      #  log_error "Not OK: #{response.inspect}"
-      #end
+      begin
+        response = Blather::Stanza.parse raw_response
+        log "response: #{response}"
+
+        # when the response is empty everything is okay
+        if response.xpath("//error").empty?
+          { 'code' => 'OK' }
+        else
+          log_error "Not OK: #{response.inspect}"
+          {
+            'code'    => response.xpath("//error/code").text,
+            'message' => response.xpath("//error/text").text
+          }
+        end
+      rescue
+        log_error "Failed to parse: #{raw_response.inspect}"
+        # TODO: raise an exception?
+      end
     end
 
     def req_comment(comment, references={})
