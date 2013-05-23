@@ -20,7 +20,6 @@ begin
   client = Libertree::Client.new(
     private_key: key,
     public_key: key.public_key.to_pem,
-    avatar_url_base: ARGV[2],
     socket: socket
   )
 
