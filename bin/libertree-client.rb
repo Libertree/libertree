@@ -5,6 +5,7 @@ require 'openssl'
 Tree = Struct.new(:ip)
 Forest = Struct.new(:id, :name, :trees)
 Member = Struct.new(:username, :avatar_path)
+Post = Struct.new(:username, :id, :visibility, :text, :member, :via)
 
 if ARGV.size < 1
   $stderr.puts "#{$0} <private key file> [avatar_url_base]"
@@ -41,6 +42,10 @@ begin
     when /^m/  # member
       member = Member.new(params[0], params[1])
       client.request target, client.req_member(member)
+    when /^p/ # post
+      member = Member.new(params[0], "")
+      post = Post.new(member.username, 99999, 'internet', params[1], member, nil)
+      client.request target, client.req_post(post)
     end
   end
 rescue Errno::ECONNREFUSED
