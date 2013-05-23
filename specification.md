@@ -172,8 +172,8 @@ Request Parameters:
       "id": <forest id on requester>,
       "name": <forest name>,
       "trees": [
-        { "ip": <ip address of tree> },
-        [[ { "ip": <ip address of tree> }, ... ]]
+        { "domain": <domain of tree> },
+        [[ { "domain": <domain of tree> }, ... ]]
       ]
     }
 
