@@ -56,5 +56,13 @@ HERE
 HERE
       xml.should == example.delete("\n ")
     end
+
+    it 'encodes entities' do
+      xml = @c.send(:params_to_xml,
+                    { 'something' =>
+                      "This is a text --> hello & goodbye. A <link>" })
+      example = "<something>This is a text --&gt; hello &amp; goodbye. A &lt;link&gt;</something>"
+      xml.should == example
+    end
   end
 end
