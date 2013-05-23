@@ -109,7 +109,7 @@ describe Libertree::Server::Responder::Message do
             ],
             'text' => 'a direct message',
           }
-          expect { subject.rsp_message(h.to_json) }.
+          expect { subject.rsp_message(h) }.
             not_to raise_error
         end
       end
