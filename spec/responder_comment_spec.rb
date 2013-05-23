@@ -22,7 +22,7 @@ describe Libertree::Server::Responder::Comment do
         @post = Libertree::Model::Post.create(
           FactoryGirl.attributes_for(:post, member_id: @member.id)
         )
-        subject.instance_variable_set(:@server, @requester)
+        subject.instance_variable_set(:@remote_tree, @requester)
       end
 
       it 'raises MissingParameter when a parameter is missing or blank' do

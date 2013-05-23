@@ -26,7 +26,7 @@ describe Libertree::Server::Responder::Member do
         Net::HTTPResponse.any_instance.stub(:body)
         Socket.stub(:getaddrinfo) { [ [nil,nil,nil,@requester.ip] ] }
         File.stub(:open)
-        subject.instance_variable_set(:@server, @requester)
+        subject.instance_variable_set(:@remote_tree, @requester)
       end
 
       it 'raises MissingParameter with a missing username' do

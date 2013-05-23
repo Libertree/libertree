@@ -16,7 +16,7 @@ describe Libertree::Server::Responder::Chat do
 
     context 'and the responder has no record of the sending member' do
       it 'raises NotFound' do
-        subject.instance_variable_set(:@server, @requester)
+        subject.instance_variable_set(:@remote_tree, @requester)
         h = {
           'username' => 'sender',
           'recipient_username' => 'recipient',
@@ -32,7 +32,7 @@ describe Libertree::Server::Responder::Chat do
         @member = Libertree::Model::Member.create(
           FactoryGirl.attributes_for(:member, :server_id => @requester.id)
         )
-        subject.instance_variable_set(:@server, @requester)
+        subject.instance_variable_set(:@remote_tree, @requester)
       end
 
       it 'raises MissingParameter when a parameter is missing or blank' do

@@ -12,8 +12,8 @@ describe Libertree::Server::Responder do
       include Libertree::XML::Helper
       include LSR::Helper
     }
-    @server = mock
-    @server.stub :id
+    @remote_tree = mock
+    @remote_tree.stub :id
   end
 
   it 'rejects unsupported iq stanzas with "UNKNOWN COMMAND"' do
@@ -99,7 +99,7 @@ describe Libertree::Server::Responder do
           'text'       => 'A test comment.',
         }}
       
-      subject.instance_variable_set(:@server, @server)
+      subject.instance_variable_set(:@remote_tree, @remote_tree)
       
       msg = helper.build_stanza( "localhost.localdomain", h )
       msg.from = @requester.domain

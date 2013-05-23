@@ -14,7 +14,7 @@ describe Libertree::Server::Responder::Forest do
   describe 'rsp_forest' do
     include_context 'requester in a forest'
     before :each do
-      subject.instance_variable_set(:@server, @requester)
+      subject.instance_variable_set(:@remote_tree, @requester)
     end
 
     it 'raises MissingParameter with a missing name' do

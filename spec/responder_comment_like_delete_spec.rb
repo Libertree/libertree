@@ -42,7 +42,7 @@ describe Libertree::Server::Responder::CommentLike do
         @like = Libertree::Model::CommentLike.create(
           FactoryGirl.attributes_for(:comment_like, member_id: @member.id, comment_id: @comment.id)
         )
-        subject.instance_variable_set(:@server, @requester)
+        subject.instance_variable_set(:@remote_tree, @requester)
       end
 
       it 'deletes the local copy and raises no errors with valid data' do

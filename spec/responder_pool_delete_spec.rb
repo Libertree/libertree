@@ -21,7 +21,7 @@ describe Libertree::Server::Responder::Pool do
       @pool = Libertree::Model::Pool.create(
         FactoryGirl.attributes_for(:pool, member_id: @member.id, sprung: true)
       )
-      subject.instance_variable_set(:@server, @requester)
+      subject.instance_variable_set(:@remote_tree, @requester)
     end
 
     it 'raises MissingParameter when a parameter is missing or blank' do

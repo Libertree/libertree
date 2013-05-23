@@ -33,7 +33,7 @@ describe Libertree::Server::Responder::Member do
         @member = Libertree::Model::Member.create(
           FactoryGirl.attributes_for(:member, :server_id => @requester.id)
         )
-        subject.instance_variable_set(:@server, @requester)
+        subject.instance_variable_set(:@remote_tree, @requester)
       end
 
       it 'deletes the local member record and raises no errors with valid data' do

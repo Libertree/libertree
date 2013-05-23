@@ -39,7 +39,7 @@ describe Libertree::Server::Responder::PostLike do
         @like = Libertree::Model::PostLike.create(
           FactoryGirl.attributes_for(:post_like, member_id: @member.id, post_id: @post.id)
         )
-        subject.instance_variable_set(:@server, @requester)
+        subject.instance_variable_set(:@remote_tree, @requester)
       end
 
       it 'deletes the local copy and raises no errors with valid data' do

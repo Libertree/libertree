@@ -36,7 +36,7 @@ describe Libertree::Server::Responder::Post do
         @post = Libertree::Model::Post.create(
           FactoryGirl.attributes_for(:post, member_id: @member.id)
         )
-        subject.instance_variable_set(:@server, @requester)
+        subject.instance_variable_set(:@remote_tree, @requester)
       end
 
       it 'raises no errors and deletes the local copy with valid data' do

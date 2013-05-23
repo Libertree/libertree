@@ -19,7 +19,7 @@ describe Libertree::Server::Responder::Post do
         @member = Libertree::Model::Member.create(
           FactoryGirl.attributes_for(:member, :server_id => @requester.id)
         )
-        subject.instance_variable_set(:@server, @requester)
+        subject.instance_variable_set(:@remote_tree, @requester)
       end
 
       it 'raises MissingParameter with a missing id' do

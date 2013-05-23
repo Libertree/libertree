@@ -39,7 +39,7 @@ describe Libertree::Server::Responder::Comment do
         @comment = Libertree::Model::Comment.create(
           FactoryGirl.attributes_for(:comment, member_id: @member.id, post_id: @post.id)
         )
-        subject.instance_variable_set(:@server, @requester)
+        subject.instance_variable_set(:@remote_tree, @requester)
       end
 
       it 'raises no errors with valid data and deletes the local copy' do

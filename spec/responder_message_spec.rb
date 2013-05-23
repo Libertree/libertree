@@ -14,7 +14,7 @@ describe Libertree::Server::Responder::Message do
   describe 'rsp_message' do
     include_context 'requester in a forest'
     before :each do
-      subject.instance_variable_set(:@server, @requester)
+      subject.instance_variable_set(:@remote_tree, @requester)
     end
 
     context 'and the responder has no record of the sending member' do
