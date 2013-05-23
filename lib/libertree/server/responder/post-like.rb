@@ -8,7 +8,7 @@ module Libertree
           begin
             member = Model::Member[
               'username' => params['username'],
-              'server_id' => @server.id,
+              'server_id' => @remote_tree.id,
             ]
             assert member, "Unrecognized member username: #{params['username'].inspect}"
 
@@ -48,7 +48,7 @@ module Libertree
           begin
             likes = Model::PostLike.
               where( 'remote_id' => params['id'] ).
-              find_all { |like| like.member.server == @server }
+              find_all { |like| like.member.server == @remote_tree }
 
             assert likes[0], "Unrecognized like ID: #{params['id'].inspect}"
             likes[0].delete  # there should only be one Like

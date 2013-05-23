@@ -9,7 +9,7 @@ module Libertree
             # TODO: This can be DRYed up with the code in rsp_pool_post_delete
             member = Model::Member[
               'username' => params['username'],
-              'server_id' => @server.id,
+              'server_id' => @remote_tree.id,
             ]
             assert member, "Unrecognized member username: #{params['username'].inspect}"
 
@@ -53,7 +53,7 @@ module Libertree
             # TODO: This can be DRYed up with the code in rsp_pool_post
             member = Model::Member[
               'username' => params['username'],
-              'server_id' => @server.id,
+              'server_id' => @remote_tree.id,
             ]
             assert member, "Unrecognized member username: #{params['username'].inspect}"
 

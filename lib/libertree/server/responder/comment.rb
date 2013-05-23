@@ -10,7 +10,7 @@ module Libertree
           begin
             member = Model::Member[
               'username' => params['username'],
-              'server_id' => @server.id,
+              'server_id' => @remote_tree.id,
             ]
             assert member, "Unrecognized member username: #{params['username'].inspect}"
 
@@ -33,7 +33,7 @@ module Libertree
             assert post, 'Unrecognized post.'
 
             if params.has_key? 'references'
-              comment_text = Libertree::References::replace(params['text'], params['references'], @server.id, @public_key)
+              comment_text = Libertree::References::replace(params['text'], params['references'], @remote_tree.id, @public_key)
             else
               comment_text = params['text']
             end
@@ -57,7 +57,7 @@ module Libertree
           begin
             comments = Model::Comment.
               where( 'remote_id' => params['id'] ).
-              reject { |c| c.member.server != @server }
+              reject { |c| c.member.server != @remote_tree }
 
             assert comments[0], "Unrecognized comment ID: #{params['id'].inspect}"
             comments[0].delete_cascade  # there should only be one comment

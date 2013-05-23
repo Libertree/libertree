@@ -8,7 +8,7 @@ module Libertree
           begin
             sender_member = Model::Member[
               'username' => params['username'],
-              'server_id' => @server.id,
+              'server_id' => @remote_tree.id,
             ]
             assert sender_member, "Unrecognized member username: #{params['username'].inspect}"
 

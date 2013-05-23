@@ -10,12 +10,12 @@ module Libertree
           begin
             member = Model::Member[
               'username' => params['username'],
-              'server_id' => @server.id,
+              'server_id' => @remote_tree.id,
             ]
             assert member, "Unrecognized member username: #{params['username'].inspect}"
 
             if params.has_key? 'references'
-              post_text = Libertree::References::replace(params['text'], params['references'], @server.id, @public_key)
+              post_text = Libertree::References::replace(params['text'], params['references'], @remote_tree.id, @public_key)
             else
               post_text = params['text']
             end
@@ -50,7 +50,7 @@ module Libertree
           begin
             posts = Model::Post.
               where( 'remote_id' => params['id'] ).
-              reject { |p| p.server != @server }
+              reject { |p| p.server != @remote_tree }
 
             assert posts[0], "Unrecognized post ID: #{params['id'].inspect}"
             posts[0].delete_cascade  # there should only be one post

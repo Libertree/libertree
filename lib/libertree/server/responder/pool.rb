@@ -8,7 +8,7 @@ module Libertree
           begin
             member = Model::Member[
               'username' => params['username'],
-              'server_id' => @server.id,
+              'server_id' => @remote_tree.id,
             ]
             assert member, "Unrecognized member username: #{params['username'].inspect}"
 
@@ -43,7 +43,7 @@ module Libertree
           begin
             member = Model::Member[
               'username' => params['username'],
-              'server_id' => @server.id,
+              'server_id' => @remote_tree.id,
             ]
             assert member, "Unrecognized member username: #{params['username'].inspect}"
 

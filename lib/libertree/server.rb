@@ -29,8 +29,8 @@ module Libertree
         l = "#{level} "
       end
 
-      if @server
-        id = "server #{@server.id}"
+      if @remote_tree
+        id = "server #{@remote_tree.id}"
       else
         id = @ip_remote
       end

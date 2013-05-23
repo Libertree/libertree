@@ -7,14 +7,14 @@ module Libertree
 
           begin
             forest = Model::Forest[
-              origin_server_id: @server.id,
+              origin_server_id: @remote_tree.id,
               remote_id: params['id']
             ]
             if forest
               forest.name = params['name']
             else
               forest = Model::Forest.create(
-                origin_server_id: @server.id,
+                origin_server_id: @remote_tree.id,
                 remote_id: params['id'],
                 name: params['name']
               )
