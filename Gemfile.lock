@@ -7,7 +7,8 @@ GIT
 
 GIT
   remote: git://github.com/Libertree/libertree-model-rb.git
-  revision: 384086f0d678cc032f76e358b8ed1c2a6c752d2c
+  revision: 358b4cbe719a46e46e24dcf74fb0a6f69fec59da
+  branch: xmpp
   specs:
     libertree-model (0.0.1)
 
