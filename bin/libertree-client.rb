@@ -41,6 +41,8 @@ begin
     when /^m/  # member
       member = Member.new(params[0], params[1])
       client.request target, client.req_member(member)
+    when /^d/ # post delete
+      client.request target, client.req_post_delete(params[0])
     when /^p/ # post
       member = Member.new(params[0], "")
       post = Post.new(member.username, 99999, 'internet', params[1], member, nil)
