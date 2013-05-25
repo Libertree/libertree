@@ -83,7 +83,15 @@ module Libertree
       msg = stanza.serialize(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML)+"\n"
 
       # write to socket and wait for response
-      @socket.send msg, 0
+      begin
+        @socket.send msg, 0
+      rescue Errno::EPIPE => e
+        log_error "#{e.message}, reconnecting"
+        sleep 1
+        connect
+        retry
+      end
+
       begin
         Timeout.timeout(10) do
           raw_response = @socket.recv 8192
