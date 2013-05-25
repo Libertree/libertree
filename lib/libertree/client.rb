@@ -84,10 +84,23 @@ module Libertree
             { 'code' => 'OK' }
           else
             log_error "Not OK: #{response.inspect}"
-            {
-              'code'    => response.xpath("//error/code").text,
-              'message' => response.xpath("//error/text").text
-            }
+            error_code = response.xpath("//error/code").text
+            error_msg  = response.xpath("//error/text").text
+
+            # not a Libertree error
+            if error_code.empty?
+              error_code = "XMPP error"
+              error_msg  = response.inspect
+            end
+
+            if error_msg.empty?
+              { 'code' => error_code }
+            else
+              {
+                'code' => error_code,
+                'message' => error_msg
+              }
+            end
           end
         end
       rescue Timeout::Error
