@@ -24,7 +24,18 @@ module Libertree
       @contact = params[:contact]
       @log = params.fetch(:log, $stdout)
       @log_identifier = params.fetch(:log_identifier, "pid #{Process.pid}")
-      @socket = UNIXSocket.new params.fetch(:socket, '/tmp/libertree-relay')
+      @socket_file = params.fetch(:socket, '/tmp/libertree-relay')
+      connect
+    end
+
+    def connect
+      begin
+        @socket = UNIXSocket.new @socket_file
+      rescue Errno::ECONNREFUSED => e
+        log_error "#{e.message}, reconnecting"
+        sleep 1
+        retry
+      end
     end
 
     # NOTE: This is different from the other req_* methods in that it needs to
