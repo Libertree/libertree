@@ -29,13 +29,7 @@ module Libertree
         l = "#{level} "
       end
 
-      if @remote_tree
-        id = "server #{@remote_tree.id}"
-      else
-        id = @ip_remote
-      end
-
-      Libertree::Server.log_handle.puts "[#{t}] (#{id}) #{l}#{s}"
+      Libertree::Server.log_handle.puts "[#{t}] #{l}#{s}"
     end
 
     def self.log_error(s)
