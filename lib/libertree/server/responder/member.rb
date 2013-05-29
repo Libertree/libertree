@@ -45,8 +45,7 @@ module Libertree
           rescue URI::InvalidURIError => e
             fail InternalError, "Invalid URI: #{params['avatar_url']}", nil
           rescue PGError => e
-            log "Error in rsp_member: #{e.message}"
-            fail InternalError, '', nil
+            fail InternalError, "Error in rsp_member: #{e.message}", nil
           end
         end
 
@@ -61,8 +60,7 @@ module Libertree
             assert members[0], "Unrecognized username: #{params['username'].inspect}"
             members[0].delete_cascade  # there should only be one member
           rescue PGError => e
-            log "Error in rsp_member_delete: #{e.message}"
-            fail InternalError, '', nil
+            fail InternalError, "Error in rsp_member_delete: #{e.message}", nil
           end
         end
       end

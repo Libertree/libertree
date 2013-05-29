@@ -25,8 +25,7 @@ module Libertree
             }
             forest.set_trees_by_domain trees
           rescue PGError => e
-            log "Error on FOREST request: #{e.message}"
-            fail InternalError, '', nil
+            fail InternalError, "Error on FOREST request: #{e.message}", nil
           end
         end
 

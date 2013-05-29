@@ -34,8 +34,7 @@ module Libertree
               recipient_member_ids: member_ids
             )
           rescue PGError => e
-            log "Error in rsp_message: #{e.message}"
-            fail InternalError, '', nil
+            fail InternalError, "Error in rsp_message: #{e.message}", nil
           end
         end
 
@@ -46,8 +45,7 @@ module Libertree
           # begin
             # # TODO
           # rescue PGError => e
-            # log "Error in rsp_message_delete: #{e.message}"
-            # fail InternalError, '', nil
+            # fail InternalError, "Error in rsp_message_delete: #{e.message}", nil
           # end
         # end
       end

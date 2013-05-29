@@ -115,6 +115,7 @@ module Libertree
         rescue NotFound => e
           error code: 'NOT FOUND', text: e.message
         rescue InternalError => e
+          Libertree::Server.log_error e.message
           error text: e.message
         end
       end
