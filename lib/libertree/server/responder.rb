@@ -85,6 +85,8 @@ module Libertree
         respond to: stanza, with: (error code: 'UNKNOWN COMMAND')
       end
 
+      # Packs an optional XML fragment (opts[:with]) in a standard XMPP reply
+      # to the provided stanza (opts[:to]) and sends out the reply stanza.
       def self.respond(opts)
         stanza = opts[:to]
         response = stanza.reply
@@ -92,12 +94,17 @@ module Libertree
         write_to_stream response
       end
 
+      # Converts the XML payload to a hash and passes it
+      # to the method indicated by the command string.
+      # The method is run for its side effects.
       def self.process(command, payload)
         parameters = xml_to_hash payload
         method = "rsp_#{command.gsub('-', '_')}".to_sym
         send  method, parameters
       end
 
+      # Generates an error XML fragment given an optional
+      # error code and an optional error message
       def self.error(opts={ code: 'ERROR' })
         Nokogiri::XML::Builder.new { |xml|
           xml.error {
@@ -107,9 +114,12 @@ module Libertree
         }.doc.root
       end
 
+      # Processes a command with an XML nodeset of parameters.
+      # Returns nil when no error occurred, otherwise returns
+      # an XML fragment containing error code and error message.
       def self.handle(command, params)
         begin
-          process command, params; nil
+          process command, params; nil # generate standard response
         rescue MissingParameter => e
           error code: 'MISSING PARAMETER', text: e.message
         rescue NotFound => e
