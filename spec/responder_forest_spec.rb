@@ -21,7 +21,7 @@ describe Libertree::Server::Responder::Forest do
       h = {
         'id' => 4,
         'trees' => [
-          { 'ip' => '12.34.56.78', },
+          { 'domain' => 'some.domain.net', },
         ],
       }
       expect { subject.rsp_forest(h) }.
@@ -33,7 +33,7 @@ describe Libertree::Server::Responder::Forest do
         'id' => 4,
         'name' => '',
         'trees' => [
-          { 'ip' => '12.34.56.78', },
+          { 'domain' => 'some.domain.net', },
         ],
       }
 
@@ -47,7 +47,7 @@ describe Libertree::Server::Responder::Forest do
           'id' => 4,
           'name' => 'New Forest',
           'trees' => [
-            { 'ip' => '12.34.56.78', },
+            { 'domain' => 'some.domain.net', },
           ],
         }
         expect { subject.rsp_forest(h) }.
@@ -59,7 +59,7 @@ describe Libertree::Server::Responder::Forest do
         ]
         f.name.should == 'New Forest'
         f.trees.count.should == 1
-        f.trees[0].ip.should == '12.34.56.78'
+        f.trees[0].domain.should == 'some.domain.net'
       end
     end
 
@@ -79,7 +79,7 @@ describe Libertree::Server::Responder::Forest do
           'id' => @forest.remote_id,
           'name' => 'Different Forest Name',
           'trees' => [
-            { 'ip' => '99.88.77.66', },
+            { 'domain' => 'some.other.domain', },
           ],
         }
         expect { subject.rsp_forest(h) }.
@@ -88,7 +88,7 @@ describe Libertree::Server::Responder::Forest do
         f = Libertree::Model::Forest[id: @forest.id]
         f.name.should == 'Different Forest Name'
         f.trees.count.should == 1
-        f.trees[0].ip.should == '99.88.77.66'
+        f.trees[0].domain.should == 'some.other.domain'
       end
     end
   end
