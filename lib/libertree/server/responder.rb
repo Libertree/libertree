@@ -66,17 +66,7 @@ module Libertree
             response = error code: 'UNRECOGNIZED SERVER'
           else
             Libertree::Server.log "Received request: '#{command}' from #{stanza.from.stripped}"
-
-            response =
-              begin
-                process command, xpath_result.first; nil
-              rescue MissingParameter => e
-                error code: 'MISSING PARAMETER', text: e.message
-              rescue NotFound => e
-                error code: 'NOT FOUND', text: e.message
-              rescue InternalError => e
-                error text: e.message
-              end
+            response = handle command, xpath_result.first
           end
 
           respond to: stanza, with: response
@@ -115,6 +105,18 @@ module Libertree
             xml.text_(opts[:text])  if opts[:text]
           }
         }.doc.root
+      end
+
+      def self.handle(command, params)
+        begin
+          process command, params; nil
+        rescue MissingParameter => e
+          error code: 'MISSING PARAMETER', text: e.message
+        rescue NotFound => e
+          error code: 'NOT FOUND', text: e.message
+        rescue InternalError => e
+          error text: e.message
+        end
       end
     end
   end
