@@ -38,9 +38,9 @@ module Libertree
       end
     end
 
-    # NOTE: This is different from the other req_* methods in that it needs to
-    # be passed the target domain.  It builds a chat message directly, not an
-    # IQ stanza payload.
+    # NOTE: This is different from the other req_* methods. It needs to
+    # be passed the target domain, it builds a chat message, not an
+    # IQ stanza payload and it writes directly to the stream.
     def req_chat(target, chat_message)
       stanza = Blather::Stanza::Message.new(
         "#{chat_message.recipient.username}@#{target}",
@@ -48,7 +48,8 @@ module Libertree
         :chat
       )
       stanza.from = "#{chat_message.sender.username}@#{@domain}"
-      stanza
+      write_out stanza
+      { 'code' => 'OK' }
     end
 
 
@@ -88,12 +89,7 @@ module Libertree
     def request( target, params )
       log "REQUEST: >#{params.inspect}<"
 
-      if params.class <= Blather::Stanza
-        stanza = params
-      else
-        stanza = build_stanza( target, params )
-      end
-
+      stanza = build_stanza( target, params )
       write_out stanza
 
       begin
