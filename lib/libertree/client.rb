@@ -67,6 +67,20 @@ module Libertree
       log s, 'ERROR'
     end
 
+    def write_out(stanza)
+      msg = stanza.serialize(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML)+"\n"
+
+      # write to socket and wait for response
+      begin
+        @socket.send msg, 0
+      rescue Errno::EPIPE => e
+        log_error "#{e.message}, reconnecting"
+        sleep 1
+        connect
+        retry
+      end
+    end
+
     public
 
     # e.g.:
@@ -80,17 +94,7 @@ module Libertree
         stanza = build_stanza( target, params )
       end
 
-      msg = stanza.serialize(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML)+"\n"
-
-      # write to socket and wait for response
-      begin
-        @socket.send msg, 0
-      rescue Errno::EPIPE => e
-        log_error "#{e.message}, reconnecting"
-        sleep 1
-        connect
-        retry
-      end
+      write_out stanza
 
       begin
         Timeout.timeout(10) do
