@@ -9,6 +9,7 @@ require 'libertree/server/relay'
 
 module Libertree
   module Server
+    @debug = false
 
     class ConfigurationError < StandardError; end
     class MissingParameter < StandardError; end
@@ -34,6 +35,10 @@ module Libertree
 
     def self.log_error(s)
       self.log s, 'ERROR'
+    end
+
+    def self.log_debug(s)
+      self.log s, 'DEBUG'  if @debug
     end
 
     def self.load_config(config_filename)
