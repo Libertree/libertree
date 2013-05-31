@@ -93,6 +93,7 @@ module Libertree
       end
 
       def handle_stanza(stanza)
+        Libertree::Server.log_debug "XMPP relay: relaying stanza: #{stanza.inspect}"
         # throw away the old parser
         @parser = Parser.new self
 
