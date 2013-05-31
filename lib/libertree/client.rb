@@ -69,7 +69,7 @@ module Libertree
     end
 
     def write_out(stanza)
-      msg = stanza.serialize(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML)+"\n"
+      msg = stanza.serialize(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML)
 
       # write to socket and wait for response
       begin
