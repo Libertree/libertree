@@ -84,12 +84,12 @@ module Libertree
       end
 
       def post_init
-        Libertree::Server.log "XMPP relay: process connected", "INFO"
+        Libertree::Server.log_debug "XMPP relay: process connected"
         @parser = Parser.new self
       end
 
       def unbind
-        Libertree::Server.log "XMPP relay: process disconnected", "INFO"
+        Libertree::Server.log_debug "XMPP relay: process disconnected"
       end
 
       def handle_stanza(stanza)
