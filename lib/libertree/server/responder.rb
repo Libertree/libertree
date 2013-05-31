@@ -34,8 +34,7 @@ module Libertree
       }
 
       VALID_COMMANDS =
-        [ 'chat',
-          'comment',
+        [ 'comment',
           'comment-delete',
           'comment-like',
           'comment-like-delete',
@@ -74,6 +73,25 @@ module Libertree
         end
       end
 
+      message :chat? do |stanza|
+        # when we get messages from unknown remotes: ignore for now
+        # TODO: check recipient's roster instead
+        @remote_tree = Libertree::Model::Server[ :domain => stanza.from.domain ]
+        if ! @remote_tree || @remote_tree.forests.none?(&:local_is_member?)
+          halt
+        end
+
+        params = {
+          'username' => stanza.from.node,
+          'recipient_username' => stanza.to.node,
+          'text' => stanza.body
+        }
+
+        # handle chat message, ignore errors
+        handle 'chat', params
+        halt # stop further processing
+      end
+
       # catch all
       iq do |stanza|
         respond to: stanza, with: (error code: 'UNKNOWN COMMAND')
@@ -98,7 +116,11 @@ module Libertree
       # to the method indicated by the command string.
       # The method is run for its side effects.
       def self.process(command, payload)
-        parameters = xml_to_hash payload
+        parameters = if payload.class <= Hash
+                       payload
+                     else
+                       xml_to_hash payload
+                     end
         method = "rsp_#{command.gsub('-', '_')}".to_sym
         send  method, parameters
       end

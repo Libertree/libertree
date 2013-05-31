@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/Libertree/libertree-client-rb.git
-  revision: e6b2418f22648e5da4feb0e8a80ccfd8b275db48
+  revision: 416a5a46c421489f61da0f3ed4ef141fc80a4acc
   branch: xmpp
   specs:
     libertree-client (0.0.1)
