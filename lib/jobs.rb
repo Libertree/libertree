@@ -118,9 +118,9 @@ module Jobs
             # which is very unwise. This defect is also present in the
             # master branch.
 
-          # TODO: check what exceptions can be raised
-          rescue Errno::ETIMEDOUT, Errno::ECONNREFUSED => e
-            raise Libertree::RetryJob, "With #{server.name_display} (#{server.domain}): #{e.message}"
+          # TODO: should we just catch *all* exceptions?
+          rescue Timeout::Error => e
+            raise Libertree::RetryJob, "With #{server.domain}: #{e.message}"
           end
         end
       end
