@@ -6,7 +6,7 @@ module Libertree
     module Helper
       def build_stanza( target, params )
         stanza = Blather::Stanza::Iq.new(:set, target)
-        content = "<libertree xmlns=\"libertree\">#{params_to_xml(params)}</libertree>"
+        content = "<libertree xmlns=\"urn:libertree\">#{params_to_xml(params)}</libertree>"
         stanza.add_child content
         stanza
       end
