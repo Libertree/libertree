@@ -124,6 +124,7 @@ module Libertree
         end
       rescue Timeout::Error
         log_error "(timeout)"
+        raise # raise exception to caller
       rescue => e # there is no dedicated exception for a stanza parse error
         log_error "Failed to receive/parse response: #{e.message}"
         # TODO: raise an exception?
