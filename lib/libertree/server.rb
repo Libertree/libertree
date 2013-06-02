@@ -9,8 +9,6 @@ require 'libertree/server/relay'
 
 module Libertree
   module Server
-    @debug = false
-
     class ConfigurationError < StandardError; end
     class MissingParameter < StandardError; end
     class NotFound < StandardError; end
@@ -109,6 +107,7 @@ module Libertree
           end
         end
 
+        @debug = true  if @conf['debug']
         host   = @conf['xmpp_server']
         domain = @conf['domain']
         secret = @conf['shared_secret']
