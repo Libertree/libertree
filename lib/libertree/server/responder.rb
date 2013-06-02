@@ -55,7 +55,7 @@ module Libertree
 
       VALID_COMMANDS.each do |command|
         client.register_handler :iq,
-          "/iq/ns:libertree/ns:#{command}", :ns => 'libertree' do |stanza, xpath_result|
+          "/iq/ns:libertree/ns:#{command}", :ns => 'urn:libertree' do |stanza, xpath_result|
 
           @domain = stanza.from.domain
           @remote_tree = Libertree::Model::Server[ :domain => @domain ]
