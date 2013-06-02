@@ -99,6 +99,10 @@ module Jobs
       @client_conf
     end
 
+    def self.client
+      @client ||= Libertree::Client.new(self.conf)
+    end
+
     class RequestJob
       def self.with_tree(server_id, method_name, args)
         server = Libertree::Model::Server[server_id]
@@ -106,8 +110,7 @@ module Jobs
           raise Libertree::JobFailed, "No server with id #{server_id.inspect}"
         else
           begin
-            client = Libertree::Client.new(@client_conf)
-            client.request(server.domain, client.send(method_name, *args))
+            Request.client.request(server.domain, Request.client.send(method_name, *args))
 
             # TODO: when the response code is not OK the job should
             # not be marked as successfully completed. Currently, we
