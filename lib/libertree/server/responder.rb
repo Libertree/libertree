@@ -101,6 +101,9 @@ module Libertree
         respond to: stanza, with: (error code: 'UNKNOWN COMMAND')
       end
       presence do |stanza|
+        # TODO: not yet implemented
+        # Presence stanzas are used to indicate chat availability for
+        # remote users.
         respond to: stanza, with: (error code: 'UNKNOWN COMMAND')
       end
 

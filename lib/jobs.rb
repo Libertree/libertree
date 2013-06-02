@@ -108,6 +108,13 @@ module Jobs
           begin
             client = Libertree::Client.new(@client_conf)
             client.request(server.domain, client.send(method_name, *args))
+
+            # TODO: when the response code is not OK the job should
+            # not be marked as successfully completed. Currently, we
+            # just ignore the response code from the remote tree,
+            # which is very unwise. This defect is also present in the
+            # master branch.
+
           # TODO: check what exceptions can be raised
           rescue Errno::ETIMEDOUT, Errno::ECONNREFUSED => e
             raise Libertree::RetryJob, "With #{server.name_display} (#{server.domain}): #{e.message}"
