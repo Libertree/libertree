@@ -33,11 +33,11 @@ describe Libertree::Server::Responder do
     response = LSR.error code: 'UNKNOWN COMMAND'
     c = LSR.send :client
 
-    msgs = [ Blather::Stanza::Message.new('to', 'body', :chat),
-             Blather::Stanza::Message.new('to', 'body', :groupchat),
-             Blather::Stanza::Message.new('to', 'body', :headline),
-             Blather::Stanza::Message.new('to', 'body', :normal),
-             Blather::Stanza::Message.new('to', 'body', :error)
+    target = "to@receiver.localhost.localdomain"
+    msgs = [ Blather::Stanza::Message.new(target, 'body', :groupchat),
+             Blather::Stanza::Message.new(target, 'body', :headline),
+             Blather::Stanza::Message.new(target, 'body', :normal),
+             Blather::Stanza::Message.new(target, 'body', :error)
            ]
 
     presences = [ Blather::Stanza::Presence.new(:unavailable),
@@ -125,6 +125,15 @@ describe Libertree::Server::Responder do
         LSR.should_receive "rsp_#{command.gsub('-', '_')}".to_sym
         catch(:halt) { c.send :call_handler_for, :iq, stanza }
       end
+    end
+
+    it 'calls the correct handler for chat messages' do
+      stanza = Blather::Stanza::Message.new("localhost.localdomain", 'text', :chat)
+      stanza.from = @requester.domain
+      c = LSR.send(:client)
+      c.stub :write
+      LSR.should_receive :rsp_chat
+      catch(:halt) { c.send :call_handler_for, :message, stanza }
     end
   end
 
