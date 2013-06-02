@@ -30,13 +30,23 @@ module Libertree
         end
 
         def rsp_introduce(params)
-          require_parameters(params, 'public_key')
-          # TODO: record provided parameters for this server,
-          # ignore domain parameter if provided
-          # store the following:
-          # - name_given
-          # - contact
-          # - public key
+          require_parameters(params, 'public_key', 'contact')
+
+          if @remote_tree.nil?
+            @remote_tree = Model::Server.create(
+              'domain'     => @domain,
+              'public_key' => params['public_key'],
+              'contact'    => params['contact'],
+            )
+
+            log "#{@domain} is a new server (id: #{@remote_tree.id})."
+          else
+            log "updating server record for #{@domain} (id: #{@remote_tree.id})."
+            # TODO: validate before storing these values
+            @remote_tree.public_key = params['public_key']
+            @remote_tree.contact    = params['contact']
+            @remote_tree.name_given = params['name_given']
+          end
         end
 
       end
