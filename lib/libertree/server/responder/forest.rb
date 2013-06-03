@@ -39,9 +39,9 @@ module Libertree
               'contact'    => params['contact'],
             )
 
-            log "#{@domain} is a new server (id: #{@remote_tree.id})."
+            Libertree::Server.log "#{@domain} is a new server (id: #{@remote_tree.id})."
           else
-            log "updating server record for #{@domain} (id: #{@remote_tree.id})."
+            Libertree::Server.log "updating server record for #{@domain} (id: #{@remote_tree.id})."
             # TODO: validate before storing these values
             @remote_tree.public_key = params['public_key']
             @remote_tree.contact    = params['contact']
