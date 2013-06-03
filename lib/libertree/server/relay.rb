@@ -98,8 +98,7 @@ module Libertree
         @parser = Parser.new self
 
         begin
-          # TODO: expose client through proper interface
-          c = Libertree::Server::Responder.send(:client)
+          c = Libertree::Server::Responder.connection
 
           # TODO: timeout after n seconds
           c.write_with_handler(stanza) do |response|

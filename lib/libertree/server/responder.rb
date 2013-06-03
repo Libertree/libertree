@@ -155,6 +155,12 @@ module Libertree
           error text: e.message
         end
       end
+
+      # expose client (and with it the XMPP connection) to
+      # the XMPP relay
+      def self.connection
+        client
+      end
     end
   end
 end
