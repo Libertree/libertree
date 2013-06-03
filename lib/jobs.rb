@@ -132,7 +132,7 @@ module Jobs
       def self.perform(params)
         chat_message = Libertree::Model::ChatMessage[ params['chat_message_id'].to_i ]
         if chat_message
-          with_tree(params['server_id'], :req_chat, [ chat_message ])
+          Request.client.req_chat chat_message
         end
       end
     end

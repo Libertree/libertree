@@ -50,9 +50,6 @@ describe Jobs do
         }
 
         @client.should_receive(:req_chat)
-        @client.should_receive(:request) {|domain, args|
-          domain.should eq msg.recipient.tree.domain
-        }
         Jobs::Request::CHAT.perform( params )
       end
     end
