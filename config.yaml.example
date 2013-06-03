@@ -16,7 +16,7 @@ port: 5347
 relay_socket: '/tmp/libertree-relay'
 
 # The administrator's email address to allow other
-# Libertree administrators to contact you. (optional)
+# Libertree administrators to contact you.
 contact: admin@mydomain.net
 
 # The path to the private RSA key
