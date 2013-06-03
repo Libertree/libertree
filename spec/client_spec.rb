@@ -6,8 +6,9 @@ describe Libertree::Client do
   before(:each) do
     key = OpenSSL::PKey::RSA.new File.read("private.key")
     @c = Libertree::Client.new({ private_key: key,
-                                 public_key: key.public_key.to_pem,
-                                 avatar_url_base: "localhost" })
+                                 contact: 'admin@localhost',
+                                 domain: 'localhost',
+                                 frontend_url_base: 'localhost' })
   end
 
   describe 'build_stanza' do
@@ -19,7 +20,7 @@ describe Libertree::Client do
       )
       example =<<HERE
 <iq type="set" to="libertree.localhost.localdomain" id="blather0001">
-  <libertree xmlns="libertree">
+  <libertree xmlns="urn:libertree">
     <post>
       <text>Hello</text>
       <id>123</id>
