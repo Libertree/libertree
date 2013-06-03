@@ -14,14 +14,17 @@ module Libertree
     # @option params [String] :frontend_url_base The URL base of local frontend resources
     # @option params [String] :server_name a short identifier that other servers will display beside member usernames
     # @option params [String] :domain The XMPP component's JID domain (e.g. libertree.localhost.localdomain)
+    # @option params [String] :contact The administrator's email address
     def initialize( params = {} )
       # TODO: not used at the moment
       @private_key = params[:private_key] or raise ":private_key required by Libertree::Client"
       @public_key = @private_key.public_key.to_pem,
+      @contact = params[:contact] or raise ":contact required by Libertree::Client"
+      @domain = params[:domain] or raise ":domain required by Libertree::Client"
+
       @frontend_url_base = params[:frontend_url_base]
-      @domain = params[:domain]
       @server_name = params[:server_name]
-      @contact = params[:contact]
+
       @log = params.fetch(:log, $stdout)
       @log_identifier = params.fetch(:log_identifier, "pid #{Process.pid}")
       @socket_file = params.fetch(:socket, '/tmp/libertree-relay')
@@ -185,8 +188,8 @@ module Libertree
     def req_introduce
       params = {
         'public_key' => @public_key
+        'contact'    => @contact
       }
-      params.merge!('contact'     => @contact)      if @contact
       params.merge!('server_name' => @server_name)  if @server_name
 
       { 'introduce' => params }
