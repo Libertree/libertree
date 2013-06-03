@@ -34,18 +34,18 @@ HERE
 
   describe 'params_to_xml' do
     it 'constructs a valid xml fragment' do
-      xml = @c.send(:params_to_xml,
-        {
-          'id' => 12,
-          'trees' =>
-          [
-            'lt1.remote.org',
-            'lt2.remote.org',
-            'lt3.remote.org',
-          ].map {|t| { 'domain' => t }},
-          'name' => 'nothing'
-        }
-      )
+      params = {
+        'id' => 12,
+        'trees' => [ 'lt1.remote.org',
+                     'lt2.remote.org',
+                     'lt3.remote.org',
+                   ].map {|t| { 'domain' => t }},
+        'name' => 'nothing',
+        'array' => [ 1, 2, 3,
+                     { 'inner' => [4,5,"<test>",[6,7]] },
+                     4, 5 ],
+      }
+      xml = @c.send(:params_to_xml, params)
       example = <<HERE
 <id>12</id>
 <trees>
@@ -54,6 +54,22 @@ HERE
   <domain>lt3.remote.org</domain>
 </trees>
 <name>nothing</name>
+<array>
+  <element>1</element>
+  <element>2</element>
+  <element>3</element>
+  <inner>
+    <element>4</element>
+    <element>5</element>
+    <element>&lt;test&gt;</element>
+    <element>
+      <element>6</element>
+      <element>7</element>
+    </element>
+  </inner>
+  <element>4</element>
+  <element>5</element>
+</array>
 HERE
       xml.should == example.delete("\n ")
     end
