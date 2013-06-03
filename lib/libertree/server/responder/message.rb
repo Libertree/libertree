@@ -17,7 +17,7 @@ module Libertree
               if origin
                 member = Model::Member['username' => recipient['username'], 'server_id' => origin.id]
                 ids << member.id  if member
-              elsif origin.nil? && recipient['public_key'] == @public_key
+              elsif origin.nil? && recipient['public_key'] == Server.conf['public_key']
                 # origin is this local server
                 account = Model::Account['username' => recipient['username']]
                 if account

@@ -15,7 +15,7 @@ module Libertree
             assert member, "Unrecognized member username: #{params['username'].inspect}"
 
             origin = Model::Server[ public_key: params['public_key'] ]
-            if origin.nil? && params['public_key'] != @public_key
+            if origin.nil? && params['public_key'] != Server.conf['public_key']
               # TODO: Is this revealing too much to the requester?
               fail NotFound, 'Unrecognized origin server.', nil
             end
@@ -33,7 +33,7 @@ module Libertree
             assert post, 'Unrecognized post.'
 
             if params.has_key? 'references'
-              comment_text = Libertree::References::replace(params['text'], params['references'], @remote_tree.id, @public_key)
+              comment_text = Libertree::References::replace(params['text'], params['references'], @remote_tree.id, Server.conf['public_key'])
             else
               comment_text = params['text']
             end

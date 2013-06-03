@@ -46,6 +46,7 @@ module Libertree
         'xmpp_server',
         'domain',
         'shared_secret',
+        'private_key_path',
       ].each do |required_key|
         if @conf[required_key].nil?
           missing << required_key
@@ -55,6 +56,10 @@ module Libertree
       if missing.any?
         raise ConfigurationError.new("Configuration error: Missing required configuration keys: #{missing.join(', ')}")
       end
+    end
+
+    def self.conf
+      @conf
     end
 
     def self.run(config_filename)
@@ -113,6 +118,11 @@ module Libertree
         secret = @conf['shared_secret']
         port   = @conf['port'].to_i || 5347
         socket = @conf['relay_socket'] || "/tmp/libertree-relay"
+
+        # TODO: we use the public key in a few places in the responders,
+        #       but eventually we should simply use domain names.
+        key = OpenSSL::PKey::RSA.new File.read( @conf['private_key_path'] )
+        @conf['public_key'] = key.public_key.to_pem
 
         Responder.setup domain, secret, host, port
         begin

@@ -22,7 +22,7 @@ module Libertree
             # TODO: These next two code paragraphs could be DRYed up along with
             # the code found in server/responder/post-like.rb .
             origin = Model::Server[ public_key: params['public_key'] ]
-            if origin.nil? && params['public_key'] != @public_key
+            if origin.nil? && params['public_key'] != Server.conf['public_key']
               # TODO: Is this revealing too much to the requester?
               fail NotFound, 'Unrecognized origin server.', nil
             end
@@ -65,7 +65,7 @@ module Libertree
             # TODO: These next two code paragraphs could be DRYed up along with
             # the code found in server/responder/post-like.rb .
             origin = Model::Server[ public_key: params['public_key'] ]
-            if origin.nil? && params['public_key'] != @public_key
+            if origin.nil? && params['public_key'] != Server.conf['public_key']
               # TODO: Is this revealing too much to the requester?
               fail NotFound, 'Unrecognized origin server.', nil
             end
