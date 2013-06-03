@@ -6,6 +6,7 @@ gem 'pony'
 gem 'libertree-model', :git => 'git://github.com/Libertree/libertree-model-rb.git', :branch => 'xmpp'
 gem 'libertree-client', :git => 'git://github.com/Libertree/libertree-client-rb.git', :branch => 'xmpp'
 gem 'syck', :platforms => [:ruby_20]
+gem 'json'
 
 group 'extensions' do
   gem 'pg'
