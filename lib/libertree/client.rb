@@ -92,6 +92,11 @@ module Libertree
     # e.g.:
     #   request "lt.localhost", req_comment(what, ever)
     def request( target, params )
+      if params.nil? || params.empty?
+        log_error "request: called with empty parameters"
+        return
+      end
+
       log "REQUEST: >#{params.inspect}<"
 
       stanza = build_stanza( target, params )
