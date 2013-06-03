@@ -34,14 +34,14 @@ module Libertree
 
           if @remote_tree.nil?
             @remote_tree = Model::Server.create(
-              'domain'     => @domain,
+              'domain'     => @remote_domain,
               'public_key' => params['public_key'],
               'contact'    => params['contact'],
             )
 
-            Libertree::Server.log "#{@domain} is a new server (id: #{@remote_tree.id})."
+            Libertree::Server.log "#{@remote_domain} is a new server (id: #{@remote_tree.id})."
           else
-            Libertree::Server.log "updating server record for #{@domain} (id: #{@remote_tree.id})."
+            Libertree::Server.log "updating server record for #{@remote_domain} (id: #{@remote_tree.id})."
             # TODO: validate before storing these values
             @remote_tree.public_key = params['public_key']
             @remote_tree.contact    = params['contact']

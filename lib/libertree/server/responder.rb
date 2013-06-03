@@ -57,8 +57,8 @@ module Libertree
         client.register_handler :iq,
           "/iq/ns:libertree/ns:#{command}", :ns => 'urn:libertree' do |stanza, xpath_result|
 
-          @domain = stanza.from.domain
-          @remote_tree = Libertree::Model::Server[ :domain => @domain ]
+          @remote_domain = stanza.from.domain
+          @remote_tree = Libertree::Model::Server[ :domain => @remote_domain ]
 
           # when we get messages from unknown remotes: abort connection
           if ( ! ['forest', 'introduce'].include? command ) &&
