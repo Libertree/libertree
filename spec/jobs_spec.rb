@@ -34,13 +34,12 @@ describe Jobs do
   describe Jobs::Request do
     before :each do
       @client = mock("Client")
-      @client.stub(:request)
-      Libertree::Client.stub(:new) {|conf| @client }
+      @client.stub(:request) {|domain, args| {'code' => 'OK'}}
+      Jobs::Request.stub(:client) { @client }
     end
 
     describe 'CHAT#perform' do
       it 'calls req_chat with a valid chat message' do
-        @client.stub(:req_chat)
         msg = LM::ChatMessage.create( from_member_id: @member.id,
                                       to_member_id: @other_member.id,
                                       text: "hello" )
@@ -49,6 +48,7 @@ describe Jobs do
           'server_id'       => msg.recipient.tree.id,
         }
 
+        @client.stub(:req_chat)
         @client.should_receive(:req_chat)
         Jobs::Request::CHAT.perform( params )
       end
@@ -56,8 +56,6 @@ describe Jobs do
 
     describe 'COMMENT#perform' do
       it 'calls req_comment with a valid comment' do
-        # Ugly. Set this config variable because COMMENT.perform requires it.
-        Jobs::Request.instance_variable_set(:@client_conf, { :frontend_url_base => '/' })
         # remote post
         post = LM::Post.create( member_id: @other_member.id,
                                 text: "this is a post" )
@@ -70,9 +68,7 @@ describe Jobs do
         }
         @client.stub(:req_comment)
         @client.should_receive(:req_comment)
-        @client.should_receive(:request) {|domain, args|
-          domain.should eq comment.post.member.tree.domain
-        }
+        @client.should_receive(:request).with(comment.post.member.tree.domain, anything())
         Jobs::Request::COMMENT.perform( params )
       end
     end
