@@ -11,8 +11,7 @@ GIT
 
 GIT
   remote: git://github.com/RDBI/rdbi.git
-  revision: 3742c7fc3eb2876716ed5a1cf4883389be13e631
-  branch: sth-leak
+  revision: 4ca05ac7c355818260a25502499f01f59f775ee6
   specs:
     rdbi (0.9.1)
       epoxy (>= 0.3.1)
