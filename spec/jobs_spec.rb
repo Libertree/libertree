@@ -74,7 +74,22 @@ describe Jobs do
     end
 
     describe 'COMMENT_DELETE#perform' do
-      pending
+      it 'calls req_comment_delete with a valid comment' do
+        # remote post
+        post = LM::Post.create( member_id: @other_member.id,
+                                text: "this is a post" )
+        comment = LM::Comment.create( member_id: @member.id,
+                                      post_id: post.id,
+                                      text: "hello" )
+        params = {
+          'comment_id' => comment.id,
+          'server_id'  => post.member.server_id,
+        }
+        @client.stub(:req_comment_delete)
+        @client.should_receive(:req_comment_delete)
+        @client.should_receive(:request).with(comment.post.member.tree.domain, anything())
+        Jobs::Request::COMMENT_DELETE.perform( params )
+      end
     end
 
     describe 'COMMENT_LIKE#perform' do
