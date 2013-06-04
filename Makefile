@@ -25,8 +25,19 @@ gems : activesupport-3.2.2.gem \
 	eventmachine-0.12.10.gem \
 	nokogiri-1.5.5.gem
 
+# TODO: add all built gem packages as dependencies
+BUILDPKG = fpm -d ruby -d rubygems \
+		--prefix $(PREFIX) \
+		--gem-package-name-prefix $(PKG_PREFIX) \
+		--maintainer "rekado+libertree@elephly.net" \
+		--version $(VERSION) \
+		--license AGPL3 \
+		-s gem -t $(1) $(2)
+
 libertree-client-$(VERSION).gem : FORCE
 	gem build libertree-client.gemspec
+	$(call BUILDPKG, rpm, $@)
+	$(call BUILDPKG, deb, $@)
 
 # standard rule for dependent gems
 %.gem : | prepare
