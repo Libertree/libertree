@@ -29,8 +29,21 @@ gems : bcrypt-ruby-3.0.1.gem \
 	rdbi-4ca05ac7c355 \
 	rdbi-driver-postgresql-be571a9909f7
 
+# TODO: add all built gem packages as dependencies
+# TODO: share database.yaml with other packages?
+# TODO: specify database.yaml.example as config file
+BUILDPKG = fpm -d ruby -d rubygems \
+		--prefix $(PREFIX) \
+		--gem-package-name-prefix $(PKG_PREFIX) \
+		--maintainer "rekado+libertree@elephly.net" \
+		--version $(VERSION) \
+		--license AGPL3 \
+		-s gem -t $(1) $(2)
+
 libertree-model-$(VERSION).gem : FORCE
 	gem build libertree-model.gemspec
+	$(call BUILDPKG, rpm, $@)
+	$(call BUILDPKG, deb, $@)
 
 # standard rule for dependent gems
 %.gem : | prepare
