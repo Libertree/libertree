@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = 'libertree-model'
   s.version     = '0.0.1'
-  s.date        = '2012-11-25'
+  s.date        = '2013-06-04'
   s.summary     = "Database library for Libertree"
   s.description = "Database library for Libertree"
   s.authors     = ["Pistos", "rekado"]
