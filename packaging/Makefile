@@ -40,15 +40,13 @@ all: gems \
 	mkdir -p ./packages/$(PKG_TYPE)
 	mv *.$(PKG_TYPE) ./packages/$(PKG_TYPE)
 
-gems : activesupport-3.2.13.gem \
-	bcrypt-ruby-3.0.1.gem \
+gems : regular_gems gems_with_extensions
+regular_gems : activesupport-3.2.13.gem \
 	blather-0.8.5.gem \
 	connection_pool-1.0.0.gem \
 	epoxy-0.3.1.gem \
-	eventmachine-1.0.3.gem \
 	girl_friday-0.11.2.gem \
 	i18n-0.6.1.gem \
-	json-1.8.0.gem \
 	m4dbi-0.8.8.gem \
 	mail-2.5.4.gem \
 	metaid-1.0.gem \
@@ -56,16 +54,20 @@ gems : activesupport-3.2.13.gem \
 	mime-types-1.23.gem \
 	multi_json-1.7.6.gem \
 	niceogiri-1.1.2.gem \
-	nokogiri-1.5.9.gem \
-	pg-0.9.0.gem \
 	polyglot-0.3.3.gem \
 	pony-1.4.1.gem \
 	rdbi-6b4103aac8e2 \
 	rdbi-driver-postgresql-be571a9909f7 \
 	rubinius-actor-0.0.2.gem \
-	rubinius-core-api-0.0.1.gem \
 	treetop-1.4.14.gem \
 	typelib-0.1.0.gem
+
+gems_with_extensions : bcrypt-ruby-3.0.1.gem \
+	eventmachine-0.12.10.gem \
+	json-1.8.0.gem \
+	nokogiri-1.5.5.gem \
+	pg-0.9.0.gem \
+	rubinius-core-api-0.0.1.gem
 
 # TODO: share database config file?
 # TODO: add built rpms/debs as dependencies
