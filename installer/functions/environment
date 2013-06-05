@@ -10,10 +10,6 @@ safety() {
   fi
 }
 
-load_rvm() {
-  source ~/.rvm/scripts/rvm
-}
-
 define_editor() {
   if [[ "${EDITOR:-unset}" == "unset" ]]; then
     say "What program do you want to use for editing the configuration file?"
