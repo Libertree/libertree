@@ -35,22 +35,16 @@ clone_repos() {
   URL="git://github.com/Libertree"
 
   mkdir -p ~/git
-  safety off
-    cd ~/git
-  safety on
+  cd ~/git
   for repo in libertree-db \
               libertree-backend-rb \
               libertree-frontend-ramaze; do
     if [[ ! -d $repo ]]; then
       git clone "$URL/$repo.git"
     else
-      safety off
-        cd "$repo"
-      safety on
+      cd "$repo"
       git pull origin
-      safety off
-        cd -
-      safety on
+      cd -
     fi
   done
 }
@@ -62,9 +56,7 @@ setup_db() {
     fatal "The PostgreSQL server is not running. Please start it manually."
   fi
 
-  safety off
-    cd ~/git/libertree-db
-  safety on
+  cd ~/git/libertree-db
 
   export PGHOST=localhost
   info "Creating db owner and database as user \"postgres\"."
@@ -85,9 +77,7 @@ generate_invite() {
 }
 
 setup_backend() {
-  safety off
-    cd ~/git/libertree-backend-rb
-  safety on
+  cd ~/git/libertree-backend-rb
 
   info "Installing dependent gems"
   bundle install --without development --path vendor
@@ -103,18 +93,13 @@ setup_backend() {
 }
 
 setup_frontend() {
-  # TODO: untested
-  safety off
-    cd ~/git/libertree-frontend-ramaze
-  safety on
+  cd ~/git/libertree-frontend-ramaze
 
   info "Installing dependent gems"
   bundle install --without development --path vendor
   ./css-build.sh
 
-  safety off
-    cd config
-  safety on
+  cd config
 
   # TODO: offer to use the same db config as for libertree-db
   handle_config "database.yaml"
