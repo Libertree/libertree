@@ -25,9 +25,9 @@ module Libertree
       @frontend_url_base = params[:frontend_url_base]
       @server_name = params[:server_name]
 
-      @log = params.fetch(:log, $stdout)
-      @log_identifier = params.fetch(:log_identifier, "pid #{Process.pid}")
-      @socket_file = params.fetch(:socket, '/tmp/libertree-relay')
+      @log = params[:log] || $stdout
+      @log_identifier = params[:log_identifier] || "pid #{Process.pid}"
+      @socket_file = params[:socket] || '/tmp/libertree-relay'
       connect
     end
 
