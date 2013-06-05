@@ -65,11 +65,11 @@ If you don't trust the installer, please follow the instructions below.
 
 While it is possible to use the system Ruby package, it is recommended that a
 Ruby version manager be used instead, such as
-[RVM](https://rvm.beginrescueend.com/) or
+[RVM](https://rvm.io/) or
 [rbenv](https://github.com/sstephenson/rbenv).
 
 Install RVM using the installation instructions found on
-[the RVM website](https://rvm.beginrescueend.com/) (one simple line at the time
+[the RVM website](https://rvm.io/) (one simple line at the time
 of this writing).
 
 Once RVM is installed (including configuration of your shell startup script),

@@ -20,11 +20,7 @@ system_user_install() {
   done
 
   safety on
-  install_rvm
-  safety off
-    load_rvm
-  safety on
-  install_ruby
+  install_bundler
   clone_repos
 
   skip_decision "Do you want to create a new db?"             && setup_db
@@ -39,22 +35,16 @@ clone_repos() {
   URL="git://github.com/Libertree"
 
   mkdir -p ~/git
-  safety off
-    cd ~/git
-  safety on
+  cd ~/git
   for repo in libertree-db \
               libertree-backend-rb \
               libertree-frontend-ramaze; do
     if [[ ! -d $repo ]]; then
       git clone "$URL/$repo.git"
     else
-      safety off
-        cd "$repo"
-      safety on
+      cd "$repo"
       git pull origin
-      safety off
-        cd -
-      safety on
+      cd -
     fi
   done
 }
@@ -66,9 +56,7 @@ setup_db() {
     fatal "The PostgreSQL server is not running. Please start it manually."
   fi
 
-  safety off
-    cd ~/git/libertree-db
-  safety on
+  cd ~/git/libertree-db
 
   export PGHOST=localhost
   info "Creating db owner and database as user \"postgres\"."
@@ -89,42 +77,26 @@ generate_invite() {
 }
 
 setup_backend() {
-  safety off
-    cd ~/git/libertree-backend-rb
-    rvm use --create 2.0.0@libertree-backend-rb
-  safety on
-
-  gem list --local | grep -qE '^bundler' || (info "Installing bundler"; gem install bundler)
+  cd ~/git/libertree-backend-rb
 
   info "Installing dependent gems"
-  bundle install
+  bundle install --without development --path vendor
 
   [[ ! -e public.key ]] && [[ ! -e private.key ]] && bundle exec ruby generate-key-pair.rb
   handle_config "config.yaml"
 
   # TODO: offer to use the same db config as for libertree-db
   handle_config "database.yaml"
-
-  info "Running test suite now"
-  bundle exec bin/test.sh
 }
 
 setup_frontend() {
-  # TODO: untested
-  safety off
-    cd ~/git/libertree-frontend-ramaze
-    rvm use --create 2.0.0@libertree-frontend-ramaze
-  safety on
-
-  gem list --local | grep -qE '^bundler' || (info "Installing bundler"; gem install bundler)
+  cd ~/git/libertree-frontend-ramaze
 
   info "Installing dependent gems"
-  bundle install --without development
+  bundle install --without development --path vendor
   ./css-build.sh
 
-  safety off
-    cd config
-  safety on
+  cd config
 
   # TODO: offer to use the same db config as for libertree-db
   handle_config "database.yaml"
@@ -132,34 +104,6 @@ setup_frontend() {
   mkdir -p public/images/avatars
 }
 
-install_rvm() {
-  # skip if rvm exists or user doesn't want to install it.
-  # TODO: ~/.rvm exists even if the RVM install was aborted. Try harder.
-  [[ -d ~/.rvm ]] && return 0
-
-  warn "RVM is not installed."
-  yes_or_fatal "Do you want to install RVM now?" "RVM is required. Please install it manually."
-
-  info "fetching RVM installation script from http://get.rvm.io"
-  curl -L get.rvm.io | bash -s stable || fatal "Installation of RVM failed. Please install it manually."
-}
-
-install_ruby() {
-  # skip if ruby v2.0.0 is installed
-  if rvm list | grep -q "ruby-2.0.0"; then
-    return 0
-  fi
-
-  clear
-  info "Installing ruby 2.0.0"
-  info "You will see a number of requirements that your system must meet in order to install ruby."
-  info "Press any key to show the requirements."
-  read -n1
-
-  safety off
-    rvm requirements
-    info "Press any key to continue installing ruby 2.0.0."
-    read -n1
-    rvm install 2.0.0
-  safety on
+install_bundler() {
+  gem list --local | grep -qE '^bundler' || (info "Installing bundler"; gem install bundler)
 }
