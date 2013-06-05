@@ -66,8 +66,8 @@ bcrypt-ruby-3.0.1.gem : | prepare
 	$(call MKPACKAGE, deb, $@)
 
 pg-0.9.0.gem : | prepare
-	$(call MKPACKAGE, rpm, $@, -d libpg)
-	$(call MKPACKAGE, deb, $@, -d libpg)
+	$(call MKPACKAGE, rpm, $@, -d postgresql-libs)
+	$(call MKPACKAGE, deb, $@, -d libpq5)
 
 clean :
 	rm -rf ./packages/
