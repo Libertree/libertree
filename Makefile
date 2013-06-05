@@ -44,10 +44,10 @@ libertree-client-$(VERSION).gem : FORCE
 	$(call MKPACKAGE, rpm, $@)
 	$(call MKPACKAGE, deb, $@)
 
-# needs OpenSSL headers
+# needs OpenSSL library
 eventmachine-0.12.10.gem : | prepare
-	$(call MKPACKAGE, rpm, $@, -d libssl)
-	$(call MKPACKAGE, deb, $@, -d libssl)
+	$(call MKPACKAGE, rpm, $@, -d openssl-libs)
+	$(call MKPACKAGE, deb, $@, -d openssl-libs)
 
 # needs libxml2 libxslt
 nokogiri-1.5.5.gem : | prepare
