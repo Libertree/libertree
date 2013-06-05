@@ -91,7 +91,8 @@ module Jobs
           :domain            => conf['domain'],
           :contact           => conf['contact'],
           :log               => conf['log_handle'],
-          :log_identifier    => conf['log_identifier']
+          :log_identifier    => conf['log_identifier'],
+          :socket            => conf['relay_socket']
         }
     end
 
