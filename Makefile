@@ -8,9 +8,9 @@ MKPACKAGE = fpm -d ruby -d rubygems $(3) \
 		--prefix $(PREFIX) --gem-package-name-prefix $(PKG_PREFIX) \
 		-s gem -t $(1) $(addprefix $(GEMDIR)/,$(2))
 
-WRAPGEMDIR = fpm -d ruby -d rubygems $(3) \
+WRAPGEMDIR = fpm -d ruby -d rubygems $(4) \
 		--prefix $(PREFIX) \
-		-s dir -t $(1) -n $(addprefix $(PKG_PREFIX)-,$(2)) $(addprefix $(GEMDIR)/,$(2))
+		-s dir -t $(1) -n $(addprefix $(PKG_PREFIX)-,$(3)) $(addprefix $(GEMDIR)/,$(2))
 
 all: libertree-model-$(VERSION).gem gems move
 
@@ -52,13 +52,13 @@ libertree-model-$(VERSION).gem : FORCE
 
 # directory (because we use git version)
 rdbi-4ca05ac7c355 : | prepare
-	$(call WRAPGEMDIR, rpm, $@)
-	$(call WRAPGEMDIR, deb, $@)
+	$(call WRAPGEMDIR, rpm, $@, rdbi, -v 4ca05ac7c355)
+	$(call WRAPGEMDIR, deb, $@, rdbi, -v 4ca05ac7c355)
 
 # directory (because we use git version)
 rdbi-driver-postgresql-be571a9909f7 : | prepare
-	$(call WRAPGEMDIR, rpm, $@)
-	$(call WRAPGEMDIR, deb, $@)
+	$(call WRAPGEMDIR, rpm, $@, rdbi-driver-postgresql, -v be571a9909f7)
+	$(call WRAPGEMDIR, deb, $@, rdbi-driver-postgresql, -v be571a9909f7)
 
 # TODO: does this depend on a system library?
 bcrypt-ruby-3.0.1.gem : | prepare
