@@ -87,9 +87,6 @@ setup_backend() {
 
   # TODO: offer to use the same db config as for libertree-db
   handle_config "database.yaml"
-
-  info "Running test suite now"
-  bundle exec bin/test.sh
 }
 
 setup_frontend() {
