@@ -19,6 +19,8 @@ gems : activesupport-3.2.2.gem \
 	blather-0.8.1.gem \
 	connection_pool-0.9.2.gem \
 	girl_friday-0.11.1.gem \
+	rubinius-actor-0.0.2.gem \
+	rubinius-core-api-0.0.1.gem \
 	i18n-0.6.0.gem \
 	multi_json-1.1.0.gem \
 	niceogiri-1.1.1.gem \
