@@ -62,23 +62,25 @@ module Libertree
       @conf
     end
 
+    def self.quit
+      @quit = true
+      puts "Terminating server."
+      EventMachine.stop_event_loop  if @em
+    end
+
     def self.run(config_filename)
-      quit = false
+      @quit = false
 
       Signal.trap("HUP") do
         puts "\nRestarting server."
         EventMachine.stop_event_loop
       end
 
-      terminate = Proc.new {
-        quit = true
-        puts "Terminating server."
-        EventMachine.stop_event_loop
-      }
+      terminate = Proc.new { self.quit }
       Signal.trap("TERM", &terminate)
       Signal.trap("INT" , &terminate)
 
-      until quit
+      until @quit
         begin
           load_config config_filename
 
@@ -126,7 +128,7 @@ module Libertree
 
         Responder.setup domain, secret, host, port
         begin
-          EventMachine.run {
+          @em = EventMachine.run {
             Responder.run
             EventMachine.start_unix_domain_server socket, Relay
           }

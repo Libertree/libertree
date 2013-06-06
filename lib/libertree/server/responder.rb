@@ -107,6 +107,12 @@ module Libertree
         respond to: stanza, with: (error code: 'UNKNOWN COMMAND')
       end
 
+      # handle fatal errors more nicely; default is to repeatedly raise an exception
+      client.register_handler :stream_error, :name => :host_unknown do |err|
+        Libertree::Server.log_error err.message
+        Libertree::Server.quit
+      end
+
       # Packs an optional XML fragment (opts[:with]) in a standard XMPP reply
       # to the provided stanza (opts[:to]) and sends out the reply stanza.
       def self.respond(opts)
