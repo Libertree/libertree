@@ -132,6 +132,9 @@ module Libertree
             Responder.run
             EventMachine.start_unix_domain_server socket, Relay
           }
+        rescue Blather::Stream::ConnectionTimeout
+          log_error "Connection to the XMPP server on #{host} timed out; retrying."
+          sleep 3
         rescue Blather::Stream::ConnectionFailed
           log_error "No connection to the XMPP server on #{host}; retrying."
           sleep 3
