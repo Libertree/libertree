@@ -21,6 +21,7 @@ Install the required system packages:
 * PostgreSQL 8 or 9
 * GraphicsMagick (or ImageMagick)
 * git
+* Ruby >= 1.9 (unless RVM is used)
 
 Check the /packages directory to see if there is a meta-package for you system
 to install the dependencies through your package manager.
@@ -63,10 +64,17 @@ If you don't trust the installer, please follow the instructions below.
 
 ### Ruby
 
-While it is possible to use the system Ruby package, it is recommended that a
-Ruby version manager be used instead, such as
+Libertree uses the system Ruby package per default. If for some reason you do not wish to use the system package, a Ruby version manager can be used instead, such as
 [RVM](https://rvm.io/) or
 [rbenv](https://github.com/sstephenson/rbenv).
+
+#### Using the system Ruby
+
+To keep the gems used by Libertree separate from other gems that may be installed
+on your system, it is recommended to use [Bundler](http://gembundler.com/).
+
+
+#### RVM
 
 Install RVM using the installation instructions found on
 [the RVM website](https://rvm.io/) (one simple line at the time
