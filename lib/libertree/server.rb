@@ -65,7 +65,7 @@ module Libertree
     def self.quit
       @quit = true
       puts "Terminating server."
-      EventMachine.stop_event_loop  if @em
+      EventMachine.stop_event_loop  if EventMachine.reactor_running?
     end
 
     def self.run(config_filename)
@@ -128,7 +128,7 @@ module Libertree
 
         Responder.setup domain, secret, host, port
         begin
-          @em = EventMachine.run {
+          EventMachine.run {
             Responder.run
             EventMachine.start_unix_domain_server socket, Relay
           }
