@@ -103,7 +103,7 @@ module Libertree
       write_out stanza
 
       begin
-        Timeout.timeout(10) do
+        Timeout.timeout(100) do
           raw_response = @socket.recv 8192
           response = Blather::Stanza.parse raw_response
           log "response: #{response}"
