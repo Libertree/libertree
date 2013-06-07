@@ -368,6 +368,10 @@ module Libertree
           }
         )
       end
+
+      def remote_storage_connection
+        @remote_storage_connection ||= RemoteStorageConnection['account_id' => self.id]
+      end
     end
   end
 end
