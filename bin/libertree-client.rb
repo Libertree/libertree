@@ -19,7 +19,9 @@ socket = ARGV[2] || '/tmp/libertree-relay'
 begin
   client = Libertree::Client.new(
     private_key: key,
-    socket: socket
+    socket: socket,
+    contact: 'admin@localhost',
+    domain: 'localhost'
   )
 
   while input = Readline.readline("libertree> ", true)
