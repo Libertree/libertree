@@ -90,7 +90,7 @@ module Libertree
 
     public
     def ping( target )
-      stanza = Blather::Stanza::Iq::Ping.new(:get, target, @domain)
+      stanza = Blather::Stanza::Iq::Ping.new(:get, target)
       write_out stanza
       begin
         Timeout.timeout(100) do
