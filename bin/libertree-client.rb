@@ -44,10 +44,12 @@ begin
       client.request target, client.req_member(member)
     when /^d/ # post delete
       client.request target, client.req_post_delete(params[0])
-    when /^p/ # post
+    when /^post/ # post
       member = Member.new(params[0], "")
       post = Post.new(member.username, 99999, 'internet', params[1], member, nil)
       client.request target, client.req_post(post)
+    when /^ping/
+      client.ping params[0]
     end
   end
 rescue Errno::ECONNREFUSED
