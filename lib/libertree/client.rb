@@ -79,6 +79,7 @@ module Libertree
       # write to socket and wait for response
       begin
         @socket.send msg, 0
+        @socket.flush
       rescue Errno::EPIPE => e
         log_error "#{e.message}, reconnecting"
         sleep 1
