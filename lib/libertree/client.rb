@@ -89,6 +89,19 @@ module Libertree
     end
 
     public
+    def ping( target )
+      stanza = Blather::Stanza::Iq::Ping.new(:get, target, @domain)
+      write_out stanza
+      begin
+        Timeout.timeout(100) do
+          raw_response = @socket.recv 8192
+          response = Blather::Stanza.parse raw_response
+          log "response: #{response}"
+        end
+      rescue Timeout::Error
+        log_error "(timeout)"
+      end
+    end
 
     # e.g.:
     #   request "lt.localhost", req_comment(what, ever)
