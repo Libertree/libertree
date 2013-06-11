@@ -12,4 +12,5 @@ Gem::Specification.new do |s|
   s.add_dependency 'ruby-oembed', '~> 0.8.8'
   s.add_dependency 'pg', '= 0.9.0'
   s.add_dependency 'bcrypt-ruby', '= 3.0.1'
+  s.add_dependency 'nokogiri', '= 1.6.0'
 end
