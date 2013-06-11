@@ -68,6 +68,7 @@ GEM
       columnize (>= 0.3.1)
       linecache19 (>= 0.5.11)
       ruby-debug-base19 (>= 0.11.19)
+    ruby-oembed (0.8.8)
     ruby_core_source (0.1.5)
       archive-tar-minitar (>= 0.5.2)
     syck (1.0.0)
@@ -87,4 +88,5 @@ DEPENDENCIES
   rspec
   ruby-debug-base19x (~> 0.11.30.pre4)
   ruby-debug19
+  ruby-oembed
   syck

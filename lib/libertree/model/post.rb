@@ -1,4 +1,5 @@
 require 'date'
+require_relative '../embedder'
 
 module Libertree
   module Model
@@ -16,6 +17,7 @@ module Libertree
             *post.forests
           )
         end
+        Libertree::Embedder.autoembed(post.text)
       end
 
       after_update do |post_before, post|
@@ -32,6 +34,7 @@ module Libertree
             *post.forests
           )
         end
+        Libertree::Embedder.autoembed(post.text)
       end
 
       def member
