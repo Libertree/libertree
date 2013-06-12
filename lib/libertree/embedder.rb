@@ -53,9 +53,7 @@ module Libertree
     end
 
     def self.extract_urls(text)
-      html = Nokogiri::HTML.fragment(Libertree.render(text))
-      urls = html.xpath(".//a/@href").map(&:value)
-
+      urls = URI.extract text
       urls.find_all {|u| u =~ self.supported}.map(&:strip)
     end
 
