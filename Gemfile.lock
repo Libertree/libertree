@@ -85,7 +85,7 @@ DEPENDENCIES
   factory_girl
   linecache19!
   m4dbi
-  nokogiri
+  nokogiri (~> 1.5)
   pg
   rdbi!
   rdbi-driver-postgresql!
