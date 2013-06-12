@@ -7,10 +7,14 @@ GIT
 
 GIT
   remote: git://github.com/Libertree/libertree-model-rb.git
-  revision: 358b4cbe719a46e46e24dcf74fb0a6f69fec59da
+  revision: 66a7b8f0e163a68704df66ed6de55e337c0ca5bf
   branch: xmpp
   specs:
-    libertree-model (0.0.1)
+    libertree-model (0.0.2)
+      bcrypt-ruby (= 3.0.1)
+      nokogiri (~> 1.5)
+      pg (= 0.9.0)
+      ruby-oembed (~> 0.8.8)
 
 GIT
   remote: git://github.com/RDBI/rdbi-driver-postgresql.git
@@ -81,6 +85,7 @@ GEM
     metaid (1.0)
     methlab (0.1.0)
     mime-types (1.19)
+    mini_portile (0.5.0)
     multi_json (1.5.1)
     niceogiri (1.1.1)
       nokogiri (~> 1.5)
@@ -114,6 +119,7 @@ GEM
       ruby-debug-base19 (>= 0.11.19)
     ruby_core_source (0.1.5)
       archive-tar-minitar (>= 0.5.2)
+    ruby-oembed (0.8.8)
     syck (1.0.0)
     treetop (1.4.10)
       polyglot
