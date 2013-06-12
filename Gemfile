@@ -8,7 +8,7 @@ gem 'ruby-oembed'
 group 'extensions' do
   gem 'pg'
   gem 'bcrypt-ruby'
-  gem 'nokogiri'
+  gem 'nokogiri', '~> 1.5'
 end
 
 group 'development' do
