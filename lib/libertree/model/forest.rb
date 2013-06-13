@@ -2,7 +2,7 @@ module Libertree
   module Model
     class Forest < M4DBI::Model(:forests)
       def trees
-        Server.prepare(
+        stm = Server.prepare(
           %{
             SELECT
               s.*
@@ -13,8 +13,10 @@ module Libertree
               fs.forest_id = ?
               AND s.id = fs.server_id
           }
-        ).s(self.id).
-          map { |row| Server.new row }
+        )
+        records = stm.s(self.id).map { |row| Server.new row }
+        stm.finish
+        records
       end
       alias :servers :trees
 

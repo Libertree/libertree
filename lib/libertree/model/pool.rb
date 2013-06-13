@@ -68,6 +68,9 @@ module Libertree
       end
 
       def posts( opts = {} )
+        @posts ||= Hash.new
+        return @posts[opts]  if @posts[opts]
+
         limit = opts.fetch(:limit, 30)
         if opts[:newer]
           time_comparator = '>'
@@ -76,7 +79,7 @@ module Libertree
         end
         time = Time.at( opts.fetch(:time, Time.now.to_f) ).strftime("%Y-%m-%d %H:%M:%S.%6N%z")
 
-        @posts ||= Post.prepare(
+        stm = Post.prepare(
           %{
             SELECT
               p.*
@@ -91,7 +94,11 @@ module Libertree
               p.id DESC
             LIMIT #{limit}
           }
-        ).s(self.id, time).map { |row| Post.new row }
+        )
+        @posts[opts] = stm.s(self.id, time).map { |row| Post.new row }
+        stm.finish
+
+        @posts[opts]
       end
 
       def includes?(post)
