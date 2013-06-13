@@ -49,8 +49,8 @@ module Libertree
       end
 
       def server
-        if $m4dbi_cached_fetches
-          @server = Server.cached_fetch(self.server_id)
+        if $m4dbi_cache_id
+          @server = Server.cached_fetch($m4dbi_cache_id, self.server_id)
         else
           @server = Server[self.server_id]
         end
