@@ -1,24 +1,4 @@
 GIT
-  remote: git://github.com/Pistos/m4dbi.git
-  revision: 3a0149cc5ab2fc09a7db20fb9109412c72d33476
-  branch: fix-memory-leaks
-  specs:
-    m4dbi (0.8.9)
-      metaid
-      rdbi
-
-GIT
-  remote: git://github.com/RDBI/rdbi-driver-postgresql.git
-  revision: 907b681bc8a5c055f761bb0afd90a0b9e1d4b269
-  branch: fix-execute-memory-leak
-  specs:
-    rdbi-driver-postgresql (0.9.1)
-      epoxy (>= 0.3.1)
-      methlab
-      pg (= 0.9.0)
-      rdbi
-
-GIT
   remote: git://github.com/RDBI/rdbi.git
   revision: e5accb27a99f314db1474f5bb01538b4d2ccb26a
   ref: pre-sth-leak
@@ -49,6 +29,9 @@ GEM
     factory_girl (3.4.0)
       activesupport (>= 3.0.0)
     i18n (0.6.0)
+    m4dbi (0.8.9)
+      metaid
+      rdbi
     metaid (1.0)
     methlab (0.1.0)
     mini_portile (0.5.0)
@@ -57,6 +40,11 @@ GEM
       mini_portile (~> 0.5.0)
     pg (0.9.0)
     rake (0.9.2.2)
+    rdbi-driver-postgresql (0.9.1)
+      epoxy (>= 0.3.1)
+      methlab
+      pg (= 0.9.0)
+      rdbi
     rspec (2.13.0)
       rspec-core (~> 2.13.0)
       rspec-expectations (~> 2.13.0)
@@ -91,11 +79,11 @@ DEPENDENCIES
   bcrypt-ruby
   factory_girl
   linecache19!
-  m4dbi!
+  m4dbi
   nokogiri (~> 1.5)
   pg
   rdbi!
-  rdbi-driver-postgresql!
+  rdbi-driver-postgresql
   rspec
   ruby-debug-base19x (~> 0.11.30.pre4)
   ruby-debug19
