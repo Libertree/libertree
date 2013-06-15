@@ -49,8 +49,8 @@ module Libertree
       end
 
       def server
-        if $m4dbi_cached_fetches
-          @server = Server.cached_fetch(self.server_id)
+        if $m4dbi_cache_id
+          @server = Server.cached_fetch($m4dbi_cache_id, self.server_id)
         else
           @server = Server[self.server_id]
         end
@@ -73,7 +73,7 @@ module Libertree
         if h =~ /^(.+?)@(.+?)$/
           username = $1
           host = $2
-          row = self.prepare(
+          stm = self.prepare(
             %{
               SELECT m.*
               FROM
@@ -87,14 +87,12 @@ module Libertree
                   OR s.ip::TEXT = ? || '/32'
                 )
             }
-          ).s1(
-            username,
-            host,
-            host
           )
+          row = stm.s1( username, host, host )
+          stm.finish
           self.new(row)  if row
         else
-          row = self.prepare(
+          stm = self.prepare(
             %{
               SELECT
                 m.*
@@ -105,7 +103,9 @@ module Libertree
                 a.id = m.account_id
                 AND a.username = ?
             },
-          ).s1(h)
+          )
+          row = stm.s1(h)
+          stm.finish
           self.new(row)  if row
         end
       end

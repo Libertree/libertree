@@ -6,7 +6,7 @@ module Libertree
       end
 
       def forests
-        Forest.prepare(
+        stm = Forest.prepare(
           %{
             SELECT
               f.*
@@ -17,8 +17,10 @@ module Libertree
               fs.server_id = ?
               AND f.id = fs.forest_id
           }
-        ).s(self.id).
-          map { |row| Forest.new row }
+        )
+        records = stm.s(self.id).map { |row| Forest.new row }
+        stm.finish
+        records
       end
     end
   end
