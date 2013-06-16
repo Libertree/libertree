@@ -1,5 +1,5 @@
 if RUBY_VERSION =~ /^1\.9/
-  require 'ruby-debug'
+  #require 'ruby-debug'
 end
 require 'libertree/db'
 
