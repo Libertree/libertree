@@ -8,9 +8,13 @@ module Libertree
     # relay client (e.g. the job processor) to consume.
     module Relay
 
+      def receive_data(chunk)
+        # we may not feed the whole chunk to the parser at once.
+        # As soon as the parser reaches the end of the stanza it will
+        # discard whatever else is in the queue.
+        chunk.each_char do |char|
+          @parser.receive_data char
         end
-      def receive_data(string)
-        @parser.receive_data string
       rescue ParseError => e
         Libertree::Server.log_error "XMPP relay parse: #{e}"
       end
