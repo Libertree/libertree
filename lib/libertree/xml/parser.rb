@@ -10,7 +10,8 @@ module Libertree
         @parser = Nokogiri::XML::SAX::PushParser.new self
         @parser.options =
           Nokogiri::XML::ParseOptions::DEFAULT_XML |
-          Nokogiri::XML::ParseOptions::NOENT
+          Nokogiri::XML::ParseOptions::NOENT |
+          Nokogiri::XML::ParseOptions::NONET
         @current = nil
         @namespaces = {}
         @namespace_definitions = []
