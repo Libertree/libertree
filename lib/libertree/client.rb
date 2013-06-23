@@ -103,13 +103,20 @@ module Libertree
       log s, 'ERROR'
     end
 
-    def write_out(stanza)
+    def write_out(stanza, callback=nil)
+      # store callback to be executed on a reply
+      if callback
+        key = "#{stanza.id}:#{stanza.to}"
+        @expected[key] = {:fn => callback, :timestamp => Time.now}
+      end
+
       msg = stanza.serialize(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML)
 
-      # write to socket and wait for response
+      # write to socket
       begin
         @socket.send msg, 0
-        @socket.flush
+        @socket.flush # TODO: is this really required? Or does it hurt us?
+        stanza
       rescue Errno::EPIPE => e
         log_error "#{e.message}, reconnecting"
         sleep 1
