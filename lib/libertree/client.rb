@@ -126,6 +126,21 @@ module Libertree
     end
 
     public
+
+    # called by the parser
+    def handle_stanza(stanza)
+      # throw away the old parser
+      @parser = Libertree::XML::Parser.new self
+
+      # if this stanza is a reply to one of the stanzas we sent out before
+      # execute the callback
+      key = "#{stanza.id}:#{stanza.from}"
+      if expecting = @expected[key]
+        expecting[:fn].call stanza
+        @expected.delete key
+      end
+    end
+
     def ping( target )
       stanza = Blather::Stanza::Iq::Ping.new(:get, target)
       write_out stanza, lambda {|response| log "response: #{response}" }
