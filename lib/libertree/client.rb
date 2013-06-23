@@ -1,6 +1,5 @@
 require 'base64'
 require 'openssl'
-require 'timeout'
 require 'socket'
 require 'blather/client/client'
 require_relative 'xml/helper'
@@ -29,6 +28,8 @@ module Libertree
       @log = params[:log] || $stdout
       @log_identifier = params[:log_identifier] || "pid #{Process.pid}"
       @socket_file = params[:socket] || '/tmp/libertree-relay'
+      @timeout = 90 # seconds
+
       connect
       listener
     end
@@ -122,6 +123,22 @@ module Libertree
         sleep 1
         connect
         retry
+      end
+    end
+
+    def cleanup_callbacks!
+      # Remove reply expectations for timed-out stanzas.
+      # @expected is ordered by value insertion time.
+      # If the first record is too old, delete it. Repeat.
+      timestamp = Time.now
+      while ! @expected.empty?
+        key, value = @expected.first
+        if timestamp - value[:timestamp] > @timeout
+          log_error "timeout: #{key}"
+          @expected.delete key
+        else
+          break
+        end
       end
     end
 
