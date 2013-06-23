@@ -4,6 +4,7 @@ require 'timeout'
 require 'socket'
 require 'blather/client/client'
 require_relative 'xml/helper'
+require_relative 'xml/parser'
 
 module Libertree
   class Client
@@ -29,6 +30,7 @@ module Libertree
       @log_identifier = params[:log_identifier] || "pid #{Process.pid}"
       @socket_file = params[:socket] || '/tmp/libertree-relay'
       connect
+      listener
     end
 
     def connect
@@ -38,6 +40,34 @@ module Libertree
         log_error "#{e.message}, reconnecting"
         sleep 1
         retry
+      end
+    end
+
+    def listener
+      Thread.fork do
+        @parser = Libertree::XML::Parser.new self
+        @expected = {}
+
+        loop do
+          readable, _, _ = IO.select([@socket], nil, nil, 0.2)
+
+          if ! readable
+            cleanup_callbacks!
+          else
+            chunk = @socket.recv(1024)
+
+            begin
+              # we may not feed the whole chunk to the parser at once.
+              # As soon as the parser reaches the end of the stanza it will
+              # discard whatever else is in the queue.
+              chunk.each_char do |char|
+                @parser.receive_data char
+              end
+            rescue ParseError => e
+              log_error "parse error: #{e}"
+            end
+          end
+        end
       end
     end
 
