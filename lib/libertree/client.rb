@@ -128,16 +128,7 @@ module Libertree
     public
     def ping( target )
       stanza = Blather::Stanza::Iq::Ping.new(:get, target)
-      write_out stanza
-      begin
-        Timeout.timeout(100) do
-          raw_response = @socket.recv 8192
-          response = Blather::Stanza.parse raw_response
-          log "response: #{response}"
-        end
-      rescue Timeout::Error
-        log_error "(timeout)"
-      end
+      write_out stanza, lambda {|response| log "response: #{response}" }
     end
 
     # e.g.:
@@ -151,45 +142,37 @@ module Libertree
       log "REQUEST: >#{params.inspect}<"
 
       stanza = build_stanza( target, params )
-      write_out stanza
 
-      begin
-        Timeout.timeout(100) do
-          raw_response = @socket.recv 8192
-          response = Blather::Stanza.parse raw_response
-          log "response: #{response}"
+      # TODO: this callback is weird. Raise exceptions on failure instead of using {'code'=>'...'}
+      callback = lambda do |response|
+        log "response: #{response}"
 
-          # when the response is empty everything is okay
-          if response.xpath("//error").empty?
-            { 'code' => 'OK' }
+        # when the response is empty everything is okay
+        if response.xpath("//error").empty?
+          { 'code' => 'OK' }
+        else
+          log_error "Not OK: #{response.inspect}"
+          error_code = response.xpath("//error/code").text
+          error_msg  = response.xpath("//error/text").text
+
+          # not a Libertree error
+          if error_code.empty?
+            error_code = "XMPP error"
+            error_msg  = response.inspect
+          end
+
+          if error_msg.empty?
+            { 'code' => error_code }
           else
-            log_error "Not OK: #{response.inspect}"
-            error_code = response.xpath("//error/code").text
-            error_msg  = response.xpath("//error/text").text
-
-            # not a Libertree error
-            if error_code.empty?
-              error_code = "XMPP error"
-              error_msg  = response.inspect
-            end
-
-            if error_msg.empty?
-              { 'code' => error_code }
-            else
-              {
-                'code' => error_code,
-                'message' => error_msg
-              }
-            end
+            {
+              'code' => error_code,
+              'message' => error_msg
+            }
           end
         end
-      rescue Timeout::Error
-        log_error "(timeout)"
-        raise # raise exception to caller
-      rescue => e # there is no dedicated exception for a stanza parse error
-        log_error "Failed to receive/parse response: #{e.message}"
-        # TODO: raise an exception?
       end
+
+      write_out stanza, callback
     end
 
     def req_comment(comment, references={})
