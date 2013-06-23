@@ -1,3 +1,5 @@
+require 'libertree/client'
+
 module Libertree
   module Server
     # Whatever is received through the relay socket is parsed as an
@@ -6,77 +8,7 @@ module Libertree
     # relay client (e.g. the job processor) to consume.
     module Relay
 
-      # The following class implementation has been adapted
-      # from Blather::Stream::Parser
-      class Parser < Nokogiri::XML::SAX::Document
-        def initialize(caller)
-          @caller = caller
-          @parser = Nokogiri::XML::SAX::PushParser.new self
-          @parser.options =
-            Nokogiri::XML::ParseOptions::DEFAULT_XML |
-            Nokogiri::XML::ParseOptions::NOENT
-          @current = nil
-          @namespaces = {}
-          @namespace_definitions = []
         end
-
-        def receive_data(string)
-          @parser << string
-        end
-
-        def start_element_namespace(elem, attrs, prefix, uri, namespaces)
-          args = [elem]
-          args << @current.document  if @current
-          node = Blather::XMPPNode.new *args
-          node.document.root = node  unless @current
-
-          attrs.each do |attr|
-            node[attr.localname] = attr.value
-          end
-
-          ns_keys = namespaces.map { |pre, href| pre }
-          @namespace_definitions.push []
-          namespaces.each do |pre, href|
-            next  if @namespace_definitions.flatten.include?(@namespaces[[pre, href]])
-            ns = node.add_namespace(pre, href)
-            @namespaces[[pre, href]] ||= ns
-          end
-
-          if prefix && ! ns_keys.include?(prefix)
-            @namespaces[[prefix, uri]] ||= node.add_namespace(prefix, uri)
-          end
-          node.namespace = @namespaces[[prefix, uri]]
-
-          @current << node  if @current
-          @current = node
-        end
-
-        def end_element_namespace(elem, prefix, uri)
-          if @current.parent != @current.document
-            # travel up the stack
-            @namespace_definitions.pop
-            @current = @current.parent
-          else
-            # handle stanza and implode
-            @caller.handle_stanza @current.to_stanza
-          end
-        end
-
-        def characters(chars='')
-          if @current
-            @current << Nokogiri::XML::Text.new(chars, @current.document)
-          end
-        end
-
-        def warning(msg)
-          Libertree::Server.log "XMPP relay: #{msg}", "WARN"
-        end
-
-        def error(msg)
-          raise ParseError.new(msg)
-        end
-      end
-
       def receive_data(string)
         @parser.receive_data string
       rescue ParseError => e
@@ -85,7 +17,7 @@ module Libertree
 
       def post_init
         Libertree::Server.log_debug "XMPP relay: process connected"
-        @parser = Parser.new self
+        @parser = Libertree::XML::Parser.new self
       end
 
       def unbind
@@ -95,7 +27,7 @@ module Libertree
       def handle_stanza(stanza)
         Libertree::Server.log_debug "XMPP relay: relaying stanza: #{stanza.inspect}"
         # throw away the old parser
-        @parser = Parser.new self
+        @parser = Libertree::XML::Parser.new self
 
         begin
           c = Libertree::Server::Responder.connection
