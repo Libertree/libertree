@@ -56,6 +56,7 @@ module Libertree
             cleanup_callbacks!
           else
             chunk = @socket.recv(1024)
+            connect  if chunk.empty?
 
             begin
               # we may not feed the whole chunk to the parser at once.
