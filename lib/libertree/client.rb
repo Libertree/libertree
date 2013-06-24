@@ -165,7 +165,7 @@ module Libertree
 
     # e.g.:
     #   request "lt.localhost", req_comment(what, ever)
-    def request( target, params )
+    def request( target, params, callback=nil )
       if params.nil? || params.empty?
         log_error "request: called with empty parameters"
         return
