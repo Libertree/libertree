@@ -153,8 +153,13 @@ module Libertree
       # execute the callback
       key = "#{stanza.id}:#{stanza.from}"
       if expecting = @expected[key]
-        expecting[:fn].call stanza
-        @expected.delete key
+        begin
+          expecting[:fn].call stanza
+        rescue => e
+          log_error "processing reply: #{e.message}"
+        ensure
+          @expected.delete key
+        end
       end
     end
 
