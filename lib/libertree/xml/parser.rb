@@ -55,6 +55,10 @@ module Libertree
           @current = @current.parent
         else
           # handle stanza and implode
+          # NOTE: to_stanza results in a call to Blather::Stanza::Iq.new, which
+          #       calls next_id (without using the new id). That is why the next
+          #       stanza that is created appears to have skipped an id.
+          #       This is harmless but a little confusing.
           @caller.handle_stanza @current.to_stanza
         end
       end
