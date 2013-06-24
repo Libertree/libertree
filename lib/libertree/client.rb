@@ -175,32 +175,13 @@ module Libertree
 
       stanza = build_stanza( target, params )
 
-      # TODO: this callback is weird. Raise exceptions on failure instead of using {'code'=>'...'}
-      callback = lambda do |response|
-        log "response: #{response}"
-
+      # default callback only logs errors
+      callback ||= lambda do |response|
         # when the response is empty everything is okay
-        if response.xpath("//error").empty?
-          { 'code' => 'OK' }
+        if ! response.xpath("//error").empty?
+          log_error "Not OK: #{response}"
         else
-          log_error "Not OK: #{response.inspect}"
-          error_code = response.xpath("//error/code").text
-          error_msg  = response.xpath("//error/text").text
-
-          # not a Libertree error
-          if error_code.empty?
-            error_code = "XMPP error"
-            error_msg  = response.inspect
-          end
-
-          if error_msg.empty?
-            { 'code' => error_code }
-          else
-            {
-              'code' => error_code,
-              'message' => error_msg
-            }
-          end
+          log "response OK: #{response}"
         end
       end
 
