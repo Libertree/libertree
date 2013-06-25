@@ -1,6 +1,7 @@
 require 'base64'
 require 'openssl'
 require 'socket'
+require 'timeout'
 require 'blather/client/client'
 require_relative 'xml/helper'
 require_relative 'xml/parser'
@@ -48,13 +49,12 @@ module Libertree
       Thread.fork do
         @parser = Libertree::XML::Parser.new self
         @expected = {}
+        @replies = {}
 
         loop do
           readable, _, _ = IO.select([@socket], nil, nil, 0.2)
 
-          if ! readable
-            cleanup_callbacks!
-          else
+          if readable
             chunk = @socket.recv(1024)
             connect  if chunk.empty?
 
@@ -105,11 +105,10 @@ module Libertree
       log s, 'ERROR'
     end
 
-    def write_out(stanza, callback=nil)
-      # store callback to be executed on a reply
-      if callback
+    def write_out(stanza, wait_for_reply=true)
+      if wait_for_reply
         key = "#{stanza.id}:#{stanza.to}"
-        @expected[key] = {:fn => callback, :timestamp => Time.now}
+        @expected[key] = Time.now
       end
 
       msg = stanza.serialize(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML)
@@ -118,28 +117,32 @@ module Libertree
       begin
         @socket.send msg, 0
         @socket.flush # TODO: is this really required? Or does it hurt us?
-        stanza
+
+        # TODO: use a Queue instead of this weird cross-thread hash?
+        if wait_for_reply
+          begin
+            Timeout.timeout(@timeout) do
+              loop {
+                if reply = @replies[key]
+                  @replies.delete key
+                  return reply
+                end
+                sleep 0.2
+              }
+            end
+          rescue Timeout::Error
+            @expected.delete key
+            log_error "(timeout)"
+            raise
+          end
+        else
+          stanza
+        end
       rescue Errno::EPIPE => e
         log_error "#{e.message}, reconnecting"
         sleep 1
         connect
         retry
-      end
-    end
-
-    def cleanup_callbacks!
-      # Remove reply expectations for timed-out stanzas.
-      # @expected is ordered by value insertion time.
-      # If the first record is too old, delete it. Repeat.
-      timestamp = Time.now
-      while ! @expected.empty?
-        key, value = @expected.first
-        if timestamp - value[:timestamp] > @timeout
-          log_error "timeout: #{key}"
-          @expected.delete key
-        else
-          break
-        end
       end
     end
 
@@ -151,27 +154,23 @@ module Libertree
       @parser = Libertree::XML::Parser.new self
 
       # if this stanza is a reply to one of the stanzas we sent out before
-      # execute the callback
+      # record the reply
       key = "#{stanza.id}:#{stanza.from}"
-      if expecting = @expected[key]
-        begin
-          expecting[:fn].call stanza
-        rescue => e
-          log_error "processing reply: #{e.message}"
-        ensure
-          @expected.delete key
-        end
+      if @expected[key]
+        log "got response after #{Time.now - @expected[key]} seconds"
+        @expected.delete key
+        @replies[key] = stanza
       end
     end
 
     def ping( target )
       stanza = Blather::Stanza::Iq::Ping.new(:get, target)
-      write_out stanza, lambda {|response| log "response: #{response}" }
+      write_out stanza
     end
 
     # e.g.:
     #   request "lt.localhost", req_comment(what, ever)
-    def request( target, params, callback=nil )
+    def request( target, params )
       if params.nil? || params.empty?
         log_error "request: called with empty parameters"
         return
@@ -180,18 +179,16 @@ module Libertree
       log "REQUEST: >#{params.inspect}<"
 
       stanza = build_stanza( target, params )
+      response = write_out stanza
 
-      # default callback only logs errors
-      callback ||= lambda do |response|
-        # when the response is empty everything is okay
-        if ! response.xpath("//error").empty?
-          log_error "Not OK: #{response}"
-        else
-          log "response OK: #{response}"
-        end
+      # when the response is empty everything is okay
+      if ! response.xpath("//error").empty?
+        log_error "Not OK: #{response}"
+      else
+        log "response OK: #{response}"
       end
 
-      write_out stanza, callback
+      response
     end
 
     def req_comment(comment, references={})
