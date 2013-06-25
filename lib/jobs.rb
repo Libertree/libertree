@@ -148,11 +148,10 @@ module Jobs
         response = with_tree(params['server_id'],
                              :req_comment,
                              [comment, refs])
-        if response['code'] == 'NOT FOUND'
+
         if response.xpath("//error/code").text == 'NOT FOUND'
           # Remote didn't recognize the comment author or the referenced post
           # Send the potentially missing data, then retry the comment later.
-          case response['message']
           case response.xpath("//error/text").text
           when /post/
             if comment.post.local?
