@@ -111,7 +111,8 @@ module Jobs
           raise Libertree::JobFailed, "No server with id #{server_id.inspect}"
         else
           begin
-            Request.client.request(server.domain, Request.client.send(method_name, *args))
+            params = Request.client.send(method_name, *args)
+            Request.client.request(server.domain, params)
 
             # TODO: when the response code is not OK the job should
             # not be marked as successfully completed. Currently, we
