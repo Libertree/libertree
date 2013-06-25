@@ -85,8 +85,7 @@ module Libertree
         :chat
       )
       stanza.from = "#{chat_message.sender.username}@#{@domain}"
-      write_out stanza
-      { 'code' => 'OK' }
+      write_out stanza, false
     end
 
 
