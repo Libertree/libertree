@@ -141,37 +141,37 @@ module Jobs
     class COMMENT < RequestJob
       def self.perform(params)
         comment = Libertree::Model::Comment[params['comment_id'].to_i]
-        if comment
-          refs = Libertree::References::extract(comment.text, Request.conf[:frontend_url_base])
-          response = with_tree(params['server_id'],
-                               :req_comment,
-                               [comment, refs])
-          if response['code'] == 'NOT FOUND'
-            # Remote didn't recognize the comment author or the referenced post
-            # Send the potentially missing data, then retry the comment later.
-            case response['message']
-            when /post/
-              if comment.post.local?
-                with_tree(params['server_id'],
-                          :req_post,
-                          [comment.post])
-              end
-            when /member/
+        return  if comment.nil?
+
+        refs = Libertree::References::extract(comment.text, Request.conf[:frontend_url_base])
+        response = with_tree(params['server_id'],
+                             :req_comment,
+                             [comment, refs])
+        if response['code'] == 'NOT FOUND'
+          # Remote didn't recognize the comment author or the referenced post
+          # Send the potentially missing data, then retry the comment later.
+          case response['message']
+          when /post/
+            if comment.post.local?
               with_tree(params['server_id'],
-                        :req_member,
-                        [comment.member])
-            else
-              if comment.post.local?
-                with_tree(params['server_id'],
-                          :req_post,
-                          [comment.post])
-              end
-              with_tree(params['server_id'],
-                        :req_member,
-                        [comment.member])
+                        :req_post,
+                        [comment.post])
             end
-            raise Libertree::RetryJob, "request associated data first"
+          when /member/
+            with_tree(params['server_id'],
+                      :req_member,
+                      [comment.member])
+          else
+            if comment.post.local?
+              with_tree(params['server_id'],
+                        :req_post,
+                        [comment.post])
+            end
+            with_tree(params['server_id'],
+                      :req_member,
+                      [comment.member])
           end
+          raise Libertree::RetryJob, "request associated data first"
         end
       end
     end
