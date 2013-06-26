@@ -80,9 +80,9 @@ setup_backend() {
   cd ~/git/libertree-backend-rb
 
   info "Installing dependent gems"
-  bundle install --without development --path vendor
+  $BUNDLE_BIN install --without development --path vendor
 
-  [[ ! -e public.key ]] && [[ ! -e private.key ]] && bundle exec ruby generate-key-pair.rb
+  [[ ! -e public.key ]] && [[ ! -e private.key ]] && $BUNDLE_BIN exec ruby generate-key-pair.rb
   handle_config "config.yaml"
 
   # TODO: offer to use the same db config as for libertree-db
@@ -93,7 +93,7 @@ setup_frontend() {
   cd ~/git/libertree-frontend-ramaze
 
   info "Installing dependent gems"
-  bundle install --without development --path vendor
+  $BUNDLE_BIN install --without development --path vendor
   ./css-build.sh
 
   cd config
@@ -105,5 +105,6 @@ setup_frontend() {
 }
 
 install_bundler() {
-  gem list --local | grep -qE '^bundler' || (info "Installing bundler"; gem install bundler)
+  gem list --local --installed bundler || (info "Installing bundler"; gem install bundler)
+  export BUNDLE_BIN=`find ~/.gem -executable -name "bundle" | head -n1`
 }
