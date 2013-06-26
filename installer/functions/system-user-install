@@ -105,6 +105,6 @@ setup_frontend() {
 }
 
 install_bundler() {
-  gem list --local --installed bundler || (info "Installing bundler"; gem install bundler)
+  gem list --local --installed bundler || (info "Installing bundler"; gem install bundler --user-install)
   export BUNDLE_BIN=`find ~/.gem -executable -name "bundle" | head -n1`
 }
