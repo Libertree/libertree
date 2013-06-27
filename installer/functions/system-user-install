@@ -94,7 +94,6 @@ setup_frontend() {
 
   info "Installing dependent gems"
   $LIBERTREE_BUNDLE_BIN install --without development --path vendor
-  ./css-build.sh
 
   cd config
 
