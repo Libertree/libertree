@@ -17,12 +17,10 @@ The installer will attempt to fulfill the following tasks:
        - install the Libertree Ruby backend
        - install the Libertree Ramaze frontend
 
-To install system packages you will need root privileges.  If sudo is installed
-you may need to input your password to execute certain tasks as root.  For
-database administration you may need the password of the PostgreSQL superuser
-on some systems.
+If sudo is installed you may need to input your password to execute
+certain tasks as root.
 
-You should have installed all dependencies before running this script.
+You should have installed all runtime dependencies before continuing.
 EOF
 
   dev_dependencies
