@@ -27,6 +27,7 @@ system_user_install() {
   skip_decision "Do you want to install the ruby backend?"    && setup_backend
   skip_decision "Do you want to install the ramaze frontend?" && setup_frontend
   skip_decision "Do you want to generate an invitation code to create a Libertree account?" && generate_invite
+  return 0
 }
 
 clone_repos() {
