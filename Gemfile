@@ -10,7 +10,7 @@ gem 'json'
 
 group 'extensions' do
   gem 'pg'
-  gem 'eventmachine'
+  gem 'eventmachine', '> 0.12.10'
   gem 'bcrypt-ruby'
 end
 
