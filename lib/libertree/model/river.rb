@@ -63,7 +63,7 @@ module Libertree
                   AND rp.river_id = ?
                   AND p.time_created #{time_comparator} ?
                   AND NOT post_hidden_by_account( rp.post_id, ? )
-                ORDER BY p.time_created DESC
+                ORDER BY p.id DESC
                 LIMIT #{limit}
               ) AS x
               ORDER BY id
