@@ -23,11 +23,35 @@ database administration you may need the password of the PostgreSQL superuser
 on some systems.
 
 You should have installed all dependencies before running this script.
-
-Press a key to continue
 EOF
+
+  dev_dependencies
+  say "\nPress a key to continue"
   read -n1
   clear
+}
+
+dev_dependencies() {
+  if [ ! -e /etc/os-release ]; then return 0; fi
+
+  OS=`sed -ne 's/^ID=\(.*\)/\1/p' /etc/os-release`
+  case "$OS" in
+      debian|ubuntu)
+          cat<<EOF
+To install the development dependencies, please first run
+  apt-get install gcc g++ make ruby1.9-dev libpq-dev libglib2.0-dev
+EOF
+          ;;
+      fedora)
+          cat<<EOF
+To install the development dependencies, please first run
+  yum install gcc g++ make ruby-devel postgresql-devel glib2-devel
+EOF
+          ;;
+      *)
+          ;;
+  esac
+  return 0
 }
 
 wizard() {
