@@ -112,7 +112,7 @@ PLATFORMS
 DEPENDENCIES
   bcrypt-ruby
   debugger
-  eventmachine (> 0.12.10)
+  eventmachine
   factory_girl
   json
   libertree-client!
