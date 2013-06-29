@@ -10,7 +10,10 @@ module Libertree
       end
 
       def contains?( post )
-        River.prepare("SELECT river_contains_post(?, ?)").sc( self.id, post.id )
+        stm = River.prepare("SELECT river_contains_post(?, ?)")
+        retval = stm.sc( self.id, post.id )
+        stm.finish
+        retval
       end
 
       def posts( opts = {} )
@@ -60,7 +63,7 @@ module Libertree
                   AND rp.river_id = ?
                   AND p.time_created #{time_comparator} ?
                   AND NOT post_hidden_by_account( rp.post_id, ? )
-                ORDER BY p.time_created DESC
+                ORDER BY p.id DESC
                 LIMIT #{limit}
               ) AS x
               ORDER BY id
@@ -171,7 +174,7 @@ module Libertree
 
       def refresh_posts( n = 512 )
         DB.dbh.d  "DELETE FROM river_posts WHERE river_id = ?", self.id
-        posts = Post.prepare(
+        stm = Post.prepare(
           %{
             SELECT
               p.*
@@ -181,10 +184,13 @@ module Libertree
               NOT river_contains_post( ?, p.id )
               AND NOT post_hidden_by_account( p.id, ? )
             ORDER BY id DESC LIMIT #{n.to_i}
-          }).s(self.id, account.id).map { |row| Post.new row }
+          }
+        )
+        posts = stm.s(self.id, account.id).map { |row| Post.new row }
+        stm.finish
 
         matching = posts.find_all { |post| self.matches_post? post }
-        unless matching.empty?
+        if matching.any?
           placeholders = ( ['?'] * matching.count ).join(', ')
           DB.dbh.i "INSERT INTO river_posts SELECT ?, id FROM posts WHERE id IN (#{placeholders})", self.id, *matching.map(&:id)
         end

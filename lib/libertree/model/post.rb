@@ -1,4 +1,5 @@
 require 'date'
+require_relative '../embedder'
 
 module Libertree
   module Model
@@ -16,6 +17,7 @@ module Libertree
             *post.forests
           )
         end
+        Libertree::Embedder.autoembed(post.text)
       end
 
       after_update do |post_before, post|
@@ -32,11 +34,12 @@ module Libertree
             *post.forests
           )
         end
+        Libertree::Embedder.autoembed(post.text)
       end
 
       def member
-        if $m4dbi_cached_fetches
-          @member = Member.cached_fetch(self.member_id)
+        if $m4dbi_cache_id
+          @member = Member.cached_fetch($m4dbi_cache_id, self.member_id)
         else
           @member = Member[self.member_id]
         end
@@ -151,7 +154,11 @@ module Libertree
       end
 
       def likes
-        @likes ||= PostLike.prepare("SELECT * FROM post_likes WHERE post_id = ? ORDER BY id DESC").s(self.id).map { |row| PostLike.new row }
+        return @likes   if @likes
+        stm = PostLike.prepare("SELECT * FROM post_likes WHERE post_id = ? ORDER BY id DESC")
+        @likes = stm.s(self.id).map { |row| PostLike.new row }
+        stm.finish
+        @likes
       end
 
       def notify_about_comment(comment)
@@ -324,7 +331,10 @@ module Libertree
       end
 
       def hidden_by?(account)
-        self.prepare("SELECT post_hidden_by_account(?, ?)").sc(self.id, account.id)
+        stm = self.prepare("SELECT post_hidden_by_account(?, ?)")
+        retval = stm.sc(self.id, account.id)
+        stm.finish
+        retval
       end
 
       def collected_by?(account_or_member)

@@ -59,10 +59,14 @@ module Libertree
       end
 
       def notifications_unseen
-        @notifications_unseen ||= Notification.prepare(
+        return @notifications_unseen  if @notifications_unseen
+
+        stm = Notification.prepare(
           "SELECT * FROM notifications WHERE account_id = ? AND seen = FALSE ORDER BY id"
-        ).s(self.id).
-          map { |row| Notification.new row }
+        )
+        @notifications_unseen = stm.s(self.id).map { |row| Notification.new row }
+        stm.finish
+        @notifications_unseen
       end
 
       def num_notifications_unseen
@@ -82,7 +86,7 @@ module Libertree
       end
 
       def chat_partners_current
-        Libertree::Model::Member.prepare(
+        stm = Libertree::Model::Member.prepare(
           %{
             (
               SELECT
@@ -125,12 +129,21 @@ module Libertree
                 AND m.id = cm.to_member_id
             )
           }
-        ).s( self.member.id, self.member.id ).
-          map { |row| Member.new row }
+        )
+        partners = stm.s(
+          self.member.id, self.member.id
+        ).map { |row|
+          Member.new row
+        }
+        stm.finish
+        partners
       end
 
       def rivers
-        River.prepare("SELECT * FROM rivers WHERE account_id = ? ORDER BY position ASC, id DESC").s(self.id).map { |row| River.new row }
+        stm = River.prepare("SELECT * FROM rivers WHERE account_id = ? ORDER BY position ASC, id DESC")
+        results = stm.s(self.id).map { |row| River.new row }
+        stm.finish
+        results
       end
 
       def rivers_not_appended
@@ -151,29 +164,10 @@ module Libertree
         account
       end
 
-      def first_unread_post
-        Post.new Post.prepare(
-          %{
-            SELECT
-              p.*
-            FROM
-              posts p
-            WHERE
-              p.id = (
-                SELECT MIN(p2.id)
-                FROM posts p2
-                WHERE NOT EXISTS(
-                  SELECT 1
-                  FROM posts_read pr
-                  WHERE pr.account_id = ?
-                )
-              )
-          }
-        ).s1(self.id)
-      end
-
       def home_river
-        row = River.prepare("SELECT * FROM rivers WHERE account_id = ? AND home = TRUE").s1(self.id)
+        stm = River.prepare("SELECT * FROM rivers WHERE account_id = ? AND home = TRUE")
+        row = stm.s1(self.id)
+        stm.finish
         if row
           River.new row
         end
@@ -185,9 +179,10 @@ module Libertree
       end
 
       def invitations_not_accepted
-        Invitation.prepare("SELECT * FROM invitations WHERE inviter_account_id = ? AND account_id IS NULL ORDER BY id").
-          s(self.id).
-          map { |row| Invitation.new row }
+        stm = Invitation.prepare("SELECT * FROM invitations WHERE inviter_account_id = ? AND account_id IS NULL ORDER BY id")
+        invitations = stm.s(self.id).map { |row| Invitation.new row }
+        stm.finish
+        invitations
       end
 
       def new_invitation
@@ -260,7 +255,7 @@ module Libertree
       end
 
       def self.subscribed_to(post)
-        prepare(
+        stm = prepare(
           %{
             SELECT
               a.*
@@ -271,25 +266,31 @@ module Libertree
               ps.post_id = ?
               AND a.id = ps.account_id
           }
-        ).s(post.id).
-          map { |row| self.new row }
+        )
+        accounts = stm.s(post.id).map { |row| self.new row }
+        stm.finish
+        accounts
       end
 
       def messages
-        Message.prepare(
+        stm = Message.prepare(
           %{
             SELECT *
             FROM view__messages_sent_and_received
             WHERE member_id = ?
             ORDER BY id DESC
           }
-        ).s(self.member.id).
-          map { |row| Message.new row }
+        )
+        records = stm.s(self.member.id).map { |row| Message.new row }
+        stm.finish
+        records
       end
 
       # @return [Boolean] true iff password reset was successfully set up
       def self.set_up_password_reset_for(email)
-        result = prepare("SELECT * FROM accounts WHERE email = ?").s1(email)
+        stm = prepare("SELECT * FROM accounts WHERE email = ?")
+        result = stm.s1(email)
+        stm.finish
         if result.nil?
           return false
         end
