@@ -118,7 +118,12 @@ module Libertree
       def self.respond(opts)
         stanza = opts[:to]
         response = stanza.reply
-        response.add_child opts[:with]  if opts[:with]
+        if opts[:with]
+          response.add_child opts[:with]
+          if opts[:with].node_name == "error"
+            response.type = :error
+          end
+        end
         write_to_stream response
       end
 
