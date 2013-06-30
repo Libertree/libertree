@@ -93,12 +93,13 @@ module Libertree
         halt # stop further processing
       end
 
-      # catch all
+      # only log errors, never respond to errors!
       iq :type => :error do |stanza|
-        # only log errors, never respond to errors!
         Libertree::Server.log_error stanza
+        halt
       end
 
+      # catch all
       iq do |stanza|
         respond to: stanza, with: (error code: 'UNKNOWN COMMAND')
       end
