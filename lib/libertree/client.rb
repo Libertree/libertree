@@ -126,6 +126,8 @@ module Libertree
                   return reply
                 end
                 sleep 0.1
+                # TODO: WTF? Without this, the listener will never see that the socket is readable
+                @socket.send " ", 0
               }
             end
           rescue Timeout::Error
