@@ -52,7 +52,7 @@ module Libertree
       Thread.fork do
         @parser = Libertree::XML::Parser.new self
         loop do
-          readable, _, _ = IO.select([@socket], nil, nil, 0.2)
+          readable, _, _ = IO.select([@socket], nil, nil, 0.1)
 
           if readable
             chunk = @socket.recv(1024)
@@ -126,7 +126,7 @@ module Libertree
                   @replies.delete key
                   return reply
                 end
-                sleep 0.2
+                sleep 0.1
               }
             end
           rescue Timeout::Error
