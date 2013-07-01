@@ -46,11 +46,11 @@ module Libertree
     end
 
     def listener
+      @replies = {}
+      @expected = {}
+
       Thread.fork do
         @parser = Libertree::XML::Parser.new self
-        @expected = {}
-        @replies = {}
-
         loop do
           readable, _, _ = IO.select([@socket], nil, nil, 0.2)
 
