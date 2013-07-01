@@ -74,6 +74,12 @@ module Libertree
         end
       end
 
+      # respond to all other libertree stanzas with an error
+      client.register_handler :iq, "/iq/ns:libertree", :ns => 'urn:libertree' do |stanza|
+        respond to: stanza, with: (error code: 'UNKNOWN COMMAND')
+        halt
+      end
+
       message :chat? do |stanza|
         # when we get messages from unknown remotes: ignore for now
         # TODO: check recipient's roster instead
@@ -100,9 +106,6 @@ module Libertree
       end
 
       # catch all
-      iq do |stanza|
-        respond to: stanza, with: (error code: 'UNKNOWN COMMAND')
-      end
       message do |stanza|
         respond to: stanza, with: (error code: 'UNKNOWN COMMAND')
       end
