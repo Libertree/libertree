@@ -115,7 +115,6 @@ module Libertree
       # write to socket
       begin
         @socket.send msg, 0
-        @socket.flush # TODO: is this really required? Or does it hurt us?
 
         # TODO: use a Queue instead of this weird cross-thread hash?
         if wait_for_reply
