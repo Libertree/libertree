@@ -34,14 +34,15 @@ Database configuration
 
 To simplify database administration, please configure PostgreSQL to
 trust local connections.  Please confirm that the configuration file
-\`pg_hba.conf' contains the following line:
+\`pg_hba.conf' contains the following lines:
 
-    local  all  all  trust
+    local  all  all       trust
+    local  all  postgres  trust
 
-If you see \`peer' or \`md5' instead of \`trust', please change the line
-and reload the PostgreSQL server configuration (or restart the
-postgresql daemon).  While this change is not required, it is highly
-recommended because authentication often gets in the way.
+If you see \`peer', \`ident', or \`md5' instead of \`trust', please
+change the lines and reload the PostgreSQL server configuration (or
+restart the postgresql daemon).  While this change is not required, it
+is highly recommended because authentication often gets in the way.
 
 Common locations of the pg_hba.conf file are:
 
