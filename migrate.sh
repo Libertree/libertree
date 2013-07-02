@@ -34,12 +34,16 @@ function parse_config
   fi
 
   # ensure that all required connection variables are defined
-  [ -n ${libertree_db_host:?"Database host undefined."} ]
   [ -n ${libertree_db_username:?"Database username undefined."} ]
   [ -n ${libertree_db_database:?"Database name undefined."} ]
 
   # TODO: use password if it is defined
-  export psql_options="-X --quiet -v ON_ERROR_STOP=1 -v VERBOSITY=terse -h $libertree_db_host --username $libertree_db_username --dbname $libertree_db_database"
+  export psql_options="-X --quiet -v ON_ERROR_STOP=1 -v VERBOSITY=terse --username $libertree_db_username --dbname $libertree_db_database"
+
+  # pass host option only if libertree_db_host exists
+  if [ ! -z "${libertree_db_host:-}" ]; then
+      export psql_options="$psql_options --host $libertree_db_host"
+  fi
 
   return 0
 }
