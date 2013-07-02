@@ -59,7 +59,6 @@ setup_db() {
 
   cd ~/git/libertree-db
 
-  export PGHOST=localhost
   info "Creating db owner and database as user \"postgres\"."
   ./createuser.sh
   ./createdb.sh
