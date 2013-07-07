@@ -105,5 +105,10 @@ setup_frontend() {
 
 install_bundler() {
   gem list --local --installed bundler || (info "Installing bundler"; gem install bundler --user-install --no-rdoc --no-ri)
-  export LIBERTREE_BUNDLE_BIN=`find ~/.gem -executable -name "bundle" | head -n1`
+  # TODO: if none was found, use which
+  LIBERTREE_BUNDLE_BIN=`find ~/.gem -executable -name "bundle" | head -n1`
+  if [ -z "${LIBERTREE_BUNDLE_BIN:-}" ]; then
+      LIBERTREE_BUNDLE_BIN=`which bundle`
+  fi
+  export LIBERTREE_BUNDLE_BIN
 }
