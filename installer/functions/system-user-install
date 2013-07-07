@@ -82,7 +82,7 @@ setup_backend() {
   info "Installing dependent gems"
   $LIBERTREE_BUNDLE_BIN install --without development --path vendor
 
-  [[ ! -e public.key ]] && [[ ! -e private.key ]] && $LIBERTREE_BUNDLE_BIN exec ruby generate-key-pair.rb
+  [[ ! -e public.key ]] && [[ ! -e private.key ]] && ./generate-key-pair.sh
   handle_config "config.yaml"
 
   # TODO: offer to use the same db config as for libertree-db
