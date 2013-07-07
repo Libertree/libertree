@@ -167,7 +167,7 @@ As the libertree user:
     % rvm use --create 2.0.0@libertree-backend-rb
     % gem install bundler
     % bundle install
-    % bundle exec ruby generate-key-pair.rb
+    % ./generate-key-pair.sh
     % cp config.yaml.example config.yaml
     % ${EDITOR} config.yaml
 
