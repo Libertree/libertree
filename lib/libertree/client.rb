@@ -193,13 +193,13 @@ module Libertree
     def req_comment(comment, references={})
       post = comment.post
       server = post.member.server
-      public_key = server ? server.public_key : @public_key
+      origin = server ? server.domain : @domain
       params = {
-        'id'         => comment.id,
-        'post_id'    => post.public_id,
-        'public_key' => public_key,
-        'username'   => comment.member.username,
-        'text'       => comment.text
+        'id'       => comment.id,
+        'post_id'  => post.public_id,
+        'origin'   => origin,
+        'username' => comment.member.username,
+        'text'     => comment.text
       }
       params.merge!('references' => references) unless references.empty?
       { 'comment' => params }
@@ -211,12 +211,12 @@ module Libertree
 
     def req_comment_like(like)
       server = like.comment.member.server
-      public_key = server ? server.public_key : @public_key
+      origin = server ? server.domain : @domain
       {
         'comment-like' => {
           'id'         => like.id,
           'comment_id' => like.comment.public_id,
-          'public_key' => public_key,
+          'origin'     => origin,
           'username'   => like.member.username,
         }
       }
@@ -275,7 +275,7 @@ module Libertree
           'recipients' => recipients.map { |recipient|
             {
               'username' => recipient.username,
-              'public_key' => recipient.server ? recipient.server.public_key : @public_key,
+              'origin'   => recipient.server ? recipient.server.domain : @domain,
             }
           },
           'text'       => message.text
@@ -316,26 +316,26 @@ module Libertree
 
     def req_pool_post(pool, post)
       server = post.member.server
-      public_key = server ? server.public_key : @public_key
+      origin = server ? server.domain : @domain
       {
         'pool-post' => {
-          'username'   => pool.member.username,
-          'pool_id'    => pool.id,
-          'post_id'    => post.public_id,
-          'public_key' => public_key,
+          'username' => pool.member.username,
+          'pool_id'  => pool.id,
+          'post_id'  => post.public_id,
+          'origin'   => origin,
         }
       }
     end
 
     def req_pool_post_delete(pool, post)
       server = post.member.server
-      public_key = server ? server.public_key : @public_key
+      origin = server ? server.domain : @domain
       {
         'pool-post-delete' => {
-          'username'   => pool.member.username,
-          'pool_id'    => pool.id,
-          'post_id'    => post.public_id,
-          'public_key' => public_key,
+          'username' => pool.member.username,
+          'pool_id'  => pool.id,
+          'post_id'  => post.public_id,
+          'origin'   => origin,
         }
       }
     end
@@ -346,13 +346,13 @@ module Libertree
 
     def req_post_like(like)
       server = like.post.member.server
-      public_key = server ? server.public_key : @public_key
+      origin = server ? server.domain : @domain
       {
         'post-like' => {
-          'id'         => like.id,
-          'post_id'    => like.post.public_id,
-          'public_key' => public_key,
-          'username'   => like.member.username,
+          'id'       => like.id,
+          'post_id'  => like.post.public_id,
+          'origin'   => origin,
+          'username' => like.member.username,
         }
       }
     end
