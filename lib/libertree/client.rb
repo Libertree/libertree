@@ -17,9 +17,8 @@ module Libertree
     # @option params [String] :domain The XMPP component's JID domain (e.g. libertree.localhost.localdomain)
     # @option params [String] :contact The administrator's email address
     def initialize( params = {} )
-      # TODO: not used at the moment
-      @private_key = params[:private_key] or raise ":private_key required by Libertree::Client"
-      @public_key = @private_key.public_key.to_pem
+      private_key = params[:private_key] or raise ":private_key required by Libertree::Client"
+      @public_key = private_key.public_key.to_pem
       @contact = params[:contact] or raise ":contact required by Libertree::Client"
       @domain = params[:domain] or raise ":domain required by Libertree::Client"
 
