@@ -27,6 +27,7 @@ system_user_install() {
   skip_decision "Do you want to install the ruby backend?"    && setup_backend
   skip_decision "Do you want to install the ramaze frontend?" && setup_frontend
   skip_decision "Do you want to generate an invitation code to create a Libertree account?" && generate_invite
+  return 0
 }
 
 clone_repos() {
@@ -58,7 +59,6 @@ setup_db() {
 
   cd ~/git/libertree-db
 
-  export PGHOST=localhost
   info "Creating db owner and database as user \"postgres\"."
   ./createuser.sh
   ./createdb.sh
@@ -80,9 +80,9 @@ setup_backend() {
   cd ~/git/libertree-backend-rb
 
   info "Installing dependent gems"
-  bundle install --without development --path vendor
+  $LIBERTREE_BUNDLE_BIN install --without development --path vendor
 
-  [[ ! -e public.key ]] && [[ ! -e private.key ]] && bundle exec ruby generate-key-pair.rb
+  [[ ! -e public.key ]] && [[ ! -e private.key ]] && ./generate-key-pair.sh
   handle_config "config.yaml"
 
   # TODO: offer to use the same db config as for libertree-db
@@ -93,8 +93,7 @@ setup_frontend() {
   cd ~/git/libertree-frontend-ramaze
 
   info "Installing dependent gems"
-  bundle install --without development --path vendor
-  ./css-build.sh
+  $LIBERTREE_BUNDLE_BIN install --without development --path vendor
 
   cd config
 
@@ -105,5 +104,11 @@ setup_frontend() {
 }
 
 install_bundler() {
-  gem list --local | grep -qE '^bundler' || (info "Installing bundler"; gem install bundler)
+  gem list --local --installed bundler || (info "Installing bundler"; gem install bundler --user-install --no-rdoc --no-ri)
+  # TODO: if none was found, use which
+  LIBERTREE_BUNDLE_BIN=`find ~/.gem -executable -name "bundle" | head -n1`
+  if [ -z "${LIBERTREE_BUNDLE_BIN:-}" ]; then
+      LIBERTREE_BUNDLE_BIN=`which bundle`
+  fi
+  export LIBERTREE_BUNDLE_BIN
 }

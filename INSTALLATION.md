@@ -116,11 +116,16 @@ As the libertree user:
 As the libertree user:
 
     % cd ~/git/libertree-db
-    % export PGHOST=localhost
     % ./createuser.sh
     % ./createdb.sh
     % cp database.yaml.example database.yaml
     % LIBERTREE_ENV=production ./migrate.sh
+
+If the above commands do not successfully connect to the database, you may need
+to specify that PostgreSQL is listening on the localhost TCP socket.  Try again
+after setting this:
+
+    % export PGHOST=localhost
 
 If a password is required for connecting to PostgreSQL, use a pgpass file:
 
@@ -162,7 +167,7 @@ As the libertree user:
     % rvm use --create 2.0.0@libertree-backend-rb
     % gem install bundler
     % bundle install
-    % bundle exec ruby generate-key-pair.rb
+    % ./generate-key-pair.sh
     % cp config.yaml.example config.yaml
     % ${EDITOR} config.yaml
 
