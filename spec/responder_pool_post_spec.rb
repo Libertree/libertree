@@ -30,10 +30,10 @@ describe Libertree::Server::Responder::PoolPost do
 
       it 'raises MissingParameter when a parameter is missing or blank' do
         h = {
-          'username'   => @member.username,
-          'pool_id'    => @pool.remote_id,
-          'post_id'    => @post.remote_id,
-          'public_key' => @requester.public_key,
+          'username' => @member.username,
+          'pool_id'  => @pool.remote_id,
+          'post_id'  => @post.remote_id,
+          'origin'   => @requester.domain,
         }
 
         keys = h.keys
@@ -51,10 +51,10 @@ describe Libertree::Server::Responder::PoolPost do
 
       it "raises NotFound with a member username that isn't found" do
         h = {
-          'username'   => 'nosuchusername',
-          'pool_id'    => 99999999,
-          'post_id'    => @post.remote_id,
-          'public_key' => @requester.public_key,
+          'username' => 'nosuchusername',
+          'pool_id'  => 99999999,
+          'post_id'  => @post.remote_id,
+          'origin'   => @requester.domain,
         }
         expect { subject.rsp_pool_post(h) }.
           to raise_error( Libertree::Server::NotFound )
@@ -62,10 +62,10 @@ describe Libertree::Server::Responder::PoolPost do
 
       it "raises NotFound with a pool id that isn't found" do
         h = {
-          'username'   => @member.username,
-          'pool_id'    => 99999999,
-          'post_id'    => @post.remote_id,
-          'public_key' => @requester.public_key,
+          'username' => @member.username,
+          'pool_id'  => 99999999,
+          'post_id'  => @post.remote_id,
+          'origin'   => @requester.domain,
         }
         expect { subject.rsp_pool_post(h) }.
           to raise_error( Libertree::Server::NotFound )
@@ -73,10 +73,10 @@ describe Libertree::Server::Responder::PoolPost do
 
       it "raises NotFound with a post id that isn't found" do
         h = {
-          'username'   => @member.username,
-          'pool_id'    => @pool.remote_id,
-          'post_id'    => 99999999,
-          'public_key' => @requester.public_key,
+          'username' => @member.username,
+          'pool_id'  => @pool.remote_id,
+          'post_id'  => 99999999,
+          'origin'   => @requester.domain,
         }
         expect { subject.rsp_pool_post(h) }.
           to raise_error( Libertree::Server::NotFound )
@@ -92,10 +92,10 @@ describe Libertree::Server::Responder::PoolPost do
 
         it 'raises NotFound' do
           h = {
-          'username'   => @member.username,
-          'pool_id'    => @pool.remote_id,
-          'post_id'    => 99999999,
-          'public_key' => @requester.public_key,
+            'username' => @member.username,
+            'pool_id'  => @pool.remote_id,
+            'post_id'  => 99999999,
+            'origin'   => @requester.domain,
           }
           expect { subject.rsp_pool_post(h) }.
             to raise_error( Libertree::Server::NotFound )
@@ -115,10 +115,10 @@ describe Libertree::Server::Responder::PoolPost do
 
         it 'raises no errors' do
           h = {
-            'username'   => @member.username,
-            'pool_id'    => @pool.remote_id,
-            'post_id'    => @post.remote_id,
-            'public_key' => @requester.public_key,
+            'username' => @member.username,
+            'pool_id'  => @pool.remote_id,
+            'post_id'  => @post.remote_id,
+            'origin'   => @requester.domain,
           }
           expect { subject.rsp_pool_post(h) }.
             not_to raise_error
@@ -127,10 +127,10 @@ describe Libertree::Server::Responder::PoolPost do
 
       it 'raises no errors with valid data' do
         h = {
-          'username'   => @member.username,
-          'pool_id'    => @pool.remote_id,
-          'post_id'    => @post.remote_id,
-          'public_key' => @requester.public_key,
+          'username' => @member.username,
+          'pool_id'  => @pool.remote_id,
+          'post_id'  => @post.remote_id,
+          'origin'   => @requester.domain,
         }
         expect { subject.rsp_pool_post(h) }.
           not_to raise_error
