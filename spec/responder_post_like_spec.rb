@@ -29,7 +29,7 @@ describe Libertree::Server::Responder::PostLike do
         h = {
           'id'       => 999,
           'username' => @member.username,
-          'origin'   => @requester.domain,
+          'origin'   => @post.member.server.domain,
           'post_id'  => @post.remote_id,
         }
 
@@ -50,7 +50,7 @@ describe Libertree::Server::Responder::PostLike do
         h = {
           'id'       => 999,
           'username' => 'nosuchusername',
-          'origin'   => @requester.domain,
+          'origin'   => @post.member.server.domain,
           'post_id'  => @post.remote_id,
         }
         expect { subject.rsp_post_like(h) }.
@@ -61,7 +61,7 @@ describe Libertree::Server::Responder::PostLike do
         h = {
           'id'       => 999,
           'username' => @member.username,
-          'origin'   => @requester.domain,
+          'origin'   => @post.member.server.domain,
           'post_id'  => 99999999,
         }
         expect { subject.rsp_post_like(h) }.
@@ -80,7 +80,7 @@ describe Libertree::Server::Responder::PostLike do
           h = {
             'id'       => 999,
             'username' => @member.username,
-            'origin'   => @requester.domain,
+            'origin'   => @post.member.server.domain,
             'post_id'  => @post.remote_id,
           }
           expect { subject.rsp_post_like(h) }.
@@ -103,7 +103,7 @@ describe Libertree::Server::Responder::PostLike do
           h = {
             'id'       => 999,
             'username' => @member.username,
-            'origin'   => @requester.domain,
+            'origin'   => @post.member.server.domain,
             'post_id'  => @post.remote_id,
           }
           expect { subject.rsp_post_like(h) }.
@@ -115,7 +115,7 @@ describe Libertree::Server::Responder::PostLike do
         h = {
           'id'       => 999,
           'username' => @member.username,
-          'origin'   => @requester.domain,
+          'origin'   => @post.member.server.domain,
           'post_id'  => @post.remote_id,
         }
         expect { subject.rsp_post_like(h) }.
