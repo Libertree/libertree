@@ -32,7 +32,7 @@ describe Libertree::Server::Responder::CommentLike do
         h = {
           'id'         => 999,
           'username'   => @member.username,
-          'public_key' => @requester.public_key,
+          'origin'     => @requester.domain,
           'comment_id' => @comment.remote_id,
         }
 
@@ -53,7 +53,7 @@ describe Libertree::Server::Responder::CommentLike do
         h = {
           'id'         => 999,
           'username'   => 'nosuchusername',
-          'public_key' => @requester.public_key,
+          'origin'     => @requester.domain,
           'comment_id' => @comment.remote_id,
         }
         expect { subject.rsp_comment_like(h) }.
@@ -64,7 +64,7 @@ describe Libertree::Server::Responder::CommentLike do
         h = {
           'id'         => 999,
           'username'   => @member.username,
-          'public_key' => @requester.public_key,
+          'origin'     => @requester.domain,
           'comment_id' => 99999999,
         }
         expect { subject.rsp_comment_like(h) }.
@@ -83,7 +83,7 @@ describe Libertree::Server::Responder::CommentLike do
           h = {
             'id'         => 999,
             'username'   => @member.username,
-            'public_key' => @requester.public_key,
+            'origin'     => @requester.domain,
             'comment_id' => @comment.remote_id,
           }
           expect { subject.rsp_comment_like(h) }.
@@ -109,7 +109,7 @@ describe Libertree::Server::Responder::CommentLike do
           h = {
             'id'         => 999,
             'username'   => @member.username,
-            'public_key' => @requester.public_key,
+            'origin'     => @requester.public_key,
             'comment_id' => @comment.remote_id,
           }
           expect { subject.rsp_comment_like(h) }.
@@ -121,7 +121,7 @@ describe Libertree::Server::Responder::CommentLike do
         h = {
           'id'         => 999,
           'username'   => @member.username,
-          'public_key' => @requester.public_key,
+          'origin'     => @requester.public_key,
           'comment_id' => @comment.remote_id,
         }
         expect { subject.rsp_comment_like(h) }.
