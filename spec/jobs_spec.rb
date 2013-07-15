@@ -68,6 +68,9 @@ describe Jobs do
           'comment_id' => comment.id,
           'server_id'  => post.member.server_id,
         }
+        Jobs::Request.stub(:conf) {
+          { :frontend_url_base => 'not.important.net' }
+        }
         @client.stub(:req_comment)
         @client.should_receive(:req_comment)
         @client.should_receive(:request).with(comment.post.member.tree.domain, anything())
