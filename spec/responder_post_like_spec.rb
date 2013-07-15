@@ -27,10 +27,10 @@ describe Libertree::Server::Responder::PostLike do
 
       it 'raises MissingParameter when a parameter is missing or blank' do
         h = {
-          'id'         => 999,
-          'username'   => @member.username,
-          'public_key' => @requester.public_key,
-          'post_id'    => @post.remote_id,
+          'id'       => 999,
+          'username' => @member.username,
+          'origin'   => @requester.domain,
+          'post_id'  => @post.remote_id,
         }
 
         keys = h.keys
@@ -48,10 +48,10 @@ describe Libertree::Server::Responder::PostLike do
 
       it "raises NotFound with a member username that isn't found" do
         h = {
-          'id'         => 999,
-          'username'   => 'nosuchusername',
-          'public_key' => @requester.public_key,
-          'post_id'    => @post.remote_id,
+          'id'       => 999,
+          'username' => 'nosuchusername',
+          'origin'   => @requester.domain,
+          'post_id'  => @post.remote_id,
         }
         expect { subject.rsp_post_like(h) }.
           to raise_error( Libertree::Server::NotFound )
@@ -59,10 +59,10 @@ describe Libertree::Server::Responder::PostLike do
 
       it "raises NotFound with a post id that isn't found" do
         h = {
-          'id'         => 999,
-          'username'   => @member.username,
-          'public_key' => @requester.public_key,
-          'post_id'    => 99999999,
+          'id'       => 999,
+          'username' => @member.username,
+          'origin'   => @requester.domain,
+          'post_id'  => 99999999,
         }
         expect { subject.rsp_post_like(h) }.
           to raise_error( Libertree::Server::NotFound )
@@ -78,10 +78,10 @@ describe Libertree::Server::Responder::PostLike do
 
         it 'raises NotFound' do
           h = {
-            'id'         => 999,
-            'username'   => @member.username,
-            'public_key' => @requester.public_key,
-            'post_id'    => @post.remote_id,
+            'id'       => 999,
+            'username' => @member.username,
+            'origin'   => @requester.domain,
+            'post_id'  => @post.remote_id,
           }
           expect { subject.rsp_post_like(h) }.
             to raise_error( Libertree::Server::NotFound )
@@ -101,10 +101,10 @@ describe Libertree::Server::Responder::PostLike do
 
         it 'raises no errors' do
           h = {
-            'id'         => 999,
-            'username'   => @member.username,
-            'public_key' => @requester.public_key,
-            'post_id'    => @post.remote_id,
+            'id'       => 999,
+            'username' => @member.username,
+            'origin'   => @requester.domain,
+            'post_id'  => @post.remote_id,
           }
           expect { subject.rsp_post_like(h) }.
             not_to raise_error
@@ -113,10 +113,10 @@ describe Libertree::Server::Responder::PostLike do
 
       it 'raises no errors with valid data' do
         h = {
-          'id'         => 999,
-          'username'   => @member.username,
-          'public_key' => @requester.public_key,
-          'post_id'    => @post.remote_id,
+          'id'       => 999,
+          'username' => @member.username,
+          'origin'   => @requester.domain,
+          'post_id'  => @post.remote_id,
         }
         expect { subject.rsp_post_like(h) }.
           not_to raise_error
