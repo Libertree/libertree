@@ -13,11 +13,11 @@ module Libertree
             assert sender_member, "Unrecognized member username: #{params['username'].inspect}"
 
             member_ids = params['recipients'].reduce([]) { |ids, recipient|
-              origin = Model::Server[ 'public_key' => recipient['public_key'] ]
+              origin = Model::Server[ domain: recipient['origin'] ]
               if origin
                 member = Model::Member['username' => recipient['username'], 'server_id' => origin.id]
                 ids << member.id  if member
-              elsif origin.nil? && recipient['public_key'] == Server.conf['public_key']
+              elsif origin.nil? && recipient['origin'] == Server.conf['domain']
                 # origin is this local server
                 account = Model::Account['username' => recipient['username']]
                 if account
