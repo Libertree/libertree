@@ -92,11 +92,11 @@ describe Libertree::Server::Responder do
     
     it 'responds with "NOT FOUND" when a handler throws NotFound' do
       h = { 'comment' => {
-          'id'         => 999,
-          'username'   => 'nosuchusername',
-          'public_key' => "WHATEVER",
-          'post_id'    => 1234,
-          'text'       => 'A test comment.',
+          'id'       => 999,
+          'username' => 'nosuchusername',
+          'origin'   => "WHATEVER",
+          'post_id'  => 1234,
+          'text'     => 'A test comment.',
         }}
       
       subject.instance_variable_set(:@remote_tree, @remote_tree)
