@@ -20,7 +20,6 @@ class MockServer
   attr_reader :responses
 
   def initialize
-    @ip_remote = '192.168.0.100'
     @responses = []
     @public_key = 'public-key-of-mock-server'
     Libertree::Server.log_handle = File.open( 'test-server.log', 'a+' )
