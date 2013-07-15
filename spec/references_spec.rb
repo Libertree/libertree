@@ -8,12 +8,11 @@ describe Libertree::References do
       FactoryGirl.attributes_for(:member, :server_id => @server.id)
     )
     @server_remote = Libertree::Model::Server.create( FactoryGirl.attributes_for(:server) )
-    key = OpenSSL::PKey::RSA.new(2048, 65537)
-    @server_remote.public_key = key.to_pem
+    @server_remote.domain = "some.remote.tree"
     @member_remote = Libertree::Model::Member.create(
       FactoryGirl.attributes_for(:member, :server_id => @server_remote.id)
     )
-    @public_key = @server.public_key
+    @domain = @server.domain
   end
 
   describe 'extract' do
@@ -83,7 +82,7 @@ EOF
       refs = Libertree::References::extract(original_text, "http://never-mind.org")
 
       # this happens on the receiving server
-      processed_text = Libertree::References::replace(original_text, refs, @server_remote.id, @public_key)
+      processed_text = Libertree::References::replace(original_text, refs, @server_remote.id, @domain)
       processed_text.should == expected_text
     end
 
@@ -120,7 +119,7 @@ EOF
       refs = Libertree::References::extract(original_text, "http://never-mind.org")
 
       # this happens on the receiving server
-      processed_text = Libertree::References::replace(original_text, refs, @server_remote.id, @public_key)
+      processed_text = Libertree::References::replace(original_text, refs, @server_remote.id, @domain)
       processed_text.should == expected_text
     end
 
@@ -190,7 +189,7 @@ EOF
       refs = Libertree::References::extract(original_text, "http://never-mind.org")
 
       # this happens on the receiving server
-      processed_text = Libertree::References::replace(original_text, refs, @server_remote.id, @public_key)
+      processed_text = Libertree::References::replace(original_text, refs, @server_remote.id, @domain)
       processed_text.should == expected_text
     end
 
@@ -234,7 +233,7 @@ EOF
       refs = Libertree::References::extract(original_text, "http://never-mind.org")
 
       # this happens on the receiving server
-      processed_text = Libertree::References::replace(original_text, refs, @server_remote.id, @public_key)
+      processed_text = Libertree::References::replace(original_text, refs, @server_remote.id, @domain)
       processed_text.should == expected_text
     end
   end
