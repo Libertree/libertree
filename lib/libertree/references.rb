@@ -14,10 +14,11 @@ module Libertree
     #     "/posts/show/366"
     #     "128#comment-128"
     #
-    #   Every segment is assigned one hash that contains the id of the local copy
-    #   of the entity that is referenced by the segment ("id") and the public key
-    #   of the origin of the entity ("origin"). The public key is not included if
-    #   the server that sends the reference hash is the origin of the described
+    #   Every segment is assigned one hash that contains the id of the
+    #   local copy of the entity that is referenced by the segment
+    #   ("id") and the domain of the origin of the entity
+    #   ("origin"). The origin domain is not included if the server
+    #   that sends the reference hash is the origin of the described
     #   entity.
     #
     #   The following is an example of a refs hash for a post that contains
@@ -29,7 +30,7 @@ module Libertree
     #         "/posts/show/366" =>
     #         {
     #           "id"     => 365,
-    #           "origin" => "-----BEGIN PUBLIC KEY-----..."
+    #           "origin" => "some.remote.tree"
     #         }
     #       },
     #       " /posts/show/366/128#comment-128" =>
@@ -37,12 +38,12 @@ module Libertree
     #         "/posts/show/366" =>
     #         {
     #           "id"     => 365,
-    #           "origin" => "-----BEGIN PUBLIC KEY-----..."
+    #           "origin" => "some.remote.tree"
     #         },
     #         "/128#comment-128" =>
     #         {
     #           "id"     => 127,
-    #           "origin" => "-----BEGIN PUBLIC KEY-----..."
+    #           "origin" => "some.remote.tree"
     #         }
     #       },
     #       "http://never-mind.org/posts/show/366/128"=>
@@ -50,27 +51,27 @@ module Libertree
     #         "/posts/show/366"=>
     #         {
     #           "id"     => 365,
-    #           "origin" => "-----BEGIN PUBLIC KEY-----..."
+    #           "origin" => "some.remote.tree"
     #         },
     #         "/128"=>
     #         {
     #           "id"     => 127,
-    #           "origin" => "-----BEGIN PUBLIC KEY-----..."
+    #           "origin" => "some.remote.tree"
     #         }
     #       }
     #     }
 
-    def self.replace(text_, refs, server_id, own_pubkey)
+    def self.replace(text_, refs, server_id, own_domain)
       text = text_.dup
 
       refs.each do |url, segments|
         substitution = segments.entries.reduce(url) do |res, pair|
           segment, ref = pair
           if ref.has_key? 'origin'
-            if ref['origin'].to_s == own_pubkey
+            if ref['origin'].to_s == own_domain
               local = true
             else
-              server = Model::Server[ public_key: ref['origin'].to_s ]
+              server = Model::Server[ domain: ref['origin'].to_s ]
             end
           else
             server = Model::Server[ server_id ]
@@ -141,7 +142,7 @@ module Libertree
 
         map = { 'id' => post.remote_id || post_id.to_i }
         if post.server
-          map.merge!( { 'origin' => post.server.public_key } )
+          map.merge!( { 'origin' => post.server.domain } )
         end
         ref[post_url] = map
 
@@ -149,7 +150,7 @@ module Libertree
         if comment
           map = { 'id' => comment.remote_id || comment_id.to_i }
           if comment.server
-            map.merge!({ 'origin' => comment.server.public_key })
+            map.merge!({ 'origin' => comment.server.domain })
           end
           ref[comment_url] = map
         end
