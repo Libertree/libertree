@@ -15,7 +15,7 @@ module Libertree
             assert member, "Unrecognized member username: #{params['username'].inspect}"
 
             if params.has_key? 'references'
-              post_text = Libertree::References::replace(params['text'], params['references'], @remote_tree.id, Server.conf['public_key'])
+              post_text = Libertree::References::replace(params['text'], params['references'], @remote_tree.id, Server.conf['domain'])
             else
               post_text = params['text']
             end
