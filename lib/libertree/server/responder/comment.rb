@@ -5,7 +5,7 @@ module Libertree
     module Responder
       module Comment
         def rsp_comment(params)
-          require_parameters(params, 'id', 'username', 'public_key', 'post_id', 'text')
+          require_parameters(params, 'id', 'username', 'origin', 'post_id', 'text')
 
           begin
             member = Model::Member[
@@ -14,8 +14,8 @@ module Libertree
             ]
             assert member, "Unrecognized member username: #{params['username'].inspect}"
 
-            origin = Model::Server[ public_key: params['public_key'] ]
-            if origin.nil? && params['public_key'] != Server.conf['public_key']
+            origin = Model::Server[ domain: params['origin'] ]
+            if origin.nil? && params['origin'] != Server.conf['domain']
               # TODO: Is this revealing too much to the requester?
               fail NotFound, 'Unrecognized origin server.', nil
             end
@@ -33,7 +33,7 @@ module Libertree
             assert post, 'Unrecognized post.'
 
             if params.has_key? 'references'
-              comment_text = Libertree::References::replace(params['text'], params['references'], @remote_tree.id, Server.conf['public_key'])
+              comment_text = Libertree::References::replace(params['text'], params['references'], @remote_tree.id, Server.conf['domain'])
             else
               comment_text = params['text']
             end
