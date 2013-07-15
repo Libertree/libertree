@@ -16,16 +16,10 @@ describe Libertree::Server::Responder do
     @remote_tree.stub :id
   end
 
-  it 'rejects unsupported iq stanzas with "UNKNOWN COMMAND"' do
+  it 'ignores unsupported iq stanzas' do
     msg = Blather::Stanza::Iq.new :set
-    response = LSR.error code: 'UNKNOWN COMMAND'
-
     c = LSR.send :client
-    LSR.should_receive(:respond) do |args|
-      args[:to].should eq msg
-      args[:with].to_s.should eq response.to_s
-    end
-
+    LSR.should_not_receive(:respond)
     c.send :call_handler_for, :iq, msg
   end
 
