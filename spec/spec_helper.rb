@@ -73,7 +73,6 @@ end
 shared_context 'requester not in any forest' do
   before :each do
     @requester = Libertree::Model::Server.create( FactoryGirl.attributes_for(:server) )
-    @requester.domain = "unknown"
   end
 end
 
@@ -81,7 +80,6 @@ shared_context 'requester in a forest' do
   before :each do
     @forest = Libertree::Model::Forest.create( FactoryGirl.attributes_for(:forest) )
     @requester = Libertree::Model::Server.create( FactoryGirl.attributes_for(:server) )
-    @requester.domain = "test.localdomain"
     @forest.add @requester
   end
 end

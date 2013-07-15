@@ -8,6 +8,7 @@ FactoryGirl.define do
     }
     public_key OpenSSL::PKey::RSA.new(2048, 65537).public_key.to_pem
     # sequence(:public_key, 0xf000000) { |n| "%08x" % n }
+    sequence(:domain) { |n| "tree#{n}.localhost.localdomain" }
   end
 
   factory :forest, :class => Libertree::Model::Forest do
