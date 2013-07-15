@@ -24,7 +24,7 @@ describe Libertree::Server::Responder::Message do
           'recipients' => [
             {
               'username' => 'recipient',
-              'public_key' => '69e2c3164868a8d9ba4c77db842553a13116bef8',
+              'origin'   => 'does.not.matter',
             },
           ],
           'text' => 'a direct message',
@@ -47,7 +47,7 @@ describe Libertree::Server::Responder::Message do
           'recipients' => [
             {
               'username' => 'recipient',
-              'public_key' => '69e2c3164868a8d9ba4c77db842553a13116bef8',
+              'origin'   => 'does.not.matter',
             },
           ],
           'text' => 'a direct message',
@@ -80,7 +80,7 @@ describe Libertree::Server::Responder::Message do
             'recipients' => [
               {
                 'username' => 'recipient',
-                'public_key' => '69e2c3164868a8d9ba4c77db842553a13116bef8',
+                'origin'   => 'does.not.matter',
               },
             ],
             'text' => 'a direct message',
@@ -104,7 +104,6 @@ describe Libertree::Server::Responder::Message do
             'recipients' => [
               {
                 'username' => @member_local.username,
-                'public_key' => 'public-key-of-mock-server',
               },
             ],
             'text' => 'a direct message',
@@ -131,11 +130,10 @@ describe Libertree::Server::Responder::Message do
             'recipients' => [
               {
                 'username' => @member_local.username,
-                'public_key' => 'public-key-of-mock-server',
               },
               {
                 'username' => @member_remote.username,
-                'public_key' => @requester.public_key,
+                'origin'   => @member_remote.server.domain,
               },
             ],
             'text' => 'a direct message',
