@@ -29,7 +29,7 @@ describe Libertree::Server::Responder::Comment do
         h = {
           'id'       => 999,
           'username' => @member.username,
-          'origin'   => @requester.domain,
+          'origin'   => @post.member.server.domain,
           'post_id'  => @post.remote_id,
           'text'     => 'A test comment.',
         }
@@ -51,7 +51,7 @@ describe Libertree::Server::Responder::Comment do
         h = {
           'id'       => 999,
           'username' => 'nosuchusername',
-          'origin'   => @requester.domain,
+          'origin'   => @post.member.server.domain,
           'post_id'  => @post.remote_id,
           'text'     => 'A test comment.',
         }
@@ -63,7 +63,7 @@ describe Libertree::Server::Responder::Comment do
         h = {
           'id'       => 999,
           'username' => @member.username,
-          'origin'   => @requester.domain,
+          'origin'   => @post.member.server.domain,
           'post_id'  => 99999999,
           'text'     => 'A test comment.',
         }
@@ -83,7 +83,7 @@ describe Libertree::Server::Responder::Comment do
           h = {
             'id'       => 999,
             'username' => @member.username,
-            'origin'   => @requester.domain,
+            'origin'   => @post.member.server.domain,
             'post_id'  => @post.remote_id,
             'text'     => 'A test comment.',
           }
@@ -107,7 +107,7 @@ describe Libertree::Server::Responder::Comment do
           h = {
             'id'       => 999,
             'username' => @member.username,
-            'origin'   => @requester.domain,
+            'origin'   => @post.member.server.domain,
             'post_id'  => @post.remote_id,
             'text'     => 'A test comment.',
           }
@@ -120,7 +120,7 @@ describe Libertree::Server::Responder::Comment do
         h = {
           'id'       => 999,
           'username' => @member.username,
-          'origin'   => @requester.domain,
+          'origin'   => @post.member.server.domain,
           'post_id'  => @post.remote_id,
           'text'     => 'A test comment.',
         }
