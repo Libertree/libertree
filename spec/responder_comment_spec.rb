@@ -27,11 +27,11 @@ describe Libertree::Server::Responder::Comment do
 
       it 'raises MissingParameter when a parameter is missing or blank' do
         h = {
-          'id'         => 999,
-          'username'   => @member.username,
-          'public_key' => @requester.public_key,
-          'post_id'    => @post.remote_id,
-          'text'       => 'A test comment.',
+          'id'       => 999,
+          'username' => @member.username,
+          'origin'   => @requester.domain,
+          'post_id'  => @post.remote_id,
+          'text'     => 'A test comment.',
         }
 
         keys = h.keys
@@ -49,11 +49,11 @@ describe Libertree::Server::Responder::Comment do
 
       it "raises NotFound with a member username that isn't found" do
         h = {
-          'id'         => 999,
-          'username'   => 'nosuchusername',
-          'public_key' => @requester.public_key,
-          'post_id'    => @post.remote_id,
-          'text'       => 'A test comment.',
+          'id'       => 999,
+          'username' => 'nosuchusername',
+          'origin'   => @requester.domain,
+          'post_id'  => @post.remote_id,
+          'text'     => 'A test comment.',
         }
         expect { subject.rsp_comment(h) }.
           to raise_error( Libertree::Server::NotFound )
@@ -61,11 +61,11 @@ describe Libertree::Server::Responder::Comment do
 
       it "raises NotFound with a post id that isn't found" do
         h = {
-          'id'         => 999,
-          'username'   => @member.username,
-          'public_key' => @requester.public_key,
-          'post_id'    => 99999999,
-          'text'       => 'A test comment.',
+          'id'       => 999,
+          'username' => @member.username,
+          'origin'   => @requester.domain,
+          'post_id'  => 99999999,
+          'text'     => 'A test comment.',
         }
         expect { subject.rsp_comment(h) }.
           to raise_error( Libertree::Server::NotFound )
@@ -81,11 +81,11 @@ describe Libertree::Server::Responder::Comment do
 
         it 'raises NotFound' do
           h = {
-            'id'         => 999,
-            'username'   => @member.username,
-            'public_key' => @requester.public_key,
-            'post_id'    => @post.remote_id,
-            'text'       => 'A test comment.',
+            'id'       => 999,
+            'username' => @member.username,
+            'origin'   => @requester.domain,
+            'post_id'  => @post.remote_id,
+            'text'     => 'A test comment.',
           }
           expect { subject.rsp_comment(h) }.
             to raise_error( Libertree::Server::NotFound )
@@ -105,11 +105,11 @@ describe Libertree::Server::Responder::Comment do
 
         it 'raises no errors' do
           h = {
-            'id'         => 999,
-            'username'   => @member.username,
-            'public_key' => @requester.public_key,
-            'post_id'    => @post.remote_id,
-            'text'       => 'A test comment.',
+            'id'       => 999,
+            'username' => @member.username,
+            'origin'   => @requester.domain,
+            'post_id'  => @post.remote_id,
+            'text'     => 'A test comment.',
           }
           expect { subject.rsp_comment(h) }.
             not_to raise_error
@@ -118,11 +118,11 @@ describe Libertree::Server::Responder::Comment do
 
       it 'raises no errors otherwise' do
         h = {
-          'id'         => 999,
-          'username'   => @member.username,
-          'public_key' => @requester.public_key,
-          'post_id'    => @post.remote_id,
-          'text'       => 'A test comment.',
+          'id'       => 999,
+          'username' => @member.username,
+          'origin'   => @requester.domain,
+          'post_id'  => @post.remote_id,
+          'text'     => 'A test comment.',
         }
         expect { subject.rsp_comment(h) }.
           not_to raise_error
