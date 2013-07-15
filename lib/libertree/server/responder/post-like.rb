@@ -3,7 +3,7 @@ module Libertree
     module Responder
       module PostLike
         def rsp_post_like(params)
-          require_parameters(params, 'id', 'username', 'public_key', 'post_id')
+          require_parameters(params, 'id', 'username', 'origin', 'post_id')
 
           begin
             member = Model::Member[
@@ -12,8 +12,8 @@ module Libertree
             ]
             assert member, "Unrecognized member username: #{params['username'].inspect}"
 
-            origin = Model::Server[ public_key: params['public_key'] ]
-            if origin.nil? && params['public_key'] != Server.conf['public_key']
+            origin = Model::Server[ domain: params['origin'] ]
+            if origin.nil? && params['origin'] != Server.conf['domain']
               # TODO: Is this revealing too much to the requester?
               fail NotFound, 'Unrecognized origin server.', nil
             end
