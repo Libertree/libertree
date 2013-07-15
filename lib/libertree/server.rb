@@ -121,11 +121,6 @@ module Libertree
         port   = @conf['port'].to_i || 5347
         socket = @conf['relay_socket'] || "/tmp/libertree-relay"
 
-        # TODO: we use the public key in a few places in the responders,
-        #       but eventually we should simply use domain names.
-        key = OpenSSL::PKey::RSA.new File.read( @conf['private_key_path'] )
-        @conf['public_key'] = key.public_key.to_pem
-
         Responder.setup domain, secret, host, port
         begin
           EventMachine.run {
