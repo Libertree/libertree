@@ -3,7 +3,7 @@ module Libertree
     module Responder
       module PoolPost
         def rsp_pool_post(params)
-          require_parameters(params, 'username', 'pool_id', 'post_id', 'public_key')
+          require_parameters(params, 'username', 'pool_id', 'post_id', 'origin')
 
           begin
             # TODO: This can be DRYed up with the code in rsp_pool_post_delete
@@ -21,8 +21,8 @@ module Libertree
 
             # TODO: These next two code paragraphs could be DRYed up along with
             # the code found in server/responder/post-like.rb .
-            origin = Model::Server[ public_key: params['public_key'] ]
-            if origin.nil? && params['public_key'] != Server.conf['public_key']
+            origin = Model::Server[ domain: params['origin'] ]
+            if origin.nil? && params['origin'] != Server.conf['domain']
               # TODO: Is this revealing too much to the requester?
               fail NotFound, 'Unrecognized origin server.', nil
             end
@@ -46,7 +46,7 @@ module Libertree
         end
 
         def rsp_pool_post_delete(params)
-          require_parameters(params, 'username', 'pool_id', 'post_id', 'public_key')
+          require_parameters(params, 'username', 'pool_id', 'post_id', 'origin')
 
           begin
             # TODO: This can be DRYed up with the code in rsp_pool_post
@@ -64,8 +64,8 @@ module Libertree
 
             # TODO: These next two code paragraphs could be DRYed up along with
             # the code found in server/responder/post-like.rb .
-            origin = Model::Server[ public_key: params['public_key'] ]
-            if origin.nil? && params['public_key'] != Server.conf['public_key']
+            origin = Model::Server[ domain: params['origin'] ]
+            if origin.nil? && params['origin'] != Server.conf['domain']
               # TODO: Is this revealing too much to the requester?
               fail NotFound, 'Unrecognized origin server.', nil
             end
