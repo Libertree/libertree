@@ -33,7 +33,7 @@ describe Libertree::Server::Responder::PoolPost do
           'username' => @member.username,
           'pool_id'  => @pool.remote_id,
           'post_id'  => @post.remote_id,
-          'origin'   => @requester.domain,
+          'origin'   => @post.member.server.domain,
         }
 
         keys = h.keys
@@ -54,7 +54,7 @@ describe Libertree::Server::Responder::PoolPost do
           'username' => 'nosuchusername',
           'pool_id'  => 99999999,
           'post_id'  => @post.remote_id,
-          'origin'   => @requester.domain,
+          'origin'   => @post.member.server.domain,
         }
         expect { subject.rsp_pool_post(h) }.
           to raise_error( Libertree::Server::NotFound )
@@ -65,7 +65,7 @@ describe Libertree::Server::Responder::PoolPost do
           'username' => @member.username,
           'pool_id'  => 99999999,
           'post_id'  => @post.remote_id,
-          'origin'   => @requester.domain,
+          'origin'   => @post.member.server.domain,
         }
         expect { subject.rsp_pool_post(h) }.
           to raise_error( Libertree::Server::NotFound )
@@ -76,7 +76,7 @@ describe Libertree::Server::Responder::PoolPost do
           'username' => @member.username,
           'pool_id'  => @pool.remote_id,
           'post_id'  => 99999999,
-          'origin'   => @requester.domain,
+          'origin'   => @post.member.server.domain,
         }
         expect { subject.rsp_pool_post(h) }.
           to raise_error( Libertree::Server::NotFound )
@@ -95,7 +95,7 @@ describe Libertree::Server::Responder::PoolPost do
             'username' => @member.username,
             'pool_id'  => @pool.remote_id,
             'post_id'  => 99999999,
-            'origin'   => @requester.domain,
+            'origin'   => @post.member.server.domain,
           }
           expect { subject.rsp_pool_post(h) }.
             to raise_error( Libertree::Server::NotFound )
@@ -118,7 +118,7 @@ describe Libertree::Server::Responder::PoolPost do
             'username' => @member.username,
             'pool_id'  => @pool.remote_id,
             'post_id'  => @post.remote_id,
-            'origin'   => @requester.domain,
+            'origin'   => @post.member.server.domain,
           }
           expect { subject.rsp_pool_post(h) }.
             not_to raise_error
@@ -130,7 +130,7 @@ describe Libertree::Server::Responder::PoolPost do
           'username' => @member.username,
           'pool_id'  => @pool.remote_id,
           'post_id'  => @post.remote_id,
-          'origin'   => @requester.domain,
+          'origin'   => @post.member.server.domain,
         }
         expect { subject.rsp_pool_post(h) }.
           not_to raise_error
