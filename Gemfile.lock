@@ -124,7 +124,6 @@ DEPENDENCIES
   json
   libertree-client!
   libertree-model!
-  m4dbi
   pg
   pony
   rdbi!
