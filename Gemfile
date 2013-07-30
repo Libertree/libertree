@@ -1,5 +1,5 @@
 source 'http://rubygems.org'
-gem 'm4dbi' #, :git => 'git://github.com/Pistos/m4dbi.git', :branch => 'fix-memory-leaks'
+gem 'm4dbi', :git => 'git://github.com/Pistos/m4dbi.git', :branch => 'mutex'
 gem 'rdbi', :git => 'git://github.com/RDBI/rdbi.git', :ref => 'pre-sth-leak'
 gem 'rdbi-driver-postgresql' #, :git => 'git://github.com/RDBI/rdbi-driver-postgresql.git'
 gem 'syck', :platforms => [:ruby_20]
