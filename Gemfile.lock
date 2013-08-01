@@ -1,13 +1,4 @@
 GIT
-  remote: git://github.com/Pistos/m4dbi.git
-  revision: b2468268f21f7604c7b99b4569b43350505c168b
-  branch: mutex
-  specs:
-    m4dbi (0.8.9)
-      metaid
-      rdbi
-
-GIT
   remote: git://github.com/RDBI/rdbi.git
   revision: e5accb27a99f314db1474f5bb01538b4d2ccb26a
   ref: pre-sth-leak
@@ -38,6 +29,9 @@ GEM
     factory_girl (3.4.0)
       activesupport (>= 3.0.0)
     i18n (0.6.0)
+    m4dbi (0.8.9)
+      metaid
+      rdbi
     metaid (1.0)
     methlab (0.1.0)
     mini_portile (0.5.0)
@@ -83,7 +77,7 @@ DEPENDENCIES
   bcrypt-ruby
   factory_girl
   linecache19!
-  m4dbi!
+  m4dbi
   nokogiri (~> 1.5)
   pg
   rdbi!
