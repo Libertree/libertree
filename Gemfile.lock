@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: git://github.com/Libertree/libertree-model-rb.git
-  revision: 82f6c15eef5f60f388642f8a2683ad35b5dc5668
+  revision: a932100ded3aef88e99c5c0c48dc524a2ed4bda8
   branch: xmpp
   specs:
     libertree-model (0.5.0)
@@ -58,7 +58,7 @@ GEM
       rubinius-actor
     i18n (0.6.0)
     json (1.8.0)
-    m4dbi (0.8.9)
+    m4dbi (0.9.0)
       metaid
       rdbi
     mail (2.4.4)
@@ -127,6 +127,6 @@ DEPENDENCIES
   pg
   pony
   rdbi!
-  rdbi-driver-postgresql!
+  rdbi-driver-postgresql
   rspec
   syck
