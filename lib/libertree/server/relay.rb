@@ -17,6 +17,7 @@ module Libertree
         end
       rescue ParseError => e
         Libertree::Server.log_error "XMPP relay parse: #{e}"
+        @parser = Libertree::XML::Parser.new self
       end
 
       def post_init
