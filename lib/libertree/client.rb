@@ -190,7 +190,7 @@ module Libertree
       response
     end
 
-    def req_comment(comment, references={})
+    def req_comment(comment, references=[])
       post = comment.post
       server = post.member.server
       origin = server ? server.domain : @domain
@@ -283,7 +283,7 @@ module Libertree
       }
     end
 
-    def req_post(post,references={})
+    def req_post(post, references=[])
       params = {
         'username'   => post.member.username,
         'id'         => post.id,
