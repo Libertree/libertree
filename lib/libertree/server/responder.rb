@@ -143,7 +143,7 @@ module Libertree
         parameters = if payload.class <= Hash
                        payload
                      else
-                       xml_to_hash payload
+                       xml_to_hash(payload).values.first
                      end
         method = "rsp_#{command.gsub('-', '_')}".to_sym
         send  method, parameters
