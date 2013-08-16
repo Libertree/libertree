@@ -33,15 +33,25 @@ module Libertree
           end
         end
 
-        # @param [Nokogiri::XML::Element] payload An XML document
+        # @param [Nokogiri::XML::Element] xml An XML document
         # @return [Hash]
         def xml_to_hash(xml)
-          xml.children.reduce({}) {|acc, n|
-            acc[n.name] = n.text
-            acc
-          }
+          value = if xml.children.length == 1 &&
+                      xml.children.first.name == 'text'
+                    xml.text
+                  else
+                    xml.children.reduce({}) do |result, n|
+                      result.merge(xml_to_hash(n)) do |key, oldval, newval|
+                        if oldval.is_a? Array
+                          oldval << newval
+                        else
+                          [ oldval ] << newval
+                        end
+                      end
+                    end
+                  end
+          { xml.name => value }
         end
-
       end
     end
   end
