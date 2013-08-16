@@ -23,8 +23,9 @@ describe Libertree::References do
       text = "This is a [relative link](/posts/show/#{post.id}). This too: /posts/show/#{post.id}"
 
       refs = Libertree::References::extract(text, "http://never-mind.org")
-      refs.keys.should include("(/posts/show/#{post.id}")
-      refs.keys.should include(" /posts/show/#{post.id}")
+      matches = refs.map {|ref| ref['match']}
+      matches.should include("(/posts/show/#{post.id}")
+      matches.should include(" /posts/show/#{post.id}")
     end
 
     it 'extracts absolute links to local posts' do
@@ -34,7 +35,8 @@ describe Libertree::References do
       text = "This is an [absolute link](http://never-mind.org/posts/show/#{post.id})."
 
       refs = Libertree::References::extract(text, "http://never-mind.org")
-      refs.keys.should include("http://never-mind.org/posts/show/#{post.id}")
+      matches = refs.map {|ref| ref['match']}
+      matches.should include("http://never-mind.org/posts/show/#{post.id}")
     end
 
     it 'does not extract links to remote posts' do
