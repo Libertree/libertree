@@ -145,6 +145,7 @@ module Jobs
         return  if comment.nil?
 
         refs = Libertree::References::extract(comment.text, Request.conf[:frontend_url_base])
+        refs = refs.map {|ref| {'reference' => ref}}
         response = with_tree(params['server_id'],
                              :req_comment,
                              [comment, refs])
@@ -278,6 +279,7 @@ module Jobs
         post = Libertree::Model::Post[params['post_id'].to_i]
         if post
           refs = Libertree::References::extract(post.text, Request.conf[:frontend_url_base])
+          refs = refs.map {|ref| {'reference' => ref}}
           with_tree(params['server_id'], :req_post, [post, refs])
         end
       end
