@@ -1,72 +1,108 @@
 module Libertree
   module References
 
-    # @param refs [Hash]:
+    # @param refs [Array]:
     #
-    #   The keys of the refs hash are extracted URLs, including the preceeding
+    #   Every reference contains an extracted URL, including the preceeding
     #   character in the case of relative URLs, e.g. "http://tree.org/posts/show/123"
     #   or "(/posts/show/123".
     #
-    #   The value assigned to each key is another hash whose keys are URL
-    #   segments. The URL " /posts/show/366/128#comment-128" has the following
+    #   A substring that identifies an entity (a post or a comment) is called a
+    #   segment. The URL " /posts/show/366/128#comment-128" has the following
     #   two segments:
     #
-    #     "/posts/show/366"
-    #     "128#comment-128"
+    #     "/posts/show/366" (a post)
+    #     "128#comment-128" (a comment)
     #
-    #   Every segment is assigned one hash that contains the id of the
-    #   local copy of the entity that is referenced by the segment
-    #   ("id") and the domain of the origin of the entity
-    #   ("origin"). The origin domain is not included if the server
-    #   that sends the reference hash is the origin of the described
-    #   entity.
+    #   For every segment the matching URL substring ("url"), the id
+    #   of the local copy of the entity that is referenced by the
+    #   segment ("id") and the domain of the origin of the entity
+    #   ("origin") is recorded. The origin domain is not included if
+    #   the server that sends the references is the origin of the
+    #   described entity.
     #
-    #   The following is an example of a refs hash for a post that contains
-    #   three URLs to local entities.
+    #   The following is an example of a refs array for a post that
+    #   contains three URLs to local entities.
+
+    #     [{ "match" => "(/posts/show/366",
+    #        "post" => {
+    #          "url" => "/posts/show/366",
+    #          "id" => 366,
+    #          "origin" => "some.remote.tree" }},
+    #      { "match" => " /posts/show/366/128#comment-128",
+    #        "post" => {
+    #          "url" => "/posts/show/366",
+    #          "id" => 365,
+    #          "origin" => "some.remote.tree" },
+    #        "comment" => {
+    #          "url" => "/128#comment-128",
+    #          "id" => 127,
+    #          "origin" => "some.remote.tree" }},
+    #      { "match" => "http://never-mind.org/posts/show/366/128",
+    #        "post" => {
+    #          "url" => "/posts/show/366",
+    #          "id" => 365,
+    #          "origin" => "some.remote.tree" },
+    #        "comment" => {
+    #          "url" => "/128",
+    #          "id" => 127,
+    #          "origin" => "some.remote.tree" }}]
     #
-    #     {
-    #       "(/posts/show/366" =>
-    #       {
-    #         "/posts/show/366" =>
-    #         {
-    #           "id"     => 365,
-    #           "origin" => "some.remote.tree"
-    #         }
-    #       },
-    #       " /posts/show/366/128#comment-128" =>
-    #       {
-    #         "/posts/show/366" =>
-    #         {
-    #           "id"     => 365,
-    #           "origin" => "some.remote.tree"
-    #         },
-    #         "/128#comment-128" =>
-    #         {
-    #           "id"     => 127,
-    #           "origin" => "some.remote.tree"
-    #         }
-    #       },
-    #       "http://never-mind.org/posts/show/366/128"=>
-    #       {
-    #         "/posts/show/366"=>
-    #         {
-    #           "id"     => 365,
-    #           "origin" => "some.remote.tree"
-    #         },
-    #         "/128"=>
-    #         {
-    #           "id"     => 127,
-    #           "origin" => "some.remote.tree"
-    #         }
-    #       }
-    #     }
+    #   This is the translation to XML:
+    #
+    #     <references>
+    #       <reference>
+    #         <match>"(/posts/show/366"</match>
+    #         <post>
+    #           <url>/posts/show/366</url>
+    #           <id>366</id>
+    #           <origin>some.remote.tree</origin>
+    #         </post>
+    #       </reference>
+    #
+    #       <reference>
+    #         <match>" /posts/show/366/128#comment-128"</match>
+    #         <post>
+    #           <url>/posts/show/366</url>
+    #           <id>365</id>
+    #           <origin>some.remote.tree</origin>
+    #         </post>
+    #         <comment>
+    #           <url>/128#comment-128</url>
+    #           <id>127</id>
+    #           <origin>some.remote.tree</origin>
+    #         </comment>
+    #       </reference>
+    #
+    #       <reference>
+    #         <match>"http://never-mind.org/posts/show/366/128"</match>
+    #         <post>
+    #           <url>"/posts/show/366"</url>
+    #           <id>365</id>
+    #           <origin>some.remote.tree</origin>
+    #         </post>
+    #         <comment>
+    #           <url>"/128"</url>
+    #           <id>127</id>
+    #           <origin>some.remote.tree</origin>
+    #         </comment>
+    #       </reference>
+    #     <references>
 
     def self.replace(text_, refs, server_id, own_domain)
       text = text_.dup
 
-      refs.each do |url, segments|
-        substitution = segments.entries.reduce(url) do |res, pair|
-          segment, ref = pair
+      # refs can be an array of references or just a single reference
+      if refs.is_a? Hash
+        refs = [ refs ]
+      end
+
+      refs.each do |ref|
+        url = ref['match']
+        substitution = ref.entries.drop(1).reduce(url) do |res, pair|
+          type, ref = pair
+          segment = ref['url']
+
           if ref.has_key? 'origin'
             if ref['origin'].to_s == own_domain
               local = true
@@ -78,7 +114,7 @@ module Libertree
           end
           next res  if server.nil? && ! local
 
-          if segment =~ /posts/
+          if type == "post"
             model = Model::Post
             target = segment
           else
@@ -131,31 +167,37 @@ module Libertree
 
       pattern = %r{(?<url>(#{server_name}|\s|\()(?<post_url>/posts/show/(?<post_id>\d+))(?<comment_url>/(?<comment_id>\d+)(#comment-\d+)?)?)}
 
-      refs = {}
+      refs = []
       text.scan(pattern) do |url, post_url, post_id, comment_url, comment_id|
         next  if post_id.nil?
 
         post = Libertree::Model::Post[ post_id.to_i ]
         next  if post.nil?
 
-        ref = {}
+        ref = { 'match' => url }
 
-        map = { 'id' => post.remote_id || post_id.to_i }
+        map = {
+          'url' => post_url,
+          'id'  => post.remote_id || post_id.to_i,
+        }
         if post.server
-          map.merge!( { 'origin' => post.server.domain } )
+          map['origin'] = post.server.domain
         end
-        ref[post_url] = map
+        ref['post'] = map
 
         comment = Libertree::Model::Comment[ comment_id.to_i ]
         if comment
-          map = { 'id' => comment.remote_id || comment_id.to_i }
+          map = {
+            'url' => comment_url,
+            'id'  => comment.remote_id || comment_id.to_i
+          }
           if comment.server
-            map.merge!({ 'origin' => comment.server.domain })
+            map['origin'] = comment.server.domain
           end
-          ref[comment_url] = map
+          ref['comment'] = map
         end
 
-        refs[url] = ref  if ref.any?
+        refs << ref
       end
 
       refs
