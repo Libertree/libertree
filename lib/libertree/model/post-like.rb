@@ -13,18 +13,6 @@ module Libertree
         end
       end
 
-      before_delete do |like|
-        if like.local?
-          Libertree::Model::Job.create_for_forests(
-            {
-              task: 'request:POST-LIKE-DELETE',
-              params: { 'post_like_id' => like.id, }
-            },
-            *like.forests
-          )
-        end
-      end
-
       def local?
         self.remote_id.nil?
       end
@@ -42,8 +30,25 @@ module Libertree
         DateTime.parse self['time_created']
       end
 
-      # NOTE: deletion is NOT distributed
+      def before_delete
+        if self.local?
+          Libertree::Model::Job.create_for_forests(
+            {
+              task: 'request:POST-LIKE-DELETE',
+              params: { 'post_like_id' => self.id, }
+            },
+            *self.forests
+          )
+        end
+      end
+
+      def delete
+        self.before_delete
+        super
+      end
+
       def delete_cascade
+        self.before_delete
         DB.dbh.execute "SELECT delete_cascade_post_like(?)", self.id
       end
 
