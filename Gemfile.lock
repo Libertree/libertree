@@ -29,6 +29,7 @@ GEM
     factory_girl (3.4.0)
       activesupport (>= 3.0.0)
     i18n (0.6.0)
+    json (1.8.0)
     m4dbi (0.8.9)
       metaid
       rdbi
@@ -76,6 +77,7 @@ PLATFORMS
 DEPENDENCIES
   bcrypt-ruby
   factory_girl
+  json
   linecache19!
   m4dbi
   nokogiri (~> 1.5)
