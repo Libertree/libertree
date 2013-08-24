@@ -8,7 +8,7 @@ module Libertree
       extend HasSearchableText
 
       after_create do |post|
-        if post.local?
+        if post.local? && post.distribute?
           Libertree::Model::Job.create_for_forests(
             {
               task: 'request:POST',
@@ -25,7 +25,10 @@ module Libertree
           post_before['text'] != post.text ||
           post_before['visibility'] != post.visibility
         )
-        if post.local? && has_distributable_difference
+
+        # TODO: deny change of visibility to 'tree' visibility?
+        #       or trigger deletion on remotes?
+        if post.local? && post.distribute? && has_distributable_difference
           Libertree::Model::Job.create_for_forests(
             {
               task: 'request:POST',
@@ -197,7 +200,7 @@ module Libertree
       end
 
       def before_delete
-        if self.local?
+        if self.local? && self.distribute?
           Libertree::Model::Job.create_for_forests(
             {
               task: 'request:POST-DELETE',
@@ -360,6 +363,9 @@ module Libertree
       end
       def v_forest?
         self.visibility == 'forest' || self.visibility == 'internet'
+      end
+      def distribute?
+        self.visibility != 'tree'
       end
     end
   end
