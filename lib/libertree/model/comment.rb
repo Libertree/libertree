@@ -4,7 +4,7 @@ module Libertree
       extend HasSearchableText
 
       after_create do |comment|
-        if comment.local?
+        if comment.local? && comment.post.distribute?
           Libertree::Model::Job.create_for_forests(
             {
               task: 'request:COMMENT',
@@ -46,7 +46,7 @@ module Libertree
           self.post.time_commented = remaining_comments.map(&:time_created).max
         end
 
-        if self.local?
+        if self.local? && self.post.distribute?
           Libertree::Model::Job.create_for_forests(
             {
               task: 'request:COMMENT-DELETE',
