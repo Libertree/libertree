@@ -4,6 +4,7 @@ gem 'rdbi', :git => 'git://github.com/RDBI/rdbi.git', :ref => 'pre-sth-leak'
 gem 'rdbi-driver-postgresql' #, :git => 'git://github.com/RDBI/rdbi-driver-postgresql.git'
 gem 'syck', :platforms => [:ruby_20]
 gem 'ruby-oembed'
+gem 'json'
 
 group 'extensions' do
   gem 'pg'

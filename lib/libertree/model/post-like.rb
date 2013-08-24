@@ -2,7 +2,7 @@ module Libertree
   module Model
     class PostLike < M4DBI::Model(:post_likes)
       after_create do |like|
-        if like.local?
+        if like.local? && like.post.distribute?
           Libertree::Model::Job.create_for_forests(
             {
               task: 'request:POST-LIKE',
@@ -31,7 +31,7 @@ module Libertree
       end
 
       def before_delete
-        if self.local?
+        if self.local? && self.post.distribute?
           Libertree::Model::Job.create_for_forests(
             {
               task: 'request:POST-LIKE-DELETE',
