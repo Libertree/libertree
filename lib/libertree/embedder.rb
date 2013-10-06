@@ -58,13 +58,13 @@ module Libertree
       # URL.  We match against the reverse of the URL to avoid complicating the
       # regular expression with non-greedy look-behind.
 
-      urls = URI.extract(text).map do |url|
+      urls = URI.extract(text).map { |url|
         if matches = url.reverse.match(/^(?:\.*,*\.*\)?)?(.+)/)
           matches[1].reverse
         else
           url
         end
-      end
+      }
       urls.find_all {|u| u =~ self.supported}.map(&:strip)
     end
 
