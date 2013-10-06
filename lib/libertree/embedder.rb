@@ -59,7 +59,8 @@ module Libertree
       # regular expression with non-greedy look-behind.
 
       urls = URI.extract(text).map { |url|
-        if matches = url.reverse.match(/^(?:\.*,*\.*\)?)?(.+)/)
+        matches = url.reverse.match(/^(?:\.*,*\.*\)?)?(.+)/)
+        if matches
           matches[1].reverse
         else
           url
