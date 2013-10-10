@@ -24,6 +24,13 @@ private_key_path: /path/to/private.key
 # The URL base of the frontend web interface (used for URL substitution)
 frontend_url_base: 'http://domain-or-ip-without-trailing-slash'
 
+# The path to the avatars directory of the frontend on disk.  This is the
+# directory to save the avatars fetched by the http:avatar job.
+avatar_dir: '../libertree-frontend-ramaze/public/images/avatars/'
+
+# The frontend location through which stored avatars are accessed via HTTP.
+avatar_url: '/images/avatars/'
+
 # For more verbose output, set debug to true.
 debug: false
 

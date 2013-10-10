@@ -18,6 +18,10 @@ end
 jobp = Libertree::JobProcessor.new( ARGV[0] )
 jobp.extend Jobs
 
+Jobs::Http::Avatar.options = {
+  :avatar_dir => jobp.conf['avatar_dir'],
+  :avatar_url => jobp.conf['avatar_url']
+}
 Jobs::Request.init_client_conf(jobp.conf)
 Pony.options = {
   :via => :smtp,
