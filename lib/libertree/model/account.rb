@@ -216,6 +216,7 @@ module Libertree
         @num_notifications_unseen = nil
         @rivers_appended = nil
         @theme = nil
+        @remote_storage_connection = nil
       end
 
       def admin?
@@ -368,6 +369,10 @@ module Libertree
             params: { 'username' => handle, }
           }
         )
+      end
+
+      def remote_storage_connection
+        @remote_storage_connection ||= RemoteStorageConnection['account_id' => self.id]
       end
     end
   end
