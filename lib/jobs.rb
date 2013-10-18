@@ -389,7 +389,16 @@ module Jobs
         if post
           refs = Libertree::References::extract(post.text, Request.conf[:frontend_url_base])
           Request::with_tree(params['server_id']) do |tree|
-            tree.req_post post, refs
+            response = tree.req_post post, refs
+            if response['code'] == 'NOT FOUND'
+              # Remote didn't recognize the post author.
+              # Send the potentially missing data, then retry the comment later.
+              case response['message']
+              when /member/
+                tree.req_member post.member
+              end
+              raise Libertree::RetryJob, "request associated data first"
+            end
           end
         end
       end
