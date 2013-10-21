@@ -17,6 +17,9 @@ module Libertree
     def self.autoembed(text)
       urls = extract_urls(text)
       urls.each do |url|
+        cached = Libertree::Model::EmbedCache[ url: url ]
+        next  if cached
+
         Libertree::Model::Job.find_or_create(
           task: 'http:embed',
           params: {
