@@ -17,7 +17,7 @@ module Libertree
     def self.autoembed(text)
       urls = extract_urls(text)
       urls.each do |url|
-        Libertree::Model::Job.create(
+        Libertree::Model::Job.find_or_create(
           task: 'http:embed',
           params: {
             'url' => url
@@ -66,7 +66,7 @@ module Libertree
           url
         end
       }
-      urls.find_all {|u| u =~ self.supported}.map(&:strip)
+      urls.find_all {|u| u =~ self.supported}.map(&:strip).uniq
     end
 
   end
