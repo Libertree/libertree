@@ -17,7 +17,10 @@ module Libertree
     def self.autoembed(text)
       urls = extract_urls(text)
       urls.each do |url|
-        Libertree::Model::Job.create(
+        cached = Libertree::Model::EmbedCache[ url: url ]
+        next  if cached
+
+        Libertree::Model::Job.find_or_create(
           task: 'http:embed',
           params: {
             'url' => url
@@ -59,14 +62,14 @@ module Libertree
       # regular expression with non-greedy look-behind.
 
       urls = URI.extract(text).map { |url|
-        matches = url.reverse.match(/^(?:\.*,*\.*\)?)?(.+)/)
+        matches = url.reverse.match(/^(?:\.*[,\?]*\.*\)?)?(.+)/)
         if matches
           matches[1].reverse
         else
           url
         end
       }
-      urls.find_all {|u| u =~ self.supported}.map(&:strip)
+      urls.find_all {|u| u =~ self.supported}.map(&:strip).uniq
     end
 
   end

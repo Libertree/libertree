@@ -13,6 +13,12 @@ describe Libertree::Embedder do
       text = "I watched a video http://youtube.com/watch?v=123)...."
       Libertree::Embedder.extract_urls(text).should == ["http://youtube.com/watch?v=123"]
 
+      text = "Silly. (I watched a video http://youtube.com/watch?v=123)...."
+      Libertree::Embedder.extract_urls(text).should == ["http://youtube.com/watch?v=123"]
+
+      text = "What do you think (http://youtube.com/watch?v=123)?"
+      Libertree::Embedder.extract_urls(text).should == ["http://youtube.com/watch?v=123"]
+
       text = "(http://youtube.com/watch?v=123),..."
       Libertree::Embedder.extract_urls(text).should == ["http://youtube.com/watch?v=123"]
 
