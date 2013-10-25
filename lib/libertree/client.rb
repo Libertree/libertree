@@ -124,10 +124,8 @@ module Libertree
           begin
             Timeout.timeout(@timeout) do
               loop {
-                if reply = @replies[key]
-                  @replies.delete key
-                  return reply
-                end
+                reply = @replies.delete(key)
+                return reply  if reply
                 sleep 0.1
                 # TODO: WTF? Without this, the listener will never see that the socket is readable
                 @socket.send " ", 0
