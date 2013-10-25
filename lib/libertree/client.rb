@@ -116,7 +116,9 @@ module Libertree
         @socket.send msg, 0
 
         # TODO: use a Queue instead of this weird cross-thread hash?
-        if wait_for_reply
+        if ! wait_for_reply
+          stanza
+        else
           begin
             Timeout.timeout(@timeout) do
               loop {
@@ -134,8 +136,6 @@ module Libertree
             log_error "(timeout)"
             raise
           end
-        else
-          stanza
         end
       rescue Errno::EPIPE => e
         log_error "#{e.message}, reconnecting"
