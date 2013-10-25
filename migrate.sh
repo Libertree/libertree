@@ -58,7 +58,7 @@ function apply_migrations
 {
   migrations=$( migrations_to_apply )
   if [ -z "$migrations" ]; then
-    echo "Nothing to do."
+    echo "No migrations to apply."
   else
     for migration in $migrations; do
       echo "Applying: $migration"
@@ -68,6 +68,22 @@ function apply_migrations
     done
     echo -e "\nDone."
   fi
+}
+
+function load_functions
+{
+  # drop all existing user functions
+  while read func; do
+    echo "Dropping function $func"
+    execute "DROP FUNCTION IF EXISTS $func"
+  done < <(execute "SELECT proname || '(' || oidvectortypes(proargtypes) || ')' \
+                    FROM pg_proc INNER JOIN pg_namespace ns \
+                    ON (pg_proc.pronamespace = ns.oid AND ns.nspname='public');")
+
+  for file in ${SCRIPT_DIR}/functions/*.sql; do
+    echo "Loading functions from: $file"
+    psql $psql_options --single-transaction --file $file
+  done
 }
 
 # return a sorted list of migrations that have not yet been applied
@@ -88,4 +104,5 @@ function execute
 parse_config
 ensure_migration_table_exists
 apply_migrations
+load_functions
 # ---------------------------------------
