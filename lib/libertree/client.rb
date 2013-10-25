@@ -270,7 +270,7 @@ module Libertree
     end
 
     # @param recipients [Array(Member)]
-    def req_message(message, usernames)
+    def req_message(message, recipients)
       {
         'message' => {
           'username'   => message.sender.account.username,
