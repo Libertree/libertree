@@ -55,21 +55,20 @@ module Libertree
         @parser = Libertree::XML::Parser.new self
         loop do
           readable, _, _ = IO.select([@socket], nil, nil, 0.1)
+          next  if ! readable
 
-          if readable
-            chunk = @socket.recv(1024)
-            connect  if chunk.empty?
+          chunk = @socket.recv(1024)
+          connect  if chunk.empty?
 
-            begin
-              # we may not feed the whole chunk to the parser at once.
-              # As soon as the parser reaches the end of the stanza it will
-              # discard whatever else is in the queue.
-              chunk.each_char do |char|
-                @parser.receive_data char
-              end
-            rescue ParseError => e
-              log_error "parse error: #{e}"
+          begin
+            # we may not feed the whole chunk to the parser at once.
+            # As soon as the parser reaches the end of the stanza it will
+            # discard whatever else is in the queue.
+            chunk.each_char do |char|
+              @parser.receive_data char
             end
+          rescue ParseError => e
+            log_error "parse error: #{e}"
           end
         end
       end
