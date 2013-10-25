@@ -37,8 +37,11 @@ module Libertree
     def connect
       begin
         @socket = UNIXSocket.new @socket_file
+        retrying = false
+        log "Connected to #{@socket_file}"
       rescue Errno::ECONNREFUSED, Errno::ENOENT => e
-        log_error "#{e.message}, reconnecting"
+        log_error "#{e.message}, reconnecting..."  unless retrying
+        retrying = true
         sleep 1
         retry
       end
