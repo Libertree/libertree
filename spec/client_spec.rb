@@ -18,7 +18,7 @@ describe Libertree::Client do
         { 'post' => { 'text' => 'Hello',
                       'id'   => 123 }}
       )
-      example =<<HERE
+      example = %{
 <iq type="set" to="libertree.localhost.localdomain" id="blather0001">
   <libertree xmlns="urn:libertree">
     <post>
@@ -27,7 +27,7 @@ describe Libertree::Client do
     </post>
   </libertree>
 </iq>
-HERE
+}
       expect(stanza.to_xml).to eq Nokogiri::XML::fragment(example).to_xml.strip
     end
   end
@@ -46,7 +46,7 @@ HERE
                      4, 5 ],
       }
       xml = @c.send(:params_to_xml, params)
-      example = <<HERE
+      example = %{
 <id>12</id>
 <trees>
   <domain>lt1.remote.org</domain>
@@ -70,7 +70,7 @@ HERE
   <element>4</element>
   <element>5</element>
 </array>
-HERE
+}
       expect(xml).to eq example.delete("\n ")
     end
 
