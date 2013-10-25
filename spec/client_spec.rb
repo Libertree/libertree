@@ -28,7 +28,7 @@ describe Libertree::Client do
   </libertree>
 </iq>
 HERE
-      stanza.to_xml.should == Nokogiri::XML::fragment(example).to_xml.strip
+      expect(stanza.to_xml).to eq Nokogiri::XML::fragment(example).to_xml.strip
     end
   end
 
@@ -71,7 +71,7 @@ HERE
   <element>5</element>
 </array>
 HERE
-      xml.should == example.delete("\n ")
+      expect(xml).to eq example.delete("\n ")
     end
 
     it 'encodes entities' do
@@ -79,7 +79,7 @@ HERE
                     { 'something' =>
                       "This is a text --> hello & goodbye. A <link>" })
       example = "<something>This is a text --&gt; hello &amp; goodbye. A &lt;link&gt;</something>"
-      xml.should == example
+      expect(xml).to eq example
     end
   end
 end
