@@ -177,6 +177,10 @@ module Libertree
         @pools = nil
         @springs = nil
       end
+
+      def self.search(username_query)
+        self.s("SELECT * FROM members WHERE username ILIKE '%' || ? || '%'", username_query)
+      end
     end
   end
 end

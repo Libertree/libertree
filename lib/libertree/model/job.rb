@@ -103,6 +103,14 @@ module Libertree
           MAX_TRIES
         )
       end
+
+      def self.unfinished(task=nil)
+        if task
+          self.s("SELECT * FROM jobs WHERE task = ? AND time_finished IS NULL", task)
+        else
+          self.s("SELECT * FROM jobs WHERE time_finished IS NULL")
+        end
+      end
     end
   end
 end
