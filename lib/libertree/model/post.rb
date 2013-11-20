@@ -191,6 +191,18 @@ module Libertree
         end
       end
 
+      def notify_mentioned
+        notification_attributes = {
+          'type'    => 'mention',
+          'post_id' => self.id,
+        }
+
+        mentioned_accounts.each do |a|
+          puts "notifying #{a.username} with id=#{a.id}"
+          a.notify_about notification_attributes
+        end
+      end
+
       def mentioned_accounts
         pattern = %r{(?:\W|^)@(\w+)}
         author_name = self.member.account.username
