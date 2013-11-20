@@ -13,6 +13,26 @@ describe Libertree::Model::Post do
     )
   end
 
+  describe '#mentioned_accounts' do
+    context 'with the Beatles and a post mentioning all but Paul' do
+      john, paul, george, ringo = [ 'john', 'paul', 'george', 'ringo'].map do |name|
+        Libertree::Model::Account.create( username: name, password_encrypted: 'p' )
+      end
+      before :each do
+        new_post "@john and paul@paul went to see @george but found @ringo."
+      end
+
+      it 'returns all accounts but Paul\'s' do
+        expect(@post.mentioned_accounts - [john, george, ringo]).to eq([])
+      end
+    end
+
+    it 'should ignore mention of the post author' do
+      new_post "@#{@account.username}: I'm talking to myself!"
+      expect(@post.mentioned_accounts).not_to include(@account)
+    end
+  end
+
   describe '#glimpse' do
     context 'when the text is short' do
       before :each do
