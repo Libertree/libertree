@@ -18,6 +18,7 @@ module Libertree
           )
         end
         Libertree::Embedder.autoembed(post.text)
+        post.notify_mentioned
       end
 
       after_update do |post_before, post|
@@ -198,7 +199,6 @@ module Libertree
         }
 
         mentioned_accounts.each do |a|
-          puts "notifying #{a.username} with id=#{a.id}"
           a.notify_about notification_attributes
         end
       end
