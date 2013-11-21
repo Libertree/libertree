@@ -13,6 +13,46 @@ describe Libertree::Model::Post do
     )
   end
 
+  context 'with the Beatles and a post mentioning all but Paul' do
+    john, paul, george, ringo = [ 'john', 'paul', 'george', 'ringo'].map do |name|
+      Libertree::Model::Account.create( username: name, password_encrypted: 'p' )
+    end
+    before :each do
+      new_post "@john and paul@paul went to see @george but found @ringo."
+    end
+
+    describe '#mentioned_accounts' do
+      it 'returns all accounts but Paul\'s' do
+        expect(@post.mentioned_accounts - [john, george, ringo]).to eq([])
+      end
+
+      it 'should ignore mention of the post author' do
+        new_post "@#{@account.username}: I'm talking to myself!"
+        expect(@post.mentioned_accounts).not_to include(@account)
+      end
+    end
+
+    describe '#notify_mentioned' do
+      before :each do
+        new_post "@ringo: are you still playing the drums?"
+      end
+      it 'should create a notification for the mentioned account' do
+        expect(ringo.notifications.count).to eq 0
+        @post.notify_mentioned
+
+        # fetch account again to invalidate cache
+        # TODO: shouldn't this be done in account.notify_about ?
+        ringo = Libertree::Model::Account[ username: 'ringo' ]
+        expect(ringo.notifications.count).to eq 1
+
+        puts ringo.notifications.inspect
+        subject = ringo.notifications[0].subject
+        expect(subject).to be_kind_of Libertree::Model::Post
+        expect(subject).to eq @post
+      end
+    end
+  end
+
   describe '#glimpse' do
     context 'when the text is short' do
       before :each do

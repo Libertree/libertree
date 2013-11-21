@@ -28,6 +28,8 @@ module Libertree
           Libertree::Model::PostLike[ self.data['post_like_id'] ]
         when 'springing'
           Libertree::Model::PoolPost[ self.data['pool_post_id'] ]
+        when 'mention'
+          Libertree::Model::Post[ self.data['post_id'] ]
         end
       end
 
