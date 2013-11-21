@@ -18,6 +18,7 @@ module Libertree
           )
         end
         Libertree::Embedder.autoembed(post.text)
+        post.notify_mentioned
       end
 
       after_update do |post_before, post|
