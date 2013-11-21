@@ -37,13 +37,13 @@ describe Libertree::Model::Post do
         new_post "@ringo: are you still playing the drums?"
       end
       it 'should create a notification for the mentioned account' do
-        expect(ringo.notifications.count).to eq 0
+        before = ringo.notifications.count
         @post.notify_mentioned
 
         # fetch account again to invalidate cache
         # TODO: shouldn't this be done in account.notify_about ?
         ringo = Libertree::Model::Account[ username: 'ringo' ]
-        expect(ringo.notifications.count).to eq 1
+        expect(ringo.notifications.count).to eq (before + 1)
 
         subject = ringo.notifications[0].subject
         expect(subject).to be_kind_of Libertree::Model::Post
