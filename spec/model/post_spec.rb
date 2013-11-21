@@ -45,7 +45,6 @@ describe Libertree::Model::Post do
         ringo = Libertree::Model::Account[ username: 'ringo' ]
         expect(ringo.notifications.count).to eq 1
 
-        puts ringo.notifications.inspect
         subject = ringo.notifications[0].subject
         expect(subject).to be_kind_of Libertree::Model::Post
         expect(subject).to eq @post
