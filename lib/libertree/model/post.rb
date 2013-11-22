@@ -206,7 +206,7 @@ module Libertree
       def mentioned_accounts
         pattern = %r{(?:\W|^)@(\w+)}
         author_name = self.member.account.username
-        usernames = self.text.scan(pattern).flatten - [author_name]
+        usernames = self.text.scan(pattern).flatten.uniq - [author_name]
         return []  if usernames.empty?
 
         placeholders = ( ['?'] * usernames.count ).join(', ')
