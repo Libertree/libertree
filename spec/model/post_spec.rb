@@ -30,6 +30,11 @@ describe Libertree::Model::Post do
         new_post "@#{@account.username}: I'm talking to myself!"
         expect(@post.mentioned_accounts).not_to include(@account)
       end
+
+      it 'should ignore repeated mentions' do
+        new_post "@paul @paul @paul!"
+        expect(@post.mentioned_accounts).to eq([paul])
+      end
     end
 
     describe '#notify_mentioned' do
