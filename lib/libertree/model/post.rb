@@ -205,7 +205,7 @@ module Libertree
 
       def mentioned_accounts
         pattern = %r{(?:\W|^)@(\w+)}
-        author_name = self.member.account.username
+        author_name = self.member.username
         usernames = self.text.scan(pattern).flatten.uniq - [author_name]
         return []  if usernames.empty?
 
