@@ -273,16 +273,26 @@ module Libertree
         accounts
       end
 
-      def messages
+      def messages( opts = {} )
+        limit = opts.fetch(:limit, 30)
+        if opts[:newer]
+          time_comparator = '>'
+        else
+          time_comparator = '<'
+        end
+        time = Time.at( opts.fetch(:time, Time.now.to_f) ).strftime("%Y-%m-%d %H:%M:%S.%6N%z")
+
         stm = Message.prepare(
           %{
             SELECT *
             FROM view__messages_sent_and_received
             WHERE member_id = ?
-            ORDER BY id DESC
+            AND time_created #{time_comparator} ?
+            ORDER BY time_created DESC
+            LIMIT #{limit}
           }
         )
-        records = stm.s(self.member.id).map { |row| Message.new row }
+        records = stm.s(self.member.id, time).map { |row| Message.new row }
         stm.finish
         records
       end
@@ -323,7 +333,7 @@ module Libertree
             'rivers'             => self.rivers.map(&:to_hash),
             'posts'              => self.member.posts(limit: 9999999).map(&:to_hash),
             'comments'           => self.member.comments(9999999).map(&:to_hash),
-            'messages'           => self.messages.map(&:to_hash),
+            'messages'           => self.messages(limit: 9999999).map(&:to_hash),
           }
         }
       end
