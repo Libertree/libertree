@@ -93,9 +93,8 @@ module Libertree
       text = text_.dup
 
       # refs can be an array of references or just a single reference
-      if refs.is_a? Hash
-        refs = [ refs ]
-      end
+      # Make sure it's an array.
+      refs = Array(refs)
 
       refs.each do |ref|
         url = ref['match']
