@@ -17,7 +17,7 @@ describe Libertree::Server::Responder::Forest do
       subject.instance_variable_set(:@remote_tree, @requester)
     end
 
-    it 'raises MissingParameter with a missing name' do
+    it 'raises MissingParameterError with a missing name' do
       h = {
         'id' => 4,
         'trees' => [
@@ -25,10 +25,10 @@ describe Libertree::Server::Responder::Forest do
         ],
       }
       expect { subject.rsp_forest(h) }.
-        to raise_error( Libertree::Server::MissingParameter )
+        to raise_error( Libertree::Server::MissingParameterError )
     end
 
-    it 'raises MissingParameter with a blank name' do
+    it 'raises MissingParameterError with a blank name' do
       h = {
         'id' => 4,
         'name' => '',
@@ -38,7 +38,7 @@ describe Libertree::Server::Responder::Forest do
       }
 
       expect { subject.rsp_forest(h) }.
-        to raise_error( Libertree::Server::MissingParameter )
+        to raise_error( Libertree::Server::MissingParameterError )
     end
 
     context 'and the forest is not yet known' do

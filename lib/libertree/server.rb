@@ -10,7 +10,7 @@ require 'libertree/server/relay'
 module Libertree
   module Server
     class ConfigurationError < StandardError; end
-    class MissingParameter < StandardError; end
+    class MissingParameterError < StandardError; end
     class NotFound < StandardError; end
     class InternalError < StandardError; end
 

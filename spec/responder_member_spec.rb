@@ -29,7 +29,7 @@ describe Libertree::Server::Responder::Member do
         subject.instance_variable_set(:@remote_tree, @requester)
       end
 
-      it 'raises MissingParameter with a missing username' do
+      it 'raises MissingParameterError with a missing username' do
         h = {
           'avatar_url' => 'http://libertree.net/images/avatars/1.png',
           'profile' => {
@@ -38,10 +38,10 @@ describe Libertree::Server::Responder::Member do
           }
         }
         expect { subject.rsp_member(h) }.
-          to raise_error( Libertree::Server::MissingParameter )
+          to raise_error( Libertree::Server::MissingParameterError )
       end
 
-      it 'raises MissingParameter with a blank username' do
+      it 'raises MissingParameterError with a blank username' do
         h = {
           'username' => '',
           'avatar_url' => 'http://libertree.net/images/avatars/1.png',
@@ -51,7 +51,7 @@ describe Libertree::Server::Responder::Member do
           }
         }
         expect { subject.rsp_member(h) }.
-          to raise_error( Libertree::Server::MissingParameter )
+          to raise_error( Libertree::Server::MissingParameterError )
       end
 
       it 'raises an error with a blank profile display name' do

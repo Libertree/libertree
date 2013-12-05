@@ -32,12 +32,12 @@ describe Libertree::Server::Responder::Helper do
   end
 
   describe 'require_parameters' do
-    it 'raises MissingParameter exception when a required parameter is missing' do
+    it 'raises MissingParameterError exception when a required parameter is missing' do
       given = { ten: 10, twenty: 20, thirty: "" }
       required = [ :ten, :twenty, :thirty ]
 
       expect { subject.require_parameters(given, *required) }.
-        to raise_error(Libertree::Server::MissingParameter, 'thirty')
+        to raise_error(Libertree::Server::MissingParameterError, 'thirty')
     end
 
     it 'returns nil when there are no missing parameters' do

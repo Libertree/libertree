@@ -66,7 +66,7 @@ describe Libertree::Server::Responder do
   context "when the requester is a member of one of the receiver's forests" do
     include_context 'requester in a forest'
 
-    it 'responds with "MISSING PARAMETER" when a handler throws MissingParameter' do
+    it 'responds with "MISSING PARAMETER" when a handler throws MissingParameterError' do
       msg = helper.build_stanza( "localhost.localdomain",
                                  { 'post' => { 'id' => 10 }} )
       msg.from = @requester.domain

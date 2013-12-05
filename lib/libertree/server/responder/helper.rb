@@ -17,13 +17,13 @@ module Libertree
         end
 
         # Calls #missing_parameters.  If any parameters are missing, raises
-        # MissingParameters exception with the first missing parameter as message.
+        # MissingParameterError exception with the first missing parameter as message.
         # @return [nil] when there are no missing parameters
-        # @raises [MissingParameter] when there is a missing parameter
+        # @raises [MissingParameterError] when there is a missing parameter
         def require_parameters(*args)
           mp = missing_parameters(*args)
           if mp[0]
-            fail MissingParameter, mp[0], nil
+            fail MissingParameterError, mp[0], nil
           end
         end
 

@@ -14,18 +14,18 @@ describe Libertree::Server::Responder::Member do
   describe 'rsp_member_delete' do
     include_context 'requester in a forest'
 
-    it 'raises MissingParameter with a missing username' do
+    it 'raises MissingParameterError with a missing username' do
       h = { }
       expect { subject.rsp_member_delete(h) }.
-        to raise_error( Libertree::Server::MissingParameter )
+        to raise_error( Libertree::Server::MissingParameterError )
     end
 
-    it 'raises MissingParameter with a blank username' do
+    it 'raises MissingParameterError with a blank username' do
       h = {
         'username' => '',
       }
       expect { subject.rsp_member_delete(h) }.
-        to raise_error( Libertree::Server::MissingParameter )
+        to raise_error( Libertree::Server::MissingParameterError )
     end
 
     context 'given an existing member' do

@@ -28,7 +28,7 @@ describe Libertree::Server::Responder::PoolPost do
         subject.instance_variable_set(:@remote_tree, @requester)
       end
 
-      it 'raises MissingParameter when a parameter is missing or blank' do
+      it 'raises MissingParameterError when a parameter is missing or blank' do
         h = {
           'username' => @member.username,
           'pool_id'  => @pool.remote_id,
@@ -40,12 +40,12 @@ describe Libertree::Server::Responder::PoolPost do
         keys.each do |key|
           h_ = h.reject { |k,v| k == key }
           expect { subject.rsp_pool_post_delete(h_) }.
-            to raise_error( Libertree::Server::MissingParameter )
+            to raise_error( Libertree::Server::MissingParameterError )
 
           h_ = h.dup
           h_[key] = ''
           expect { subject.rsp_pool_post_delete(h_) }.
-            to raise_error( Libertree::Server::MissingParameter )
+            to raise_error( Libertree::Server::MissingParameterError )
         end
       end
 

@@ -41,7 +41,7 @@ describe Libertree::Server::Responder::Message do
         )
       end
 
-      it 'raises MissingParameter when a parameter is missing or blank' do
+      it 'raises MissingParameterError when a parameter is missing or blank' do
         h = {
           'username' => @member.username,
           'recipients' => [
@@ -57,12 +57,12 @@ describe Libertree::Server::Responder::Message do
         keys.each do |key|
           h_ = h.reject { |k,v| k == key }
           expect { subject.rsp_message(h_) }.
-            to raise_error( Libertree::Server::MissingParameter )
+            to raise_error( Libertree::Server::MissingParameterError )
 
           h_ = h.dup
           h_[key] = ''
           expect { subject.rsp_message(h_) }.
-            to raise_error( Libertree::Server::MissingParameter )
+            to raise_error( Libertree::Server::MissingParameterError )
         end
       end
 

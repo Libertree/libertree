@@ -14,18 +14,18 @@ describe Libertree::Server::Responder::CommentLike do
   describe 'rsp_comment_like_delete' do
     include_context 'requester in a forest'
 
-    it 'raises MissingParameter with a missing id' do
+    it 'raises MissingParameterError with a missing id' do
       h = { }
       expect { subject.rsp_comment_like_delete(h) }.
-        to raise_error( Libertree::Server::MissingParameter )
+        to raise_error( Libertree::Server::MissingParameterError )
     end
 
-    it 'raises MissingParameter with a blank id' do
+    it 'raises MissingParameterError with a blank id' do
       h = {
         'id' => '',
       }
       expect { subject.rsp_comment_like_delete(h) }.
-        to raise_error( Libertree::Server::MissingParameter )
+        to raise_error( Libertree::Server::MissingParameterError )
     end
 
     context 'given an existing like' do

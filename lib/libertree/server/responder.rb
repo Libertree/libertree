@@ -166,7 +166,7 @@ module Libertree
       def self.handle(command, params)
         begin
           process command, params; nil # generate standard response
-        rescue MissingParameter => e
+        rescue MissingParameterError => e
           error code: 'MISSING PARAMETER', text: e.message
         rescue NotFound => e
           error code: 'NOT FOUND', text: e.message

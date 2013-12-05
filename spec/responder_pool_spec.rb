@@ -22,23 +22,23 @@ describe Libertree::Server::Responder::Pool do
         subject.instance_variable_set(:@remote_tree, @requester)
       end
 
-      it 'raises MissingParameter with a missing id' do
+      it 'raises MissingParameterError with a missing id' do
         h = {
           'username'   => @member.username,
           'name'       => 'Pool Name',
         }
         expect { subject.rsp_pool(h) }.
-          to raise_error( Libertree::Server::MissingParameter )
+          to raise_error( Libertree::Server::MissingParameterError )
       end
 
-      it 'raises MissingParameter with a blank id' do
+      it 'raises MissingParameterError with a blank id' do
         h = {
           'username'   => @member.username,
           'id'         => '',
           'name'       => 'Pool Name',
         }
         expect { subject.rsp_pool(h) }.
-          to raise_error( Libertree::Server::MissingParameter )
+          to raise_error( Libertree::Server::MissingParameterError )
       end
 
       it "raises NotFound with a member username that isn't found" do
