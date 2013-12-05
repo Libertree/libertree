@@ -93,8 +93,9 @@ module Libertree
       text = text_.dup
 
       # refs can be an array of references or just a single reference
-      # Make sure it's an array.
-      refs = Array(refs)
+      # Make sure it's an array.  Only keep the reference value of
+      # each pair.
+      refs = Array(refs).map {|ref| ref['reference']}
 
       refs.each do |ref|
         url = ref['match']
@@ -199,7 +200,7 @@ module Libertree
         refs << ref
       end
 
-      refs
+      refs.map {|ref| {'reference' => ref}}
     end
 
   end

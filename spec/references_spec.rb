@@ -23,7 +23,7 @@ describe Libertree::References do
       text = "This is a [relative link](/posts/show/#{post.id}). This too: /posts/show/#{post.id}"
 
       refs = Libertree::References::extract(text, "http://never-mind.org")
-      matches = refs.map {|ref| ref['match']}
+      matches = refs.map {|ref| ref['reference']['match']}
       matches.should include("(/posts/show/#{post.id}")
       matches.should include(" /posts/show/#{post.id}")
     end
@@ -35,7 +35,7 @@ describe Libertree::References do
       text = "This is an [absolute link](http://never-mind.org/posts/show/#{post.id})."
 
       refs = Libertree::References::extract(text, "http://never-mind.org")
-      matches = refs.map {|ref| ref['match']}
+      matches = refs.map {|ref| ref['reference']['match']}
       matches.should include("http://never-mind.org/posts/show/#{post.id}")
     end
 
