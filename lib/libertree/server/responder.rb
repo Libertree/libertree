@@ -168,7 +168,7 @@ module Libertree
           process command, params; nil # generate standard response
         rescue MissingParameterError => e
           error code: 'MISSING PARAMETER', text: e.message
-        rescue NotFound => e
+        rescue NotFoundError => e
           error code: 'NOT FOUND', text: e.message
         rescue InternalError => e
           Libertree::Server.log_error e.message

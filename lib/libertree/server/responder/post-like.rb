@@ -15,7 +15,7 @@ module Libertree
             origin = Model::Server[ domain: params['origin'] ]
             if origin.nil? && params['origin'] != Server.conf['domain']
               # TODO: Is this revealing too much to the requester?
-              fail NotFound, 'Unrecognized origin server.', nil
+              fail NotFoundError, 'Unrecognized origin server.', nil
             end
 
             if origin.nil?

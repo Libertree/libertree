@@ -84,7 +84,7 @@ describe Libertree::Server::Responder do
       catch(:halt) { c.send :call_handler_for, :iq, msg }
     end
     
-    it 'responds with "NOT FOUND" when a handler throws NotFound' do
+    it 'responds with "NOT FOUND" when a handler throws NotFoundError' do
       h = { 'comment' => {
           'id'       => 999,
           'username' => 'nosuchusername',

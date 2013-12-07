@@ -15,7 +15,7 @@ describe Libertree::Server::Responder::Chat do
     include_context 'requester in a forest'
 
     context 'and the responder has no record of the sending member' do
-      it 'raises NotFound' do
+      it 'raises NotFoundError' do
         subject.instance_variable_set(:@remote_tree, @requester)
         h = {
           'username' => 'sender',
@@ -23,7 +23,7 @@ describe Libertree::Server::Responder::Chat do
           'text' => 'a chat message',
         }
         expect { subject.rsp_chat(h) }.
-          to raise_error( Libertree::Server::NotFound )
+          to raise_error( Libertree::Server::NotFoundError )
       end
     end
 
@@ -63,14 +63,14 @@ describe Libertree::Server::Responder::Chat do
           )
         end
 
-        it 'raises NotFound' do
+        it 'raises NotFoundError' do
           h = {
             'username' => @member.username,
             'recipient_username' => 'recipient',
             'text' => 'a chat message',
           }
           expect { subject.rsp_chat(h) }.
-            to raise_error( Libertree::Server::NotFound )
+            to raise_error( Libertree::Server::NotFoundError )
         end
       end
 

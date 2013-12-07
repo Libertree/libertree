@@ -41,14 +41,14 @@ describe Libertree::Server::Responder::Pool do
           to raise_error( Libertree::Server::MissingParameterError )
       end
 
-      it "raises NotFound with a member username that isn't found" do
+      it "raises NotFoundError with a member username that isn't found" do
         h = {
           'username'   => 'nosuchusername',
           'id'         => 4,
           'name'       => 'Pool Name',
         }
         expect { subject.rsp_pool(h) }.
-          to raise_error( Libertree::Server::NotFound )
+          to raise_error( Libertree::Server::NotFoundError )
       end
 
       context 'with valid pool data, and a member that does not belong to the requester' do
@@ -59,14 +59,14 @@ describe Libertree::Server::Responder::Pool do
           )
         end
 
-        it 'raises NotFound' do
+        it 'raises NotFoundError' do
           h = {
             'username'   => @member.username,
             'id'         => 4,
             'name'       => 'Pool Name',
           }
           expect { subject.rsp_pool(h) }.
-            to raise_error( Libertree::Server::NotFound )
+            to raise_error( Libertree::Server::NotFoundError )
         end
       end
 

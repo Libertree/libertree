@@ -11,7 +11,7 @@ module Libertree
   module Server
     class ConfigurationError < StandardError; end
     class MissingParameterError < StandardError; end
-    class NotFound < StandardError; end
+    class NotFoundError < StandardError; end
     class InternalError < StandardError; end
 
     class << self

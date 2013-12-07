@@ -43,7 +43,7 @@ describe Libertree::Server::Responder::Post do
           to raise_error( Libertree::Server::MissingParameterError )
       end
 
-      it "raises NotFound with a member username that isn't found" do
+      it "raises NotFoundError with a member username that isn't found" do
         h = {
           'username'   => 'nosuchusername',
           'id'         => 4,
@@ -51,7 +51,7 @@ describe Libertree::Server::Responder::Post do
           'text'       => 'A test post.',
         }
         expect { subject.rsp_post(h) }.
-          to raise_error( Libertree::Server::NotFound )
+          to raise_error( Libertree::Server::NotFoundError )
       end
 
       context 'with valid post data, and a member that does not belong to the requester' do
@@ -62,7 +62,7 @@ describe Libertree::Server::Responder::Post do
           )
         end
 
-        it 'raises NotFound' do
+        it 'raises NotFoundError' do
           h = {
             'username'   => @member.username,
             'id'         => 5,
@@ -70,7 +70,7 @@ describe Libertree::Server::Responder::Post do
             'text'       => 'A test post.',
           }
           expect { subject.rsp_post(h) }.
-            to raise_error( Libertree::Server::NotFound )
+            to raise_error( Libertree::Server::NotFoundError )
         end
       end
 

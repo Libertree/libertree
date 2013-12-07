@@ -18,7 +18,7 @@ describe Libertree::Server::Responder::Message do
     end
 
     context 'and the responder has no record of the sending member' do
-      it 'raises NotFound' do
+      it 'raises NotFoundError' do
         h = {
           'username' => 'sender',
           'recipients' => [
@@ -30,7 +30,7 @@ describe Libertree::Server::Responder::Message do
           'text' => 'a direct message',
         }
         expect { subject.rsp_message(h) }.
-          to raise_error( Libertree::Server::NotFound )
+          to raise_error( Libertree::Server::NotFoundError )
       end
     end
 
@@ -74,7 +74,7 @@ describe Libertree::Server::Responder::Message do
           )
         end
 
-        it 'raises NotFound' do
+        it 'raises NotFoundError' do
           h = {
             'username' => @member.username,
             'recipients' => [
@@ -86,7 +86,7 @@ describe Libertree::Server::Responder::Message do
             'text' => 'a direct message',
           }
           expect { subject.rsp_message(h) }.
-            to raise_error( Libertree::Server::NotFound )
+            to raise_error( Libertree::Server::NotFoundError )
         end
       end
 

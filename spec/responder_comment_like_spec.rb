@@ -49,7 +49,7 @@ describe Libertree::Server::Responder::CommentLike do
         end
       end
 
-      it "raises NotFound with a member username that isn't found" do
+      it "raises NotFoundError with a member username that isn't found" do
         h = {
           'id'         => 999,
           'username'   => 'nosuchusername',
@@ -57,10 +57,10 @@ describe Libertree::Server::Responder::CommentLike do
           'comment_id' => @comment.remote_id,
         }
         expect { subject.rsp_comment_like(h) }.
-          to raise_error( Libertree::Server::NotFound )
+          to raise_error( Libertree::Server::NotFoundError )
       end
 
-      it "raises NotFound with a comment id that isn't found" do
+      it "raises NotFoundError with a comment id that isn't found" do
         h = {
           'id'         => 999,
           'username'   => @member.username,
@@ -68,7 +68,7 @@ describe Libertree::Server::Responder::CommentLike do
           'comment_id' => 99999999,
         }
         expect { subject.rsp_comment_like(h) }.
-          to raise_error( Libertree::Server::NotFound )
+          to raise_error( Libertree::Server::NotFoundError )
       end
 
       context 'with valid Like data, and a member that does not belong to the requester' do
@@ -79,7 +79,7 @@ describe Libertree::Server::Responder::CommentLike do
           )
         end
 
-        it 'raises NotFound' do
+        it 'raises NotFoundError' do
           h = {
             'id'         => 999,
             'username'   => @member.username,
@@ -87,7 +87,7 @@ describe Libertree::Server::Responder::CommentLike do
             'comment_id' => @comment.remote_id,
           }
           expect { subject.rsp_comment_like(h) }.
-            to raise_error( Libertree::Server::NotFound )
+            to raise_error( Libertree::Server::NotFoundError )
         end
       end
 

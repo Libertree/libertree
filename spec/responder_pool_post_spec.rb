@@ -49,7 +49,7 @@ describe Libertree::Server::Responder::PoolPost do
         end
       end
 
-      it "raises NotFound with a member username that isn't found" do
+      it "raises NotFoundError with a member username that isn't found" do
         h = {
           'username' => 'nosuchusername',
           'pool_id'  => 99999999,
@@ -57,10 +57,10 @@ describe Libertree::Server::Responder::PoolPost do
           'origin'   => @post.member.server.domain,
         }
         expect { subject.rsp_pool_post(h) }.
-          to raise_error( Libertree::Server::NotFound )
+          to raise_error( Libertree::Server::NotFoundError )
       end
 
-      it "raises NotFound with a pool id that isn't found" do
+      it "raises NotFoundError with a pool id that isn't found" do
         h = {
           'username' => @member.username,
           'pool_id'  => 99999999,
@@ -68,10 +68,10 @@ describe Libertree::Server::Responder::PoolPost do
           'origin'   => @post.member.server.domain,
         }
         expect { subject.rsp_pool_post(h) }.
-          to raise_error( Libertree::Server::NotFound )
+          to raise_error( Libertree::Server::NotFoundError )
       end
 
-      it "raises NotFound with a post id that isn't found" do
+      it "raises NotFoundError with a post id that isn't found" do
         h = {
           'username' => @member.username,
           'pool_id'  => @pool.remote_id,
@@ -79,7 +79,7 @@ describe Libertree::Server::Responder::PoolPost do
           'origin'   => @post.member.server.domain,
         }
         expect { subject.rsp_pool_post(h) }.
-          to raise_error( Libertree::Server::NotFound )
+          to raise_error( Libertree::Server::NotFoundError )
       end
 
       context 'with valid Like data, and a member that does not belong to the requester' do
@@ -90,7 +90,7 @@ describe Libertree::Server::Responder::PoolPost do
           )
         end
 
-        it 'raises NotFound' do
+        it 'raises NotFoundError' do
           h = {
             'username' => @member.username,
             'pool_id'  => @pool.remote_id,
@@ -98,7 +98,7 @@ describe Libertree::Server::Responder::PoolPost do
             'origin'   => @post.member.server.domain,
           }
           expect { subject.rsp_pool_post(h) }.
-            to raise_error( Libertree::Server::NotFound )
+            to raise_error( Libertree::Server::NotFoundError )
         end
       end
 

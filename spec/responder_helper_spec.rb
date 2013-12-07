@@ -49,9 +49,9 @@ describe Libertree::Server::Responder::Helper do
   end
 
   describe 'assert' do
-    it 'raises NotFound with the given message when the first argument is nil' do
+    it 'raises NotFoundError with the given message when the first argument is nil' do
       expect { subject.assert(nil, "Oh dear!") }.
-        to raise_error(Libertree::Server::NotFound, "Oh dear!")
+        to raise_error(Libertree::Server::NotFoundError, "Oh dear!")
     end
 
     it 'returns nil otherwise' do
