@@ -1,6 +1,6 @@
 require 'm4dbi'
 require 'rdbi-driver-postgresql'
-require 'syck'
+require 'yaml'
 
 module Libertree
   module DB
@@ -14,7 +14,7 @@ module Libertree
 
     def self.load_config(filename)
       config_file = filename
-      configs ||= Syck.load( IO.read(config_file) )
+      configs ||= YAML.load( IO.read(config_file) )
       env = ENV['LIBERTREE_ENV'] || 'development'
       @config = configs[env]
     end
