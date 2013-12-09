@@ -22,10 +22,10 @@ Jobs::Http::Avatar.options = {
   :avatar_dir => jobp.conf['avatar_dir'],
   :avatar_url => jobp.conf['avatar_url']
 }
+Jobs::Email.from = jobp.conf['smtp']['from_address']
 Jobs::Request.init_client_conf(jobp.conf)
-Pony.options = {
-  :via => :smtp,
-  :via_options => {
+Mail.defaults do
+  delivery_method :smtp, {
     :address              => jobp.conf['smtp']['host'],
     :port                 => jobp.conf['smtp']['port'],
     :user_name            => jobp.conf['smtp']['username'],
@@ -33,8 +33,8 @@ Pony.options = {
     :authentication       => jobp.conf['smtp']['authentication'],
     :domain               => jobp.conf['smtp']['helo_domain'],
     :enable_starttls_auto => jobp.conf['smtp']['starttls_auto'],
-  },
-  :from => jobp.conf['smtp']['from_address'],
-}
+  }
+end
+
 
 jobp.run
