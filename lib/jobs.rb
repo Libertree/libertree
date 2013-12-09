@@ -2,7 +2,7 @@ require 'libertree/client'
 require 'libertree/model'
 require 'libertree/job-processor'
 require_relative 'libertree/references'
-require 'pony'
+require 'mail'
 require 'net/http'
 require 'uri'
 
@@ -37,8 +37,16 @@ module Jobs
   end
 
   class Email
+    def self.from=(address)
+      @@from_address ||= address
+    end
     def self.perform(params)
-      Pony.mail  to: params['to'], subject: params['subject'], body: params['body']
+      Mail.deliver do
+        to       params['to']
+        from     @@from_address
+        subject  params['subject']
+        body     params['body']
+      end
     end
   end
 
