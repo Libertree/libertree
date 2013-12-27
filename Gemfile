@@ -6,6 +6,7 @@ gem 'libertree-model', :git => 'git://github.com/Libertree/libertree-model-rb.gi
 gem 'libertree-client', :git => 'git://github.com/Libertree/libertree-client-rb.git'
 gem 'json'
 gem 'mail'
+gem 'mail-gpg'
 
 group 'extensions' do
   gem 'pg'

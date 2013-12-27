@@ -56,6 +56,7 @@ GEM
     eventmachine (1.0.3)
     factory_girl (4.3.0)
       activesupport (>= 3.0.0)
+    gpgme (2.0.2)
     i18n (0.6.9)
     json (1.8.1)
     m4dbi (0.9.0)
@@ -64,6 +65,9 @@ GEM
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    mail-gpg (0.1.2)
+      gpgme (~> 2.0.2)
+      mail (~> 2.5.3)
     metaid (1.0)
     methlab (0.1.0)
     mime-types (1.25.1)
@@ -123,6 +127,7 @@ DEPENDENCIES
   linecache19!
   m4dbi
   mail
+  mail-gpg
   pg
   rdbi!
   rdbi-driver-postgresql
