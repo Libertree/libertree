@@ -43,7 +43,7 @@ module Libertree
           if ! pool.sprung?
             pool.create_pool_delete_job
           else
-            if ! pool_before.sprung?
+            if ! pool_before['sprung']
               Libertree::Model::Job.create_for_forests(
                 {
                   task: 'request:POOL',
