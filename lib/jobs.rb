@@ -261,7 +261,7 @@ module Jobs
                 end
                 tree.req_member comment.member
               end
-              raise Libertree::RetryJob, "request associated data first"
+              raise Libertree::RetryJob, "request associated data first (#{response['message']})"
             end
           end
         end
@@ -405,7 +405,7 @@ module Jobs
               when /member/
                 tree.req_member post.member
               end
-              raise Libertree::RetryJob, "request associated data first"
+              raise Libertree::RetryJob, "request associated data first (#{response['message']})"
             end
           end
         end
