@@ -41,6 +41,19 @@ module Libertree
               recipient_member_ids: member_ids
             )
 
+            # forward via email for those local recipients who requested it
+            members[:local].map(&:account).select {|a| a.email && a.forward_dms_via_email }.
+              each do |account|
+                Libertree::Model::Job.create(
+                  task: 'email',
+                  params: {
+                    'to'      => account.email,
+                    'subject' => '[Libertree] Direct message', # TODO: translate
+                    'body'    => params['text']
+                  }.to_json
+                )
+            end
+
             respond_with_code 'OK'
           rescue PGError => e
             log "Error in rsp_message: #{e.message}"
