@@ -70,14 +70,14 @@ dev_dependencies() {
           cat<<EOF
 To install the development dependencies, please first run
 
-    apt-get install gcc g++ make ruby1.9-dev libpq-dev libglib2.0-dev libcurl-dev libmagic-dev
+    apt-get install gcc g++ make bzip2 ruby1.9-dev libpq-dev libglib2.0-dev libcurl-dev libmagic-dev libgpgme11-dev
 EOF
           ;;
       fedora)
           cat<<EOF
 To install the development dependencies, please first run
 
-    yum install gcc g++ make ruby-devel postgresql-devel glib2-devel libcurl-devel file-devel
+    yum install gcc g++ make bzip2 ruby-devel postgresql-devel glib2-devel libcurl-devel file-devel gpgme-devel
 EOF
           ;;
       *)
@@ -86,11 +86,11 @@ You may have to install development dependencies first before installing Libertr
 
 These tools are required:
 
-    gcc g++ make
+    gcc g++ make bzip2
 
 Development headers for the following software are needed at build time:
 
-    ruby postgresql glib2 libcurl libmagic/file
+    ruby postgresql glib2 libcurl libmagic/file gpgme
 EOF
           ;;
   esac
