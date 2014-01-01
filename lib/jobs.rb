@@ -2,7 +2,9 @@ require 'libertree/client'
 require 'libertree/model'
 require 'libertree/job-processor'
 require_relative 'libertree/references'
-require 'pony'
+require 'mail'
+require 'mail-gpg'
+require 'tmpdir'
 require 'net/http'
 require 'uri'
 
@@ -36,8 +38,20 @@ module Jobs
   end
 
   class Email
+    def self.from=(address)
+      @@from_address ||= address
+    end
     def self.perform(params)
-      Pony.mail  to: params['to'], subject: params['subject'], body: params['body']
+      GPGME::Engine.home_dir = Dir.tmpdir
+      Mail.deliver do
+        to       params['to']
+        from     @@from_address
+        subject  params['subject']
+        body     params['body']
+        if params['pubkey']
+          gpg encrypt: true, keys: { params['to'] => params['pubkey'] }
+        end
+      end
     end
   end
 
@@ -259,7 +273,7 @@ module Jobs
                       :req_member,
                       comment.member)
           end
-          raise Libertree::RetryJob, "request associated data first"
+          raise Libertree::RetryJob, "request associated data first (#{response['message']})"
         end
       end
     end
@@ -373,7 +387,7 @@ module Jobs
             when /member/
               with_tree(params['server_id'], :req_member, post.member)
             end
-            raise Libertree::RetryJob, "request associated data first"
+            raise Libertree::RetryJob, "request associated data first (#{response['message']})"
           end
         end
       end

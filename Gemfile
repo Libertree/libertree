@@ -1,11 +1,12 @@
 source 'http://rubygems.org'
 gem 'rdbi', :git => 'git://github.com/RDBI/rdbi.git', :ref => 'pre-sth-leak'
 gem 'rdbi-driver-postgresql' # , :git => 'git://github.com/RDBI/rdbi-driver-postgresql.git'
-gem 'pony'
+gem 'm4dbi' # , :git => 'git://github.com/Pistos/m4dbi.git'
 gem 'libertree-model', :git => 'git://github.com/Libertree/libertree-model-rb.git', :branch => 'xmpp'
 gem 'libertree-client', :git => 'git://github.com/Libertree/libertree-client-rb.git', :branch => 'xmpp'
-gem 'syck', :platforms => [:ruby_20]
 gem 'json'
+gem 'mail'
+gem 'mail-gpg'
 
 group 'extensions' do
   gem 'pg'
