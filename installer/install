@@ -78,6 +78,17 @@ To install the development dependencies, please first run
 EOF
           ;;
       *)
+          cat<<EOF
+You may have to install development dependencies first before installing Libertree.  Unfortunately, we could not reliably identify your system, so we cannot name the actual packages you may be needing.
+
+These tools are required:
+
+    gcc g++ make
+
+Development headers for the following software are needed at build time:
+
+    ruby postgresql glib2 libcurl libmagic/file
+EOF
           ;;
   esac
   return 0
