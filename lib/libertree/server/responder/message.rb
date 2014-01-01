@@ -49,7 +49,7 @@ module Libertree
                   params: {
                     'to'      => account.email,
                     'subject' => '[Libertree] Direct message', # TODO: translate
-                    'body'    => params['text']
+                    'body'    => "#{sender_member.handle} wrote:\n\n#{params['text']}"
                   }.to_json
                 )
             end
