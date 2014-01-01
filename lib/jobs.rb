@@ -3,6 +3,8 @@ require 'libertree/model'
 require 'libertree/job-processor'
 require_relative 'libertree/references'
 require 'mail'
+require 'mail-gpg'
+require 'tmpdir'
 require 'net/http'
 require 'uri'
 
@@ -41,11 +43,15 @@ module Jobs
       @@from_address ||= address
     end
     def self.perform(params)
+      GPGME::Engine.home_dir = Dir.tmpdir
       Mail.deliver do
         to       params['to']
         from     @@from_address
         subject  params['subject']
         body     params['body']
+        if params['pubkey']
+          gpg encrypt: true, keys: { params['to'] => params['pubkey'] }
+        end
       end
     end
   end
