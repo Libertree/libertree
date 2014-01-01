@@ -67,14 +67,14 @@ dev_dependencies() {
           cat<<EOF
 To install the development dependencies, please first run
 
-    apt-get install gcc g++ make ruby1.9-dev libpq-dev libglib2.0-dev
+    apt-get install gcc g++ make ruby1.9-dev libpq-dev libglib2.0-dev libcurl-dev libmagic-dev
 EOF
           ;;
       fedora)
           cat<<EOF
 To install the development dependencies, please first run
 
-    yum install gcc g++ make ruby-devel postgresql-devel glib2-devel
+    yum install gcc g++ make ruby-devel postgresql-devel glib2-devel libcurl-devel file-devel
 EOF
           ;;
       *)
