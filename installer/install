@@ -21,6 +21,9 @@ If sudo is installed you may need to input your password to execute
 certain tasks as root.
 
 You should have installed all runtime dependencies before continuing.
+These include:
+
+  ruby postgresql gpgme openssl
 EOF
 
   dev_dependencies
@@ -67,17 +70,28 @@ dev_dependencies() {
           cat<<EOF
 To install the development dependencies, please first run
 
-    apt-get install gcc g++ make ruby1.9-dev libpq-dev libglib2.0-dev
+    apt-get install gcc g++ make bzip2 ruby1.9-dev libpq-dev libglib2.0-dev libcurl-dev libmagic-dev libgpgme11-dev
 EOF
           ;;
       fedora)
           cat<<EOF
 To install the development dependencies, please first run
 
-    yum install gcc g++ make ruby-devel postgresql-devel glib2-devel
+    yum install gcc g++ make bzip2 ruby-devel postgresql-devel glib2-devel libcurl-devel file-devel gpgme-devel
 EOF
           ;;
       *)
+          cat<<EOF
+You may have to install development dependencies first before installing Libertree.  Unfortunately, we could not reliably identify your system, so we cannot name the actual packages you may be needing.
+
+These tools are required:
+
+    gcc g++ make bzip2
+
+Development headers for the following software are needed at build time:
+
+    ruby postgresql glib2 libcurl libmagic/file gpgme
+EOF
           ;;
   esac
   return 0
