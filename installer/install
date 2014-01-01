@@ -21,6 +21,9 @@ If sudo is installed you may need to input your password to execute
 certain tasks as root.
 
 You should have installed all runtime dependencies before continuing.
+These include:
+
+  ruby postgresql gpgme openssl
 EOF
 
   dev_dependencies
