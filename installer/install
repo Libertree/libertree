@@ -66,7 +66,7 @@ dev_dependencies() {
 
   OS=`sed -ne 's/^ID=\(.*\)/\1/p' /etc/os-release`
   case "$OS" in
-      debian|ubuntu)
+      debian|raspbian|ubuntu)
           cat<<EOF
 To install the development dependencies, please first run
 
