@@ -48,6 +48,7 @@ module Libertree
                   task: 'email',
                   params: {
                     'to'      => account.email,
+                    'pubkey'  => account.pubkey,
                     'subject' => '[Libertree] Direct message', # TODO: translate
                     'body'    => "#{sender_member.handle} wrote:\n\n#{params['text']}"
                   }.to_json
