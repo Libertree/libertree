@@ -42,6 +42,7 @@ BUILDPKG = fpm -d ruby -d rubygems \
 		--maintainer "rekado+libertree@elephly.net" \
 		--version $(2) \
 		--license AGPL3 \
+		-p $(3) \
 		-s gem -t $(PKG_TYPE) $(addprefix ./,$(1))
 
 
