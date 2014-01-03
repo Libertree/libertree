@@ -128,7 +128,7 @@ libertree-model-$(VERSION_MODEL).$(PKG_TYPE) : libertree-model-$(VERSION_MODEL).
 
 # needs OpenSSL library
 $(PKG_PREFIX)-eventmachine-1.0.3.$(PKG_TYPE) : | prepare
-	$(call MKPACKAGE, eventmachine-1.0.3.gem, -p $(PKG_PREFIX)-eventmachine.$(PKG_TYPE) -d openssl-libs)
+	$(call MKPACKAGE, eventmachine-1.0.3.gem, -p $(PKG_PREFIX)-eventmachine-1.0.3.$(PKG_TYPE) -d openssl-libs)
 
 # needs libxml2 libxslt
 $(PKG_PREFIX)-nokogiri-1.5.9.$(PKG_TYPE) : | prepare
