@@ -99,7 +99,7 @@ unpacked_gems : rdbi-6b4103aac8e2 \
 gems_with_extensions : $(addprefix $(PKG_PREFIX)-,$(addsuffix .$(PKG_TYPE),bcrypt-ruby-3.0.1 \
 	eventmachine-1.0.3 \
 	json-1.8.0 \
-	nokogiri-1.5.5 \
+	nokogiri-1.5.9 \
 	pg-0.9.0 \
 	rubinius-core-api-0.0.1))
 
@@ -131,8 +131,8 @@ $(PKG_PREFIX)-eventmachine-1.0.3.$(PKG_TYPE) : | prepare
 	$(call MKPACKAGE, eventmachine-1.0.3.gem, -p $(PKG_PREFIX)-eventmachine.$(PKG_TYPE) -d openssl-libs)
 
 # needs libxml2 libxslt
-$(PKG_PREFIX)-nokogiri-1.5.5.$(PKG_TYPE) : | prepare
-	$(call MKPACKAGE, nokogiri-1.5.5.gem, -p $(PKG_PREFIX)-nokogiri.$(PKG_TYPE) -d libxml2 -d libxslt)
+$(PKG_PREFIX)-nokogiri-1.5.9.$(PKG_TYPE) : | prepare
+	$(call MKPACKAGE, nokogiri-1.5.9.gem, -p $(PKG_PREFIX)-nokogiri-1.5.9.$(PKG_TYPE) -d libxml2 -d libxslt)
 
 # this is different because we use the git version
 # firstp build the gem, then package it
