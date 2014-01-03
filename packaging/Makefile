@@ -179,8 +179,6 @@ nuke : cleanall
 # and place them in the cache in vendor/cache
 prepare :
 	bundle pack --all
-	mkdir -p ./packages/$(PKG_TYPE)
-	mv *.$(PKG_TYPE) ./packages/$(PKG_TYPE)
 
 rebuild: cleanall libertree-backend-$(VERSION_BACKEND).$(PKG_TYPE)
 
