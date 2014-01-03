@@ -10,7 +10,7 @@ PREFIX_GEMS = $(addprefix $(PREFIX)/,gems)
 PKG_PREFIX = libertree
 
 VERSION_BACKEND = 0.0.1
-VERSION_MODEL   = 0.0.1
+VERSION_MODEL   = 0.5.0
 VERSION_CLIENT  = 0.0.2
 
 GEMDIR = vendor/cache
