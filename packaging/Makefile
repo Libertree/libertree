@@ -171,7 +171,6 @@ nuke : cleanall
 # Download all gems listed in the Gemfile
 # and place them in the cache in vendor/cache
 prepare :
-	bundle install --without development --path vendor
 	bundle pack --all
 
 rebuild: cleanall all
