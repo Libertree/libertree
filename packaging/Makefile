@@ -60,7 +60,6 @@ libertree-backend-$(VERSION_BACKEND).$(PKG_TYPE) : gems \
 		-d libertree-model \
 		-d libertree-client \
 		--prefix $(PREFIX_BACKEND) \
-		--directories $(PREFIX_BACKEND) \
 		--url "http://libertreeproject.org" \
 		--maintainer "rekado+libertree@elephly.net" \
 		--version $(VERSION_BACKEND) \
