@@ -56,8 +56,8 @@ libertree-backend-$(VERSION_BACKEND).$(PKG_TYPE) : gems \
 	libertree-client-$(VERSION_CLIENT).$(PKG_TYPE) \
 	libertree-model-$(VERSION_MODEL).$(PKG_TYPE)
 	fpm -d ruby -d rubygems \
-		-d $(addprefix $(PKG_PREFIX)-,libertree-model) \
-		-d $(addprefix $(PKG_PREFIX)-,libertree-client) \
+		-d libertree-model \
+		-d libertree-client \
 		--prefix $(PREFIX_BACKEND) \
 		--url "http://libertreeproject.org" \
 		--maintainer "rekado+libertree@elephly.net" \
