@@ -129,11 +129,11 @@ libertree-model-$(VERSION_MODEL).$(PKG_TYPE) : libertree-model-$(VERSION_MODEL).
 
 # needs OpenSSL library
 $(PKG_PREFIX)-eventmachine-1.0.3.$(PKG_TYPE) : | prepare
-	$(call MKPACKAGE, $@, -p libertree-eventmachine.$(PKG_TYPE) -d openssl-libs)
+	$(call MKPACKAGE, $@, -p $(PKG_PREFIX)-eventmachine.$(PKG_TYPE) -d openssl-libs)
 
 # needs libxml2 libxslt
 $(PKG_PREFIX)-nokogiri-1.5.5.$(PKG_TYPE) : | prepare
-	$(call MKPACKAGE, $@, -p libertree-nokogiri.$(PKG_TYPE) -d libxml2 -d libxslt)
+	$(call MKPACKAGE, $@, -p $(PKG_PREFIX)-nokogiri.$(PKG_TYPE) -d libxml2 -d libxslt)
 
 # this is different because we use the git version
 # firstp build the gem, then package it
