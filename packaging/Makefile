@@ -79,7 +79,7 @@ regular_gems : activesupport-3.2.13.gem \
 	typelib-0.1.0.gem
 
 gems_with_extensions : bcrypt-ruby-3.0.1.gem \
-	eventmachine-0.12.10.gem \
+	eventmachine-1.0.3.gem \
 	json-1.8.0.gem \
 	nokogiri-1.5.5.gem \
 	pg-0.9.0.gem \
@@ -122,7 +122,7 @@ libertree-model-$(VERSION_MODEL).gem : FORCE
 ####################################
 
 # needs OpenSSL library
-eventmachine-0.12.10.gem : | prepare
+eventmachine-1.0.3.gem : | prepare
 	$(call MKPACKAGE, $@, -d openssl-libs)
 
 # needs libxml2 libxslt
