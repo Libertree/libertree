@@ -74,34 +74,35 @@ libertree-backend-$(VERSION_BACKEND).$(PKG_TYPE) : gems \
 #		--config-files config.yaml.example \
 
 
-gems : regular_gems gems_with_extensions
-regular_gems : activesupport-3.2.13.gem \
-	blather-0.8.5.gem \
-	connection_pool-1.0.0.gem \
-	epoxy-0.3.1.gem \
-	girl_friday-0.11.2.gem \
-	i18n-0.6.1.gem \
-	m4dbi-0.8.8.gem \
-	mail-2.5.4.gem \
-	metaid-1.0.gem \
-	methlab-0.1.0.gem \
-	mime-types-1.23.gem \
-	multi_json-1.7.6.gem \
-	niceogiri-1.1.2.gem \
-	polyglot-0.3.3.gem \
-	pony-1.4.1.gem \
-	rdbi-6b4103aac8e2 \
-	rdbi-driver-postgresql-be571a9909f7 \
-	rubinius-actor-0.0.2.gem \
-	treetop-1.4.14.gem \
-	typelib-0.1.0.gem
+gems : regular_gems gems_with_extensions unpacked_gems
+regular_gems : $(addprefix $(PKG_PREFIX)-,$(addsuffix .$(PKG_TYPE),activesupport-3.2.13 \
+	blather-0.8.5 \
+	connection_pool-1.0.0 \
+	epoxy-0.3.1 \
+	girl_friday-0.11.2 \
+	i18n-0.6.1 \
+	m4dbi-0.8.8 \
+	mail-2.5.4 \
+	metaid-1.0 \
+	methlab-0.1.0 \
+	mime-types-1.23 \
+	multi_json-1.7.6 \
+	niceogiri-1.1.2 \
+	polyglot-0.3.3 \
+	pony-1.4.1 \
+	rubinius-actor-0.0.2 \
+	treetop-1.4.14 \
+	typelib-0.1.0))
 
-gems_with_extensions : bcrypt-ruby-3.0.1.gem \
-	eventmachine-1.0.3.gem \
-	json-1.8.0.gem \
-	nokogiri-1.5.5.gem \
-	pg-0.9.0.gem \
-	rubinius-core-api-0.0.1.gem
+unpacked_gems : rdbi-6b4103aac8e2 \
+	rdbi-driver-postgresql-be571a9909f7
+
+gems_with_extensions : $(addprefix $(PKG_PREFIX)-,$(addsuffix .$(PKG_TYPE),bcrypt-ruby-3.0.1 \
+	eventmachine-1.0.3 \
+	json-1.8.0 \
+	nokogiri-1.5.5 \
+	pg-0.9.0 \
+	rubinius-core-api-0.0.1))
 
 
 # TODO: add libertree-client.gemspec as prerequisite?
@@ -127,15 +128,15 @@ libertree-model-$(VERSION_MODEL).$(PKG_TYPE) : libertree-model-$(VERSION_MODEL).
 ####################################
 
 # needs OpenSSL library
-eventmachine-1.0.3.gem : | prepare
-	$(call MKPACKAGE, $@, -d openssl-libs)
+$(PKG_PREFIX)-eventmachine-1.0.3.$(PKG_TYPE) : | prepare
+	$(call MKPACKAGE, $@, -p libertree-eventmachine.$(PKG_TYPE) -d openssl-libs)
 
 # needs libxml2 libxslt
-nokogiri-1.5.5.gem : | prepare
-	$(call MKPACKAGE, $@, -d libxml2 -d libxslt)
+$(PKG_PREFIX)-nokogiri-1.5.5.$(PKG_TYPE) : | prepare
+	$(call MKPACKAGE, $@, -p libertree-nokogiri.$(PKG_TYPE) -d libxml2 -d libxslt)
 
 # this is different because we use the git version
-# first build the gem, then package it
+# firstp build the gem, then package it
 rdbi-% : | prepare
 	cd $(addprefix $(GEMDIR)/,$@); gem build rdbi.gemspec
 	$(call MKPACKAGE, $(addprefix $@/,rdbi-0.9.1.gem), -v $*)
@@ -147,19 +148,20 @@ rdbi-driver-postgresql-% : | prepare
 	$(call MKPACKAGE, $(addprefix $@/,rdbi-driver-postgresql-0.9.1.gem), -v $*)
 
 # TODO: does this depend on a system library?
-bcrypt-ruby-3.0.1.gem : | prepare
+$(PKG_PREFIX)-bcrypt-ruby-3.0.1.$(PKG_TYPE) : | prepare
 	$(call MKPACKAGE, $@)
 
-pg-0.9.0.gem : | prepare
+$(PKG_PREFIX)-pg-0.9.0.$(PKG_TYPE) : | prepare
 ifeq ($(PKG_TYPE), rpm)
 	$(call MKPACKAGE, $@, -d postgresql-libs)
 else
 	$(call MKPACKAGE, $@, -d libpq5)
 endif
 
-# standard rule for dependent gems
-%.gem : | prepare
-	$(call MKPACKAGE, $@)
+# standard rule for gems that are converted to rpm/deb
+# TODO: adding gem as prerequisite fails
+$(PKG_PREFIX)-%.$(PKG_TYPE) :
+	$(call MKPACKAGE, $*.gem, -p $@)
 
 clean :
 	rm -rf ./packages/
