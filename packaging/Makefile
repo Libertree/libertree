@@ -104,17 +104,22 @@ libertree-backend : FORCE
 		database.yaml.example \
 		config.yaml.example
 
-libertree-client-$(VERSION_CLIENT).gem : FORCE
+# TODO: add libertree-client.gemspec as prerequisite?
+libertree-client-$(VERSION_CLIENT).gem :
 	cd ../../libertree-client-rb; gem build libertree-client.gemspec
 	mv $(addprefix ../../libertree-client-rb/,$@) .
-	$(call BUILDPKG, $@, $(VERSION_CLIENT))
+
+libertree-client-$(VERSION_CLIENT).$(PKG_TYPE) : libertree-client-$(VERSION_CLIENT).gem
+	$(call BUILDPKG, libertree-client-$(VERSION_CLIENT).gem, $(VERSION_CLIENT), $@)
 
 # TODO: specify database.yaml.example as config file
 # TODO: share database.yaml with other packages?
-libertree-model-$(VERSION_MODEL).gem : FORCE
+libertree-model-$(VERSION_MODEL).gem :
 	cd ../../libertree-model-rb; gem build libertree-model.gemspec
 	mv $(addprefix ../../libertree-model-rb/,$@) .
-	$(call BUILDPKG, $@, $(VERSION_MODEL))
+
+libertree-model-$(VERSION_MODEL).$(PKG_TYPE) : libertree-model-$(VERSION_MODEL).gem
+	$(call BUILDPKG, libertree-model-$(VERSION_MODEL).gem, $(VERSION_MODEL), $@)
 
 
 ####################################
