@@ -2,6 +2,7 @@
 #   - add support for frontend
 #   - non-gem builds have no dependencies (BUILDPKG and libertree-backend)
 #   - directories in /usr/share/libertree are not removed on uninstall
+#   - add architecture ("-a all" or "-a native")
 
 PREFIX = /usr/share/libertree
 PREFIX_BACKEND = $(addprefix $(PREFIX)/,backend-rb)
