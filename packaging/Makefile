@@ -183,4 +183,3 @@ prepare :
 rebuild: cleanall libertree-backend-$(VERSION_BACKEND).rpm
 
 .PHONY: prepare clean cleanall nuke rebuild
-FORCE :
