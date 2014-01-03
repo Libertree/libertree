@@ -50,12 +50,29 @@ BUILDPKG = fpm -d ruby -d rubygems \
 # RULES
 #############
 
-all: gems \
+# TODO: share database config file?
+# TODO: add built rpms/debs as dependencies
+# TODO: if config files are included fpm fails
+libertree-backend-$(VERSION_BACKEND).$(PKG_TYPE) : gems \
 	libertree-client-$(VERSION_CLIENT).gem \
-	libertree-model-$(VERSION_MODEL).gem \
-	libertree-backend
-	mkdir -p ./packages/$(PKG_TYPE)
-	mv *.$(PKG_TYPE) ./packages/$(PKG_TYPE)
+	libertree-model-$(VERSION_MODEL).gem
+	fpm -d ruby -d rubygems \
+		-d $(addprefix $(PKG_PREFIX)-,libertree-model) \
+		-d $(addprefix $(PKG_PREFIX)-,libertree-client) \
+		--prefix $(PREFIX_BACKEND) \
+		--url "http://libertreeproject.org" \
+		--maintainer "rekado+libertree@elephly.net" \
+		--version $(VERSION_BACKEND) \
+		--license AGPL3 \
+		-p $@ \
+		-C ../../libertree-backend-rb \
+		-s dir -t $(PKG_TYPE) -n $(addprefix $(PKG_PREFIX)-,$@) \
+		lib/ bin/server.rb bin/job-processor.rb generate-key-pair.sh \
+		database.yaml.example \
+		config.yaml.example
+#		--config-files database.yaml.example \
+#		--config-files config.yaml.example \
+
 
 gems : regular_gems gems_with_extensions
 regular_gems : activesupport-3.2.13.gem \
@@ -86,24 +103,6 @@ gems_with_extensions : bcrypt-ruby-3.0.1.gem \
 	pg-0.9.0.gem \
 	rubinius-core-api-0.0.1.gem
 
-# TODO: share database config file?
-# TODO: add built rpms/debs as dependencies
-libertree-backend : FORCE
-	fpm -d ruby -d rubygems \
-		-d $(addprefix $(PKG_PREFIX)-,libertree-model) \
-		-d $(addprefix $(PKG_PREFIX)-,libertree-client) \
-		--prefix $(PREFIX_BACKEND) \
-		--url "http://libertreeproject.org" \
-		--maintainer "rekado+libertree@elephly.net" \
-		--version $(VERSION_BACKEND) \
-		--license AGPL3 \
-		--config-files database.yaml.example \
-		--config-files config.yaml.example \
-		-C ../../libertree-backend-rb \
-		-s dir -t $(PKG_TYPE) -n $(addprefix $(PKG_PREFIX)-,$@) \
-		lib/ bin/server.rb bin/job-processor.rb generate-key-pair.sh \
-		database.yaml.example \
-		config.yaml.example
 
 # TODO: add libertree-client.gemspec as prerequisite?
 libertree-client-$(VERSION_CLIENT).gem :
@@ -178,8 +177,10 @@ nuke : cleanall
 # and place them in the cache in vendor/cache
 prepare :
 	bundle pack --all
+	mkdir -p ./packages/$(PKG_TYPE)
+	mv *.$(PKG_TYPE) ./packages/$(PKG_TYPE)
 
-rebuild: cleanall all
+rebuild: cleanall libertree-backend-$(VERSION_BACKEND).rpm
 
 .PHONY: prepare clean cleanall nuke rebuild
 FORCE :
