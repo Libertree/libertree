@@ -42,7 +42,7 @@ BUILDPKG = fpm -d ruby -d rubygems \
 		--maintainer "rekado+libertree@elephly.net" \
 		--version $(2) \
 		--license AGPL3 \
-		-s gem -t $(PKG_TYPE) $(1)
+		-s gem -t $(PKG_TYPE) $(addprefix ./,$(1))
 
 all: gems \
 	libertree-client-$(VERSION_CLIENT).gem \
