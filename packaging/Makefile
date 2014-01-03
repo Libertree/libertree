@@ -180,6 +180,6 @@ prepare :
 	mkdir -p ./packages/$(PKG_TYPE)
 	mv *.$(PKG_TYPE) ./packages/$(PKG_TYPE)
 
-rebuild: cleanall libertree-backend-$(VERSION_BACKEND).rpm
+rebuild: cleanall libertree-backend-$(VERSION_BACKEND).$(PKG_TYPE)
 
 .PHONY: prepare clean cleanall nuke rebuild
