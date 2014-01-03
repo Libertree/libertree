@@ -54,8 +54,8 @@ BUILDPKG = fpm -d ruby -d rubygems \
 # TODO: add built rpms/debs as dependencies
 # TODO: if config files are included fpm fails
 libertree-backend-$(VERSION_BACKEND).$(PKG_TYPE) : gems \
-	libertree-client-$(VERSION_CLIENT).gem \
-	libertree-model-$(VERSION_MODEL).gem
+	libertree-client-$(VERSION_CLIENT).$(PKG_TYPE) \
+	libertree-model-$(VERSION_MODEL).$(PKG_TYPE)
 	fpm -d ruby -d rubygems \
 		-d $(addprefix $(PKG_PREFIX)-,libertree-model) \
 		-d $(addprefix $(PKG_PREFIX)-,libertree-client) \
