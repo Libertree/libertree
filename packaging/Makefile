@@ -152,9 +152,9 @@ $(PKG_PREFIX)-bcrypt-ruby-3.0.1.$(PKG_TYPE) : | prepare
 
 $(PKG_PREFIX)-pg-0.9.0.$(PKG_TYPE) : | prepare
 ifeq ($(PKG_TYPE), rpm)
-	$(call MKPACKAGE, $@, -d postgresql-libs)
+	$(call MKPACKAGE, pg-0.9.0.gem, -p $(PKG_PREFIX)-pg-0.9.0.$(PKG_TYPE) -d postgresql-libs)
 else
-	$(call MKPACKAGE, $@, -d libpq5)
+	$(call MKPACKAGE, pg-0.9.0.gem, -p $(PKG_PREFIX)-pg-0.9.0.$(PKG_TYPE) -d libpq5)
 endif
 
 # standard rule for gems that are converted to rpm/deb
