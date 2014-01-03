@@ -73,7 +73,7 @@ libertree-backend-$(VERSION_BACKEND).$(PKG_TYPE) : gems \
 #		--config-files config.yaml.example \
 
 
-gems : regular_gems gems_with_extensions unpacked_gems
+gems : prepare regular_gems gems_with_extensions unpacked_gems
 regular_gems : $(addprefix $(PKG_PREFIX)-,$(addsuffix .$(PKG_TYPE),activesupport-3.2.13 \
 	blather-0.8.5 \
 	connection_pool-1.0.0 \
