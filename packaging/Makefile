@@ -129,11 +129,11 @@ libertree-model-$(VERSION_MODEL).$(PKG_TYPE) : libertree-model-$(VERSION_MODEL).
 
 # needs OpenSSL library
 $(PKG_PREFIX)-eventmachine-1.0.3.$(PKG_TYPE) : | prepare
-	$(call MKPACKAGE, $@, -p $(PKG_PREFIX)-eventmachine.$(PKG_TYPE) -d openssl-libs)
+	$(call MKPACKAGE, eventmachine-1.0.3.gem, -p $(PKG_PREFIX)-eventmachine.$(PKG_TYPE) -d openssl-libs)
 
 # needs libxml2 libxslt
 $(PKG_PREFIX)-nokogiri-1.5.5.$(PKG_TYPE) : | prepare
-	$(call MKPACKAGE, $@, -p $(PKG_PREFIX)-nokogiri.$(PKG_TYPE) -d libxml2 -d libxslt)
+	$(call MKPACKAGE, nokogiri-1.5.5.gem, -p $(PKG_PREFIX)-nokogiri.$(PKG_TYPE) -d libxml2 -d libxslt)
 
 # this is different because we use the git version
 # firstp build the gem, then package it
@@ -149,7 +149,7 @@ rdbi-driver-postgresql-% : | prepare
 
 # TODO: does this depend on a system library?
 $(PKG_PREFIX)-bcrypt-ruby-3.0.1.$(PKG_TYPE) : | prepare
-	$(call MKPACKAGE, $@)
+	$(call MKPACKAGE, bcrypt-ruby-3.0.1.gem, -p $(PKG_PREFIX)-bcrypt-ruby-3.0.1.$(PKG_TYPE))
 
 $(PKG_PREFIX)-pg-0.9.0.$(PKG_TYPE) : | prepare
 ifeq ($(PKG_TYPE), rpm)
