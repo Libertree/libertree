@@ -44,6 +44,11 @@ BUILDPKG = fpm -d ruby -d rubygems \
 		--license AGPL3 \
 		-s gem -t $(PKG_TYPE) $(addprefix ./,$(1))
 
+
+#############
+# RULES
+#############
+
 all: gems \
 	libertree-client-$(VERSION_CLIENT).gem \
 	libertree-model-$(VERSION_MODEL).gem \
@@ -110,6 +115,11 @@ libertree-model-$(VERSION_MODEL).gem : FORCE
 	cd ../../libertree-model-rb; gem build libertree-model.gemspec
 	mv $(addprefix ../../libertree-model-rb/,$@) .
 	$(call BUILDPKG, $@, $(VERSION_MODEL))
+
+
+####################################
+# DEPENDENT GEMS WITH EXTENSIONS
+####################################
 
 # needs OpenSSL library
 eventmachine-0.12.10.gem : | prepare
