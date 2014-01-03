@@ -16,15 +16,26 @@ VERSION_CLIENT  = 0.0.2
 GEMDIR = vendor/cache
 PKG_TYPE = rpm # or deb
 
+# Convert a ruby gem to a deb/rpm package
+# The name of the resulting package will be prefixed with "libertree-" (PKG_PREFIX)
+# $(1) : the directory containing the source gem
+# $(2) : optional deb/rpm dependencies for the built package
 MKPACKAGE = fpm -d ruby -d rubygems $(2) \
 		--prefix $(PREFIX_GEMS) --gem-package-name-prefix $(PKG_PREFIX) \
 		-s gem -t $(PKG_TYPE) $(addprefix $(GEMDIR)/,$(1))
 
+# Create a deb/rpm package from an unpacked ruby gem.
+# $(1) : ?
+# $(2) : ?
+# $(3) : optional deb/rpm dependencies for the built package
 WRAPGEMDIR = fpm -d ruby -d rubygems $(3) \
 		--prefix $(PREFIX_GEMS) \
 		-s dir -t $(PKG_TYPE) -n $(addprefix $(PKG_PREFIX)-,$(2)) $(addprefix $(GEMDIR)/,$(1))
 
-# TODO: add built rpms/debs as dependencies
+# Build a deb/rpm package from a libertree gem
+# Dependencies are set according to the gemspec file.
+# $(1) : gem file name
+# $(2) : version
 BUILDPKG = fpm -d ruby -d rubygems \
 		--prefix $(PREFIX_GEMS) \
 		--gem-package-name-prefix $(PKG_PREFIX) \
@@ -147,6 +158,8 @@ cleanall : clean
 nuke : cleanall
 	rm -rf vendor
 
+# Download all gems listed in the Gemfile
+# and place them in the cache in vendor/cache
 prepare :
 	bundle install --without development --path vendor
 	bundle pack --all
