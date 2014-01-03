@@ -95,7 +95,7 @@ libertree-backend : FORCE
 		--config-files config.yaml.example \
 		-C ../../libertree-backend-rb \
 		-s dir -t $(PKG_TYPE) -n $(addprefix $(PKG_PREFIX)-,$@) \
-		lib/ bin/server.rb bin/job-processor.rb generate-key-pair.rb \
+		lib/ bin/server.rb bin/job-processor.rb generate-key-pair.sh \
 		database.yaml.example \
 		config.yaml.example
 
