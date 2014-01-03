@@ -2,7 +2,6 @@
 #   - add support for frontend
 #   - non-gem builds have no dependencies (BUILDPKG and libertree-backend)
 #   - directories in /usr/share/libertree are not removed on uninstall
-#   - all targets are forced. Try to be smart and only build what's needed
 
 PREFIX = /usr/share/libertree
 PREFIX_BACKEND = $(addprefix $(PREFIX)/,backend-rb)
@@ -19,7 +18,7 @@ PKG_TYPE = rpm # or deb
 # Convert a ruby gem to a deb/rpm package
 # The name of the resulting package will be prefixed with "libertree-" (PKG_PREFIX)
 # $(1) : the directory containing the source gem
-# $(2) : optional deb/rpm dependencies for the built package
+# $(2) : additional parameters to fpm (e.g. package name, version, etc)
 MKPACKAGE = fpm -d ruby -d rubygems $(2) \
 		--prefix $(PREFIX_GEMS) --gem-package-name-prefix $(PKG_PREFIX) \
 		-s gem -t $(PKG_TYPE) $(addprefix $(GEMDIR)/,$(1))
