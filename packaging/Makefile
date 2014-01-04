@@ -39,6 +39,8 @@ WRAPGEMDIR = fpm -d ruby -d rubygems $(3) \
 BUILDPKG = fpm -d ruby -d rubygems \
 		--prefix $(PREFIX_GEMS) \
 		--gem-package-name-prefix $(PKG_PREFIX) \
+		--no-gem-fix-name \
+		--gem-fix-dependencies \
 		--maintainer "rekado+libertree@elephly.net" \
 		--version $(2) \
 		--license AGPL3 \
