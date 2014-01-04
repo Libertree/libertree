@@ -14,7 +14,8 @@ VERSION_MODEL   = 0.5.0
 VERSION_CLIENT  = 0.0.2
 
 GEMDIR = vendor/cache
-PKG_TYPE = rpm # or deb
+PKG_TYPE = rpm
+#PKG_TYPE = deb
 
 # Convert a ruby gem to a deb/rpm package
 # The name of the resulting package will be prefixed with "libertree-" (PKG_PREFIX)
