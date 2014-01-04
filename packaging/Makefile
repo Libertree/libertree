@@ -96,6 +96,7 @@ regular_gems : $(addprefix $(PKG_PREFIX)-,$(addsuffix .$(PKG_TYPE),activesupport
 	rdbi-6b4103aac8e2 \
 	rdbi-driver-postgresql-be571a9909f7 \
 	rubinius-actor-0.0.2 \
+	ruby-oembed-0.8.9 \
 	treetop-1.4.14 \
 	typelib-0.1.0))
 

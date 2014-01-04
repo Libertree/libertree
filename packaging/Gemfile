@@ -9,6 +9,10 @@ gem 'libertree-model', :git => 'git://github.com/Libertree/libertree-model-rb.gi
 gem 'libertree-client', :git => 'git://github.com/Libertree/libertree-client-rb.git', :branch => 'xmpp'
 gem 'json'
 
+group 'libertree-model' do
+  gem 'ruby-oembed'
+end
+
 group 'extensions' do
   gem 'pg'
   gem 'blather'

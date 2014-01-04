@@ -75,6 +75,7 @@ GEM
     rubinius-actor (0.0.2)
       rubinius-core-api
     rubinius-core-api (0.0.1)
+    ruby-oembed (0.8.9)
     treetop (1.4.14)
       polyglot
       polyglot (>= 0.3.1)
@@ -95,3 +96,4 @@ DEPENDENCIES
   pg
   rdbi!
   rdbi-driver-postgresql!
+  ruby-oembed
