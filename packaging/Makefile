@@ -90,12 +90,12 @@ regular_gems : $(addprefix $(PKG_PREFIX)-,$(addsuffix .$(PKG_TYPE),activesupport
 	niceogiri-1.1.2 \
 	polyglot-0.3.3 \
 	pony-1.4.1 \
+	rdbi-6b4103aac8e2 \
 	rubinius-actor-0.0.2 \
 	treetop-1.4.14 \
 	typelib-0.1.0))
 
-unpacked_gems : rdbi-6b4103aac8e2 \
-	rdbi-driver-postgresql-be571a9909f7
+unpacked_gems : rdbi-driver-postgresql-be571a9909f7
 
 gems_with_extensions : $(addprefix $(PKG_PREFIX)-,$(addsuffix .$(PKG_TYPE),bcrypt-ruby-3.0.1 \
 	eventmachine-1.0.3 \
@@ -136,10 +136,12 @@ $(PKG_PREFIX)-nokogiri-1.5.9.$(PKG_TYPE) : | prepare
 	$(call MKPACKAGE, nokogiri-1.5.9.gem, -p $(PKG_PREFIX)-nokogiri-1.5.9.$(PKG_TYPE) -d libxml2 -d libxslt)
 
 # this is different because we use the git version
-# firstp build the gem, then package it
-rdbi-% : | prepare
-	cd $(addprefix $(GEMDIR)/,$@); gem build rdbi.gemspec
-	$(call MKPACKAGE, $(addprefix $@/,rdbi-0.9.1.gem), -v $*)
+# first build the gem, then package it
+$(GEMDIR)/rdbi-%/rdbi-0.9.1.gem : $(GEMDIR)/rdbi-%/rdbi.gemspec
+	cd $(addprefix $(GEMDIR)/rdbi-,$*); gem build rdbi.gemspec
+
+$(PKG_PREFIX)-rdbi-%.$(PKG_TYPE) : $(GEMDIR)/rdbi-%/rdbi-0.9.1.gem
+	$(call MKPACKAGE, $(addprefix rdbi-$*/,rdbi-0.9.1.gem), -v $* -p $@)
 
 # this is different because we use the git version
 # first build the gem, then package it
@@ -159,8 +161,7 @@ else
 endif
 
 # standard rule for gems that are converted to rpm/deb
-# TODO: adding gem as prerequisite fails
-$(PKG_PREFIX)-%.$(PKG_TYPE) :
+$(PKG_PREFIX)-%.$(PKG_TYPE) : $(GEMDIR)/%.gem
 	$(call MKPACKAGE, $*.gem, -p $@)
 
 clean :
