@@ -85,6 +85,7 @@ regular_gems : $(addprefix $(PKG_PREFIX)-,$(addsuffix .$(PKG_TYPE),activesupport
 	i18n-0.6.1 \
 	m4dbi-0.8.8 \
 	mail-2.5.4 \
+	mail-gpg-0.1.2 \
 	metaid-1.0 \
 	methlab-0.1.0 \
 	mime-types-1.23 \
@@ -99,6 +100,7 @@ regular_gems : $(addprefix $(PKG_PREFIX)-,$(addsuffix .$(PKG_TYPE),activesupport
 
 gems_with_extensions : $(addprefix $(PKG_PREFIX)-,$(addsuffix .$(PKG_TYPE),bcrypt-ruby-3.0.1 \
 	eventmachine-1.0.3 \
+	gpgme-2.0.2 \
 	json-1.8.0 \
 	nokogiri-1.5.9 \
 	pg-0.9.0 \

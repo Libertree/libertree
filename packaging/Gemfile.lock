@@ -51,6 +51,7 @@ GEM
     girl_friday (0.11.2)
       connection_pool (~> 1.0)
       rubinius-actor
+    gpgme (2.0.2)
     i18n (0.6.1)
     json (1.8.0)
     m4dbi (0.8.8)
@@ -59,6 +60,9 @@ GEM
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
+    mail-gpg (0.1.2)
+      gpgme (~> 2.0.2)
+      mail (~> 2.5.3)
     metaid (1.0)
     methlab (0.1.0)
     mime-types (1.23)
@@ -87,6 +91,7 @@ DEPENDENCIES
   libertree-model!
   m4dbi
   mail
+  mail-gpg
   pg
   rdbi!
   rdbi-driver-postgresql!
