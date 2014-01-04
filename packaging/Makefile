@@ -139,6 +139,10 @@ $(PKG_PREFIX)-eventmachine-1.0.3.$(PKG_TYPE) : | prepare
 $(PKG_PREFIX)-nokogiri-1.5.9.$(PKG_TYPE) : | prepare
 	$(call MKPACKAGE, nokogiri-1.5.9.gem, -p $@ -d libxml2 -d libxslt)
 
+# needs gpgme
+$(PKG_PREFIX)-gpgme-2.0.2.$(PKG_TYPE) : $(GEMDIR)/gpgme-2.0.2.gem
+	$(call MKPACKAGE, gpgme-2.0.2.gem, -p $@ -d gpgme)
+
 # this is different because we use the git version
 # first build the gem, then package it
 $(GEMDIR)/rdbi-%/rdbi-0.9.1.gem : $(GEMDIR)/rdbi-%/rdbi.gemspec
