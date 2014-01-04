@@ -91,7 +91,6 @@ regular_gems : $(addprefix $(PKG_PREFIX)-,$(addsuffix .$(PKG_TYPE),activesupport
 	multi_json-1.7.6 \
 	niceogiri-1.1.2 \
 	polyglot-0.3.3 \
-	pony-1.4.1 \
 	rdbi-6b4103aac8e2 \
 	rdbi-driver-postgresql-be571a9909f7 \
 	rubinius-actor-0.0.2 \
