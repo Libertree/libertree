@@ -74,7 +74,7 @@ libertree-backend-$(VERSION_BACKEND).$(PKG_TYPE) : gems \
 #		--config-files config.yaml.example \
 
 
-gems : prepare regular_gems gems_with_extensions unpacked_gems
+gems : prepare regular_gems gems_with_extensions
 regular_gems : $(addprefix $(PKG_PREFIX)-,$(addsuffix .$(PKG_TYPE),activesupport-3.2.13 \
 	blather-0.8.5 \
 	connection_pool-1.0.0 \
@@ -91,11 +91,10 @@ regular_gems : $(addprefix $(PKG_PREFIX)-,$(addsuffix .$(PKG_TYPE),activesupport
 	polyglot-0.3.3 \
 	pony-1.4.1 \
 	rdbi-6b4103aac8e2 \
+	rdbi-driver-postgresql-be571a9909f7 \
 	rubinius-actor-0.0.2 \
 	treetop-1.4.14 \
 	typelib-0.1.0))
-
-unpacked_gems : rdbi-driver-postgresql-be571a9909f7
 
 gems_with_extensions : $(addprefix $(PKG_PREFIX)-,$(addsuffix .$(PKG_TYPE),bcrypt-ruby-3.0.1 \
 	eventmachine-1.0.3 \
@@ -145,9 +144,11 @@ $(PKG_PREFIX)-rdbi-%.$(PKG_TYPE) : $(GEMDIR)/rdbi-%/rdbi-0.9.1.gem
 
 # this is different because we use the git version
 # first build the gem, then package it
-rdbi-driver-postgresql-% : | prepare
-	cd $(addprefix $(GEMDIR)/,$@); gem build rdbi-driver-postgresql.gemspec
-	$(call MKPACKAGE, $(addprefix $@/,rdbi-driver-postgresql-0.9.1.gem), -v $*)
+$(GEMDIR)/rdbi-driver-postgresql-%/rdbi-driver-postgresql-0.9.1.gem : $(GEMDIR)/rdbi-driver-postgresql-%/rdbi-driver-postgresql.gemspec
+	cd $(addprefix $(GEMDIR)/rdbi-driver-postgresql-,$*); gem build rdbi-driver-postgresql.gemspec
+
+$(PKG_PREFIX)-rdbi-driver-postgresql-%.$(PKG_TYPE) : $(GEMDIR)/rdbi-driver-postgresql-%/rdbi-driver-postgresql-0.9.1.gem
+	$(call MKPACKAGE, $(addprefix rdbi-driver-postgresql-$*/,rdbi-driver-postgresql-0.9.1.gem), -v $* -p $@)
 
 # TODO: does this depend on a system library?
 $(PKG_PREFIX)-bcrypt-ruby-3.0.1.$(PKG_TYPE) : | prepare
