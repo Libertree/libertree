@@ -1,7 +1,6 @@
 # TODO:
 #   - add support for frontend
 #   - non-gem builds have no dependencies (BUILDPKG and libertree-backend)
-#   - directories in /usr/share/libertree are not removed on uninstall
 #   - add architecture ("-a all" or "-a native")
 
 PREFIX = /usr/share/libertree
@@ -23,6 +22,8 @@ PKG_TYPE = rpm
 # $(2) : additional parameters to fpm (e.g. package name, version, etc)
 MKPACKAGE = fpm -d ruby -d rubygems $(2) \
 		--prefix $(PREFIX_GEMS) --gem-package-name-prefix $(PKG_PREFIX) \
+		--directories . \
+		--gem-bin-path $(addprefix $(PREFIX_GEMS)/,bin) \
 		-s gem -t $(PKG_TYPE) $(addprefix $(GEMDIR)/,$(1))
 
 # Create a deb/rpm package from an unpacked ruby gem.
@@ -47,6 +48,8 @@ BUILDPKG = fpm -d ruby -d rubygems \
 		--maintainer "rekado+libertree@elephly.net" \
 		--version $(2) \
 		--license AGPL3 \
+		--directories . \
+		--gem-bin-path $(addprefix $(PREFIX_GEMS)/,bin) \
 		-p $(3) \
 		-n $(4) \
 		-s gem -t $(PKG_TYPE) $(addprefix ./,$(1))
@@ -72,6 +75,7 @@ libertree-backend-$(VERSION_BACKEND).$(PKG_TYPE) : gems \
 		--license AGPL3 \
 		-p $@ \
 		-C ../../libertree-backend-rb \
+		--directories . \
 		-s dir -t $(PKG_TYPE) -n libertree-backend \
 		lib/ bin/server.rb bin/job-processor.rb generate-key-pair.sh \
 		database.yaml.example \
