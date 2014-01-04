@@ -37,6 +37,8 @@ WRAPGEMDIR = fpm -d ruby -d rubygems $(3) \
 # Dependencies are set according to the gemspec file.
 # $(1) : gem file name
 # $(2) : version
+# $(3) : path of generated package
+# $(4) : package name
 BUILDPKG = fpm -d ruby -d rubygems \
 		--prefix $(PREFIX_GEMS) \
 		--gem-package-name-prefix $(PKG_PREFIX) \
@@ -46,6 +48,7 @@ BUILDPKG = fpm -d ruby -d rubygems \
 		--version $(2) \
 		--license AGPL3 \
 		-p $(3) \
+		-n $(4) \
 		-s gem -t $(PKG_TYPE) $(addprefix ./,$(1))
 
 
@@ -69,7 +72,7 @@ libertree-backend-$(VERSION_BACKEND).$(PKG_TYPE) : gems \
 		--license AGPL3 \
 		-p $@ \
 		-C ../../libertree-backend-rb \
-		-s dir -t $(PKG_TYPE) -n $(addprefix $(PKG_PREFIX)-,$@) \
+		-s dir -t $(PKG_TYPE) -n libertree-backend \
 		lib/ bin/server.rb bin/job-processor.rb generate-key-pair.sh \
 		database.yaml.example \
 		config.yaml.example
@@ -115,7 +118,7 @@ libertree-client-$(VERSION_CLIENT).gem :
 	mv $(addprefix ../../libertree-client-rb/,$@) .
 
 libertree-client-$(VERSION_CLIENT).$(PKG_TYPE) : libertree-client-$(VERSION_CLIENT).gem
-	$(call BUILDPKG, libertree-client-$(VERSION_CLIENT).gem, $(VERSION_CLIENT), $@)
+	$(call BUILDPKG, libertree-client-$(VERSION_CLIENT).gem, $(VERSION_CLIENT), $@, libertree-client)
 
 # TODO: specify database.yaml.example as config file
 # TODO: share database.yaml with other packages?
@@ -124,7 +127,7 @@ libertree-model-$(VERSION_MODEL).gem :
 	mv $(addprefix ../../libertree-model-rb/,$@) .
 
 libertree-model-$(VERSION_MODEL).$(PKG_TYPE) : libertree-model-$(VERSION_MODEL).gem
-	$(call BUILDPKG, libertree-model-$(VERSION_MODEL).gem, $(VERSION_MODEL), $@)
+	$(call BUILDPKG, libertree-model-$(VERSION_MODEL).gem, $(VERSION_MODEL), $@, libertree-model)
 
 
 ####################################
