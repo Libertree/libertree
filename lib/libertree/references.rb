@@ -128,8 +128,13 @@ module Libertree
       #   - links in verbatim sections are identified, because we extract
       #     references from the raw markdown, not the rendered text.
 
-      # TODO: regexes are hard to maintain; can we split this big regex into several smaller ones?
-      pattern = %r{(?<url>(#{server_name}|\s|\()((?<post_url>/posts/show/(?<post_id>\d+))(?<comment_url>/(?<comment_id>\d+)(#comment-\d+)?)?|(?<pool_url>/pools/show/(?<pool_id>\d+))))}
+
+      anchor = %r{(#{server_name}|\s|\()}
+      post = %r{(?<post_url>/posts/show/(?<post_id>\d+))}
+      comment = %r{(?<comment_url>/(?<comment_id>\d+)(#comment-\d+)?)?}
+      pool = %r{(?<pool_url>/pools/show/(?<pool_id>\d+))}
+
+      pattern = %r{(?<url>#{anchor}(#{post}#{comment}|#{pool}))}
 
       refs = {}
       text.scan(pattern) do |url, post_url, post_id, comment_url, comment_id, pool_url, pool_id|
