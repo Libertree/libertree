@@ -132,32 +132,35 @@ module Libertree
 
       refs = {}
       text.scan(pattern) do |url, post_url, post_id, comment_url, comment_id|
-        next  if post_id.nil?
-
-        post = Libertree::Model::Post[ post_id.to_i ]
-        next  if post.nil?
-
-        ref = {}
-
-        map = { 'id' => post.remote_id || post_id.to_i }
-        if post.server
-          map.merge!( { 'origin' => post.server.public_key } )
-        end
-        ref[post_url] = map
-
-        comment = Libertree::Model::Comment[ comment_id.to_i ]
-        if comment
-          map = { 'id' => comment.remote_id || comment_id.to_i }
-          if comment.server
-            map.merge!({ 'origin' => comment.server.public_key })
-          end
-          ref[comment_url] = map
-        end
-
-        refs[url] = ref  if ref.any?
+        ref = if post_url && post_id
+                self.process_post_reference(post_url, post_id, comment_url, comment_id)
+              end
+        refs[url] = ref  if ref
       end
 
       refs
+    end
+
+    def self.process_post_reference(post_url, post_id, comment_url, comment_id)
+      ref = {}
+      post = Libertree::Model::Post[ post_id.to_i ]
+      return  if post.nil?
+
+      map = { 'id' => post.remote_id || post_id.to_i }
+      if post.server
+        map.merge!( { 'origin' => post.server.public_key } )
+      end
+      ref[post_url] = map
+
+      comment = Libertree::Model::Comment[ comment_id.to_i ]
+      if comment
+        map = { 'id' => comment.remote_id || comment_id.to_i }
+        if comment.server
+          map.merge!({ 'origin' => comment.server.public_key })
+        end
+        ref[comment_url] = map
+      end
+      ref
     end
 
   end
