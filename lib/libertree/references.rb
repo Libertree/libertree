@@ -128,11 +128,20 @@ module Libertree
       #   - links in verbatim sections are identified, because we extract
       #     references from the raw markdown, not the rendered text.
 
-      pattern = %r{(?<url>(#{server_name}|\s|\()(?<post_url>/posts/show/(?<post_id>\d+))(?<comment_url>/(?<comment_id>\d+)(#comment-\d+)?)?)}
+      # TODO: regexes are hard to maintain; can we split this big regex into several smaller ones?
+      pattern = %r{(?<url>(#{server_name}|\s|\()((?<post_url>/posts/show/(?<post_id>\d+))(?<comment_url>/(?<comment_id>\d+)(#comment-\d+)?)?|(?<pool_url>/pools/show/(?<pool_id>\d+))))}
 
       refs = {}
-      text.scan(pattern) do |url, post_url, post_id, comment_url, comment_id|
-        ref = if post_url && post_id
+      text.scan(pattern) do |url, post_url, post_id, comment_url, comment_id, pool_url, pool_id|
+        # A reference is either a post reference (possibly also
+        # including a comment reference) or a reference to a spring.
+        # It cannot be both.
+
+        ref = if pool_url && pool_id
+                # it's a spring reference
+                self.process_spring_reference(pool_url, pool_id)
+              elsif post_url && post_id
+                # it's a post (+comment) reference
                 self.process_post_reference(post_url, post_id, comment_url, comment_id)
               end
         refs[url] = ref  if ref
@@ -161,6 +170,17 @@ module Libertree
         ref[comment_url] = map
       end
       ref
+    end
+
+    def self.process_spring_reference(pool_url, pool_id)
+      spring = Libertree::Model::Pool[ id: pool_id.to_i, sprung: true ]
+      return  if spring.nil?
+
+      map = { 'id' => spring.remote_id || post_id.to_i }
+      if spring.server
+        map.merge!( { 'origin' => spring.server.public_key } )
+      end
+      { pool_url => map }
     end
 
   end
