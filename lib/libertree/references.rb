@@ -99,7 +99,8 @@ module Libertree
 
       refs.each do |ref|
         url = ref['match']
-        substitution = ref.entries.drop(1).reduce(url) do |res, pair|
+        ref.delete('match')
+        substitution = ref.entries.reduce(url) do |res, pair|
           type, ref = pair
           segment = ref['url']
 
@@ -165,42 +166,78 @@ module Libertree
       #   - links in verbatim sections are identified, because we extract
       #     references from the raw markdown, not the rendered text.
 
-      pattern = %r{(?<url>(#{server_name}|\s|\()(?<post_url>/posts/show/(?<post_id>\d+))(?<comment_url>/(?<comment_id>\d+)(#comment-\d+)?)?)}
+
+      anchor = %r{(#{server_name}|\s|\()}
+      post = %r{(?<post_url>/posts/show/(?<post_id>\d+))}
+      comment = %r{(?<comment_url>/(?<comment_id>\d+)(#comment-\d+)?)?}
+      pool = %r{(?<pool_url>/pools/show/(?<pool_id>\d+))}
+
+      pattern = %r{(?<url>#{anchor}(#{post}#{comment}|#{pool}))}
 
       refs = []
-      text.scan(pattern) do |url, post_url, post_id, comment_url, comment_id|
-        next  if post_id.nil?
+      text.scan(pattern) do |url, post_url, post_id, comment_url, comment_id, pool_url, pool_id|
+        # A reference is either a post reference (possibly also
+        # including a comment reference) or a reference to a spring.
+        # It cannot be both.
 
-        post = Libertree::Model::Post[ post_id.to_i ]
-        next  if post.nil?
+        ref = if pool_url && pool_id
+                # it's a spring reference
+                self.process_spring_reference(pool_url, pool_id)
+              elsif post_url && post_id
+                # it's a post (+comment) reference
+                self.process_post_reference(post_url, post_id, comment_url, comment_id)
+              end
 
-        ref = { 'match' => url }
-
-        map = {
-          'url' => post_url,
-          'id'  => post.remote_id || post_id.to_i,
-        }
-        if post.server
-          map['origin'] = post.server.domain
+        if ref
+          ref['match'] = url
+          refs << ref
         end
-        ref['post'] = map
-
-        comment = Libertree::Model::Comment[ comment_id.to_i ]
-        if comment
-          map = {
-            'url' => comment_url,
-            'id'  => comment.remote_id || comment_id.to_i
-          }
-          if comment.server
-            map['origin'] = comment.server.domain
-          end
-          ref['comment'] = map
-        end
-
-        refs << ref
       end
 
       refs.map {|ref| {'reference' => ref}}
+    end
+
+    def self.process_post_reference(post_url, post_id, comment_url, comment_id)
+      post = Libertree::Model::Post[ post_id.to_i ]
+      return  if post.nil?
+      
+      ref = {}
+      map = {
+        'url' => post_url,
+        'id'  => post.remote_id || post_id.to_i,
+      }
+      if post.server
+        map['origin'] = post.server.domain
+      end
+      ref['post'] = map
+
+      comment = Libertree::Model::Comment[ comment_id.to_i ]
+      if comment
+        map = {
+          'url' => comment_url,
+          'id'  => comment.remote_id || comment_id.to_i
+        }
+        if comment.server
+          map['origin'] = comment.server.domain
+        end
+        ref['comment'] = map
+      end
+
+      ref
+    end
+
+    def self.process_spring_reference(pool_url, pool_id)
+      spring = Libertree::Model::Pool[ id: pool_id.to_i, sprung: true ]
+      return  if spring.nil?
+
+      map = {
+        'url' => pool_url,
+        'id'  => spring.remote_id || pool_id.to_i
+      }
+      if spring.server
+        map['origin'] = spring.server.domain
+      end
+      { 'spring' => map }
     end
 
   end
