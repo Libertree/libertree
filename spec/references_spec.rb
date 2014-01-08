@@ -59,14 +59,16 @@ describe Libertree::References do
       it 'extracts relative links to local springs' do
         text = "This is a [relative link](/pools/show/#{@pool.id}). This too: /pools/show/#{@pool.id}"
         refs = Libertree::References::extract(text, "http://never-mind.org")
-        refs.keys.should include("(/pools/show/#{@pool.id}")
-        refs.keys.should include(" /pools/show/#{@pool.id}")
+        matches = refs.map {|ref| ref['reference']['match']}
+        matches.should include("(/pools/show/#{@pool.id}")
+        matches.should include(" /pools/show/#{@pool.id}")
       end
 
       it 'extracts absolute links to local springs' do
         text = "This is an [absolute link](http://never-mind.org/pools/show/#{@pool.id})."
         refs = Libertree::References::extract(text, "http://never-mind.org")
-        refs.keys.should include("http://never-mind.org/pools/show/#{@pool.id}")
+        matches = refs.map {|ref| ref['reference']['match']}
+        matches.should include("http://never-mind.org/pools/show/#{@pool.id}")
       end
 
       it 'does not extract links to remote springs' do
