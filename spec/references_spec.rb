@@ -47,6 +47,33 @@ describe Libertree::References do
       refs = Libertree::References::extract(text, "http://never-mind.org")
       refs.should be_empty
     end
+
+    context 'with a local spring' do
+      before :each do
+        @pool = Libertree::Model::Pool.create(
+          FactoryGirl.attributes_for(:pool, member_id: @member.id, sprung: true, name: "myspring")
+        )
+      end
+
+      it 'extracts relative links to local springs' do
+        text = "This is a [relative link](/pools/show/#{@pool.id}). This too: /pools/show/#{@pool.id}"
+        refs = Libertree::References::extract(text, "http://never-mind.org")
+        refs.keys.should include("(/pools/show/#{@pool.id}")
+        refs.keys.should include(" /pools/show/#{@pool.id}")
+      end
+
+      it 'extracts absolute links to local springs' do
+        text = "This is an [absolute link](http://never-mind.org/pools/show/#{@pool.id})."
+        refs = Libertree::References::extract(text, "http://never-mind.org")
+        refs.keys.should include("http://never-mind.org/pools/show/#{@pool.id}")
+      end
+
+      it 'does not extract links to remote springs' do
+        text = "This is an [absolute link](http://some-tree.org/pools/show/#{@pool.id})."
+        refs = Libertree::References::extract(text, "http://never-mind.org")
+        refs.should be_empty
+      end
+    end
   end
 
   describe 'replace' do
