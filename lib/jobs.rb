@@ -98,7 +98,6 @@ module Jobs
             File.open( "#{@avatar_dir}#{member.id}#{ext}", 'wb' ) { |file|
               file.write(resp.body)
             }
-            member.avatar_path = "#{@avatar_url}#{member.id}#{ext}"
           end
         end
       end
