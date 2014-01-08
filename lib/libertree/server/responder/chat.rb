@@ -24,7 +24,7 @@ module Libertree
               text: params['text']
             )
           rescue PGError => e
-            fail InternalError, "Error in rsp_chat: #{e.message}", nil
+            fail InternalError, "Error in #{__method__}: #{e.message}", nil
           end
         end
       end

@@ -50,7 +50,7 @@ module Libertree
             end
 
           rescue PGError => e
-            fail InternalError, "Error in rsp_message: #{e.message}", nil
+            fail InternalError, "Error in #{__method__}: #{e.message}", nil
           end
         end
 
@@ -61,7 +61,7 @@ module Libertree
           # begin
             # # TODO
           # rescue PGError => e
-            # fail InternalError, "Error in rsp_message_delete: #{e.message}", nil
+            # fail InternalError, "Error in #{__method__}: #{e.message}", nil
           # end
         # end
       end

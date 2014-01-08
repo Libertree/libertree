@@ -40,7 +40,7 @@ module Libertree
               )
             end
           rescue PGError => e
-            fail InternalError, "Error in rsp_post: #{e.message}", nil
+            fail InternalError, "Error in #{__method__}: #{e.message}", nil
           end
         end
 
@@ -55,7 +55,7 @@ module Libertree
             assert posts[0], "Unrecognized post ID: #{params['id'].inspect}"
             posts[0].delete_cascade  # there should only be one post
           rescue PGError => e
-            fail InternalError, "Error in rsp_post_delete: #{e.message}", nil
+            fail InternalError, "Error in #{__method__}: #{e.message}", nil
           end
         end
       end

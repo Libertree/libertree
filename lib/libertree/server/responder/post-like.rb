@@ -37,7 +37,7 @@ module Libertree
               'remote_id' => params['id'],
             )
           rescue PGError => e
-            fail InternalError, "Error in rsp_post_like: #{e.message}", nil
+            fail InternalError, "Error in #{__method__}: #{e.message}", nil
           end
         end
 
@@ -52,7 +52,7 @@ module Libertree
             assert likes[0], "Unrecognized like ID: #{params['id'].inspect}"
             likes[0].delete  # there should only be one Like
           rescue PGError => e
-            fail InternalError, "Error in rsp_post_like_delete: #{e.message}", nil
+            fail InternalError, "Error in #{__method__}: #{e.message}", nil
           end
         end
       end
