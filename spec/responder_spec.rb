@@ -24,7 +24,7 @@ describe Libertree::Server::Responder do
   end
 
   it 'responds to any other unsupported stanza type with "UNKNOWN COMMAND"' do
-    response = LSR.error code: 'UNKNOWN COMMAND'
+    expected_response = LSR.error code: 'UNKNOWN COMMAND'
     c = LSR.send :client
 
     target = "to@receiver.localhost.localdomain"
@@ -46,7 +46,7 @@ describe Libertree::Server::Responder do
     msgs.each do |msg|
       LSR.should_receive(:respond) do |args|
         args[:to].should eq msg
-        args[:with].to_s.should eq response.to_s
+        args[:with].to_s.should eq expected_response.to_s
       end
 
       c.send :call_handler_for, :message, msg
@@ -55,7 +55,7 @@ describe Libertree::Server::Responder do
     presences.each do |p|
       LSR.should_receive(:respond) do |args|
         args[:to].should eq p
-        args[:with].to_s.should eq response.to_s
+        args[:with].to_s.should eq expected_response.to_s
       end
 
       c.send :call_handler_for, :presence, p
@@ -70,14 +70,14 @@ describe Libertree::Server::Responder do
       msg = helper.build_stanza( "localhost.localdomain",
                                  { 'post' => { 'id' => 10 }} )
       msg.from = @requester.domain
-      response = LSR.error({ :code => 'MISSING PARAMETER',
-                             :text => 'username'
-                           })
+      expected_response = LSR.error({ :code => 'MISSING PARAMETER',
+                                      :text => 'username'
+                                    })
       
       c = LSR.send :client
       LSR.should_receive(:respond) do |args|
         args[:to].should eq msg
-        args[:with].to_s.should eq response.to_s
+        args[:with].to_s.should eq expected_response.to_s
       end
       
       # handler throws :halt to prevent falling through to the catch-all handler
@@ -97,13 +97,13 @@ describe Libertree::Server::Responder do
       
       msg = helper.build_stanza( "localhost.localdomain", h )
       msg.from = @requester.domain
-      response = LSR.error({ :code => 'NOT FOUND',
-                             :text => 'Unrecognized member username: "nosuchusername"'})
+      expected_response = LSR.error({ :code => 'NOT FOUND',
+                                      :text => 'Unrecognized member username: "nosuchusername"'})
       
       c = LSR.send :client
       LSR.should_receive(:respond) do |args|
         args[:to].should eq msg
-        args[:with].to_s.should eq response.to_s
+        args[:with].to_s.should eq expected_response.to_s
       end
       
       # handler throws :halt to prevent falling through to the catch-all handler
