@@ -1,11 +1,12 @@
 require 'spec_helper'
 
 describe Libertree::Server::Responder::Helper do
-  let(:subject_class) { Class.new }
-  let(:subject) { subject_class.new }
+  subject {
+    Class.new.new
+  }
 
   before :each do
-    subject_class.class_eval { include Libertree::Server::Responder::Helper }
+    subject.class.class_eval { include Libertree::Server::Responder::Helper }
   end
 
   describe 'missing_parameters' do

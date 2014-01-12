@@ -1,11 +1,12 @@
 require 'spec_helper'
 
 describe Libertree::Server::Responder::CommentLike do
-  let(:subject_class) { Class.new }
-  let(:subject) { subject_class.new }
+  subject {
+    Class.new.new
+  }
 
   before :each do
-    subject_class.class_eval {
+    subject.class.class_eval {
       include Libertree::Server::Responder::Helper
       include Libertree::Server::Responder::CommentLike
     }
