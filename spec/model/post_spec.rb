@@ -104,6 +104,11 @@ describe Libertree::Model::Post do
         post = new_post "nothing special\n#test or not to test."
         Libertree::Model::Post.with_tag( opts ).should include(post)
       end
+
+      it 'matches posts tagged in parentheses' do
+        post = new_post "(#test)"
+        Libertree::Model::Post.with_tag( opts ).should include(post)
+      end
     end
 
     context 'with unicode tags' do
