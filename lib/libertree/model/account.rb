@@ -174,8 +174,7 @@ module Libertree
       end
 
       def home_river=(river)
-        DB.dbh.u "UPDATE rivers SET home = FALSE WHERE account_id = ?", self.id
-        DB.dbh.u "UPDATE rivers SET home = TRUE WHERE account_id = ? and id = ?", self.id, river.id
+        DB.dbh.execute "SELECT account_set_home_river(?,?)", self.id, river.id
       end
 
       def invitations_not_accepted
@@ -224,27 +223,7 @@ module Libertree
       end
 
       def subscribe_to(post)
-        DB.dbh.i(
-          %{
-            INSERT INTO post_subscriptions (
-                account_id
-              , post_id
-            ) SELECT
-                ?
-              , ?
-            WHERE NOT EXISTS(
-              SELECT 1
-              FROM post_subscriptions ps
-              WHERE
-                ps.account_id = ?
-                AND ps.post_id = ?
-            )
-          },
-          self.id,
-          post.id,
-          self.id,
-          post.id
-        )
+        DB.dbh.execute(%{SELECT subscribe_account_to_post(?,?)}, self.id, post.id)
       end
 
       def unsubscribe_from(post)
