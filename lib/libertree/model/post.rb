@@ -137,7 +137,7 @@ module Libertree
           'type'       => 'comment',
           'comment_id' => comment.id,
         }
-        accounts = Libertree::Model::Account.subscribed_to(comment.post)
+        accounts = comment.post.subscribers
         accounts.delete comment.member.account
         accounts.each do |a|
           if ! comment.post.hidden_by?(a)
@@ -272,6 +272,13 @@ module Libertree
                opts[:newer],
                opts[:order_by] == :comment,
                opts.fetch(:limit, 30))
+      end
+
+      def subscribers
+        Account.s(%{
+          SELECT a.*
+          FROM accounts a, post_subscriptions ps
+          WHERE ps.post_id = ? AND a.id = ps.account_id}, self.id)
       end
 
       def revise(text_new, visibility = self.visibility)
