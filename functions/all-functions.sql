@@ -30,6 +30,30 @@ CREATE OR REPLACE FUNCTION mark_post_as_read_by(post_id INTEGER, account_id INTE
       AND rp.post_id = $1;
 $$ LANGUAGE SQL;
 
+CREATE OR REPLACE FUNCTION mark_all_posts_as_read_by(account_id INTEGER) RETURNS void AS $$
+    INSERT INTO posts_read ( post_id, account_id )
+    SELECT p.id, $1
+    FROM posts p
+    WHERE NOT EXISTS (
+      SELECT 1
+      FROM posts_read pr2
+      WHERE
+        pr2.post_id = p.id
+        AND pr2.account_id = $1
+    );
+
+    DELETE FROM river_posts rp
+    USING rivers r
+    WHERE
+      rp.river_id = r.id
+      AND r.account_id = $1
+      AND (
+        r.query LIKE ':unread%'
+        OR r.query LIKE '% :unread%'
+        OR r.query LIKE '%+:unread%'
+      );
+$$ LANGUAGE SQL;
+
 CREATE OR REPLACE FUNCTION account_subscribed_to_post(account_id INTEGER, post_id INTEGER) RETURNS BOOLEAN AS $$
     SELECT EXISTS(
         SELECT 1 FROM post_subscriptions WHERE account_id = $1 AND post_id = $2
