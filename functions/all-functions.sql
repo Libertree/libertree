@@ -54,6 +54,42 @@ CREATE OR REPLACE FUNCTION mark_all_posts_as_read_by(account_id INTEGER) RETURNS
       );
 $$ LANGUAGE SQL;
 
+CREATE OR REPLACE FUNCTION mark_all_posts_in_river_as_read_by(river_id INTEGER, account_id INTEGER) RETURNS void AS $$
+       INSERT INTO posts_read ( post_id, account_id )
+       SELECT
+           rp.post_id
+         , $2
+       FROM
+         river_posts rp
+       WHERE
+         river_id = $1
+         AND NOT EXISTS (
+           SELECT 1
+           FROM posts_read pr2
+           WHERE
+             pr2.post_id = rp.post_id
+             AND pr2.account_id = $2
+         );
+
+       DELETE FROM river_posts rp
+       USING rivers r
+       WHERE
+         rp.river_id = r.id
+         AND r.account_id = $2
+         AND EXISTS (
+           SELECT 1
+           FROM posts_read pr2
+           WHERE
+             pr2.post_id = rp.post_id
+             AND pr2.account_id = $2
+           )
+           AND (
+             r.query LIKE ':unread%'
+             OR r.query LIKE '% :unread%'
+             OR r.query LIKE '%+:unread%'
+           );
+$$ LANGUAGE SQL;
+
 CREATE OR REPLACE FUNCTION account_subscribed_to_post(account_id INTEGER, post_id INTEGER) RETURNS BOOLEAN AS $$
     SELECT EXISTS(
         SELECT 1 FROM post_subscriptions WHERE account_id = $1 AND post_id = $2
