@@ -101,36 +101,26 @@ module Libertree
       end
 
       def matches_post?(post)
-        parts = query_components
+        parts = {:negations => [], :requirements => [], :regular => []}
+        query_components.reduce(parts) { |acc,term|
+          if term =~ /^-(.+)$/
+            acc[:negations] << $1
+          elsif term =~ /^\+(.+)$/
+            acc[:requirements] << $1
+          else
+            acc[:regular] << term
+          end
+          acc
+        }
 
         # Negations: Must not satisfy any of the conditions
-
-        parts.dup.each do |term|
-          if term =~ /^-(.+)$/
-            positive_term = $1
-            parts.delete term
-            return false  if term_matches_post?(positive_term, post)
-          end
-        end
-
         # Requirements: Must satisfy every required condition
-
-        matches_all = true
-        parts.dup.each do |term|
-          if term =~ /^\+(.+)$/
-            actual_term = $1
-            parts.delete term
-            matches_all &&= term_matches_post?(actual_term, post)
-          end
-        end
-        return false  if ! matches_all
-
         # Regular terms: Must satisfy at least one condition
-        if parts.any? && parts.none? {|term| term_matches_post?(term, post)}
-          return false
-        end
+        test = lambda {|term| term_matches_post?(term, post)}
 
-        true
+        parts[:negations].none?(&test) &&
+          parts[:requirements].all?(&test) &&
+          (parts[:regular].any? ? parts[:regular].any?(&test) : true)
       end
 
       def refresh_posts( n = 512 )
