@@ -17,62 +17,14 @@ module Libertree
       end
 
       def posts( opts = {} )
-        limit = opts.fetch(:limit, 30)
-        if opts[:newer]
-          time_comparator = '>'
-        else
-          time_comparator = '<'
-        end
         time = Time.at( opts.fetch(:time, Time.now.to_f) ).strftime("%Y-%m-%d %H:%M:%S.%6N%z")
-
-        # TODO: prepared statement?
-        if opts[:order_by] == :comment
-          Post.s(
-            %{
-              SELECT * FROM (
-                SELECT
-                    p.*
-                FROM
-                    river_posts rp
-                  , posts p
-                WHERE
-                  p.id = rp.post_id
-                  AND rp.river_id = ?
-                  AND GREATEST(p.time_commented, p.time_updated) #{time_comparator} ?
-                  AND NOT post_hidden_by_account( rp.post_id, ? )
-                ORDER BY GREATEST(p.time_commented, p.time_updated) DESC
-                LIMIT #{limit}
-              ) AS x
-              ORDER BY GREATEST(time_commented, time_updated)
-            },
-            self.id,
-            time,
-            self.account.id
-          )
-        else
-          Post.s(
-            %{
-              SELECT * FROM (
-                SELECT
-                  p.*
-                FROM
-                    river_posts rp
-                  , posts p
-                WHERE
-                  p.id = rp.post_id
-                  AND rp.river_id = ?
-                  AND p.time_created #{time_comparator} ?
-                  AND NOT post_hidden_by_account( rp.post_id, ? )
-                ORDER BY p.id DESC
-                LIMIT #{limit}
-              ) AS x
-              ORDER BY id
-            },
-            self.id,
-            time,
-            self.account.id
-          )
-        end
+        Post.s(%{SELECT * FROM posts_in_river(?,?,?,?,?,?)},
+               self.id,
+               self.account.id,
+               time,
+               opts[:newer],
+               opts[:order_by] == :comment,
+               opts.fetch(:limit, 30))
       end
 
       def query_components
@@ -294,56 +246,10 @@ module Libertree
         ]
       end
 
-      # TODO: turn this into a SQL function
       def mark_all_posts_as_read
-        # mark posts in this river as read
-        DB.dbh.execute(
-          %{
-            INSERT INTO posts_read ( post_id, account_id )
-            SELECT
-                rp.post_id
-              , ?
-            FROM
-              river_posts rp
-            WHERE
-              river_id = ?
-              AND NOT EXISTS (
-              SELECT 1
-              FROM posts_read pr2
-              WHERE
-                pr2.post_id = rp.post_id
-                AND pr2.account_id = ?
-            )
-          },
-          self.account.id,
-          self.id,
-          self.account.id,
-        )
-
-        # remove these posts from all rivers that contain ":unread"
-        DB.dbh.delete(
-          %{
-            DELETE FROM river_posts rp
-            USING rivers r
-            WHERE
-              rp.river_id = r.id
-              AND r.account_id = ?
-              AND EXISTS (
-                SELECT 1
-                FROM posts_read pr2
-                WHERE
-                  pr2.post_id = rp.post_id
-                  AND pr2.account_id = ?
-              )
-              AND (
-                r.query LIKE ':unread%'
-                OR r.query LIKE '% :unread%'
-                OR r.query LIKE '%+:unread%'
-              )
-          },
-          self.account.id,
-          self.account.id
-        )
+        DB.dbh.execute(%{SELECT mark_all_posts_in_river_as_read_by(?,?)},
+                       self.id,
+                       self.account.id)
       end
     end
   end
