@@ -126,13 +126,8 @@ module Libertree
         return false  if ! matches_all
 
         # Regular terms: Must satisfy at least one condition
-
-        if parts.any?
-          term_match = false
-          parts.each do |term|
-            term_match ||= term_matches_post?(term, post)
-          end
-          return false  if ! term_match
+        if parts.any? && parts.none? {|term| term_matches_post?(term, post)}
+          return false
         end
 
         true
