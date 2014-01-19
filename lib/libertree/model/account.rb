@@ -255,24 +255,6 @@ module Libertree
         DB.dbh.sc  "SELECT account_subscribed_to_post( ?, ? )", self.id, post.id
       end
 
-      def self.subscribed_to(post)
-        stm = prepare(
-          %{
-            SELECT
-              a.*
-            FROM
-                accounts a
-              , post_subscriptions ps
-            WHERE
-              ps.post_id = ?
-              AND a.id = ps.account_id
-          }
-        )
-        accounts = stm.s(post.id).map { |row| self.new row }
-        stm.finish
-        accounts
-      end
-
       def messages( opts = {} )
         limit = opts.fetch(:limit, 30)
         if opts[:newer]
