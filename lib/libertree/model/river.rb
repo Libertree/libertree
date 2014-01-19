@@ -17,62 +17,14 @@ module Libertree
       end
 
       def posts( opts = {} )
-        limit = opts.fetch(:limit, 30)
-        if opts[:newer]
-          time_comparator = '>'
-        else
-          time_comparator = '<'
-        end
         time = Time.at( opts.fetch(:time, Time.now.to_f) ).strftime("%Y-%m-%d %H:%M:%S.%6N%z")
-
-        # TODO: prepared statement?
-        if opts[:order_by] == :comment
-          Post.s(
-            %{
-              SELECT * FROM (
-                SELECT
-                    p.*
-                FROM
-                    river_posts rp
-                  , posts p
-                WHERE
-                  p.id = rp.post_id
-                  AND rp.river_id = ?
-                  AND GREATEST(p.time_commented, p.time_updated) #{time_comparator} ?
-                  AND NOT post_hidden_by_account( rp.post_id, ? )
-                ORDER BY GREATEST(p.time_commented, p.time_updated) DESC
-                LIMIT #{limit}
-              ) AS x
-              ORDER BY GREATEST(time_commented, time_updated)
-            },
-            self.id,
-            time,
-            self.account.id
-          )
-        else
-          Post.s(
-            %{
-              SELECT * FROM (
-                SELECT
-                  p.*
-                FROM
-                    river_posts rp
-                  , posts p
-                WHERE
-                  p.id = rp.post_id
-                  AND rp.river_id = ?
-                  AND p.time_created #{time_comparator} ?
-                  AND NOT post_hidden_by_account( rp.post_id, ? )
-                ORDER BY p.id DESC
-                LIMIT #{limit}
-              ) AS x
-              ORDER BY id
-            },
-            self.id,
-            time,
-            self.account.id
-          )
-        end
+        Post.s(%{SELECT * FROM posts_in_river(?,?,?,?,?,?)},
+               self.id,
+               self.account.id,
+               time,
+               opts[:newer],
+               opts[:order_by] == :comment,
+               opts.fetch(:limit, 30))
       end
 
       def query_components
