@@ -33,8 +33,22 @@ module Libertree
           full_query += ' ' + self.account.rivers_appended.map(&:query).join(' ')
           full_query.strip!
         end
-        # TODO: This is getting bulky and ugly...
-        @query_components ||= full_query.scan(/([+-]?"[^"]+")|([+-]?:(?:from|river|contact-list|via) ".+?")|([+-]?:visibility [a-z-]+)|([+-]?:word-count [<>] ?[0-9]+)|([+-]?:(?:spring) ".+?" ".+?")|(\S+)/).map { |c|
+
+        phrase_pat = /([+-]?"[^"]+")/
+        one_text_arg_pat = /([+-]?:(?:from|river|contact-list|via) ".+?")/
+        visibility_pat = /([+-]?:visibility [a-z-]+)/
+        word_count_pat = /([+-]?:word-count [<>] ?[0-9]+)/
+        two_text_args_pat = /([+-]?:(?:spring) ".+?" ".+?")/
+        word_pat = /(\S+)/
+
+        pattern = Regexp.union [ phrase_pat,
+                                 one_text_arg_pat,
+                                 visibility_pat,
+                                 word_count_pat,
+                                 two_text_args_pat,
+                                 word_pat ]
+
+        @query_components ||= full_query.scan(pattern).map { |c|
           c[5] || c[4] || c[3] || c[2] || c[1] || c[0].gsub(/^([+-])"/, "\\1").gsub(/^"|"$/, '')
         }
         @query_components.dup
@@ -87,41 +101,26 @@ module Libertree
       end
 
       def matches_post?(post)
-        parts = query_components
+        parts = {:negations => [], :requirements => [], :regular => []}
+        query_components.reduce(parts) { |acc,term|
+          if term =~ /^-(.+)$/
+            acc[:negations] << $1
+          elsif term =~ /^\+(.+)$/
+            acc[:requirements] << $1
+          else
+            acc[:regular] << term
+          end
+          acc
+        }
 
         # Negations: Must not satisfy any of the conditions
-
-        parts.dup.each do |term|
-          if term =~ /^-(.+)$/
-            positive_term = $1
-            parts.delete term
-            return false  if term_matches_post?(positive_term, post)
-          end
-        end
-
         # Requirements: Must satisfy every required condition
-
-        matches_all = true
-        parts.dup.each do |term|
-          if term =~ /^\+(.+)$/
-            actual_term = $1
-            parts.delete term
-            matches_all &&= term_matches_post?(actual_term, post)
-          end
-        end
-        return false  if ! matches_all
-
         # Regular terms: Must satisfy at least one condition
+        test = lambda {|term| term_matches_post?(term, post)}
 
-        if parts.any?
-          term_match = false
-          parts.each do |term|
-            term_match ||= term_matches_post?(term, post)
-          end
-          return false  if ! term_match
-        end
-
-        true
+        parts[:negations].none?(&test) &&
+          parts[:requirements].all?(&test) &&
+          (parts[:regular].any? ? parts[:regular].any?(&test) : true)
       end
 
       def refresh_posts( n = 512 )
