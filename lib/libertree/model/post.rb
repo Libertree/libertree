@@ -298,48 +298,13 @@ module Libertree
         # exclude posts that contain strings in verbatim sections that only
         # look like hashtags
 
-        limit = opts.fetch(:limit, 30)
-        if opts[:newer]
-          time_comparator = '>'
-        else
-          time_comparator = '<'
-        end
         time = Time.at( opts.fetch(:time, Time.now.to_f) ).strftime("%Y-%m-%d %H:%M:%S.%6N%z")
-
-        # TODO: prepared statement?
-        if opts[:order_by] == :comment
-          Post.s(
-            %{
-              SELECT
-                p.*
-              FROM
-                posts p
-              WHERE
-                text ~* (E'(^|\\\\s|\\\\()#' || ? || E'(\\\\M|\\\\s|$|[[:punct:]])')
-                AND GREATEST(p.time_commented, p.time_updated) #{time_comparator} ?
-              ORDER BY GREATEST(p.time_commented, p.time_updated) DESC
-              LIMIT #{limit}
-            },
-            opts[:tag],
-            time
-          )
-        else
-          Post.s(
-            %{
-              SELECT
-                p.*
-              FROM
-                posts p
-              WHERE
-                text ~* (E'(^|\\\\s|\\\\()#' || ? || E'(\\\\M|\\\\s|$|[[:punct:]])')
-                AND p.time_created #{time_comparator} ?
-              ORDER BY p.time_created DESC
-              LIMIT #{limit}
-            },
-            opts[:tag],
-            time
-          )
-        end
+        Post.s(%{SELECT * FROM tagged_posts(?, ?, ?, ?, ?)},
+               opts[:tag],
+               time,
+               opts[:newer],
+               opts[:order_by] == :comment,
+               opts.fetch(:limit, 30))
       end
 
       def revise(text_new, visibility = self.visibility)
