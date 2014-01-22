@@ -12,7 +12,7 @@ module Libertree
               'username' => params['username'],
               'server_id' => @remote_tree.id,
             ]
-            assert member, "Unrecognized member username: #{params['username'].inspect}"
+            fail_if_nil member, "Unrecognized member username: #{params['username'].inspect}"
 
             if params.has_key? 'references'
               refs = params['references']['reference']
@@ -52,7 +52,7 @@ module Libertree
               where( 'remote_id' => params['id'] ).
               reject { |p| p.server != @remote_tree }
 
-            assert posts[0], "Unrecognized post ID: #{params['id'].inspect}"
+            fail_if_nil posts[0], "Unrecognized post ID: #{params['id'].inspect}"
             posts[0].delete_cascade  # there should only be one post
           rescue PGError => e
             fail InternalError, "Error in #{__method__}: #{e.message}", nil

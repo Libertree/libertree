@@ -10,12 +10,12 @@ module Libertree
               'username' => params['username'],
               'server_id' => @remote_tree.id,
             ]
-            assert from_member, "Unrecognized member username: #{params['username'].inspect}"
+            fail_if_nil from_member, "Unrecognized member username: #{params['username'].inspect}"
 
             to_account = Model::Account[
               'username' => params['recipient_username'],
             ]
-            assert to_account, "Unrecognized recipient username: #{params['recipient_username'].inspect}"
+            fail_if_nil to_account, "Unrecognized recipient username: #{params['recipient_username'].inspect}"
             to_member = to_account.member
 
             chat_message = Libertree::Model::ChatMessage.create(

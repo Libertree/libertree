@@ -10,7 +10,7 @@ module Libertree
               'username' => params['username'],
               'server_id' => @remote_tree.id,
             ]
-            assert member, "Unrecognized member username: #{params['username'].inspect}"
+            fail_if_nil member, "Unrecognized member username: #{params['username'].inspect}"
 
             origin = Model::Server[ domain: params['origin'] ]
             if origin.nil? && params['origin'] != Server.conf['domain']
@@ -29,7 +29,7 @@ module Libertree
               post = posts[0]  # There should only be one or none
             end
 
-            assert post, 'Unrecognized post.'
+            fail_if_nil post, 'Unrecognized post.'
 
             like = Model::PostLike.find_or_create(
               'member_id' => member.id,
@@ -49,7 +49,7 @@ module Libertree
               where( 'remote_id' => params['id'] ).
               find_all { |like| like.member.server == @remote_tree }
 
-            assert likes[0], "Unrecognized like ID: #{params['id'].inspect}"
+            fail_if_nil likes[0], "Unrecognized like ID: #{params['id'].inspect}"
             likes[0].delete  # there should only be one Like
           rescue PGError => e
             fail InternalError, "Error in #{__method__}: #{e.message}", nil

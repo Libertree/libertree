@@ -49,14 +49,14 @@ describe Libertree::Server::Responder::Helper do
     end
   end
 
-  describe 'assert' do
+  describe 'fail_if_nil' do
     it 'raises NotFoundError with the given message when the first argument is nil' do
-      expect { subject.assert(nil, "Oh dear!") }.
+      expect { subject.fail_if_nil(nil, "Oh dear!") }.
         to raise_error(Libertree::Server::NotFoundError, "Oh dear!")
     end
 
     it 'returns nil otherwise' do
-      subject.assert("some object", "whatever").should eq nil
+      subject.fail_if_nil("some object", "whatever").should eq nil
     end
   end
 end

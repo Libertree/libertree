@@ -10,7 +10,7 @@ module Libertree
               'username' => params['username'],
               'server_id' => @remote_tree.id,
             ]
-            assert member, "Unrecognized member username: #{params['username'].inspect}"
+            fail_if_nil member, "Unrecognized member username: #{params['username'].inspect}"
 
             pool_name = params['name']
 
@@ -44,13 +44,13 @@ module Libertree
               'username' => params['username'],
               'server_id' => @remote_tree.id,
             ]
-            assert member, "Unrecognized member username: #{params['username'].inspect}"
+            fail_if_nil member, "Unrecognized member username: #{params['username'].inspect}"
 
             pool = Model::Pool[
               'member_id' => member.id,
               'remote_id' => params['id']
             ]
-            assert pool, "Unrecognized pool: #{params['id']}"
+            fail_if_nil pool, "Unrecognized pool: #{params['id']}"
             pool.delete_cascade
           rescue PGError => e
             fail InternalError, "ERROR on POOL request: #{e.message}", nil

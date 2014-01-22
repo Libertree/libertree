@@ -10,7 +10,7 @@ module Libertree
               'username' => params['username'],
               'server_id' => @remote_tree.id,
             ]
-            assert sender_member, "Unrecognized member username: #{params['username'].inspect}"
+            fail_if_nil sender_member, "Unrecognized member username: #{params['username'].inspect}"
 
             members = params['recipients'].reduce({:local => [], :remote => []}) { |ms, recipient|
               origin = Model::Server[ domain: recipient['origin'] ]

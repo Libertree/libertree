@@ -57,7 +57,7 @@ module Libertree
               where( 'username' => params['username'] ).
               reject { |p| p.server != @remote_tree }
 
-            assert members[0], "Unrecognized username: #{params['username'].inspect}"
+            fail_if_nil members[0], "Unrecognized username: #{params['username'].inspect}"
             members[0].delete_cascade  # there should only be one member
           rescue PGError => e
             fail InternalError, "Error in #{__method__}: #{e.message}", nil

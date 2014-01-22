@@ -12,7 +12,7 @@ module Libertree
               'username' => params['username'],
               'server_id' => @remote_tree.id,
             ]
-            assert member, "Unrecognized member username: #{params['username'].inspect}"
+            fail_if_nil member, "Unrecognized member username: #{params['username'].inspect}"
 
             origin = Model::Server[ domain: params['origin'] ]
             if origin.nil? && params['origin'] != Server.conf['domain']
@@ -30,7 +30,7 @@ module Libertree
               }
               post = posts[0]  # There should only be one or none
             end
-            assert post, 'Unrecognized post.'
+            fail_if_nil post, 'Unrecognized post.'
 
             if params.has_key? 'references'
               refs = params['references']['reference']
@@ -59,7 +59,7 @@ module Libertree
               where( 'remote_id' => params['id'] ).
               reject { |c| c.member.server != @remote_tree }
 
-            assert comments[0], "Unrecognized comment ID: #{params['id'].inspect}"
+            fail_if_nil comments[0], "Unrecognized comment ID: #{params['id'].inspect}"
             comments[0].delete_cascade  # there should only be one comment
           rescue PGError => e
             fail InternalError, "Error in #{__method__}: #{e.message}", nil

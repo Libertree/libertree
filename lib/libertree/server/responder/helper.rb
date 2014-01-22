@@ -27,7 +27,7 @@ module Libertree
           end
         end
 
-        def assert(obj, msg)
+        def fail_if_nil(obj, msg)
           if obj.nil?
             fail NotFoundError, msg, nil
           end

@@ -11,13 +11,13 @@ module Libertree
               'username' => params['username'],
               'server_id' => @remote_tree.id,
             ]
-            assert member, "Unrecognized member username: #{params['username'].inspect}"
+            fail_if_nil member, "Unrecognized member username: #{params['username'].inspect}"
 
             pool = Model::Pool[
               'member_id' => member.id,
               'remote_id' => params['pool_id'],
             ]
-            assert pool, "Unrecognized pool for given member: pool_id #{params['pool_id']}, username #{params['username'].inspect}"
+            fail_if_nil pool, "Unrecognized pool for given member: pool_id #{params['pool_id']}, username #{params['username'].inspect}"
 
             # TODO: These next two code paragraphs could be DRYed up along with
             # the code found in server/responder/post-like.rb .
@@ -38,7 +38,7 @@ module Libertree
               post = posts[0]  # There should only be one or none
             end
 
-            assert post, "Unrecognized post (#{params['post_id']})."
+            fail_if_nil post, "Unrecognized post (#{params['post_id']})."
             pool << post
           rescue PGError => e
             fail InternalError, "ERROR on POOL request: #{e.message}", nil
@@ -54,13 +54,13 @@ module Libertree
               'username' => params['username'],
               'server_id' => @remote_tree.id,
             ]
-            assert member, "Unrecognized member username: #{params['username'].inspect}"
+            fail_if_nil member, "Unrecognized member username: #{params['username'].inspect}"
 
             pool = Model::Pool[
               'member_id' => member.id,
               'remote_id' => params['pool_id'],
             ]
-            assert pool, "Unrecognized pool for given member: pool_id #{params['pool_id']}, username #{params['username'].inspect}"
+            fail_if_nil pool, "Unrecognized pool for given member: pool_id #{params['pool_id']}, username #{params['username'].inspect}"
 
             # TODO: These next two code paragraphs could be DRYed up along with
             # the code found in server/responder/post-like.rb .
@@ -81,7 +81,7 @@ module Libertree
               post = posts[0]  # There should only be one or none
             end
 
-            assert post, "Unrecognized post (#{params['post_id']})."
+            fail_if_nil post, "Unrecognized post (#{params['post_id']})."
 
             # Try to remove, regardless of whether or not it really is there.
             pool.remove_post post
