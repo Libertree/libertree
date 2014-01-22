@@ -46,6 +46,7 @@ describe Libertree::Server::Responder::Helper do
       required = [ :ten, :twenty, :thirty ]
 
       subject.require_parameters(given, *required).should eq nil
+      expect { subject.require_parameters(given, *required) }.not_to raise_error
     end
   end
 
@@ -57,6 +58,7 @@ describe Libertree::Server::Responder::Helper do
 
     it 'returns nil otherwise' do
       subject.fail_if_nil("some object", "whatever").should eq nil
+      expect { subject.fail_if_nil("some object", "whatever") }.not_to raise_error
     end
   end
 end
