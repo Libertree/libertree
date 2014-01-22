@@ -5,16 +5,12 @@ require_relative '../lib/jobs'
 describe Jobs do
   LM = Libertree::Model
   before :each do
-    @server =
-      LM::Server.create( FactoryGirl.attributes_for(:server) )
+    @server = LM::Server.create( FactoryGirl.attributes_for(:server) )
     @server.domain = "here"
-    @other_server =
-      LM::Server.create( FactoryGirl.attributes_for(:server) )
+    @other_server = LM::Server.create( FactoryGirl.attributes_for(:server) )
     @other_server.domain = "faraway"
-    @member =
-      LM::Member.create( FactoryGirl.attributes_for(:member, :server_id => @server.id) )
-    @other_member =
-      LM::Member.create( FactoryGirl.attributes_for(:member, :server_id => @other_server.id) )
+    @member = LM::Member.create( FactoryGirl.attributes_for(:member, :server_id => @server.id) )
+    @other_member = LM::Member.create( FactoryGirl.attributes_for(:member, :server_id => @other_server.id) )
   end
 
   describe Jobs::River do
