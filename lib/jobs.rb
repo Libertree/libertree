@@ -75,6 +75,7 @@ module Jobs
       def self.fetch(url_string, member, follow_redirect=false)
         uri = URI.parse(url_string)
         if uri.path.empty?
+          # TODO: delete avatar and signal success
           raise Libertree::JobFailed, "URL contains no path: #{url_string}"
         end
 
