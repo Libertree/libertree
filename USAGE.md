@@ -54,7 +54,6 @@ As the libertree user:
 
     % cd ~/git/libertree-frontend-ramaze
     % rvm use 2.0.0@libertree-frontend-ramaze
-    % ./css-build.sh
     % LIBERTREE_ENV=production bundle exec unicorn -p <port number>
 
 

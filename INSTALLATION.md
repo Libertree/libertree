@@ -189,7 +189,6 @@ As the libertree user:
     % rvm use --create 2.0.0@libertree-frontend-ramaze
     % gem install bundler
     % bundle install
-    % ./css-build.sh
     % cd config
     % cp database.yaml.example database.yaml
     % $EDITOR database.yaml
