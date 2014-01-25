@@ -320,7 +320,7 @@ module Jobs
 
     class MEMBER
       def self.perform(params)
-        member = Libertree::Model::Member[params['member_id'].to_i]
+        member = Libertree::Model::Member[ username: params['username'] ]
         if member
           Request::with_tree(params['server_id']) do |tree|
             tree.req_member member
