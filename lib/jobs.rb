@@ -74,6 +74,7 @@ module Jobs
       def self.fetch(url_string, member, follow_redirect=false)
         uri = URI.parse(url_string)
         if uri.path.empty?
+          # TODO: delete avatar and signal success
           raise Libertree::JobFailed, "URL contains no path: #{url_string}"
         end
 
@@ -113,7 +114,7 @@ module Jobs
           args = [e.url, member, false]
           retry
         rescue URI::InvalidURIError, ArgumentError => e
-          raise Libertree::JobFailed, "Invalid URI: #{params['avatar_url']}"
+          raise Libertree::JobInvalid, "Invalid URI: #{params['avatar_url']}"
         rescue Timeout::Error
           # ignore
         end
