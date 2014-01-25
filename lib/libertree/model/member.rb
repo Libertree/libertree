@@ -7,7 +7,10 @@ module Libertree
           Libertree::Model::Job.create_for_forests(
             {
               task: 'request:MEMBER',
-              params: { 'member_id' => member.id, }
+              params: {
+                'member_id' => member.id,
+                'avatar_url' => member.avatar_path
+              }
             }
           )
         end
@@ -18,7 +21,10 @@ module Libertree
           Libertree::Model::Job.create_for_forests(
             {
               task: 'request:MEMBER',
-              params: { 'member_id' => member.id, }
+              params: {
+                'member_id' => member.id,
+                'avatar_url' => member.avatar_path
+              }
             }
           )
         end
