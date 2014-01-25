@@ -6,7 +6,7 @@ module Libertree
           Libertree::Model::Job.create_for_forests(
             {
               task: 'request:MEMBER',
-              params: { 'member_id' => profile.member.id, }
+              params: { 'username' => profile.member.account.username, }
             }
           )
         end

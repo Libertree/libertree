@@ -8,7 +8,7 @@ module Libertree
             {
               task: 'request:MEMBER',
               params: {
-                'member_id' => member.id,
+                'username' => member.account.username,
                 'avatar_url' => member.avatar_path
               }
             }
@@ -22,7 +22,7 @@ module Libertree
             {
               task: 'request:MEMBER',
               params: {
-                'member_id' => member.id,
+                'username' => member.account.username,
                 'avatar_url' => member.avatar_path
               }
             }
