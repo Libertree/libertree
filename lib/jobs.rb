@@ -115,7 +115,7 @@ module Jobs
           args = [e.url, member, false]
           retry
         rescue URI::InvalidURIError, ArgumentError => e
-          raise Libertree::JobFailed, "Invalid URI: #{params['avatar_url']}"
+          raise Libertree::JobInvalid, "Invalid URI: #{params['avatar_url']}"
         rescue Timeout::Error
           # ignore
         end
