@@ -2,7 +2,7 @@ require 'spec_helper'
 require_relative '../lib/jobs'
 
 describe Jobs::Email, "#perform" do
-  it 'sends and email' do
+  it 'sends an email' do
 
     Mail.defaults do
       delivery_method :test
