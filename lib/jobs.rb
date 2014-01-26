@@ -59,7 +59,7 @@ module Jobs
   module Http
     class Avatar
       def self.options=(opts)
-        @avatar_dir = opts['avatar_dir']
+        @@avatar_dir = opts['avatar_dir']
         @avatar_url = opts['avatar_url']
       end
 
@@ -96,7 +96,7 @@ module Jobs
           end
 
           if [Net::HTTPSuccess, Net::HTTPOK].include? resp.class
-            File.open( "#{@avatar_dir}#{member.id}#{ext}", 'wb' ) { |file|
+            File.open( "#{@@avatar_dir}#{member.id}#{ext}", 'wb' ) { |file|
               file.write(resp.body)
             }
           end
