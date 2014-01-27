@@ -59,7 +59,7 @@ module Jobs
   module Http
     class Avatar
       def self.options=(opts)
-        @@avatar_dir = opts['avatar_dir']
+        @@avatar_dir = opts[:avatar_dir]
       end
 
       class Redirect < StandardError
