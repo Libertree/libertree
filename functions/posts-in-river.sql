@@ -33,4 +33,4 @@ CREATE OR REPLACE FUNCTION posts_in_river(river_id INTEGER, account_id INTEGER, 
          ELSE
            time_created
          END;
-$$ LANGUAGE SQL;
+$$ LANGUAGE SQL IMMUTABLE;
