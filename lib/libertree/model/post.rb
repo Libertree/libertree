@@ -301,13 +301,8 @@ module Libertree
         retval
       end
 
-      def collected_by?(account_or_member)
-        if account_or_member.respond_to?(:member)
-          member = account_or_member.member
-        else
-          member = account_or_member
-        end
-        member.pools.any? { |p| p.includes?(self) }
+      def collected_by?(member)
+        DB.dbh.sc  "SELECT member_collects_post(?,?)", member.id, self.id
       end
 
       def to_hash
