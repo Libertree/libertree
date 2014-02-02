@@ -2,8 +2,8 @@
 # (the Libertree backend component)
 domain: tree.mydomain.net
 
-# The domain name of the XMPP server
-xmpp_server: localhost.localdomain
+# The host running the XMPP server (usually localhost)
+xmpp_server: localhost
 
 # The shared secret
 shared_secret: 'secret'
