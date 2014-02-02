@@ -58,8 +58,7 @@ module Jobs
   module Http
     class Avatar
       def self.options=(opts)
-        @avatar_dir = opts['avatar_dir']
-        @avatar_url = opts['avatar_url']
+        @@avatar_dir = opts[:avatar_dir]
       end
 
       class Redirect < StandardError
@@ -95,7 +94,7 @@ module Jobs
           end
 
           if [Net::HTTPSuccess, Net::HTTPOK].include? resp.class
-            File.open( "#{@avatar_dir}#{member.id}#{ext}", 'wb' ) { |file|
+            File.open( "#{@@avatar_dir}#{member.id}#{ext}", 'wb' ) { |file|
               file.write(resp.body)
             }
           end
@@ -310,9 +309,9 @@ module Jobs
 
     class MEMBER < RequestJob
       def self.perform(params)
-        member = Libertree::Model::Member[ params['member_id'].to_i ]
-        if member
-          with_tree(params['server_id'], :req_member, member)
+        account = Libertree::Model::Account[ username: params['username'] ]
+        if account && account.member
+          with_tree(params['server_id'], :req_member, account.member)
         end
       end
     end

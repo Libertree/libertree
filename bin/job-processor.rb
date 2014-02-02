@@ -19,8 +19,7 @@ jobp = Libertree::JobProcessor.new( ARGV[0] )
 jobp.extend Jobs
 
 Jobs::Http::Avatar.options = {
-  :avatar_dir => jobp.conf['avatar_dir'],
-  :avatar_url => jobp.conf['avatar_url']
+  :avatar_dir => jobp.conf['avatar_dir']
 }
 Jobs::Email.from = jobp.conf['smtp']['from_address']
 Jobs::Request.init_client_conf(jobp.conf)

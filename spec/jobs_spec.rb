@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'tmpdir'
 require 'libertree/client'
 require_relative '../lib/jobs'
 
@@ -28,7 +29,7 @@ describe Jobs do
   end
 
   describe Jobs::Email, "#perform" do
-    it 'sends and email' do
+    it 'sends an email' do
       Mail.defaults do
         delivery_method :test
       end
@@ -165,5 +166,23 @@ describe Jobs do
     describe 'POST_LIKE_DELETE#perform' do
       pending
     end
+  end
+end
+
+describe Jobs::Http::Avatar, "#perform" do
+  before :each do
+    account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
+    @member = account.member
+    Jobs::Http::Avatar.options = {
+      'avatar_dir' => Dir.tmpdir
+    }
+  end
+
+  it 'raises JobInvalid with an invalid URL' do
+    params = {
+      'member_id' => @member.id,
+      'avatar_url' => "not a valid URL"
+    }
+    expect { Jobs::Http::Avatar.perform(params) }.to raise_exception(Libertree::JobInvalid)
   end
 end
