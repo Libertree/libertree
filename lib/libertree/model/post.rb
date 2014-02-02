@@ -295,10 +295,7 @@ module Libertree
       end
 
       def hidden_by?(account)
-        stm = self.prepare("SELECT post_hidden_by_account(?, ?)")
-        retval = stm.sc(self.id, account.id)
-        stm.finish
-        retval
+        DB.dbh.sc  "SELECT post_hidden_by_account(?, ?)", self.id, account.id
       end
 
       def collected_by?(member)
