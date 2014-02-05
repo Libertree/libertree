@@ -298,8 +298,8 @@ module Libertree
         DB.dbh.sc  "SELECT post_hidden_by_account(?, ?)", self.id, account.id
       end
 
-      def collected_by?(member)
-        DB.dbh.sc  "SELECT member_collects_post(?,?)", member.id, self.id
+      def collected_by?(account)
+        DB.dbh.sc  "SELECT account_collected_post(?, ?)", account.id, self.id
       end
 
       def to_hash
