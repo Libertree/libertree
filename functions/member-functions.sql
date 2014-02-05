@@ -1,8 +1,14 @@
-CREATE OR REPLACE FUNCTION member_collects_post(member_id INTEGER, post_id INTEGER) RETURNS BOOLEAN AS $$
+CREATE OR REPLACE FUNCTION account_collected_post(account_id INTEGER, post_id INTEGER) RETURNS BOOLEAN AS $$
     SELECT EXISTS (
-      SELECT 1 FROM pools_posts WHERE post_id = $2
-      AND pool_id IN (
-        SELECT id FROM pools WHERE member_id = $1
-      )
+        SELECT 1
+        FROM
+              pools_posts pp
+            , pools p
+            , members m
+        WHERE
+            m.account_id = $1
+            AND p.member_id = m.id
+            AND pp.pool_id = p.id
+            AND post_id = $2
     );
 $$ LANGUAGE SQL;
