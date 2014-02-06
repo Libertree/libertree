@@ -1,14 +1,12 @@
 GIT
   remote: git://github.com/Libertree/libertree-client-rb.git
   revision: 4b1fd32bfc5924e935d4018c1fcdeac8a224e2f7
-  branch: xmpp
   specs:
     libertree-client (0.0.2)
 
 GIT
   remote: git://github.com/Libertree/libertree-model-rb.git
-  revision: e7d54d6bbe2d1985fe1e55467b3ecb36e07d65d0
-  branch: xmpp
+  revision: 5936309f7d2d9b3470d087a0f33355fac343abd3
   specs:
     libertree-model (0.5.0)
       bcrypt-ruby (= 3.0.1)
