@@ -70,14 +70,14 @@ dev_dependencies() {
           cat<<EOF
 To install the development dependencies, please first run
 
-    apt-get install gcc g++ make bzip2 ruby1.9-dev libpq-dev libglib2.0-dev libcurl-dev libmagic-dev libgpgme11-dev
+    apt-get install gcc g++ make bzip2 ruby1.9-dev libpq-dev libglib2.0-dev libcurl-dev libmagic-dev libgpgme11-dev openssl-dev
 EOF
           ;;
       fedora)
           cat<<EOF
 To install the development dependencies, please first run
 
-    yum install gcc g++ make bzip2 ruby-devel postgresql-devel glib2-devel libcurl-devel file-devel gpgme-devel
+    yum install gcc g++ make bzip2 ruby-devel postgresql-devel glib2-devel libcurl-devel file-devel gpgme-devel openssl-devel
 EOF
           ;;
       *)
@@ -90,7 +90,7 @@ These tools are required:
 
 Development headers for the following software are needed at build time:
 
-    ruby postgresql glib2 libcurl libmagic/file gpgme
+    ruby postgresql glib2 libcurl libmagic/file gpgme openssl
 EOF
           ;;
   esac

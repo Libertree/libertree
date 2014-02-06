@@ -172,8 +172,8 @@ Request Parameters:
       "id": <forest id on requester>,
       "name": <forest name>,
       "trees": [
-        { "ip": <ip address of tree> },
-        [[ { "ip": <ip address of tree> }, ... ]]
+        { "domain": <domain of tree> },
+        [[ { "domain": <domain of tree> }, ... ]]
       ]
     }
 
@@ -286,7 +286,7 @@ Request Parameters:
     {
       "id": <comment id on requester>,
       "post_id": <post id on post origin>,
-      "public_key": <public key of post origin>,
+      "origin": <domain of post origin>,
       "username": <member username of comment author on requester>,
       "text": <comment text>,
     }
@@ -355,7 +355,7 @@ Request Parameters:
     {
       "id": <like id on requester>,
       "post_id": <post id on post origin>,
-      "public_key": <public key of post origin>,
+      "origin": <domain of post origin>,
       "username": <member username of liker on requester>,
     }
 
@@ -424,7 +424,7 @@ Request Parameters:
     {
       "id": <like id on requester>,
       "comment_id": <comment id on comment origin>,
-      "public_key": <public key of comment origin>,
+      "origin": <domain of comment origin>,
       "username": <member username of liker on requester>,
     }
 
@@ -495,7 +495,7 @@ Request Parameters:
       "recipients": [
         {
           "username": <recipient's username> },
-          "public_key": <public key of recipient's server>,
+          "origin": <domain of recipient's server>,
         }
         [[ ... ]]
       ],
@@ -647,7 +647,7 @@ Request Parameters:
     {
       "pool_id": <pool id on requester>,
       "post_id": <post id on post origin>,
-      "public_key": <public key of post origin>,
+      "origin": <domain of post origin>,
       "username": <member username of pool owner on requester>,
     }
 
@@ -686,7 +686,7 @@ Request Parameters:
     {
       "pool_id": <pool id on requester>,
       "post_id": <post id on post origin>,
-      "public_key": <public key of post origin>,
+      "origin": <domain of post origin>,
       "username": <member username of pool owner on requester>,
     }
 
