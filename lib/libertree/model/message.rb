@@ -48,12 +48,28 @@ module Libertree
           text: args[:text]
         )
 
+        sender_member = Model::Member[ args[:sender_member_id].to_i ]
+
         recipient_member_ids = Array(args[:recipient_member_ids])
         recipient_member_ids.each do |member_id|
           DB.dbh.i  "INSERT INTO message_recipients ( message_id, member_id ) VALUES ( ?, ? )", message.id, member_id.to_i
           m = Member[member_id]
           if m.account
-            m.account.notify_about  'type' => 'message', 'message_id' => message.id
+            a = m.account
+            a.notify_about  'type' => 'message', 'message_id' => message.id
+
+            # forward via email for those local recipients who requested it
+            if a.email && a.forward_dms_via_email
+              Libertree::Model::Job.create(
+                task: 'email',
+                params: {
+                  'to'      => a.email,
+                  'pubkey'  => a.pubkey,
+                  'subject' => '[Libertree] Direct message', # TODO: translate
+                  'body'    => "#{sender_member.handle} wrote:\n\n#{args[:text]}"
+                }.to_json
+              )
+            end
           end
         end
 
