@@ -90,7 +90,7 @@ module Libertree
                 AND s.id = m.server_id
                 AND (
                   s.name_given = ?
-                  OR s.ip::TEXT = ? || '/32'
+                  OR s.domain = ?
                 )
             }
           )

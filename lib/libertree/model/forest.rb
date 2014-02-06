@@ -61,11 +61,11 @@ module Libertree
         local_is_member
       end
 
-      # @param [Array] trees An Array of Hashes, each having an 'ip' key.
-      def set_trees_by_ip( trees )
+      # @param [Array] trees An Array of Hashes, each having a 'domain' key.
+      def set_trees_by_domain( trees )
         DB.dbh.d  "DELETE FROM forests_servers WHERE forest_id = ?", self.id
         trees.each do |tree|
-          add  Model::Server.find_or_create( ip: tree['ip'] )
+          add  Model::Server.find_or_create( domain: tree['domain'] )
         end
       end
     end
