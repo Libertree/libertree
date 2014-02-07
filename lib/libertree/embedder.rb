@@ -10,6 +10,10 @@ module Libertree
       OEmbed::Providers::SoundCloud
     )
 
+    # Ask Youtube to return HTTPS embed codes to keep their iframes
+    # from ending up empty when the page is served over HTTPS
+    OEmbed::Providers::Youtube.endpoint += "?scheme=https"
+
     def self.get(url)
       Libertree::Embedding::CustomProviders.get(url) || OEmbed::Providers.get(url, {width: 500}).html
     end
