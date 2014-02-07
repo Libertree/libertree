@@ -14,8 +14,10 @@ describe Libertree::Model::Post do
   end
 
   context 'with the Beatles and a post mentioning all but Paul' do
-    john, paul, george, ringo = [ 'john', 'paul', 'george', 'ringo'].map do |name|
-      Libertree::Model::Account.create( username: name, password_encrypted: 'p' )
+    before :all do
+      @john, @paul, @george, @ringo = [ 'john', 'paul', 'george', 'ringo'].map do |name|
+        Libertree::Model::Account.create( username: name, password_encrypted: 'p' )
+      end
     end
     before :each do
       new_post "@john and paul@paul went to see @george but found @ringo."
@@ -23,7 +25,7 @@ describe Libertree::Model::Post do
 
     describe '#mentioned_accounts' do
       it 'returns all accounts but Paul\'s' do
-        expect(@post.mentioned_accounts - [john, george, ringo]).to eq([])
+        expect(@post.mentioned_accounts).to match_array([@john, @george, @ringo])
       end
 
       it 'should ignore mention of the post author' do
@@ -33,7 +35,7 @@ describe Libertree::Model::Post do
 
       it 'should ignore repeated mentions' do
         new_post "@paul @paul @paul!"
-        expect(@post.mentioned_accounts).to eq([paul])
+        expect(@post.mentioned_accounts).to eq([@paul])
       end
     end
 
@@ -42,15 +44,15 @@ describe Libertree::Model::Post do
         new_post "@ringo: are you still playing the drums?"
       end
       it 'should create a notification for the mentioned account' do
-        before = ringo.notifications.count
+        before = @ringo.notifications.count
         @post.notify_mentioned
 
         # fetch account again to invalidate cache
         # TODO: shouldn't this be done in account.notify_about ?
-        ringo = Libertree::Model::Account[ username: 'ringo' ]
-        expect(ringo.notifications.count).to eq (before + 1)
+        @ringo = Libertree::Model::Account[ username: 'ringo' ]
+        expect(@ringo.notifications.count).to eq (before + 1)
 
-        subject = ringo.notifications[0].subject
+        subject = @ringo.notifications[0].subject
         expect(subject).to be_kind_of Libertree::Model::Post
         expect(subject).to eq @post
       end
