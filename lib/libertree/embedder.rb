@@ -40,11 +40,9 @@ module Libertree
         # collect urls, ignore relative links
         urls = p.xpath(".//a[not(starts-with(@href,'/'))]/@href").map(&:value).reverse
         urls.each do |url|
-          # TODO: why hit the db twice?
-          cached = (
-            Libertree::Model::EmbedCache[ url: url ] ||
-            Libertree::Model::EmbedCache[ url: url.gsub('&amp;', '&') ]
-          )
+          cached = Libertree::Model::EmbedCache.
+            s("SELECT * FROM embed_cache WHERE url IN (?,?)", url, url.gsub('&amp;', '&'))
+
           if cached
             p.add_next_sibling("<div class='embed'>#{cached[:object]}</div>")
           end
