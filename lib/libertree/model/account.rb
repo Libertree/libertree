@@ -345,10 +345,6 @@ module Libertree
       def remote_storage_connection
         @remote_storage_connection ||= RemoteStorageConnection['account_id' => self.id]
       end
-
-      def self.search(username_query)
-        self.s("SELECT * FROM accounts WHERE username ILIKE '%' || ? || '%'", username_query)
-      end
     end
   end
 end

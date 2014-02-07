@@ -184,8 +184,14 @@ module Libertree
         @springs = nil
       end
 
-      def self.search(username_query)
-        self.s("SELECT * FROM members WHERE username ILIKE '%' || ? || '%'", username_query)
+      def self.search(name)
+        self.s(%{SELECT m.* FROM members m
+                 LEFT OUTER JOIN accounts a ON (a.id = m.account_id)
+                 LEFT OUTER JOIN profiles p ON (m.id = p.member_id)
+                 WHERE m.username     ILIKE '%' || ? || '%'
+                    OR a.username     ILIKE '%' || ? || '%'
+                    OR p.name_display ILIKE '%' || ? || '%'
+                }, name, name, name)
       end
     end
   end

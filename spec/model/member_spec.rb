@@ -22,4 +22,27 @@ describe Libertree::Model::Member do
       end
     end
   end
+
+  describe '.search' do
+    before :each do
+      Libertree::DB.dbh.execute 'TRUNCATE members CASCADE'
+      Libertree::DB.dbh.execute 'TRUNCATE accounts CASCADE'
+    end
+    it 'returns local and remote members if username or display name match' do
+      account1 = Libertree::Model::Account.create({username: 'test',  password_encrypted: '1234'})
+      member1 = account1.member
+
+      remote = Libertree::Model::Server.create( FactoryGirl.attributes_for(:server) )
+      member2 = Libertree::Model::Member.create({username: 'remote', server_id: remote.id})
+      member2.profile.name_display = "Tester"
+
+      member3 = Libertree::Model::Member.create({username: 'testing', server_id: remote.id})
+      member3.profile.name_display = "whatever"
+
+      member4 = Libertree::Model::Member.create({username: 'dontcare', server_id: remote.id})
+      member4.profile.name_display = "don't care"
+
+      expect( Libertree::Model::Member.search("test") ).to match_array([member1, member2, member3])
+    end
+  end
 end
