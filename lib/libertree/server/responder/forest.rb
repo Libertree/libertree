@@ -20,8 +20,8 @@ module Libertree
               )
             end
 
-            trees = params['trees'].reject { |t|
-              t['domain'] == Server.conf['domain']
+            trees = params['trees']['domain'].reject { |tree_name|
+              tree_name == Server.conf['domain']
             }
             forest.set_trees_by_domain trees
           rescue PGError => e
