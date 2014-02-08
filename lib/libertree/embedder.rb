@@ -43,8 +43,8 @@ module Libertree
           cached = Libertree::Model::EmbedCache.
             s("SELECT * FROM embed_cache WHERE url IN (?,?)", url, url.gsub('&amp;', '&'))
 
-          if cached
-            p.add_next_sibling("<div class='embed'>#{cached[:object]}</div>")
+          if cached[0]
+            p.add_next_sibling("<div class='embed'>#{cached[0][:object]}</div>")
           end
         end
       end
