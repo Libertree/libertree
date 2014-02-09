@@ -13,6 +13,7 @@ CREATE TABLE account_settings (
     , hide_markdown_bar BOOLEAN NOT NULL DEFAULT FALSE
     , forward_dms_via_email BOOLEAN NOT NULL DEFAULT FALSE
     , PRIMARY KEY (account_id)
+    , CONSTRAINT valid_excerpt_max_height CHECK ( excerpt_max_height >= 0 )
 );
 
 COMMENT ON COLUMN account_settings.excerpt_max_height IS
