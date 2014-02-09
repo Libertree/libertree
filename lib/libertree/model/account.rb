@@ -43,6 +43,10 @@ module Libertree
         @member ||= Member['account_id' => self.id]
       end
 
+      def settings
+        @settings ||= AccountSettings['account_id' => self.id]
+      end
+
       def notify_about(data)
         Notification.create(
           account_id: self.id,
@@ -154,10 +158,6 @@ module Libertree
         @rivers_appended ||= rivers.find_all(&:appended_to_all)
       end
 
-      def theme
-        @theme ||= super
-      end
-
       def self.create(*args)
         account = super
         member = Member.create( account_id: account.id )
@@ -214,8 +214,8 @@ module Libertree
         @notifications_unseen = nil
         @num_notifications_unseen = nil
         @rivers_appended = nil
-        @theme = nil
         @remote_storage_connection = nil
+        @settings = nil
       end
 
       def admin?
@@ -281,11 +281,11 @@ module Libertree
             'username'           => self.username,
             'time_created'       => self.time_created,
             'email'              => self.email,
-            'custom_css'         => self.custom_css,
-            'custom_js'          => self.custom_js,
-            'custom_link'        => self.custom_link,
+            'custom_css'         => self.settings.custom_css,
+            'custom_js'          => self.settings.custom_js,
+            'custom_link'        => self.settings.custom_link,
             'font_css'           => self.font_css,
-            'excerpt_max_height' => self.excerpt_max_height,
+            'excerpt_max_height' => self.settings.excerpt_max_height,
             'profile' => {
               'name_display' => self.member.profile.name_display,
               'description'  => self.member.profile.description,

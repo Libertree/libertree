@@ -4,6 +4,7 @@ require_relative 'model/is-remote-or-local'
 require_relative 'model/has-searchable-text'
 
 require_relative 'model/account'
+require_relative 'model/account-settings'
 require_relative 'model/chat-message'
 require_relative 'model/comment'
 require_relative 'model/comment-like'

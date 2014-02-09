@@ -59,7 +59,7 @@ module Libertree
             a.notify_about  'type' => 'message', 'message_id' => message.id
 
             # forward via email for those local recipients who requested it
-            if a.email && a.forward_dms_via_email
+            if a.email && a.settings.forward_dms_via_email
               Libertree::Model::Job.create(
                 task: 'email',
                 params: {
