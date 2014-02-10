@@ -200,6 +200,7 @@ CREATE OR REPLACE FUNCTION delete_cascade_account(account_id INTEGER) RETURNS vo
     DELETE FROM posts_read                 WHERE account_id = $1;
     DELETE FROM posts_hidden               WHERE account_id = $1;
     DELETE FROM remote_storage_connections WHERE account_id = $1;
+    DELETE FROM account_settings           WHERE account_id = $1;
     DELETE FROM
         contact_lists_members clm
     USING
