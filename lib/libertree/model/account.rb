@@ -161,6 +161,7 @@ module Libertree
       def self.create(*args)
         account = super
         member = Member.create( account_id: account.id )
+        AccountSettings.create( account_id: account.id )
         account
       end
 
