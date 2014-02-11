@@ -12,7 +12,7 @@ describe Libertree::Server::Responder do
       include Libertree::XML::Helper
       include LSR::Helper
     }
-    @remote_tree = mock
+    @remote_tree = double
     @remote_tree.stub :id
   end
 
