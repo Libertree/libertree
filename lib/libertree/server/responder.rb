@@ -122,14 +122,21 @@ module Libertree
         Libertree::Server.quit
       end
 
-      # Packs an optional XML fragment (opts[:with]) in a standard XMPP reply
-      # to the provided stanza (opts[:to]) and sends out the reply stanza.
+      # Packs an optional XML fragment or an array of fragments
+      # (opts[:with]) in a standard XMPP reply to the provided stanza
+      # (opts[:to]) and sends out the reply stanza.
       def self.respond(opts)
         stanza = opts[:to]
         response = stanza.reply
         if opts[:with]
-          response.add_child opts[:with]
-          if opts[:with].node_name == "error"
+          # we cannot use Array() here because it results in an empty
+          # array when only one fragment is given
+          fragments = opts[:with].is_a?(Array) ? opts[:with] : [opts[:with]]
+          fragments.each do |child|
+            response.add_child child
+          end
+
+          if fragments[0].node_name == "error"
             response.type = :error
           end
         end

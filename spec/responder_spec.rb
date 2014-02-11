@@ -183,6 +183,22 @@ describe Libertree::Server::Responder do
       c.should_receive(:write).with reply
       LSR.respond to: msg, with: node
     end
+
+    it 'appends multiple XML nodes to the reply' do
+      msg = Blather::Stanza::Iq.new :set
+      node1 = Nokogiri::XML.fragment "<custom>foo</custom>"
+      node2 = Nokogiri::XML.fragment "<custom>bar</custom>"
+      node3 = Nokogiri::XML.fragment "<custom>baz</custom>"
+
+      reply = msg.reply
+      reply.add_child node1
+      reply.add_child node2
+      reply.add_child node3
+
+      c = LSR.send :client
+      c.should_receive(:write).with reply
+      LSR.respond to: msg, with: [node1, node2, node3]
+    end
   end
 
   describe 'process' do
