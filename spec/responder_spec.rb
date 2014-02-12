@@ -16,7 +16,7 @@ describe Libertree::Server::Responder do
     @remote_tree.stub :id
   end
 
-  it 'ignores unsupported iq stanzas' do
+  it 'ignores unsupported iq set stanzas' do
     msg = Blather::Stanza::Iq.new :set
     c = LSR.send :client
     LSR.should_not_receive(:respond)
