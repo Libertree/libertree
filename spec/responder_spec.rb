@@ -14,18 +14,17 @@ describe Libertree::Server::Responder do
     }
     @remote_tree = double
     @remote_tree.stub :id
+    @client = LSR.connection
   end
 
   it 'ignores unsupported iq set stanzas' do
     msg = Blather::Stanza::Iq.new :set
-    c = LSR.send :client
     LSR.should_not_receive(:respond)
-    c.send :call_handler_for, :iq, msg
+    @client.send :call_handler_for, :iq, msg
   end
 
   it 'responds to any other unsupported stanza type with "UNKNOWN COMMAND"' do
     expected_response = LSR.error code: 'UNKNOWN COMMAND'
-    c = LSR.send :client
 
     target = "to@receiver.localhost.localdomain"
     msgs = [ Blather::Stanza::Message.new(target, 'body', :groupchat),
@@ -49,7 +48,7 @@ describe Libertree::Server::Responder do
         args[:with].to_s.should eq expected_response.to_s
       end
 
-      c.send :call_handler_for, :message, msg
+      @client.send :call_handler_for, :message, msg
     end
 
     presences.each do |p|
@@ -58,7 +57,7 @@ describe Libertree::Server::Responder do
         args[:with].to_s.should eq expected_response.to_s
       end
 
-      c.send :call_handler_for, :presence, p
+      @client.send :call_handler_for, :presence, p
     end
   end
 
@@ -74,14 +73,13 @@ describe Libertree::Server::Responder do
                                       :text => 'username'
                                     })
       
-      c = LSR.send :client
       LSR.should_receive(:respond) do |args|
         args[:to].should eq msg
         args[:with].to_s.should eq expected_response.to_s
       end
       
       # handler throws :halt to prevent falling through to the catch-all handler
-      catch(:halt) { c.send :call_handler_for, :iq, msg }
+      catch(:halt) { @client.send :call_handler_for, :iq, msg }
     end
     
     it 'responds with "NOT FOUND" when a handler throws NotFoundError' do
@@ -100,34 +98,31 @@ describe Libertree::Server::Responder do
       expected_response = LSR.error({ :code => 'NOT FOUND',
                                       :text => 'Unrecognized member username: "nosuchusername"'})
       
-      c = LSR.send :client
       LSR.should_receive(:respond) do |args|
         args[:to].should eq msg
         args[:with].to_s.should eq expected_response.to_s
       end
       
       # handler throws :halt to prevent falling through to the catch-all handler
-      catch(:halt) { c.send :call_handler_for, :iq, msg }
+      catch(:halt) { @client.send :call_handler_for, :iq, msg }
     end
     
     it 'calls the correct handler for all valid iq commands' do
       LSR::VALID_COMMANDS.each do |command|
         stanza = helper.build_stanza("localhost.localdomain", { command => { id: 0 }})
         stanza.from = @requester.domain
-        c = LSR.send(:client)
-        c.stub :write
+        @client.stub :write
         LSR.should_receive "rsp_#{command.gsub('-', '_')}".to_sym
-        catch(:halt) { c.send :call_handler_for, :iq, stanza }
+        catch(:halt) { @client.send :call_handler_for, :iq, stanza }
       end
     end
 
     it 'calls the correct handler for chat messages' do
       stanza = Blather::Stanza::Message.new("localhost.localdomain", 'text', :chat)
       stanza.from = @requester.domain
-      c = LSR.send(:client)
-      c.stub :write
+      @client.stub :write
       LSR.should_receive :rsp_chat
-      catch(:halt) { c.send :call_handler_for, :message, stanza }
+      catch(:halt) { @client.send :call_handler_for, :message, stanza }
     end
   end
 
@@ -141,11 +136,10 @@ describe Libertree::Server::Responder do
 
         err = LSR.error code: 'UNRECOGNIZED SERVER'
 
-        c = LSR.send(:client)
         LSR.should_receive(:respond) do |args|
           args[:with].to_s.should eq err.to_s
         end
-        catch(:halt) { c.send :call_handler_for, :iq, stanza }
+        catch(:halt) { @client.send :call_handler_for, :iq, stanza }
       end
     end
 
@@ -153,23 +147,20 @@ describe Libertree::Server::Responder do
       stanza = helper.build_stanza("localhost.localdomain",
                                    { 'forest' => { "whatever" => "whatever" }})
       stanza.from = @requester.domain
-
       err = LSR.error code: 'UNRECOGNIZED SERVER'
 
-      c = LSR.send(:client)
       LSR.should_receive(:respond) do |args|
         args[:with].to_s.should_not eq err.to_s
       end
       # handler throws :halt to prevent falling through to the catch-all handler
-      catch(:halt) { c.send :call_handler_for, :iq, stanza }
+      catch(:halt) { @client.send :call_handler_for, :iq, stanza }
     end
   end
 
   describe 'respond' do
     it 'writes a reply to the stream' do
       msg = Blather::Stanza::Iq.new :set
-      c = LSR.send(:client)
-      c.should_receive(:write)
+      @client.should_receive(:write)
       LSR.respond to: msg
     end
 
@@ -179,8 +170,7 @@ describe Libertree::Server::Responder do
       reply = msg.reply
       reply.add_child node
 
-      c = LSR.send :client
-      c.should_receive(:write).with reply
+      @client.should_receive(:write).with reply
       LSR.respond to: msg, with: node
     end
 
@@ -195,8 +185,7 @@ describe Libertree::Server::Responder do
       reply.add_child node2
       reply.add_child node3
 
-      c = LSR.send :client
-      c.should_receive(:write).with reply
+      @client.should_receive(:write).with reply
       LSR.respond to: msg, with: [node1, node2, node3]
     end
   end
