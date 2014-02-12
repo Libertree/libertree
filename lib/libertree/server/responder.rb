@@ -77,7 +77,7 @@ module Libertree
       end
 
       # respond to all other libertree stanzas with an error
-      client.register_handler :iq, "/iq/ns:libertree", :ns => 'urn:libertree' do |stanza|
+      iq "/iq/ns:libertree", :ns => 'urn:libertree' do |stanza|
         respond to: stanza, with: (error code: 'UNKNOWN COMMAND')
         halt
       end
