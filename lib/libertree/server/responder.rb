@@ -28,6 +28,8 @@ module Libertree
       extend Post
       extend PostLike
 
+      # set @client for the `respond` helper method
+      @client = client
       when_ready {
         puts "\nLibertree started."
         puts "Send messages to #{jid.stripped}."
@@ -120,27 +122,6 @@ module Libertree
       client.register_handler :stream_error, :name => :host_unknown do |err|
         Libertree::Server.log_error err.message
         Libertree::Server.quit
-      end
-
-      # Packs an optional XML fragment or an array of fragments
-      # (opts[:with]) in a standard XMPP reply to the provided stanza
-      # (opts[:to]) and sends out the reply stanza.
-      def self.respond(opts)
-        stanza = opts[:to]
-        response = stanza.reply
-        if opts[:with]
-          # we cannot use Array() here because it results in an empty
-          # array when only one fragment is given
-          fragments = opts[:with].is_a?(Array) ? opts[:with] : [opts[:with]]
-          fragments.each do |child|
-            response.add_child child
-          end
-
-          if fragments[0].node_name == "error"
-            response.type = :error
-          end
-        end
-        write_to_stream response
       end
 
       # Converts the XML payload to a hash and passes it
