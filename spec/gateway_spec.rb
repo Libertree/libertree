@@ -145,6 +145,40 @@ describe Libertree::Server::Gateway do
       end
       @client.handle_data msg
     end
+
+    it 'unregisters the jid upon receiving a jabber:iq:register set query with "remove" tag' do
+      ns = 'jabber:iq:register'
+
+      msg = Blather::Stanza::Iq.new
+      msg.type = :set
+      msg.to = @gateway
+      msg.from = @jid
+      msg.add_child Nokogiri::XML::Builder.new { |xml|
+        xml.query('xmlns' => ns) {
+          xml.remove
+        }
+      }.doc.root
+
+      username = @account.username
+
+      @client.should_receive(:write) do |stanza|
+        expect( stanza.xpath('.//error', :ns => ns) ).to be_empty
+        account = Libertree::Model::Account[ username: username ]
+        expect( account.gateway_jid ).to be_nil
+      end
+
+      @client.should_receive(:write) do |stanza|
+        expect( stanza.type ).to eq(:unsubscribe)
+      end
+      @client.should_receive(:write) do |stanza|
+        expect( stanza.type ).to eq(:unsubscribed)
+      end
+      @client.should_receive(:write) do |stanza|
+        expect( stanza.type ).to eq(:unavailable)
+      end
+
+      @client.handle_data msg
+    end
   end
 
 end

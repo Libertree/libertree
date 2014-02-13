@@ -55,13 +55,16 @@ module Libertree
         ns = 'jabber:iq:register'
         username_node = stanza.xpath('.//ns:username', :ns => ns)
         password_node = stanza.xpath('.//ns:password', :ns => ns)
+        unregister = ! stanza.xpath('.//ns:remove', :ns => ns).empty?
 
         error = Nokogiri::XML.fragment(%{<error code='406' type='modify'>
                                            <not-acceptable
                                              xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/>
                                          </error>})
 
-        if [username_node, password_node].any?(&:empty?)
+        if unregister
+          self.register_remove(stanza)
+        elsif [username_node, password_node].any?(&:empty?)
           respond to: stanza, with: [error, stanza]
         else
           account = Libertree::Model::Account.authenticate({
@@ -81,6 +84,22 @@ module Libertree
             # failure
             respond to: stanza, with: [error, stanza]
           end
+        end
+      end
+
+      def self.register_remove(stanza)
+        account = Libertree::Model::Account[ gateway_jid: stanza.from.to_s ]
+        if account
+          account.gateway_jid = nil
+        end
+        @client.write stanza.reply!
+
+        [ 'unsubscribe', 'unsubscribed', 'unavailable' ].each do |presence_type|
+          p = Blather::Stanza::Presence.new
+          p.to = stanza.to
+          p.from = stanza.from
+          p.type = presence_type
+          @client.write p
         end
       end
 
