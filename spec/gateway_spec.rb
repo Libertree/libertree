@@ -7,10 +7,12 @@ describe Libertree::Server::Gateway do
 
   before :each do
     @client = LSR.connection
+    @gateway = "gateway.liber.tree"
   end
 
   it 'advertises Libertree gateway' do
     msg = Blather::Stanza::Iq::DiscoInfo.new
+    msg.to = @gateway
     ns = msg.class.registered_ns
 
     @client.should_receive(:write) do |stanza|
@@ -37,6 +39,7 @@ describe Libertree::Server::Gateway do
 
     it 'requests credentials when a jabber:iq:register query is received' do
       msg = Blather::Stanza::Iq.new
+      msg.to = @gateway
       msg.from = "tester@test"
       msg.add_child Nokogiri::XML.fragment("<query xmlns='jabber:iq:register'/>")
       ns = 'jabber:iq:register'
@@ -53,6 +56,7 @@ describe Libertree::Server::Gateway do
       ns = 'jabber:iq:register'
 
       msg = Blather::Stanza::Iq.new
+      msg.to = @gateway
       msg.type = :set
       msg.add_child Nokogiri::XML::Builder.new { |xml|
         xml.query('xmlns' => ns) {
@@ -71,6 +75,7 @@ describe Libertree::Server::Gateway do
       ns = 'jabber:iq:register'
 
       msg = Blather::Stanza::Iq.new
+      msg.to = @gateway
       msg.type = :set
       msg.add_child Nokogiri::XML::Builder.new { |xml|
         xml.query('xmlns' => ns) {
@@ -90,6 +95,7 @@ describe Libertree::Server::Gateway do
 
       jid = "tester@test"
       msg = Blather::Stanza::Iq.new
+      msg.to = @gateway
       msg.from = jid
       msg.type = :set
       msg.add_child Nokogiri::XML::Builder.new { |xml|
@@ -124,6 +130,7 @@ describe Libertree::Server::Gateway do
 
     it 'responds with the user record upon receiving an empty jabber:iq:register query' do
       msg = Blather::Stanza::Iq.new
+      msg.to = @gateway
       msg.from = @jid
       msg.add_child Nokogiri::XML.fragment("<query xmlns='jabber:iq:register'/>")
       ns = 'jabber:iq:register'
