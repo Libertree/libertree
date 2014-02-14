@@ -61,4 +61,41 @@ describe Libertree::Server::Responder::Helper do
       expect { subject.fail_if_nil("some object", "whatever") }.not_to raise_error
     end
   end
+
+  describe 'respond' do
+    before :all do
+      @client = LSR.connection
+    end
+
+    it 'writes a reply to the stream' do
+      msg = Blather::Stanza::Iq.new :set
+      @client.should_receive(:write)
+      LSR.respond to: msg
+    end
+
+    it 'appends a given XML node to the reply' do
+      msg = Blather::Stanza::Iq.new :set
+      node = Nokogiri::XML.fragment "<custom>whatever</custom>"
+      reply = msg.reply
+      reply.add_child node
+
+      @client.should_receive(:write).with reply
+      LSR.respond to: msg, with: node
+    end
+
+    it 'appends multiple XML nodes to the reply' do
+      msg = Blather::Stanza::Iq.new :set
+      node1 = Nokogiri::XML.fragment "<custom>foo</custom>"
+      node2 = Nokogiri::XML.fragment "<custom>bar</custom>"
+      node3 = Nokogiri::XML.fragment "<custom>baz</custom>"
+
+      reply = msg.reply
+      reply.add_child node1
+      reply.add_child node2
+      reply.add_child node3
+
+      @client.should_receive(:write).with reply
+      LSR.respond to: msg, with: [node1, node2, node3]
+    end
+  end
 end
