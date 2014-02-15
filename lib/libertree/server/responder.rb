@@ -138,17 +138,6 @@ module Libertree
         send  method, params
       end
 
-      # Generates an error XML fragment given an optional
-      # error code and an optional error message
-      def self.error(opts={ code: 'ERROR' })
-        Nokogiri::XML::Builder.new { |xml|
-          xml.error {
-            xml.code(opts[:code])
-            xml.text_(opts[:text])  if opts[:text]
-          }
-        }.doc.root
-      end
-
       # Processes a command with an XML nodeset of parameters.
       # Returns nil when no error occurred, otherwise returns
       # an XML fragment containing error code and error message.

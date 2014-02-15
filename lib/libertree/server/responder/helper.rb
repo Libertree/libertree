@@ -27,6 +27,17 @@ module Libertree
           @client.write response
         end
 
+        # Generates an error XML fragment given an optional
+        # error code and an optional error message
+        def error(opts={ code: 'ERROR' })
+          Nokogiri::XML::Builder.new { |xml|
+            xml.error {
+              xml.code(opts[:code])
+              xml.text_(opts[:text])  if opts[:text]
+            }
+          }.doc.root
+        end
+
         # @param [Hash] params A Hash.
         # @param [Array] required_parameters The keys which are required.
         # @return [Array] The keys whose values are missing.

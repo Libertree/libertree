@@ -182,18 +182,4 @@ XML
       LSR.process("post-like-delete", xml)
     end
   end
-
-  describe 'error' do
-    it 'builds an XML document with the given error code' do
-      err = LSR.error( code: "SOME CODE" ).
-        serialize(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML)
-      err.should eq "<error><code>SOME CODE</code></error>"
-    end
-
-    it 'builds an XML document with the given error message' do
-      err = LSR.error( code: "ERROR", text: "Some message" ).
-        serialize(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML)
-      err.should eq "<error><code>ERROR</code><text>Some message</text></error>"
-    end
-  end
 end
