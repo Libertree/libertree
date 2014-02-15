@@ -11,7 +11,7 @@ module Libertree
       end
 
       def xml &block
-        Nokogiri::XML::Builder.new(&block).doc.root.to_xml
+        Nokogiri::XML::Builder.new(&block).doc.root.serialize(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML)
       end
     end
   end
