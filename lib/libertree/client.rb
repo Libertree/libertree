@@ -145,6 +145,29 @@ module Libertree
       end
     end
 
+    def build_references_xml(refs)
+      Nokogiri::XML::Builder.new {|x|
+        x.references  {
+          refs.each do |ref|
+            x.reference {
+              x.match  ref['match']
+              ['post', 'comment', 'spring'].each do |type|
+                if ref[type]
+                  # Nokogiri uses `comment` for XML comments
+                  type_ = type == 'comment' ? 'comment_' : type
+                  x.send(type_) {
+                    x.url     ref[type]['url']
+                    x.id_     ref[type]['id']
+                    x.origin  ref[type]['origin']  if ref[type]['origin']
+                  }
+                end
+              end
+            }
+          end
+        }
+      }.doc.root
+    end
+
     public
 
     # called by the parser
@@ -194,122 +217,132 @@ module Libertree
       post = comment.post
       server = post.member.server
       origin = server ? server.domain : @domain
-      params = {
-        'id'       => comment.id,
-        'post_id'  => post.public_id,
-        'origin'   => origin,
-        'username' => comment.member.username,
-        'text'     => comment.text
+      xml {|x|
+        x.comment_ {
+          x.id_         comment.id
+          x.post_id     post.public_id
+          x.origin      origin
+          x.username    comment.member.username
+          x.text_       comment.text
+          unless references.empty?
+            build_references_xml references
+          end
+        }
       }
-      params.merge!('references' => references) unless references.empty?
-      { 'comment' => params }
     end
 
     def req_comment_delete(comment_id)
-      { 'comment-delete' => { 'id' => comment_id } }
+      xml {|x| x.send('comment-delete') { x.id_  comment_id } }
     end
 
     def req_comment_like(like)
       server = like.comment.member.server
       origin = server ? server.domain : @domain
-      {
-        'comment-like' => {
-          'id'         => like.id,
-          'comment_id' => like.comment.public_id,
-          'origin'     => origin,
-          'username'   => like.member.username,
+      xml {|x|
+        x.send('comment-like') {
+          x.id_         like.id
+          x.comment_id  like.comment.public_id
+          x.origin      origin
+          x.username    like.member.username
         }
       }
     end
 
     def req_comment_like_delete(like_id)
-      { 'comment-like-delete' => { 'id' => like_id } }
+      xml {|x| x.send('comment-like-delete') { x.id_  like_id } }
     end
 
     def req_forest(forest)
-      return  if ! forest.local_is_member?
-      {
-        'forest' => {
-          'id'    => forest.id,
-          'name'  => forest.name,
-          'trees' => forest.trees.map { |t|
-            { 'domain' => t.domain }
-          } + [ { 'domain' => @domain } ]
+      return  if ! forest.local_is_member?  #TODO
+      domains = forest.trees.map(&:domain) + [@domain]
+      xml {|x|
+        x.forest {
+          x.id_    forest.id
+          x.name   forest.name
+          x.trees  {
+            for domain in domains
+              x.domain domain
+            end
+          }
         }
       }
     end
 
     def req_introduce
-      params = {
-        'public_key' => @public_key,
-        'contact'    => @contact
+      xml {|x|
+        x.introduce {
+          x.public_key   @public_key
+          x.contact      @contact
+          x.server_name  @server_name  if @server_name
+        }
       }
-      params.merge!('server_name' => @server_name)  if @server_name
-
-      { 'introduce' => params }
     end
 
     def req_member(member)
-      params = {
-        'username' => member.username,
-        'profile'  => {
-          'name_display' => member.profile.name_display,
-          'description'  => member.profile.description,
+      xml {|x|
+        x.member {
+          x.username  member.username
+          x.avatar_url  "#{@frontend_url_base}#{member.avatar_path}"  if member.avatar_path
+          x.profile {
+            x.name_display  member.profile.name_display
+            x.description   member.profile.description
+          }
         }
       }
-      if member.avatar_path
-        params.merge!('avatar_url' => "#{@frontend_url_base}#{member.avatar_path}")
-      end
-      { 'member' => params }
     end
 
     def req_member_delete(username)
-      { 'member-delete' => { 'username' => username } }
+      xml {|x| x.send('member-delete') { x.username  username } }
     end
 
     # @param recipients [Array(Member)]
     def req_message(message, recipients)
-      {
-        'message' => {
-          'username'   => message.sender.account.username,
-          'recipients' => recipients.map { |recipient|
-            {
-              'username' => recipient.username,
-              'origin'   => recipient.server ? recipient.server.domain : @domain,
-            }
-          },
-          'text'       => message.text
+      xml {|x|
+        x.message {
+          x.username    message.sender.account.username
+          x.text_       message.text
+          x.recipients  {
+            for member in recipients
+              x.recipient {
+                x.username  member.username
+                x.origin    member.server ? member.server.domain : @domain
+              }
+            end
+          }
         }
       }
     end
 
     def req_post(post, references=[])
-      params = {
-        'username'   => post.member.username,
-        'id'         => post.id,
-        'visibility' => post.visibility,
-        'text'       => post.text
+      xml {|x|
+        x.post {
+          x.username    post.member.username
+          x.id_         post.id
+          x.visibility  post.visibility
+          x.text_       post.text
+          x.via         post.via  if post.via
+          unless references.empty?
+            build_references_xml references
+          end
+        }
       }
-      params.merge!('references' => references) unless references.empty?
-      params.merge!('via' => post.via)  if post.via
-      { 'post' => params }
     end
 
     def req_pool(pool)
-      {
-        'pool' => {
-          'username' => pool.member.username,
-          'id'       => pool.id,
-          'name'     => pool.name,
+      xml {|x|
+        x.pool {
+          x.username  pool.member.username
+          x.id_       pool.id
+          x.name      pool.name
         }
       }
     end
 
     def req_pool_delete(pool)
-      {
-        'pool-delete' => {
-          'username' => pool.member.username,
-          'id'       => pool.id,
+      xml {|x|
+        x.send('pool-delete') {
+          x.username  pool.member.username
+          x.id_       pool.id
         }
       }
     end
@@ -317,12 +350,12 @@ module Libertree
     def req_pool_post(pool, post)
       server = post.member.server
       origin = server ? server.domain : @domain
-      {
-        'pool-post' => {
-          'username' => pool.member.username,
-          'pool_id'  => pool.id,
-          'post_id'  => post.public_id,
-          'origin'   => origin,
+      xml {|x|
+        x.send('pool-post') {
+          x.username  pool.member.username
+          x.pool_id   pool.id
+          x.post_id   post.public_id
+          x.origin    origin
         }
       }
     end
@@ -330,35 +363,37 @@ module Libertree
     def req_pool_post_delete(pool, post)
       server = post.member.server
       origin = server ? server.domain : @domain
-      {
-        'pool-post-delete' => {
-          'username' => pool.member.username,
-          'pool_id'  => pool.id,
-          'post_id'  => post.public_id,
-          'origin'   => origin,
+      xml {|x|
+        x.send('pool-post-delete') {
+          x.username  pool.member.username
+          x.pool_id   pool.id
+          x.post_id   post.public_id
+          x.origin    origin
         }
       }
     end
 
     def req_post_delete(post_id)
-      { 'post-delete' => { 'id' => post_id } }
+      xml {|x|
+        x.send('post-delete') { x.id_ post_id }
+      }
     end
 
     def req_post_like(like)
       server = like.post.member.server
       origin = server ? server.domain : @domain
-      {
-        'post-like' => {
-          'id'       => like.id,
-          'post_id'  => like.post.public_id,
-          'origin'   => origin,
-          'username' => like.member.username,
+      xml {|x|
+        x.send('post-like') {
+          x.id_       like.id
+          x.post_id   like.post.public_id
+          x.origin    origin
+          x.username  like.member.username
         }
       }
     end
 
     def req_post_like_delete(like_id)
-      { 'post-like-delete' => { 'id' => like_id } }
+      xml {|x| x.send('post-like-delete') { x.id_  like_id } }
     end
   end
 end
