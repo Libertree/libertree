@@ -66,8 +66,7 @@ describe Libertree::Server::Responder do
     include_context 'requester in a forest'
 
     it 'responds with "MISSING PARAMETER" when a handler throws MissingParameterError' do
-      msg = helper.build_stanza( "localhost.localdomain",
-                                 { 'post' => { 'id' => 10 }} )
+      msg = helper.build_stanza("localhost.localdomain", "<post><id>10</id></post>")
       msg.from = @requester.domain
       expected_response = LSR.error({ :code => 'MISSING PARAMETER',
                                       :text => 'username'
@@ -81,19 +80,21 @@ describe Libertree::Server::Responder do
       # handler throws :halt to prevent falling through to the catch-all handler
       catch(:halt) { @client.send :call_handler_for, :iq, msg }
     end
-    
+
     it 'responds with "NOT FOUND" when a handler throws NotFoundError' do
-      h = { 'comment' => {
-          'id'       => 999,
-          'username' => 'nosuchusername',
-          'origin'   => "WHATEVER",
-          'post_id'  => 1234,
-          'text'     => 'A test comment.',
-        }}
-      
+      xml =<<XML
+<comment>
+  <id>999</id>
+  <username>nosuchusername</username>
+  <origin>WHATEVER</origin>
+  <post_id>1234</post_id>
+  <text>A test comment.</text>
+</comment>
+XML
+
       subject.instance_variable_set(:@remote_tree, @remote_tree)
       
-      msg = helper.build_stanza( "localhost.localdomain", h )
+      msg = helper.build_stanza("localhost.localdomain", xml)
       msg.from = @requester.domain
       expected_response = LSR.error({ :code => 'NOT FOUND',
                                       :text => 'Unrecognized member username: "nosuchusername"'})
@@ -109,7 +110,7 @@ describe Libertree::Server::Responder do
     
     it 'calls the correct handler for all valid iq commands' do
       LSR::VALID_COMMANDS.each do |command|
-        stanza = helper.build_stanza("localhost.localdomain", { command => { id: 0 }})
+        stanza = helper.build_stanza("localhost.localdomain", "<#{command}/>")
         stanza.from = @requester.domain
         @client.stub :write
         LSR.should_receive "rsp_#{command.gsub('-', '_')}".to_sym
@@ -131,7 +132,7 @@ describe Libertree::Server::Responder do
 
     it 'responds with UNRECOGNIZED SERVER' do
       (LSR::VALID_COMMANDS - ['forest', 'introduce']).each do |command|
-        stanza = helper.build_stanza("localhost.localdomain", { command => { id: 0 }})
+        stanza = helper.build_stanza("localhost.localdomain", "<#{command}/>")
         stanza.from = @requester.domain
 
         err = LSR.error code: 'UNRECOGNIZED SERVER'
@@ -144,8 +145,7 @@ describe Libertree::Server::Responder do
     end
 
     it 'does not respond with UNRECOGNIZED SERVER to "forest" commands' do
-      stanza = helper.build_stanza("localhost.localdomain",
-                                   { 'forest' => { "whatever" => "whatever" }})
+      stanza = helper.build_stanza("localhost.localdomain", '<forest/>')
       stanza.from = @requester.domain
       err = LSR.error code: 'UNRECOGNIZED SERVER'
 
