@@ -15,6 +15,23 @@ describe Libertree::Server::Responder do
     @remote_tree = double
     @remote_tree.stub :id
     @client = LSR.connection
+
+    # requester using client library
+    Libertree::Client.any_instance.stub(:connect)
+    key = OpenSSL::PKey::RSA.new(512)
+    @public_key = key.public_key.to_pem
+    @contact = "admin@localhost"
+    @domain = "localhost"
+    @server_name = "server"
+
+    @requester = Libertree::Client.new({ private_key: key,
+                                         contact: @contact,
+                                         domain: @domain,
+                                         frontend_url_base: 'localhost' })
+
+    @requester.instance_variable_set(:@contact, @contact)
+    @requester.instance_variable_set(:@domain, @domain)
+    @requester.instance_variable_set(:@server_name, @server_name)
   end
 
   it 'ignores unsupported iq set stanzas' do
@@ -159,7 +176,7 @@ XML
 
   describe 'process' do
     it 'converts commands with dashes to method names with underscores' do
-      xml = Nokogiri::XML.fragment helper.params_to_xml({ 'id' => 10 })
+      xml = Nokogiri::XML.fragment @requester.req_post_like_delete(10)
       hash = helper.xml_to_hash(xml).values.first
       LSR.should_receive(:rsp_post_like_delete).with(hash)
       LSR.process("post-like-delete", xml)
