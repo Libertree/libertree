@@ -1,4 +1,15 @@
 GIT
+  remote: git://github.com/Libertree/libertree-model-rb.git
+  revision: 517794a1a7e283f8da526c522222a265dd5fea28
+  specs:
+    libertree-model (0.5.0)
+      bcrypt-ruby (= 3.0.1)
+      m4dbi
+      nokogiri (~> 1.5)
+      rdbi-driver-postgresql
+      ruby-oembed (~> 0.8.8)
+
+GIT
   remote: git://github.com/mark-moseley/linecache
   revision: 869c6a65155068415925067e480741bd0a71527e
   specs:
@@ -12,6 +23,7 @@ GEM
       i18n (~> 0.6)
       multi_json (~> 1.0)
     archive-tar-minitar (0.5.2)
+    bcrypt-ruby (3.0.1)
     blather (0.8.1)
       activesupport (>= 2.3.11)
       eventmachine (>= 0.12.6)
@@ -20,24 +32,33 @@ GEM
       nokogiri (~> 1.5.5)
     columnize (0.3.6)
     connection_pool (0.9.2)
-    debugger (1.5.0)
-      columnize (>= 0.3.1)
-      debugger-linecache (~> 1.2.0)
-      debugger-ruby_core_source (~> 1.2.0)
-    debugger-linecache (1.2.0)
-    debugger-ruby_core_source (1.2.0)
+    debugger-ruby_core_source (1.3.1)
     diff-lcs (1.1.3)
+    epoxy (0.3.1)
     eventmachine (0.12.10)
+    factory_girl (4.4.0)
+      activesupport (>= 3.0.0)
     girl_friday (0.11.1)
       connection_pool (~> 0.9.0)
       rubinius-actor
     i18n (0.6.0)
+    json (1.8.1)
+    m4dbi (0.9.0)
+      metaid
+      rdbi
+    metaid (1.0)
     multi_json (1.1.0)
     niceogiri (1.1.1)
       nokogiri (~> 1.5)
     nokogiri (1.5.5)
-    rake (0.9.2.2)
-    rake (10.0.3)
+    pg (0.17.1)
+    rake (10.1.1)
+    rdbi (1.1.0)
+      epoxy (>= 0.3.1)
+      typelib
+    rdbi-driver-postgresql (0.9.2)
+      pg (>= 0.10.0)
+      rdbi
     rspec (2.12.0)
       rspec-core (~> 2.12.0)
       rspec-expectations (~> 2.12.0)
@@ -53,24 +74,26 @@ GEM
       columnize (>= 0.3.1)
       linecache19 (>= 0.5.11)
       ruby_core_source (>= 0.1.4)
-    ruby-debug-base19x (0.11.30.pre10)
-      columnize (>= 0.3.1)
-      linecache19 (>= 0.5.11)
+    ruby-debug-base19x (0.11.30.pre15)
+      debugger-ruby_core_source (> 0)
       rake (>= 0.8.1)
-      ruby_core_source (>= 0.1.4)
     ruby-debug19 (0.11.6)
       columnize (>= 0.3.1)
       linecache19 (>= 0.5.11)
       ruby-debug-base19 (>= 0.11.19)
+    ruby-oembed (0.8.9)
     ruby_core_source (0.1.5)
       archive-tar-minitar (>= 0.5.2)
+    typelib (0.1.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   blather
-  debugger
+  factory_girl
+  json
+  libertree-model!
   linecache19!
   rspec
   ruby-debug-base19x (~> 0.11.30.pre4)
