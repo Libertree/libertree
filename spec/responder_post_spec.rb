@@ -86,6 +86,48 @@ describe Libertree::Server::Responder::Post do
           not_to raise_error
       end
 
+      it 'raises no errors with references' do
+        refs = [ { 'reference' =>
+                   { "match" => "(/posts/show/366",
+                     "post" => {
+                       "url" => "/posts/show/366",
+                       "id" => 366,
+                       "origin" => "some.remote.tree" }}
+                 },
+                 { 'reference' =>
+                   { "match" => " /posts/show/366/128#comment-128",
+                     "post" => {
+                       "url" => "/posts/show/366",
+                       "id" => 365,
+                       "origin" => "some.remote.tree" },
+                     "comment" => {
+                       "url" => "/128#comment-128",
+                       "id" => 127,
+                       "origin" => "some.remote.tree" }}
+                 },
+                 { 'reference' =>
+                   { "match" => "http://never-mind.org/posts/show/366/128",
+                     "post" => {
+                       "url" => "/posts/show/366",
+                       "id" => 365,
+                       "origin" => "some.remote.tree" },
+                     "comment" => {
+                       "url" => "/128",
+                       "id" => 127,
+                       "origin" => "some.remote.tree" }}
+                 }]
+
+        h = {
+          'username'   => @member.username,
+          'id'         => 6,
+          'visibility' => 'forest',
+          'text'       => 'A test post.',
+          'references' => refs,
+        }
+        expect { subject.rsp_post(h) }.
+          not_to raise_error
+      end
+
       context 'when a remote post exists already' do
         before :each do
           @post = Libertree::Model::Post.create(
