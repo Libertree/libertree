@@ -12,7 +12,7 @@ module Libertree
             ]
             fail_if_nil sender_member, "Unrecognized member username: #{params['username'].inspect}"
 
-            members = params['recipients'].reduce({}) { |ms, recipient|
+            members = params['recipients'].reduce([]) { |ms, recipient|
               origin = Model::Server[ domain: recipient['origin'] ]
               if origin
                 member = Model::Member['username' => recipient['username'], 'server_id' => origin.id]
