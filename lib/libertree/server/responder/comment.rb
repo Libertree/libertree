@@ -33,7 +33,7 @@ module Libertree
             fail_if_nil post, 'Unrecognized post.'
 
             if params.has_key? 'references'
-              refs = params['references']['reference']
+              refs = params['references'].map {|r| r['reference']}
               comment_text = Libertree::References::replace(params['text'], refs, @remote_tree.id, Server.conf['domain'])
             else
               comment_text = params['text']

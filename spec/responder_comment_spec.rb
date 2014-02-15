@@ -128,6 +128,49 @@ describe Libertree::Server::Responder::Comment do
         expect { subject.rsp_comment(h) }.
           not_to raise_error
       end
+
+      it 'raises no errors with references' do
+        refs = [ { 'reference' =>
+                   { "match" => "(/posts/show/366",
+                     "post" => {
+                       "url" => "/posts/show/366",
+                       "id" => 366,
+                       "origin" => "some.remote.tree" }}
+                 },
+                 { 'reference' =>
+                   { "match" => " /posts/show/366/128#comment-128",
+                     "post" => {
+                       "url" => "/posts/show/366",
+                       "id" => 365,
+                       "origin" => "some.remote.tree" },
+                     "comment" => {
+                       "url" => "/128#comment-128",
+                       "id" => 127,
+                       "origin" => "some.remote.tree" }}
+                 },
+                 { 'reference' =>
+                   { "match" => "http://never-mind.org/posts/show/366/128",
+                     "post" => {
+                       "url" => "/posts/show/366",
+                       "id" => 365,
+                       "origin" => "some.remote.tree" },
+                     "comment" => {
+                       "url" => "/128",
+                       "id" => 127,
+                       "origin" => "some.remote.tree" }}
+                 }]
+        h = {
+          'id'       => 999,
+          'username' => @member.username,
+          'origin'   => @post.member.server.domain,
+          'post_id'  => @post.remote_id,
+          'text'     => 'A test comment.',
+          'references' => refs,
+        }
+        expect { subject.rsp_comment(h) }.
+          not_to raise_error
+      end
+
     end
   end
 end
