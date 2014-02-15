@@ -3,15 +3,15 @@ require 'spec_helper'
 require 'libertree/client'
 
 describe Libertree::Server::Responder do
-  let(:helper_class) { Class.new }
-  let(:helper) { helper_class.new }
   LSR = Libertree::Server::Responder
+  helper_class = Class.new
+  helper_class.class_eval {
+    include Libertree::XML::Helper
+    include LSR::Helper
+  }
+  helper = helper_class.new
 
   before :each do
-    helper_class.class_eval {
-      include Libertree::XML::Helper
-      include LSR::Helper
-    }
     @remote_tree = double
     @remote_tree.stub :id
     @client = LSR.connection
