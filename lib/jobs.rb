@@ -124,7 +124,11 @@ module Jobs
       def self.perform(params)
         cached = Libertree::Model::EmbedCache[ url: params['url'] ]
         unless cached
-          response = Libertree::Embedder.get(params['url'])
+          begin
+            response = Libertree::Embedder.get(params['url'])
+          rescue Libertree::Embedding::Error, OEmbed::NotFound => e
+            raise Libertree::JobInvalid, "Embedding error: #{e.message}"
+          end
           if response
             Libertree::Model::EmbedCache.create(
               url: params['url'],

@@ -169,20 +169,31 @@ describe Jobs do
   end
 end
 
-describe Jobs::Http::Avatar, "#perform" do
-  before :each do
-    account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
-    @member = account.member
-    Jobs::Http::Avatar.options = {
-      'avatar_dir' => Dir.tmpdir
-    }
+describe Jobs::Http do
+  describe 'Avatar#perform' do
+    before :each do
+      account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
+      @member = account.member
+      Jobs::Http::Avatar.options = {
+        'avatar_dir' => Dir.tmpdir
+      }
+    end
+
+    it 'raises JobInvalid with an invalid URL' do
+      params = {
+        'member_id' => @member.id,
+        'avatar_url' => "not a valid URL"
+      }
+      expect { Jobs::Http::Avatar.perform(params) }.to raise_exception(Libertree::JobInvalid)
+    end
   end
 
-  it 'raises JobInvalid with an invalid URL' do
-    params = {
-      'member_id' => @member.id,
-      'avatar_url' => "not a valid URL"
-    }
-    expect { Jobs::Http::Avatar.perform(params) }.to raise_exception(Libertree::JobInvalid)
+  describe 'Embed#perform' do
+    it 'raises JobInvalid with an invalid URL' do
+      params = {
+        'url' => 'localhost',
+      }
+      expect { Jobs::Http::Embed.perform(params) }.to raise_exception(Libertree::JobInvalid)
+    end
   end
 end
