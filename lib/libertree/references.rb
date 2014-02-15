@@ -52,9 +52,8 @@ module Libertree
       text = text_.dup
 
       # refs can be an array of references or just a single reference
-      # Make sure it's an array.  Only keep the reference value of
-      # each pair.
-      refs = Array(refs).map {|ref| ref['reference']}
+      # Make sure it's an array.
+      refs = Array(refs)
 
       refs.each do |ref|
         url = ref['match']
@@ -153,7 +152,7 @@ module Libertree
         end
       end
 
-      refs.map {|ref| {'reference' => ref}}
+      refs
     end
 
     def self.process_post_reference(post_url, post_id, comment_url, comment_id)

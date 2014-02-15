@@ -23,7 +23,7 @@ describe Libertree::References do
       text = "This is a [relative link](/posts/show/#{post.id}). This too: /posts/show/#{post.id}"
 
       refs = Libertree::References::extract(text, "http://never-mind.org")
-      matches = refs.map {|ref| ref['reference']['match']}
+      matches = refs.map {|ref| ref['match']}
       matches.should include("(/posts/show/#{post.id}")
       matches.should include(" /posts/show/#{post.id}")
     end
@@ -35,7 +35,7 @@ describe Libertree::References do
       text = "This is an [absolute link](http://never-mind.org/posts/show/#{post.id})."
 
       refs = Libertree::References::extract(text, "http://never-mind.org")
-      matches = refs.map {|ref| ref['reference']['match']}
+      matches = refs.map {|ref| ref['match']}
       matches.should include("http://never-mind.org/posts/show/#{post.id}")
     end
 
@@ -59,7 +59,7 @@ describe Libertree::References do
       it 'extracts relative links to local springs' do
         text = "This is a [relative link](/pools/show/#{@pool.id}). This too: /pools/show/#{@pool.id}"
         refs = Libertree::References::extract(text, "http://never-mind.org")
-        matches = refs.map {|ref| ref['reference']['match']}
+        matches = refs.map {|ref| ref['match']}
         matches.should include("(/pools/show/#{@pool.id}")
         matches.should include(" /pools/show/#{@pool.id}")
       end
@@ -67,7 +67,7 @@ describe Libertree::References do
       it 'extracts absolute links to local springs' do
         text = "This is an [absolute link](http://never-mind.org/pools/show/#{@pool.id})."
         refs = Libertree::References::extract(text, "http://never-mind.org")
-        matches = refs.map {|ref| ref['reference']['match']}
+        matches = refs.map {|ref| ref['match']}
         matches.should include("http://never-mind.org/pools/show/#{@pool.id}")
       end
 
