@@ -61,21 +61,22 @@ module Libertree
         # @param [Nokogiri::XML::Element] xml An XML document
         # @return [Hash]
         def xml_to_hash(xml)
-          value = if xml.children.length == 1 &&
-                      xml.children.first.name == 'text'
-                    xml.text
-                  else
-                    xml.children.reduce({}) do |result, n|
-                      result.merge(xml_to_hash(n)) do |key, oldval, newval|
-                        if oldval.is_a? Array
-                          oldval << newval
-                        else
-                          [ oldval ] << newval
-                        end
-                      end
-                    end
-                  end
-          { xml.name => value }
+          # remove empty text nodes
+          xml.children.each {|n| n.unlink  if n.text? && n.text.strip.empty?}
+
+          if xml.text? && ! xml.text.strip.empty?
+            xml.text
+          elsif xml.children.length == 1
+            { xml.name => xml_to_hash(xml.children[0])}
+          elsif ! xml.children.empty?
+            children = xml.children.map {|n| xml_to_hash(n)}.compact
+            if xml.children.map(&:name).uniq.compact.length > 1
+              # flatten the array of hashes to a single hash
+              { xml.name => children.reduce(&:merge) }
+            else
+              { xml.name => children }
+            end
+          end
         end
       end
     end
