@@ -128,13 +128,14 @@ module Libertree
       # to the method indicated by the command string.
       # The method is run for its side effects.
       def self.process(command, payload)
-        parameters = if payload.class <= Hash
-                       payload
-                     else
-                       xml_to_hash(payload).values.first
-                     end
+        if payload.class <= Hash
+          params = payload
+        else
+          params = xml_to_hash(payload)
+          params = params.values.first  if params
+        end
         method = "rsp_#{command.gsub('-', '_')}".to_sym
-        send  method, parameters
+        send  method, params
       end
 
       # Generates an error XML fragment given an optional

@@ -31,6 +31,7 @@ module Libertree
         # @param [Array] required_parameters The keys which are required.
         # @return [Array] The keys whose values are missing.
         def missing_parameters(params, *required_parameters)
+          return required_parameters  if params.nil?
           missing = []
           required_parameters.each do |rp|
             if params[rp].nil? || params[rp].respond_to?(:empty?) && params[rp].empty?
