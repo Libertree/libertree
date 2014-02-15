@@ -47,7 +47,7 @@ describe Jobs do
 
   describe Jobs::Request do
     before :each do
-      @client = mock("Client")
+      @client = double("Client")
       @client.stub(:request) {|domain, args|
         Nokogiri::XML.fragment("<iq />")
       }
