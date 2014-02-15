@@ -54,6 +54,19 @@ describe Jobs do
       Jobs::Request.stub(:client) { @client }
     end
 
+    describe 'RequestJob.with_tree' do
+      it 'raises JobInvalid if the server has no domain' do
+        server = LM::Server.create( FactoryGirl.attributes_for(:server) )
+        server.domain = nil
+        expect { Jobs::Request::RequestJob.with_tree(server.id, nil, nil) }.
+          to raise_exception(Libertree::JobInvalid)
+
+        server.domain = ""
+        expect { Jobs::Request::RequestJob.with_tree(server.id, nil, nil) }.
+          to raise_exception(Libertree::JobInvalid)
+      end
+    end
+
     describe 'CHAT#perform' do
       it 'calls req_chat with a valid chat message' do
         msg = LM::ChatMessage.create( from_member_id: @member.id,

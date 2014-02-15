@@ -213,6 +213,9 @@ module Jobs
         if server.nil?
           raise Libertree::JobFailed, "No server with id #{server_id.inspect}"
         else
+          if server.domain.nil? || server.domain.empty?
+            raise Libertree::JobInvalid, "Server #{server.id} has no domain."
+          end
           begin
             params = Request.client.send(method_name, *args)
             Request.client.request(server.domain, params)
