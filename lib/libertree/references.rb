@@ -47,47 +47,6 @@ module Libertree
     #          "url" => "/128",
     #          "id" => 127,
     #          "origin" => "some.remote.tree" }}]
-    #
-    #   This is the translation to XML:
-    #
-    #     <references>
-    #       <reference>
-    #         <match>"(/posts/show/366"</match>
-    #         <post>
-    #           <url>/posts/show/366</url>
-    #           <id>366</id>
-    #           <origin>some.remote.tree</origin>
-    #         </post>
-    #       </reference>
-    #
-    #       <reference>
-    #         <match>" /posts/show/366/128#comment-128"</match>
-    #         <post>
-    #           <url>/posts/show/366</url>
-    #           <id>365</id>
-    #           <origin>some.remote.tree</origin>
-    #         </post>
-    #         <comment>
-    #           <url>/128#comment-128</url>
-    #           <id>127</id>
-    #           <origin>some.remote.tree</origin>
-    #         </comment>
-    #       </reference>
-    #
-    #       <reference>
-    #         <match>"http://never-mind.org/posts/show/366/128"</match>
-    #         <post>
-    #           <url>"/posts/show/366"</url>
-    #           <id>365</id>
-    #           <origin>some.remote.tree</origin>
-    #         </post>
-    #         <comment>
-    #           <url>"/128"</url>
-    #           <id>127</id>
-    #           <origin>some.remote.tree</origin>
-    #         </comment>
-    #       </reference>
-    #     <references>
 
     def self.replace(text_, refs, server_id, own_domain)
       text = text_.dup
