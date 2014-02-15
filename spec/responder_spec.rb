@@ -158,13 +158,6 @@ XML
   end
 
   describe 'process' do
-    it 'calls valid commands with parameters' do
-      xml = Nokogiri::XML.fragment helper.params_to_xml({ 'id' => 10 })
-      hash = helper.xml_to_hash(xml).values.first
-      LSR.should_receive(:rsp_post).with(hash)
-      LSR.process("post", xml)
-    end
-
     it 'converts commands with dashes to method names with underscores' do
       xml = Nokogiri::XML.fragment helper.params_to_xml({ 'id' => 10 })
       hash = helper.xml_to_hash(xml).values.first
