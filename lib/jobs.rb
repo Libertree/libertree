@@ -42,15 +42,19 @@ module Jobs
       @@from_address ||= address
     end
     def self.perform(params)
-      GPGME::Engine.home_dir = Dir.tmpdir
-      Mail.deliver do
-        to       params['to']
-        from     @@from_address
-        subject  params['subject']
-        body     params['body']
-        if params['pubkey']
-          gpg encrypt: true, keys: { params['to'] => params['pubkey'] }
+      begin
+        GPGME::Engine.home_dir = Dir.tmpdir
+        Mail.deliver do
+          to       params['to']
+          from     @@from_address
+          subject  params['subject']
+          body     params['body']
+          if params['pubkey']
+            gpg encrypt: true, keys: { params['to'] => params['pubkey'] }
+          end
         end
+      rescue Errno::ECONNRESET => e
+        raise Libertree::RetryJob, "Email: #{e.message}"
       end
     end
   end
