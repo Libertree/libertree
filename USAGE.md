@@ -49,9 +49,11 @@ As the libertree user:
     % LIBERTREE_ENV=production bundle exec ruby bin/job-processor.rb config.yaml
 
 The job processor can be restricted to only certain tasks by way of the LIBERTREE_TASKS
-environment variable:
+environment variable, and LIBERTREE_PID_FILEPATH can be used to specific an alternative
+pid file:
 
-    % LIBERTREE_ENV=production LIBERTREE_TASKS="request:COMMENT,request:COMMENT-LIKE" bundle exec ruby bin/job-processor.rb config.yaml
+    % LIBERTREE_ENV=production LIBERTREE_TASKS="request:COMMENT,request:COMMENT-LIKE" \
+    LIBERTREE_PID_FILEPATH=/path/to/job-processor-2.pid bundle exec ruby bin/job-processor.rb config.yaml
 
 
 #### Frontend
