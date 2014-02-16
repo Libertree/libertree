@@ -18,7 +18,7 @@ module Libertree
             fail_if_nil to_account, "Unrecognized recipient username: #{params['recipient_username'].inspect}"
             to_member = to_account.member
 
-            chat_message = Libertree::Model::ChatMessage.create(
+            Libertree::Model::ChatMessage.create(
               from_member_id: from_member.id,
               to_member_id: to_member.id,
               text: params['text']

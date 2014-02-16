@@ -29,7 +29,7 @@ module Libertree
             }
 
             member_ids = members.map(&:id)
-            message = Libertree::Model::Message.create_with_recipients(
+            Libertree::Model::Message.create_with_recipients(
               sender_member_id: sender_member.id,
               text: params['text'],
               recipient_member_ids: member_ids

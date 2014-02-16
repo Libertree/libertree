@@ -39,7 +39,7 @@ module Libertree
               comment_text = params['text']
             end
 
-            comment = Model::Comment.find_or_create(
+            Model::Comment.find_or_create(
               'member_id' => member.id,
               'post_id' => post.id,
               'remote_id' => params['id'],

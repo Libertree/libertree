@@ -31,7 +31,7 @@ module Libertree
 
             fail_if_nil comment, 'Unrecognized comment.'
 
-            like = Model::CommentLike.find_or_create(
+            Model::CommentLike.find_or_create(
               'member_id' => member.id,
               'comment_id' => comment.id,
               'remote_id' => params['id'],

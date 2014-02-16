@@ -31,7 +31,7 @@ module Libertree
 
             fail_if_nil post, 'Unrecognized post.'
 
-            like = Model::PostLike.find_or_create(
+            Model::PostLike.find_or_create(
               'member_id' => member.id,
               'post_id' => post.id,
               'remote_id' => params['id'],
