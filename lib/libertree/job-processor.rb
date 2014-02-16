@@ -52,7 +52,8 @@ module Libertree
       log s, 'ERROR'
     end
 
-    def run
+    # @param tasks [Array<String>] which specific tasks to work on
+    def run(tasks = Jobs.list.keys)
       quit = false
 
       terminate = Proc.new {
@@ -68,7 +69,7 @@ module Libertree
       end
 
       until quit
-        job = Libertree::Model::Job.reserve(Jobs.list.keys)
+        job = Libertree::Model::Job.reserve(tasks)
         if job
           process job
         else
