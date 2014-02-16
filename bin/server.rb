@@ -21,5 +21,5 @@ Libertree::DB.dbh
 ########################
 
 require 'libertree/server'
-
+Thread.abort_on_exception = true
 Libertree::Server.run ARGV[0]
