@@ -137,7 +137,12 @@ describe Jobs do
     end
 
     describe 'INTRODUCE#perform' do
-      pending
+      it 'calls req_introduce' do
+        @client.stub(:req_introduce)
+        expect( @client ).to receive(:req_introduce)
+        expect( @client ).to receive(:request)
+        Jobs::Request::INTRODUCE.perform({'server_id' => @other_server.id})
+      end
     end
 
     describe 'MEMBER#perform' do
