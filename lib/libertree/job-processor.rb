@@ -16,9 +16,9 @@ module Libertree
         if ! Dir.exists?(@conf['pid_dir'])
           Dir.mkdir @conf['pid_dir']
         end
-        pid_file = File.join(@conf['pid_dir'], 'job-processor.pid')
+        pid_filepath = ENV['LIBERTREE_PID_FILEPATH'] || File.join(@conf['pid_dir'], 'job-processor.pid')
         @pid = Process.pid
-        File.open(pid_file, 'w') do |f|
+        File.open(pid_filepath, 'w') do |f|
           f.print @pid
         end
       end
