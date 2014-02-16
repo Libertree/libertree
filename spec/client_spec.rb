@@ -2,6 +2,12 @@ require 'spec_helper'
 require 'openssl'
 require_relative '../lib/libertree/client'
 
+def strip_xml(string)
+  xml = Nokogiri::XML.parse(string).root
+  xml.xpath('.//text()').select{|n| n.text.strip.empty? }.each {|n| n.remove}
+  xml.serialize(:save_with => Nokogiri::XML::Node::SaveOptions::AS_XML)
+end
+
 describe Libertree::Client do
   before :each do
     Libertree::Client.any_instance.stub(:connect)
@@ -155,7 +161,7 @@ XML
   <text>#{@comment.text}</text>
 </comment>
 XML
-        expect( @c.req_comment(@comment) ).to eq(expected.strip)
+        expect( @c.req_comment(@comment) ).to eq(strip_xml(expected))
       end
     end
 
@@ -166,7 +172,7 @@ XML
   <id>1</id>
 </comment-delete>
 XML
-        expect( @c.req_comment_delete(1) ).to eq(expected.strip)
+        expect( @c.req_comment_delete(1) ).to eq(strip_xml(expected))
       end
     end
 
@@ -180,7 +186,7 @@ XML
   <username>#{@comment_like.member.username}</username>
 </comment-like>
 XML
-        expect( @c.req_comment_like(@comment_like) ).to eq(expected.strip)
+        expect( @c.req_comment_like(@comment_like) ).to eq(strip_xml(expected))
       end
     end
 
@@ -191,7 +197,7 @@ XML
   <id>1</id>
 </comment-like-delete>
 XML
-        expect( @c.req_comment_like_delete(1) ).to eq(expected.strip)
+        expect( @c.req_comment_like_delete(1) ).to eq(strip_xml(expected))
       end
     end
 
@@ -207,7 +213,7 @@ XML
   </trees>
 </forest>
 XML
-        expect( @c.req_forest(@forest) ).to eq(expected.strip)
+        expect( @c.req_forest(@forest) ).to eq(strip_xml(expected))
       end
     end
 
@@ -220,7 +226,7 @@ XML
   <server_name>#{@server_name}</server_name>
 </introduce>
 XML
-        expect( @c.req_introduce ).to eq(expected.strip)
+        expect( @c.req_introduce ).to eq(strip_xml(expected))
       end
     end
 
@@ -235,7 +241,7 @@ XML
   </profile>
 </member>
 XML
-        expect( @c.req_member(@member) ).to eq(expected.strip)
+        expect( @c.req_member(@member) ).to eq(strip_xml(expected))
       end
     end
     describe 'req_member_delete' do
@@ -245,7 +251,7 @@ XML
   <username>tester</username>
 </member-delete>
 XML
-        expect( @c.req_member_delete('tester') ).to eq(expected.strip)
+        expect( @c.req_member_delete('tester') ).to eq(strip_xml(expected))
       end
     end
     describe 'req_message' do
@@ -266,7 +272,7 @@ XML
   </recipients>
 </message>
 XML
-        expect( @c.req_message(@message, [@member, @member2]) ).to eq(expected.strip)
+        expect( @c.req_message(@message, [@member, @member2]) ).to eq(strip_xml(expected))
       end
     end
 
@@ -280,7 +286,7 @@ XML
   <text>#{@post.text}</text>
 </post>
 XML
-        expect( @c.req_post(@post) ).to eq(expected.strip)
+        expect( @c.req_post(@post) ).to eq(strip_xml(expected))
       end
     end
 
@@ -293,7 +299,7 @@ XML
   <name>#{@pool.name}</name>
 </pool>
 XML
-        expect( @c.req_pool(@pool) ).to eq(expected.strip)
+        expect( @c.req_pool(@pool) ).to eq(strip_xml(expected))
       end
     end
 
@@ -305,7 +311,7 @@ XML
   <id>#{@pool.id}</id>
 </pool-delete>
 XML
-        expect( @c.req_pool_delete(@pool) ).to eq(expected.strip)
+        expect( @c.req_pool_delete(@pool) ).to eq(strip_xml(expected))
       end
     end
 
@@ -319,7 +325,7 @@ XML
   <origin>#{@pool.member.server.domain}</origin>
 </pool-post>
 XML
-        expect( @c.req_pool_post(@pool, @post) ).to eq(expected.strip)
+        expect( @c.req_pool_post(@pool, @post) ).to eq(strip_xml(expected))
       end
     end
 
@@ -333,7 +339,7 @@ XML
   <origin>#{@pool.member.server.domain}</origin>
 </pool-post-delete>
 XML
-        expect( @c.req_pool_post_delete(@pool, @post) ).to eq(expected.strip)
+        expect( @c.req_pool_post_delete(@pool, @post) ).to eq(strip_xml(expected))
       end
     end
 
@@ -344,7 +350,7 @@ XML
   <id>1</id>
 </post-delete>
 XML
-        expect( @c.req_post_delete(1) ).to eq(expected.strip)
+        expect( @c.req_post_delete(1) ).to eq(strip_xml(expected))
       end
     end
 
@@ -358,7 +364,7 @@ XML
   <username>#{@post_like.member.username}</username>
 </post-like>
 XML
-        expect( @c.req_post_like(@post_like) ).to eq(expected.strip)
+        expect( @c.req_post_like(@post_like) ).to eq(strip_xml(expected))
       end
     end
 
@@ -369,7 +375,7 @@ XML
   <id>1</id>
 </post-like-delete>
 XML
-        expect( @c.req_post_like_delete(1) ).to eq(expected.strip)
+        expect( @c.req_post_like_delete(1) ).to eq(strip_xml(expected))
       end
     end
 
