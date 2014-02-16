@@ -48,6 +48,12 @@ As the libertree user:
     % rvm use 2.0.0@libertree-backend-rb
     % LIBERTREE_ENV=production bundle exec ruby bin/job-processor.rb config.yaml
 
+The job processor can be restricted to only certain tasks by way of the LIBERTREE_TASKS
+environment variable:
+
+    % LIBERTREE_ENV=production LIBERTREE_TASKS="request:COMMENT,request:COMMENT-LIKE" bundle exec ruby bin/job-processor.rb config.yaml
+
+
 #### Frontend
 
 As the libertree user:
