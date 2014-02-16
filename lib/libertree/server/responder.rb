@@ -68,6 +68,7 @@ module Libertree
             response = error code: 'UNRECOGNIZED SERVER'
           else
             Libertree::Server.log "Received request: '#{command}' from #{stanza.from.stripped}"
+            Libertree::Server.log_debug stanza.inspect
             response = handle command, xpath_result.first
           end
 
