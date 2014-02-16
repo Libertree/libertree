@@ -35,5 +35,11 @@ Mail.defaults do
   }
 end
 
+if ENV['LIBERTREE_TASKS']
+  tasks = ENV['LIBERTREE_TASKS'].split(/[ ,;]+/)
+else
+  tasks = Jobs.list.keys
+end
 
-jobp.run
+jobp.log "Processing tasks: #{tasks.inspect}"
+jobp.run tasks
