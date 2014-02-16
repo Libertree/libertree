@@ -95,13 +95,3 @@ some non-DB repositories.
 
 If there are changes to a Gemfile.lock in a repo, then `bundle install` will have
 to be run before restarting the daemons.
-
-If there are SCSS changes, compile the SCSS to CSS:
-
-    % cd ~/git/libertree-frontend-ramaze/contrib/
-    % rvm use 2.0.0@libertree-frontend-ramaze
-    % ./css-build.sh
-
-This command is safe to run, even if it is not certain whether there were SCSS
-changes.  SCSS files for all themes are automatically compiled whenever the
-frontend is started.
