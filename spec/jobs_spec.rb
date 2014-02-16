@@ -136,6 +136,10 @@ describe Jobs do
       pending
     end
 
+    describe 'INTRODUCE#perform' do
+      pending
+    end
+
     describe 'MEMBER#perform' do
       pending
     end

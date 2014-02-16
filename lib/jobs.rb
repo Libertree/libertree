@@ -23,6 +23,7 @@ module Jobs
       "request:COMMENT-LIKE"         => Request::COMMENT_LIKE,
       "request:COMMENT-LIKE-DELETE"  => Request::COMMENT_LIKE_DELETE,
       "request:FOREST"               => Request::FOREST,
+      "request:INTRODUCE"            => Request::INTRODUCE,
       "request:MEMBER"               => Request::MEMBER,
       "request:MEMBER-DELETE"        => Request::MEMBER_DELETE,
       "request:MESSAGE"              => Request::MESSAGE,
@@ -315,6 +316,12 @@ module Jobs
       def self.perform(params)
         forest = Libertree::Model::Forest[params['forest_id'].to_i]
         with_tree(params['server_id'], :req_forest, forest)
+      end
+    end
+
+    class INTRODUCE < RequestJob
+      def self.perform(params)
+        with_tree(params['server_id'], :req_introduce)
       end
     end
 
