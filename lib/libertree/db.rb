@@ -19,13 +19,10 @@ module Libertree
     end
 
     def self.dbh
-      @dbh ||= M4DBI.connect(
-        :PostgreSQL,
-        host:     config['host'],
-        database: config['database'],
-        username: config['username'],
-        password: config['password']
-      )
+      @dbh ||= Sequel.postgres(host:     config['host'],
+                               database: config['database'],
+                               user:     config['username'],
+                               password: config['password'])
     end
   end
 end
