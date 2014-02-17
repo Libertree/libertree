@@ -1,6 +1,6 @@
 module Libertree
   module Model
-    class River < M4DBI::Model(:rivers)
+    class River < Sequel::Model(:rivers)
       def account
         @account ||= Account[self.account_id]
       end

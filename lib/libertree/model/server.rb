@@ -1,6 +1,6 @@
 module Libertree
   module Model
-    class Server < M4DBI::Model(:servers)
+    class Server < Sequel::Model(:servers)
       def name_display
         self.name_given || self.domain || self.ip || "(unknown)"
       end

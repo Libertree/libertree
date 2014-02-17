@@ -2,7 +2,7 @@ require 'json'
 
 module Libertree
   module Model
-    class Job < M4DBI::Model(:jobs)
+    class Job < Sequel::Model(:jobs)
       MAX_TRIES = 11
 
       def params

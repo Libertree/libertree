@@ -1,6 +1,6 @@
 module Libertree
   module Model
-    class ContactList < M4DBI::Model(:contact_lists)
+    class ContactList < Sequel::Model(:contact_lists)
       def account
         @account ||= Account[self.account_id]
       end

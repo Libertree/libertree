@@ -1,6 +1,6 @@
 module Libertree
   module Model
-    class PoolPost < M4DBI::Model(:pools_posts)
+    class PoolPost < Sequel::Model(:pools_posts)
       def pool
         Pool[self.pool_id]
       end

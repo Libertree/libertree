@@ -1,6 +1,6 @@
 module Libertree
   module Model
-    class Invitation < M4DBI::Model(:invitations)
+    class Invitation < Sequel::Model(:invitations)
     end
   end
 end

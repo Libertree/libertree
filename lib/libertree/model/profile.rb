@@ -1,6 +1,6 @@
 module Libertree
   module Model
-    class Profile < M4DBI::Model(:profiles)
+    class Profile < Sequel::Model(:profiles)
       after_update do |profile_before, profile|
         if profile.member.local?
           Libertree::Model::Job.create_for_forests(

@@ -1,6 +1,6 @@
 module Libertree
   module Model
-    class CommentLike < M4DBI::Model(:comment_likes)
+    class CommentLike < Sequel::Model(:comment_likes)
       after_create do |like|
         if like.local? && like.comment.post.distribute?
           Libertree::Model::Job.create_for_forests(

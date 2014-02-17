@@ -1,6 +1,6 @@
 module Libertree
   module Model
-    class ChatMessage < M4DBI::Model(:chat_messages)
+    class ChatMessage < Sequel::Model(:chat_messages)
       # RDBI casting not working with TIMESTAMP WITH TIME ZONE ?
       def time_created
         DateTime.parse self['time_created']

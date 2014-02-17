@@ -1,6 +1,6 @@
 module Libertree
   module Model
-    class Forest < M4DBI::Model(:forests)
+    class Forest < Sequel::Model(:forests)
       def trees
         stm = Server.prepare(
           %{

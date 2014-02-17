@@ -2,7 +2,7 @@ require 'json'
 
 module Libertree
   module Model
-    class Notification < M4DBI::Model(:notifications)
+    class Notification < Sequel::Model(:notifications)
       def account
         @account ||= Account[self.account_id]
       end

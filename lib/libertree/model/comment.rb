@@ -1,6 +1,6 @@
 module Libertree
   module Model
-    class Comment < M4DBI::Model(:comments)
+    class Comment < Sequel::Model(:comments)
       extend HasSearchableText
 
       after_create do |comment|

@@ -3,7 +3,7 @@ require_relative '../embedder'
 
 module Libertree
   module Model
-    class Post < M4DBI::Model(:posts)
+    class Post < Sequel::Model(:posts)
       include IsRemoteOrLocal
       extend HasSearchableText
 

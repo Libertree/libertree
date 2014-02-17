@@ -1,6 +1,6 @@
 module Libertree
   module Model
-    class Pool < M4DBI::Model(:pools)
+    class Pool < Sequel::Model(:pools)
       include IsRemoteOrLocal
 
       def create_pool_post_job(post)

@@ -1,6 +1,6 @@
 module Libertree
   module Model
-    class PostLike < M4DBI::Model(:post_likes)
+    class PostLike < Sequel::Model(:post_likes)
       after_create do |like|
         if like.local? && like.post.distribute?
           Libertree::Model::Job.create_for_forests(

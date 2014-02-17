@@ -3,7 +3,7 @@ require 'securerandom'
 
 module Libertree
   module Model
-    class Account < M4DBI::Model(:accounts)
+    class Account < Sequel::Model(:accounts)
 
       # These two password methods provide a seamless interface to the BCrypted
       # password.  The pseudo-field "password" can be treated like a normal

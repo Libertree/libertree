@@ -1,6 +1,6 @@
 module Libertree
   module Model
-    class Member < M4DBI::Model(:members)
+    class Member < Sequel::Model(:members)
 
       after_create do |member|
         if member.local?
