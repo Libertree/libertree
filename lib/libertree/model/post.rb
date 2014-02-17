@@ -7,38 +7,40 @@ module Libertree
       include IsRemoteOrLocal
       extend HasSearchableText
 
-      after_create do |post|
-        if post.local? && post.distribute?
+      def after_create
+        super
+        if self.local? && self.distribute?
           Libertree::Model::Job.create_for_forests(
             {
               task: 'request:POST',
-              params: { 'post_id' => post.id, }
+              params: { 'post_id' => self.id, }
             },
-            *post.forests
+            *self.forests
           )
         end
-        Libertree::Embedder.autoembed(post.text)
-        post.notify_mentioned
+        Libertree::Embedder.autoembed(self.text)
+        self.notify_mentioned
       end
 
-      after_update do |post_before, post|
+      def after_update
+        super
         has_distributable_difference = (
-          post_before['text'] != post.text ||
-          post_before['visibility'] != post.visibility
+          self.previous_changes.include?(:text) ||
+          self.previous_changes.include?(:visibility)
         )
 
         # TODO: deny change of visibility to 'tree' visibility?
         #       or trigger deletion on remotes?
-        if post.local? && post.distribute? && has_distributable_difference
+        if self.local? && self.distribute? && has_distributable_difference
           Libertree::Model::Job.create_for_forests(
             {
               task: 'request:POST',
-              params: { 'post_id' => post.id, }
+              params: { 'post_id' => self.id, }
             },
-            *post.forests
+            *self.forests
           )
         end
-        Libertree::Embedder.autoembed(post.text)
+        Libertree::Embedder.autoembed(self.text)
       end
 
       def member
@@ -188,7 +190,7 @@ module Libertree
         end
       end
 
-      def before_delete
+      def before_destroy
         if self.local? && self.distribute?
           Libertree::Model::Job.create_for_forests(
             {
@@ -198,16 +200,18 @@ module Libertree
             *self.forests
           )
         end
+        super
       end
 
+      # TODO: the correct method to call is "destroy"
       def delete
-        self.before_delete
+        self.before_destroy
         super
       end
 
       # NOTE: deletion is NOT distributed when force=true
       def delete_cascade(force=false)
-        self.before_delete  unless force
+        self.before_destroy  unless force
         DB.dbh.execute "SELECT delete_cascade_post(?)", self.id
       end
 

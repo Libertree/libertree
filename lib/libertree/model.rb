@@ -1,4 +1,5 @@
 require 'libertree/db'
+Sequel::Model.plugin :dirty
 
 require_relative 'model/is-remote-or-local'
 require_relative 'model/has-searchable-text'

@@ -1,12 +1,13 @@
 module Libertree
   module Model
     class Profile < Sequel::Model(:profiles)
-      after_update do |profile_before, profile|
-        if profile.member.local?
+      def after_update
+        super
+        if self.member.local?
           Libertree::Model::Job.create_for_forests(
             {
               task: 'request:MEMBER',
-              params: { 'username' => profile.member.account.username, }
+              params: { 'username' => self.member.account.username, }
             }
           )
         end

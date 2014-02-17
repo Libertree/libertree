@@ -3,14 +3,15 @@ module Libertree
     class Comment < Sequel::Model(:comments)
       extend HasSearchableText
 
-      after_create do |comment|
-        if comment.local? && comment.post.distribute?
+      def after_create
+        super
+        if self.local? && self.post.distribute?
           Libertree::Model::Job.create_for_forests(
             {
               task: 'request:COMMENT',
-              params: { 'comment_id' => comment.id, }
+              params: { 'comment_id' => self.id, }
             },
-            *comment.forests
+            *self.forests
           )
         end
       end
@@ -40,7 +41,7 @@ module Libertree
         DateTime.parse self['time_created']
       end
 
-      def before_delete
+      def before_destroy
         if self.post
           remaining_comments = self.post.comments - [self]
           self.post.time_commented = remaining_comments.map(&:time_created).max
@@ -55,16 +56,18 @@ module Libertree
             *self.forests
           )
         end
+        super
       end
 
+      # TODO: the correct method to call is "destroy"
       def delete
-        self.before_delete
+        self.before_destroy
         super
       end
 
       # NOTE: deletion is NOT distributed when force=true
       def delete_cascade(force=false)
-        self.before_delete  unless force
+        self.before_destroy  unless force
         DB.dbh.execute "SELECT delete_cascade_comment(?)", self.id
       end
 

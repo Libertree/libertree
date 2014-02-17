@@ -2,48 +2,52 @@ module Libertree
   module Model
     class Member < Sequel::Model(:members)
 
-      after_create do |member|
-        if member.local?
+      def after_create
+        super
+        if self.local?
           Libertree::Model::Job.create_for_forests(
             {
               task: 'request:MEMBER',
               params: {
-                'username' => member.account.username,
-                'avatar_url' => member.avatar_path
+                'username' => self.account.username,
+                'avatar_url' => self.avatar_path
               }
             }
           )
         end
       end
 
-      after_update do |member_before, member|
-        if member.local?
+      # TODO: merge with after_create
+      def after_update
+        super
+        if self.local?
           Libertree::Model::Job.create_for_forests(
             {
               task: 'request:MEMBER',
               params: {
-                'username' => member.account.username,
-                'avatar_url' => member.avatar_path
+                'username' => self.account.username,
+                'avatar_url' => self.avatar_path
               }
             }
           )
         end
       end
 
-      before_delete do |member|
+      def before_destroy
         # TODO: expand later for more granularity:
         #       - only abandon (not delete) posts and comments
         #       - only empty posts if they contain a discussion
         #       - only empty and anonymise comments
         #       - etc.
-        if member.local?
+        if self.local?
           Libertree::Model::Job.create_for_forests(
             {
               task: 'request:MEMBER-DELETE',
-              params: { 'username' => member.account.username, }
+              params: { 'username' => self.account.username, }
             }
           )
         end
+        super
       end
 
       def local?

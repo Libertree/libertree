@@ -1,14 +1,15 @@
 module Libertree
   module Model
     class PostLike < Sequel::Model(:post_likes)
-      after_create do |like|
-        if like.local? && like.post.distribute?
+      def after_create
+        super
+        if self.local? && self.post.distribute?
           Libertree::Model::Job.create_for_forests(
             {
               task: 'request:POST-LIKE',
-              params: { 'post_like_id' => like.id, }
+              params: { 'post_like_id' => self.id, }
             },
-            *like.forests
+            *self.forests
           )
         end
       end
@@ -30,7 +31,7 @@ module Libertree
         DateTime.parse self['time_created']
       end
 
-      def before_delete
+      def before_destroy
         if self.local? && self.post.distribute?
           Libertree::Model::Job.create_for_forests(
             {
@@ -40,15 +41,17 @@ module Libertree
             *self.forests
           )
         end
+        super
       end
 
+      # TODO: the correct method to call is "destroy"
       def delete
-        self.before_delete
+        self.before_destroy
         super
       end
 
       def delete_cascade
-        self.before_delete
+        self.before_destroy
         DB.dbh.execute "SELECT delete_cascade_post_like(?)", self.id
       end
 
