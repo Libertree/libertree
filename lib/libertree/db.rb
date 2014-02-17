@@ -1,5 +1,4 @@
-require 'm4dbi'
-require 'rdbi-driver-postgresql'
+require 'sequel'
 require 'yaml'
 
 module Libertree
