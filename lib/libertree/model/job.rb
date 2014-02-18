@@ -44,16 +44,8 @@ module Libertree
         job = self.s1("SELECT * FROM jobs WHERE task IN (#{placeholders}) AND pid IS NULL AND tries < #{MAX_TRIES} AND time_to_start <= NOW() ORDER BY time_to_start ASC LIMIT 1", *tasks)
         return nil  if job.nil?
 
-        self.update(
-          {
-            id: job.id,
-            pid: nil,
-          },
-          {
-            pid: Process.pid,
-            time_started: Time.now
-          }
-        )
+        self.where({ id: job.id, pid: nil }).
+          update({ pid: Process.pid, time_started: Time.now })
 
         job = Job[job.id]
         if job.pid == Process.pid
