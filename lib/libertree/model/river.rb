@@ -194,7 +194,7 @@ module Libertree
       end
 
       def self.num_appended_to_all
-        DB.dbh.sc "SELECT COUNT(*) FROM rivers WHERE appended_to_all"
+        self.where(:appended_to_all).count
       end
 
       def self.create(*args)

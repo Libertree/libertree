@@ -74,15 +74,17 @@ module Libertree
       end
 
       def num_notifications_unseen
-        @num_notifications_unseen ||= Libertree::DB.dbh.sc("SELECT COUNT(*) FROM notifications WHERE account_id = ? AND seen = FALSE", self.id)
+        @num_notifications_unseen ||= Notification.where(account_id: self.id, seen: false).count
       end
 
       def num_chat_unseen
-        Libertree::DB.dbh.sc("SELECT COUNT(*) FROM chat_messages WHERE to_member_id = ? AND seen = FALSE", self.member.id)
+        ChatMessage.where(to_member_id: self.member.id, seen: false).count
       end
 
       def num_chat_unseen_from_partner(member)
-        Libertree::DB.dbh.sc("SELECT COUNT(*) FROM chat_messages WHERE from_member_id = ? AND to_member_id = ? AND seen = FALSE", member.id, self.member.id)
+        ChatMessage.where(from_member_id: member.id,
+                          to_member_id: self.member.id,
+                          seen: false).count
       end
 
       def chat_messages_unseen
