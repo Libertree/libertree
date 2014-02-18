@@ -107,7 +107,7 @@ module Libertree
       end
 
       def includes?(post)
-        DB.dbh.sc  "SELECT EXISTS( SELECT 1 FROM pools_posts WHERE post_id = ? AND pool_id = ? LIMIT 1 )", post.id, self.id
+        DB.dbh[ "SELECT EXISTS( SELECT 1 FROM pools_posts WHERE post_id = ? AND pool_id = ? LIMIT 1 )", post.id, self.id ].single_value
       end
 
       # NOTE: deletion is NOT distributed

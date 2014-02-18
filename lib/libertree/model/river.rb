@@ -10,10 +10,7 @@ module Libertree
       end
 
       def contains?( post )
-        stm = River.prepare("SELECT river_contains_post(?, ?)")
-        retval = stm.sc( self.id, post.id )
-        stm.finish
-        retval
+        Libertree::DB.dbh[ "SELECT river_contains_post(?, ?)", self.id, post.id ].simple_value
       end
 
       def posts( opts = {} )

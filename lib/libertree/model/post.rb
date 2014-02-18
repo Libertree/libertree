@@ -56,7 +56,7 @@ module Libertree
       end
 
       def read_by?(account)
-        DB.dbh.sc  "SELECT EXISTS( SELECT 1 FROM posts_read WHERE post_id = ? AND account_id = ? LIMIT 1 )", self.id, account.id
+        DB.dbh[ "SELECT EXISTS( SELECT 1 FROM posts_read WHERE post_id = ? AND account_id = ? LIMIT 1 )", self.id, account.id ].single_value
       end
 
       def mark_as_read_by(account)
@@ -99,7 +99,7 @@ module Libertree
       end
 
       def commented_on_by?(member)
-        DB.dbh.sc(
+        DB.dbh[
           %{
             SELECT EXISTS(
               SELECT 1
@@ -111,7 +111,7 @@ module Libertree
           },
           self.id,
           member.id
-        )
+        ].single_value
       end
 
       def likes
@@ -287,11 +287,11 @@ module Libertree
       end
 
       def hidden_by?(account)
-        DB.dbh.sc  "SELECT post_hidden_by_account(?, ?)", self.id, account.id
+        DB.dbh[ "SELECT post_hidden_by_account(?, ?)", self.id, account.id ].single_value
       end
 
       def collected_by?(account)
-        DB.dbh.sc  "SELECT account_collected_post(?, ?)", account.id, self.id
+        DB.dbh[ "SELECT account_collected_post(?, ?)", account.id, self.id ].single_value
       end
 
       def to_hash

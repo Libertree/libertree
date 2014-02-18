@@ -225,7 +225,7 @@ module Libertree
       end
 
       def subscribed_to?(post)
-        DB.dbh.sc  "SELECT account_subscribed_to_post( ?, ? )", self.id, post.id
+        DB.dbh[ "SELECT account_subscribed_to_post( ?, ? )", self.id, post.id ].single_value
       end
 
       def messages( opts = {} )
@@ -314,8 +314,8 @@ module Libertree
       end
 
       def has_contact_list_by_name_containing_member?(contact_list_name, member)
-        DB.dbh.sc  "SELECT account_has_contact_list_by_name_containing_member( ?, ?, ? )",
-          self.id, contact_list_name, member.id
+        DB.dbh[ "SELECT account_has_contact_list_by_name_containing_member( ?, ?, ? )",
+                self.id, contact_list_name, member.id ].single_value
       end
 
       def delete_cascade
