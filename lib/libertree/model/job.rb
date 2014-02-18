@@ -6,7 +6,9 @@ module Libertree
       MAX_TRIES = 11
 
       def params
-        JSON.parse self['params']
+        if val = super
+          JSON.parse val
+        end
       end
 
       def retry!

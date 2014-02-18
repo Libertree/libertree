@@ -8,7 +8,9 @@ module Libertree
       end
 
       def data
-        JSON.parse self['data']
+        if val = super
+          JSON.parse val
+        end
       end
 
       def subject
