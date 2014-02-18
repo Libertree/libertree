@@ -4,12 +4,10 @@ module Libertree
     # and a time_created field.
     module HasSearchableText
       def search(q, limit = 42)
-        stm = self.prepare(
-          "SELECT * FROM #{self.table} WHERE to_tsvector('simple', text) @@ plainto_tsquery('simple', ?) ORDER BY time_created DESC LIMIT #{limit.to_i}"
-        )
-        records = stm.s(q).map { |row| self.new row }
-        stm.finish
-        records
+        self.where("to_tsvector('simple', text) @@ plainto_tsquery('simple', ?)", q).
+          reverse_order(:time_created).
+          limit(limit.to_i).
+          all
       end
     end
   end
