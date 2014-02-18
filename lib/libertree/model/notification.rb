@@ -11,11 +11,6 @@ module Libertree
         JSON.parse self['data']
       end
 
-      # RDBI casting not working with TIMESTAMP WITH TIME ZONE ?
-      def time_created
-        DateTime.parse self['time_created']
-      end
-
       def subject
         @subject ||= case self.data['type']
         when 'comment'

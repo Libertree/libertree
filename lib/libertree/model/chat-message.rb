@@ -1,11 +1,6 @@
 module Libertree
   module Model
     class ChatMessage < Sequel::Model(:chat_messages)
-      # RDBI casting not working with TIMESTAMP WITH TIME ZONE ?
-      def time_created
-        DateTime.parse self['time_created']
-      end
-
       def sender
         @sender ||= Member[self.from_member_id]
       end

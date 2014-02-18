@@ -195,13 +195,6 @@ module Libertree
         self.api_token = SecureRandom.hex(16)
       end
 
-      # RDBI casting not working with TIMESTAMP WITH TIME ZONE ?
-      def api_time_last
-        if self['api_time_last']
-          DateTime.parse self['api_time_last']
-        end
-      end
-
       # @param [Time] time The time to compare to
       # @return [Boolean] whether or not the API was last used by this account
       #                   more recently than the given Time
@@ -298,11 +291,6 @@ module Libertree
             'messages'           => self.messages(limit: 9999999).map(&:to_hash),
           }
         }
-      end
-
-      # RDBI casting not working with TIMESTAMP WITH TIME ZONE ?
-      def time_heartbeat
-        DateTime.parse self['time_heartbeat']
       end
 
       def online?

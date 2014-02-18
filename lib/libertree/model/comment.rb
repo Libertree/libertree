@@ -36,11 +36,6 @@ module Libertree
         end
       end
 
-      # RDBI casting not working with TIMESTAMP WITH TIME ZONE ?
-      def time_created
-        DateTime.parse self['time_created']
-      end
-
       def before_destroy
         if self.post
           remaining_comments = self.post.comments - [self]

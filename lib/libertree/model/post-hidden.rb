@@ -9,11 +9,6 @@ module Libertree
         @post ||= Post[self.post_id]
       end
 
-      # RDBI casting not working with TIMESTAMP WITH TIME ZONE ?
-      def time_created
-        DateTime.parse self['time_created']
-      end
-
       def forests
         if self.post.remote?
           self.post.server.forests

@@ -26,11 +26,6 @@ module Libertree
         @comment ||= Comment[self.comment_id]
       end
 
-      # RDBI casting not working with TIMESTAMP WITH TIME ZONE ?
-      def time_created
-        DateTime.parse self['time_created']
-      end
-
       def before_destroy
         if self.local? && self.comment.post.distribute?
           Libertree::Model::Job.create_for_forests(
