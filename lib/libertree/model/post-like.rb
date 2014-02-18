@@ -47,7 +47,7 @@ module Libertree
 
       def delete_cascade
         self.before_destroy
-        DB.dbh.execute "SELECT delete_cascade_post_like(?)", self.id
+        DB.dbh[ "SELECT delete_cascade_post_like(?)", self.id ].get
       end
 
       def self.create(*args)

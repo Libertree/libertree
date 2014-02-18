@@ -26,18 +26,18 @@ module Libertree
       end
 
       def members=(arg)
-        DB.dbh.d  "DELETE FROM contact_lists_members WHERE contact_list_id = ?", self.id
+        DB.dbh[ "DELETE FROM contact_lists_members WHERE contact_list_id = ?", self.id ].get
         Array(arg).each do |member_id_s|
-          DB.dbh.i  "INSERT INTO contact_lists_members ( contact_list_id, member_id ) VALUES ( ?, ? )", self.id, member_id_s.to_i
+          DB.dbh[ "INSERT INTO contact_lists_members ( contact_list_id, member_id ) VALUES ( ?, ? )", self.id, member_id_s.to_i ].get
         end
       end
 
       def delete_cascade
-        DB.dbh.execute "SELECT delete_cascade_contact_list(?)", self.id
+        DB.dbh[ "SELECT delete_cascade_contact_list(?)", self.id ].get
       end
 
       def <<(member)
-        DB.dbh.i(
+        DB.dbh[
           %{
             INSERT INTO contact_lists_members (
                 contact_list_id
@@ -57,7 +57,7 @@ module Libertree
           member.id,
           self.id,
           member.id
-        )
+        ].get
       end
     end
   end

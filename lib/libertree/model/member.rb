@@ -177,7 +177,7 @@ module Libertree
       end
 
       def delete_cascade
-        DB.dbh.execute "SELECT delete_cascade_member(?)", self.id
+        DB.dbh[ "SELECT delete_cascade_member(?)", self.id ].get
       end
 
       def dirty

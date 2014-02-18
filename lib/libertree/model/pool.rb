@@ -112,7 +112,7 @@ module Libertree
 
       # NOTE: deletion is NOT distributed
       def delete_cascade
-        DB.dbh.execute "SELECT delete_cascade_pool(?)", self.id
+        DB.dbh[ "SELECT delete_cascade_pool(?)", self.id ].get
       end
 
       def dirty
@@ -159,7 +159,7 @@ module Libertree
       end
 
       def remove_post(post)
-        DB.dbh.d  "DELETE FROM pools_posts WHERE pool_id = ? AND post_id = ?", self.id, post.id
+        DB.dbh[  "DELETE FROM pools_posts WHERE pool_id = ? AND post_id = ?", self.id, post.id ].get
         self.dirty
         if self.local? && self.sprung?
           Libertree::Model::Job.create_for_forests(

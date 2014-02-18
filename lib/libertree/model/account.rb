@@ -175,7 +175,7 @@ module Libertree
       end
 
       def home_river=(river)
-        DB.dbh.execute "SELECT account_set_home_river(?,?)", self.id, river.id
+        DB.dbh[ "SELECT account_set_home_river(?,?)", self.id, river.id ].get
       end
 
       def invitations_not_accepted
@@ -217,11 +217,11 @@ module Libertree
       end
 
       def subscribe_to(post)
-        DB.dbh.execute(%{SELECT subscribe_account_to_post(?,?)}, self.id, post.id)
+        DB.dbh[ %{SELECT subscribe_account_to_post(?,?)}, self.id, post.id ].get
       end
 
       def unsubscribe_from(post)
-        DB.dbh.d  "DELETE FROM post_subscriptions WHERE account_id = ? AND post_id = ?", self.id, post.id
+        DB.dbh[ "DELETE FROM post_subscriptions WHERE account_id = ? AND post_id = ?", self.id, post.id ].get
       end
 
       def subscribed_to?(post)
@@ -320,7 +320,7 @@ module Libertree
 
       def delete_cascade
         handle = self.username
-        DB.dbh.execute "SELECT delete_cascade_account(?)", self.id
+        DB.dbh[ "SELECT delete_cascade_account(?)", self.id ].get
 
         # distribute deletion of member record
         Libertree::Model::Job.create_for_forests(

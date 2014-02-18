@@ -60,14 +60,14 @@ module Libertree
       end
 
       def mark_as_read_by(account)
-        DB.dbh.execute  "SELECT mark_post_as_read_by( ?, ? )", self.id, account.id
+        DB.dbh[ "SELECT mark_post_as_read_by( ?, ? )", self.id, account.id ].get
       end
 
       def mark_as_unread_by(account)
-        DB.dbh.execute  "DELETE FROM posts_read WHERE post_id = ? AND account_id = ?", self.id, account.id
+        DB.dbh[  "DELETE FROM posts_read WHERE post_id = ? AND account_id = ?", self.id, account.id ].get
         account.rivers.each do |river|
           if river.should_contain? self
-            DB.dbh.i "INSERT INTO river_posts ( river_id, post_id ) VALUES ( ?, ? )", river.id, self.id
+            DB.dbh[ "INSERT INTO river_posts ( river_id, post_id ) VALUES ( ?, ? )", river.id, self.id ].get
           end
         end
       end
@@ -77,9 +77,9 @@ module Libertree
         if except_accounts.any?
           ids = except_accounts.map { |a| a.id }
           placeholders = ( ['?'] * ids.count ).join(', ')
-          DB.dbh.execute  "DELETE FROM posts_read WHERE post_id = ? AND NOT account_id IN (#{placeholders})", self.id, *ids
+          DB.dbh[ "DELETE FROM posts_read WHERE post_id = ? AND NOT account_id IN (#{placeholders})", self.id, *ids ].get
         else
-          DB.dbh.execute  "DELETE FROM posts_read WHERE post_id = ?", self.id
+          DB.dbh[ "DELETE FROM posts_read WHERE post_id = ?", self.id ].get
         end
 
         Libertree::Model::Job.create(
@@ -89,7 +89,7 @@ module Libertree
       end
 
       def self.mark_all_as_read_by(account)
-        DB.dbh.execute(%{SELECT mark_all_posts_as_read_by(?)}, account.id)
+        DB.dbh[ %{SELECT mark_all_posts_as_read_by(?)}, account.id ].get
       end
 
       # @param [Hash] opt options for restricting the comment set returned.  See Comment.to_post .
@@ -200,7 +200,7 @@ module Libertree
       # NOTE: deletion is NOT distributed when force=true
       def delete_cascade(force=false)
         self.before_destroy  unless force
-        DB.dbh.execute "SELECT delete_cascade_post(?)", self.id
+        DB.dbh[ "SELECT delete_cascade_post(?)", self.id ].get
       end
 
       def self.create(*args)

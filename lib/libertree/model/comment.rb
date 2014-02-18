@@ -63,7 +63,7 @@ module Libertree
       # NOTE: deletion is NOT distributed when force=true
       def delete_cascade(force=false)
         self.before_destroy  unless force
-        DB.dbh.execute "SELECT delete_cascade_comment(?)", self.id
+        DB.dbh[ "SELECT delete_cascade_comment(?)", self.id ].get
       end
 
       # TODO: DRY up with Post#glimpse

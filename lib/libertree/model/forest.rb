@@ -21,7 +21,7 @@ module Libertree
       alias :servers :trees
 
       def add(server)
-        DB.dbh.i(
+        DB.dbh[
           %{
             INSERT INTO forests_servers (
               forest_id, server_id
@@ -39,11 +39,11 @@ module Libertree
           server.id,
           self.id,
           server.id
-        )
+        ].get
       end
 
       def remove(server)
-        DB.dbh.d  "DELETE FROM forests_servers WHERE forest_id = ? AND server_id = ?", self.id, server.id
+        DB.dbh[ "DELETE FROM forests_servers WHERE forest_id = ? AND server_id = ?", self.id, server.id ].get
       end
 
       def local?
@@ -63,7 +63,7 @@ module Libertree
 
       # @param [Array] trees An Array of Strings.
       def set_trees_by_domain( trees )
-        DB.dbh.d  "DELETE FROM forests_servers WHERE forest_id = ?", self.id
+        DB.dbh[ "DELETE FROM forests_servers WHERE forest_id = ?", self.id ].get
         trees.each do |tree|
           add  Model::Server.find_or_create( domain: tree )
         end

@@ -47,7 +47,7 @@ module Libertree
 
         recipient_member_ids = Array(args[:recipient_member_ids])
         recipient_member_ids.each do |member_id|
-          DB.dbh.i  "INSERT INTO message_recipients ( message_id, member_id ) VALUES ( ?, ? )", message.id, member_id.to_i
+          DB.dbh[ "INSERT INTO message_recipients ( message_id, member_id ) VALUES ( ?, ? )", message.id, member_id.to_i ].get
           m = Member[member_id]
           if m.account
             a = m.account
