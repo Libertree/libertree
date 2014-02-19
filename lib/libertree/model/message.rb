@@ -8,7 +8,7 @@ module Libertree
 
       def recipients
         return @recipients  if @recipients
-        stm = Member.prepare(
+        @recipients = Member.s(
           %{
             SELECT
               m.*
@@ -18,11 +18,9 @@ module Libertree
             WHERE
               mr.message_id = ?
               AND m.id = mr.member_id
-          }
+          },
+          self.id
         )
-        @recipients = stm.s(self.id).map { |row| Member.new row }
-        stm.finish
-        @recipients
       end
 
       def visible_to?(account)

@@ -64,13 +64,7 @@ module Libertree
 
       def notifications_unseen
         return @notifications_unseen  if @notifications_unseen
-
-        stm = Notification.prepare(
-          "SELECT * FROM notifications WHERE account_id = ? AND seen = FALSE ORDER BY id"
-        )
-        @notifications_unseen = stm.s(self.id).map { |row| Notification.new row }
-        stm.finish
-        @notifications_unseen
+        @notifications_unseen = Notification.where(account_id: self.id, seen: false).order(:id).all
       end
 
       def num_notifications_unseen
@@ -92,7 +86,7 @@ module Libertree
       end
 
       def chat_partners_current
-        stm = Libertree::Model::Member.prepare(
+        Libertree::Model::Member.s(
           %{
             (
               SELECT
@@ -134,22 +128,13 @@ module Libertree
                 AND cm.time_created > NOW() - '1 hour'::INTERVAL
                 AND m.id = cm.to_member_id
             )
-          }
-        )
-        partners = stm.s(
+          },
           self.member.id, self.member.id
-        ).map { |row|
-          Member.new row
-        }
-        stm.finish
-        partners
+        )
       end
 
       def rivers
-        stm = River.prepare("SELECT * FROM rivers WHERE account_id = ? ORDER BY position ASC, id DESC")
-        results = stm.s(self.id).map { |row| River.new row }
-        stm.finish
-        results
+        River.s("SELECT * FROM rivers WHERE account_id = ? ORDER BY position ASC, id DESC", self.id)
       end
 
       def rivers_not_appended
@@ -168,12 +153,7 @@ module Libertree
       end
 
       def home_river
-        stm = River.prepare("SELECT * FROM rivers WHERE account_id = ? AND home = TRUE")
-        row = stm.s1(self.id)
-        stm.finish
-        if row
-          River.new row
-        end
+        River.where(account_id: self.id, home: true).first
       end
 
       def home_river=(river)
@@ -181,10 +161,7 @@ module Libertree
       end
 
       def invitations_not_accepted
-        stm = Invitation.prepare("SELECT * FROM invitations WHERE inviter_account_id = ? AND account_id IS NULL ORDER BY id")
-        invitations = stm.s(self.id).map { |row| Invitation.new row }
-        stm.finish
-        invitations
+        Invitation.where("inviter_account_id = ? AND account_id IS NULL", self.id).order(:id).all
       end
 
       def new_invitation
@@ -239,7 +216,7 @@ module Libertree
         end
         time = Time.at( opts.fetch(:time, Time.now.to_f) ).strftime("%Y-%m-%d %H:%M:%S.%6N%z")
 
-        stm = Message.prepare(
+        Message.s(
           %{
             SELECT *
             FROM view__messages_sent_and_received
@@ -247,28 +224,21 @@ module Libertree
             AND time_created #{time_comparator} ?
             ORDER BY time_created DESC
             LIMIT #{limit}
-          }
+          },
+          self.member.id, time
         )
-        records = stm.s(self.member.id, time).map { |row| Message.new row }
-        stm.finish
-        records
       end
 
       # @return [Boolean] true iff password reset was successfully set up
       def self.set_up_password_reset_for(email)
-        stm = prepare("SELECT * FROM accounts WHERE email = ?")
-        result = stm.s1(email)
-        stm.finish
-        if result.nil?
+        account = self.where(email: email).first
+        if account.nil?
           return false
         end
 
-        account = self.new result
-        if account
-          account.password_reset_code = SecureRandom.hex(16)
-          account.password_reset_expiry = Time.now + 60 * 60
-          account
-        end
+        account.password_reset_code = SecureRandom.hex(16)
+        account.password_reset_expiry = Time.now + 60 * 60
+        account
       end
 
       def data_hash

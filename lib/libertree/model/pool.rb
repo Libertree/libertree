@@ -84,7 +84,7 @@ module Libertree
         end
         time = Time.at( opts.fetch(:time, Time.now.to_f) ).strftime("%Y-%m-%d %H:%M:%S.%6N%z")
 
-        stm = Post.prepare(
+        @posts[opts] = Post.s(
           %{
             SELECT
               p.*
@@ -98,12 +98,9 @@ module Libertree
             ORDER BY
               p.id DESC
             LIMIT #{limit}
-          }
+          },
+          self.id, time
         )
-        @posts[opts] = stm.s(self.id, time).map { |row| Post.new row }
-        stm.finish
-
-        @posts[opts]
       end
 
       def includes?(post)

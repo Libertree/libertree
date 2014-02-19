@@ -122,7 +122,7 @@ module Libertree
 
       def refresh_posts( n = 512 )
         DB.dbh[ "DELETE FROM river_posts WHERE river_id = ?", self.id ].get
-        stm = Post.prepare(
+        posts = Post.s(
           %{
             SELECT
               p.*
@@ -132,10 +132,9 @@ module Libertree
               NOT river_contains_post( ?, p.id )
               AND NOT post_hidden_by_account( p.id, ? )
             ORDER BY id DESC LIMIT #{n.to_i}
-          }
+          },
+          self.id, account.id
         )
-        posts = stm.s(self.id, account.id).map { |row| Post.new row }
-        stm.finish
 
         matching = posts.find_all { |post| self.matches_post? post }
         if matching.any?

@@ -83,7 +83,7 @@ module Libertree
         if h =~ /^(.+?)@(.+?)$/
           username = $1
           host = $2
-          stm = self.prepare(
+          self.s(
             %{
               SELECT m.*
               FROM
@@ -96,13 +96,11 @@ module Libertree
                   s.name_given = ?
                   OR s.domain = ?
                 )
-            }
-          )
-          row = stm.s1( username, host, host )
-          stm.finish
-          self.new(row)  if row
+            },
+            username, host, host
+          ).first
         else
-          stm = self.prepare(
+          self.s(
             %{
               SELECT
                 m.*
@@ -113,10 +111,8 @@ module Libertree
                 a.id = m.account_id
                 AND a.username = ?
             },
-          )
-          row = stm.s1(h)
-          stm.finish
-          self.new(row)  if row
+            h
+          ).first
         end
       end
 

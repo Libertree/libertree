@@ -116,10 +116,7 @@ module Libertree
 
       def likes
         return @likes   if @likes
-        stm = PostLike.prepare("SELECT * FROM post_likes WHERE post_id = ? ORDER BY id DESC")
-        @likes = stm.s(self.id).map { |row| PostLike.new row }
-        stm.finish
-        @likes
+        @likes = PostLike.where(post_id: self.id).reverse_order(:id)
       end
 
       def notify_about_comment(comment)

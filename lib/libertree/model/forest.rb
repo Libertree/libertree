@@ -2,7 +2,7 @@ module Libertree
   module Model
     class Forest < Sequel::Model(:forests)
       def trees
-        stm = Server.prepare(
+        Server.s(
           %{
             SELECT
               s.*
@@ -12,11 +12,9 @@ module Libertree
             WHERE
               fs.forest_id = ?
               AND s.id = fs.server_id
-          }
+          },
+          self.id
         )
-        records = stm.s(self.id).map { |row| Server.new row }
-        stm.finish
-        records
       end
       alias :servers :trees
 

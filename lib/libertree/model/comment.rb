@@ -96,10 +96,7 @@ module Libertree
 
       def likes
         return @likes  if @likes
-        stm = CommentLike.prepare("SELECT * FROM comment_likes WHERE comment_id = ? ORDER BY id DESC")
-        @likes = stm.s(self.id).map { |row| CommentLike.new row }
-        stm.finish
-        @likes
+        @likes = CommentLike.s("SELECT * FROM comment_likes WHERE comment_id = ? ORDER BY id DESC", self.id)
       end
 
       def notify_about_like(like)
@@ -147,7 +144,7 @@ module Libertree
 
       # TODO: When more visibilities come, restrict this result set by visibility
       def self.comments_since_id(comment_id)
-        stm = self.prepare(
+        self.s(
           %{
             SELECT
               c.*
@@ -157,15 +154,9 @@ module Libertree
               c.id > ?
             ORDER BY
               c.id
-          }
-        )
-        comments = stm.s(
+          },
           comment_id
-        ).map { |row|
-          self.new row
-        }
-        stm.finish
-        comments
+        )
       end
 
       # @param [Hash] opt options for restricting the comment set returned
@@ -185,12 +176,7 @@ module Libertree
           limit_clause = "LIMIT #{opt[:limit].to_i}"
         end
 
-        stm = Comment.prepare("SELECT * FROM comments WHERE post_id = ? #{from_clause} #{to_clause} ORDER BY id DESC #{limit_clause}")
-        comments = stm.s( *params ).map { |row|
-          self.new row
-        }.sort_by { |c| c.id }
-        stm.finish
-        comments
+        Comment.s("SELECT * FROM comments WHERE post_id = ? #{from_clause} #{to_clause} ORDER BY id DESC #{limit_clause}", *params)
       end
     end
   end

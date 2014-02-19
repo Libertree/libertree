@@ -8,7 +8,7 @@ module Libertree
       def members
         return @members   if @members
 
-        stm = Member.prepare(
+        @members = Member.s(
           %{
             SELECT
               m.*
@@ -18,11 +18,9 @@ module Libertree
             WHERE
               clm.contact_list_id = ?
               AND m.id = clm.member_id
-          }
+          },
+          self.id
         )
-        @members = stm.s(self.id).map { |row| Member.new row }
-        stm.finish
-        @members
       end
 
       def members=(arg)
