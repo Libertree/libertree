@@ -179,7 +179,9 @@ describe Libertree::Model::River do
       context 'with display names' do
         before do
           @member4.profile.name_display = 'First1 Last1'
+          @member4.profile.save
           @member5.profile.name_display = 'First2 Last2'
+          @member5.profile.save
         end
 
         it 'matches :from "member display name"' do
@@ -427,10 +429,12 @@ describe Libertree::Model::River do
           FactoryGirl.attributes_for( :contact_list, account_id: @account.id, name: 'List 1' )
         )
         @list1.members = [ @contact1.id, @contact2.id, ]
+        @list1.save
         @list2 = Libertree::Model::ContactList.create(
           FactoryGirl.attributes_for( :contact_list, account_id: @account.id, name: 'List 2' )
         )
         @list2.members = [ @contact3.id, @contact4.id, ]
+        @list2.save
 
         @post1a = Libertree::Model::Post.create(
           FactoryGirl.attributes_for( :post, member_id: @contact1.id, text: 'test post' )

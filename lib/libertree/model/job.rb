@@ -15,6 +15,7 @@ module Libertree
         self.pid = self.time_started = self.time_finished = nil
         self.time_to_start = Time.now
         self.tries = 0
+        self.save
       end
 
       # First parameter can be a Forest Array.
