@@ -21,13 +21,8 @@ module Libertree
       # @return [Account] authenticated account, or nil on failure to authenticate
       def self.authenticate(creds)
         if creds['password_reset_code'].to_s
-          account = Account.one_where(
-            %{
-              password_reset_code = ?
-              AND NOW() <= password_reset_expiry
-            },
-            creds['password_reset_code'].to_s
-          )
+          account = Account.where(%{password_reset_code = ? AND NOW() <= password_reset_expiry},
+                                  creds['password_reset_code'].to_s).first
           if account
             return account
           end
