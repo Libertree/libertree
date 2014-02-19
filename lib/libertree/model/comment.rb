@@ -20,20 +20,14 @@ module Libertree
         ! remote_id
       end
 
+      # TODO: DB: association
       def member
-        if $m4dbi_cache_id
-          @member = Member.cached_fetch($m4dbi_cache_id, self.member_id)
-        else
-          @member = Member[self.member_id]
-        end
+        @member = Member[self.member_id]
       end
 
+      # TODO: DB: association
       def post
-        if $m4dbi_cache_id
-          @post = Post.cached_fetch($m4dbi_cache_id, self.post_id)
-        else
-          @post = Post[self.post_id]
-        end
+        @post = Post[self.post_id]
       end
 
       def before_destroy

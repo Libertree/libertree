@@ -58,12 +58,10 @@ module Libertree
         @account ||= Account[self.account_id]
       end
 
+      # TODO: DB: association
+      #many_to_one :server
       def server
-        if $m4dbi_cache_id
-          @server = Server.cached_fetch($m4dbi_cache_id, self.server_id)
-        else
-          @server = Server[self.server_id]
-        end
+        @server = Server[self.server_id]
       end
       alias :tree :server
 
@@ -120,6 +118,7 @@ module Libertree
         self['username'] || account.username
       end
 
+      # TODO: DB: association
       def profile
         @profile ||= Profile[ member_id: self.id ]
       end
