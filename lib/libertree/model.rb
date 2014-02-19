@@ -1,5 +1,7 @@
 require 'libertree/db'
+require_relative 'compat'
 Sequel::Model.plugin :dirty
+Sequel::Model.plugin :compat
 Sequel::Model.unrestrict_primary_key
 
 require_relative 'model/is-remote-or-local'
