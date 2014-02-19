@@ -137,10 +137,7 @@ module Libertree
       end
 
       def <<(post)
-        pool_post = PoolPost[
-          'pool_id' => self.id,
-          'post_id' => post.id
-        ]
+        pool_post = PoolPost[ pool_id: self.id, post_id: post.id ]
         if pool_post.nil?
           pool_post_created = true
           pool_post = PoolPost.create(

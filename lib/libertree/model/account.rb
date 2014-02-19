@@ -33,18 +33,18 @@ module Libertree
           end
         end
 
-        account = Account[ 'username' => creds['username'].to_s ]
+        account = Account[ username: creds['username'].to_s ]
         if account && account.password == creds['password'].to_s
           account
         end
       end
 
       def member
-        @member ||= Member['account_id' => self.id]
+        @member ||= Member[ account_id: self.id ]
       end
 
       def settings
-        @settings ||= AccountSettings['account_id' => self.id]
+        @settings ||= AccountSettings[ account_id: self.id ]
       end
 
       def notify_about(data)
@@ -334,7 +334,7 @@ module Libertree
       end
 
       def remote_storage_connection
-        @remote_storage_connection ||= RemoteStorageConnection['account_id' => self.id]
+        @remote_storage_connection ||= RemoteStorageConnection[ account_id: self.id ]
       end
     end
   end
