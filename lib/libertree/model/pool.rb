@@ -170,7 +170,7 @@ module Libertree
       end
 
       def sprung?
-        self['sprung']
+        self.sprung
       end
     end
   end

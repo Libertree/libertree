@@ -70,10 +70,10 @@ module Libertree
       end
 
       def handle
-        if self['username']
-          self['username'] + "@#{server.name_display}"
+        if self.username && self.server
+          self.username + "@#{self.server.name_display}"
         else
-          account.username
+          account.username  if account
         end
       end
 
@@ -115,7 +115,11 @@ module Libertree
       end
 
       def username
-        self['username'] || account.username
+        if val = super
+          val
+        elsif a = self.account
+          a.username
+        end
       end
 
       # TODO: DB: association
