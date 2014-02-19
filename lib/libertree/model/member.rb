@@ -138,7 +138,6 @@ module Libertree
         end
         time = Time.at( opts.fetch(:time, Time.now.to_f) ).strftime("%Y-%m-%d %H:%M:%S.%6N%z")
 
-        # TODO: prepared statement?
         Post.s(
           %{
             SELECT

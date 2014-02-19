@@ -227,7 +227,6 @@ module Libertree
           query_params << account.id
         end
 
-        # TODO: can this be turned into a prepared statement?
         River.s(
           %{
             SELECT
