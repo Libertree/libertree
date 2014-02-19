@@ -43,7 +43,7 @@ module Libertree
       # @return [Job] nil if no job was reserved
       def self.reserve(tasks)
         placeholders = ( ['?'] * tasks.count ).join(', ')
-        job = self.s1("SELECT * FROM jobs WHERE task IN (#{placeholders}) AND pid IS NULL AND tries < #{MAX_TRIES} AND time_to_start <= NOW() ORDER BY time_to_start ASC LIMIT 1", *tasks)
+        job = self.where("task IN (#{placeholders}) AND pid IS NULL AND tries < #{MAX_TRIES} AND time_to_start <= NOW()", *tasks).order(:time_to_start).limit(1).first
         return nil  if job.nil?
 
         self.where({ id: job.id, pid: nil }).
@@ -81,9 +81,9 @@ module Libertree
 
       def self.unfinished(task=nil)
         if task
-          self.s("SELECT * FROM jobs WHERE task = ? AND time_finished IS NULL", task)
+          self.where("task = ? AND time_finished IS NULL", task).all
         else
-          self.s("SELECT * FROM jobs WHERE time_finished IS NULL")
+          self.where("time_finished IS NULL").all
         end
       end
     end

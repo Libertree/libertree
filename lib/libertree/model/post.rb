@@ -160,8 +160,7 @@ module Libertree
         usernames = self.text.scan(pattern).flatten.uniq - [author_name]
         return []  if usernames.empty?
 
-        placeholders = ( ['?'] * usernames.count ).join(', ')
-        Libertree::Model::Account.s("SELECT * FROM accounts WHERE username IN (#{placeholders})", *usernames)
+        Libertree::Model::Account.where(username: usernames).all
       end
 
       def glimpse( length = 60 )

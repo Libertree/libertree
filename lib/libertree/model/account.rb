@@ -50,11 +50,7 @@ module Libertree
       end
 
       def notifications( limit = 128 )
-        # TODO: prepared statement possible?
-        @notifications ||= Notification.s(
-          "SELECT * FROM notifications WHERE account_id = ? ORDER BY id DESC LIMIT #{limit.to_i}",
-          self.id
-        )
+        @notifications ||= Notification.where(account_id: self.id).reverse_order(:id).limit(limit.to_i).all
       end
 
       def notifications_unseen
@@ -77,7 +73,7 @@ module Libertree
       end
 
       def chat_messages_unseen
-        Libertree::Model::ChatMessage.s("SELECT * FROM chat_messages WHERE to_member_id = ? AND seen = FALSE", self.member.id)
+        ChatMessage.where(to_member_id: self.member.id, seen: false).all
       end
 
       def chat_partners_current
