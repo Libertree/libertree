@@ -23,6 +23,7 @@ module Libertree
             ]
             if pool
               pool.name = pool_name
+              pool.save
             else
               Model::Pool.create(
                 member_id: member.id,

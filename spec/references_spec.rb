@@ -9,6 +9,7 @@ describe Libertree::References do
     )
     @server_remote = Libertree::Model::Server.create( FactoryGirl.attributes_for(:server) )
     @server_remote.domain = "some.remote.tree"
+    @server_remote.save
     @member_remote = Libertree::Model::Member.create(
       FactoryGirl.attributes_for(:member, :server_id => @server_remote.id)
     )

@@ -75,6 +75,7 @@ module Libertree
             # success!  Try to register jid with account
             begin
               account.gateway_jid = stanza.from.to_s
+              account.save
               @client.write stanza.reply!
               # TODO: presence subscribe
             rescue StandardError => e
@@ -91,6 +92,7 @@ module Libertree
         account = Libertree::Model::Account[ gateway_jid: stanza.from.to_s ]
         if account
           account.gateway_jid = nil
+          account.save
         end
         @client.write stanza.reply!
 

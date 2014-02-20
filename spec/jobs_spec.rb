@@ -58,10 +58,12 @@ describe Jobs do
       it 'raises JobInvalid if the server has no domain' do
         server = LM::Server.create( FactoryGirl.attributes_for(:server) )
         server.domain = nil
+        server.save
         expect { Jobs::Request::RequestJob.with_tree(server.id, nil, nil) }.
           to raise_exception(Libertree::JobInvalid)
 
         server.domain = ""
+        server.save
         expect { Jobs::Request::RequestJob.with_tree(server.id, nil, nil) }.
           to raise_exception(Libertree::JobInvalid)
       end

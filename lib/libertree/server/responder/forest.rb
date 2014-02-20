@@ -12,6 +12,7 @@ module Libertree
             ]
             if forest
               forest.name = params['name']
+              forest.save
             else
               forest = Model::Forest.create(
                 origin_server_id: @remote_tree.id,
@@ -46,6 +47,7 @@ module Libertree
             @remote_tree.public_key = params['public_key']
             @remote_tree.contact    = params['contact']
             @remote_tree.name_given = params['name_given']
+            @remote_tree.save
           end
         end
 

@@ -20,14 +20,15 @@ module Libertree
             if params['profile']
               begin
                 profile.name_display = params['profile']['name_display']
-              rescue PGError => e
+                profile.description = params['profile']['description']
+                profile.save
+              rescue Sequel::CheckConstraintViolation, PGError => e
                 if e.message =~ /valid_name_display/
                   fail InternalError, "Invalid display name: #{params['profile']['name_display'].inspect}", nil
                 else
                   raise e
                 end
               end
-              profile.description = params['profile']['description']
             end
 
             # fetch avatar asynchronously
