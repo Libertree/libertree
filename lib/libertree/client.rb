@@ -196,8 +196,6 @@ module Libertree
         return
       end
 
-      log "REQUEST: >#{params.inspect}<"
-
       stanza = build_stanza( target, params )
       response = write_out stanza
 
