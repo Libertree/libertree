@@ -139,7 +139,7 @@ describe Libertree::Server::Responder::Post do
         it 'updates the post text and stores a post revision' do
           original_text = @post.text
           original_text.should_not == 'edited text'
-          Libertree::Model::PostRevision.where( 'post_id' => @post.id ).count.should == 0
+          Libertree::Model::PostRevision.where( post_id: @post.id ).count.should == 0
 
           h = {
             'username'   => @member.username,
@@ -151,7 +151,7 @@ describe Libertree::Server::Responder::Post do
             not_to raise_error
 
           Libertree::Model::Post[@post.id].text.should == 'edited text'
-          revisions = Libertree::Model::PostRevision.where( 'post_id' => @post.id )
+          revisions = Libertree::Model::PostRevision.where( post_id: @post.id ).all
           revisions.count.should == 1
           revisions[0].text.should == original_text
         end

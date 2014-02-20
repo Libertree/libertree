@@ -11,8 +11,8 @@ module Libertree
 
           begin
             member = Model::Member.find_or_create(
-              'username' => params['username'],
-              'server_id' => @remote_tree.id
+              username:  params['username'],
+              server_id: @remote_tree.id
             )
 
             profile = Libertree::Model::Profile.find_or_create( member_id: member.id )
@@ -54,7 +54,7 @@ module Libertree
 
           begin
             members = Model::Member.
-              where( 'username' => params['username'] ).
+              where( username: params['username'] ).
               reject { |p| p.server != @remote_tree }
 
             fail_if_nil members[0], "Unrecognized username: #{params['username'].inspect}"

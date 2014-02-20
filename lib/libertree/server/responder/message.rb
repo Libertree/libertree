@@ -7,19 +7,19 @@ module Libertree
 
           begin
             sender_member = Model::Member[
-              'username' => params['username'],
-              'server_id' => @remote_tree.id,
+              username:  params['username'],
+              server_id: @remote_tree.id,
             ]
             fail_if_nil sender_member, "Unrecognized member username: #{params['username'].inspect}"
 
             members = params['recipients'].reduce([]) { |ms, recipient|
               origin = Model::Server[ domain: recipient['origin'] ]
               if origin
-                member = Model::Member['username' => recipient['username'], 'server_id' => origin.id]
+                member = Model::Member[ username: recipient['username'], server_id: origin.id]
                 ms << member  if member
               elsif origin.nil? && recipient['origin'] == Server.conf['domain']
                 # origin is this local server
-                account = Model::Account['username' => recipient['username']]
+                account = Model::Account[ username: recipient['username'] ]
                 if account
                   ms << account.member
                 end

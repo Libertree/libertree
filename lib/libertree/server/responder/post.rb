@@ -9,8 +9,8 @@ module Libertree
 
           begin
             member = Model::Member[
-              'username' => params['username'],
-              'server_id' => @remote_tree.id,
+              username: params['username'],
+              server_id: @remote_tree.id,
             ]
             fail_if_nil member, "Unrecognized member username: #{params['username'].inspect}"
 
@@ -25,18 +25,18 @@ module Libertree
             # but it's so small, I guess we'll ignore it for now.
 
             post = Model::Post[
-              'member_id' => member.id,
-              'remote_id' => params['id']
+              member_id: member.id,
+              remote_id: params['id']
             ]
             if post
               post.revise post_text
             else
               Model::Post.create(
-                'member_id'  => member.id,
-                'remote_id'  => params['id'],
-                'visibility' => params['visibility'],
-                'text'       => post_text,
-                'via'        => params['via']
+                member_id:  member.id,
+                remote_id:  params['id'],
+                visibility: params['visibility'],
+                text:       post_text,
+                via:        params['via']
               )
             end
           rescue PGError => e
@@ -49,7 +49,7 @@ module Libertree
 
           begin
             posts = Model::Post.
-              where( 'remote_id' => params['id'] ).
+              where( remote_id: params['id'] ).
               reject { |p| p.server != @remote_tree }
 
             fail_if_nil posts[0], "Unrecognized post ID: #{params['id'].inspect}"

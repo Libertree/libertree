@@ -34,9 +34,9 @@ module Libertree
 
           if @remote_tree.nil?
             @remote_tree = Model::Server.create(
-              'domain'     => @remote_domain,
-              'public_key' => params['public_key'],
-              'contact'    => params['contact'],
+              domain:     @remote_domain,
+              public_key: params['public_key'],
+              contact:    params['contact'],
             )
 
             Libertree::Server.log "#{@remote_domain} is a new server (id: #{@remote_tree.id})."

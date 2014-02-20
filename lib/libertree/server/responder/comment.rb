@@ -9,8 +9,8 @@ module Libertree
 
           begin
             member = Model::Member[
-              'username' => params['username'],
-              'server_id' => @remote_tree.id,
+              username: params['username'],
+              server_id: @remote_tree.id,
             ]
             fail_if_nil member, "Unrecognized member username: #{params['username'].inspect}"
 
@@ -40,11 +40,11 @@ module Libertree
             end
 
             Model::Comment.find_or_create(
-              'member_id' => member.id,
-              'post_id' => post.id,
-              'remote_id' => params['id'],
+              member_id: member.id,
+              post_id:   post.id,
+              remote_id: params['id'],
               # TODO: Sanitize with Loofah
-              'text' => comment_text
+              text:      comment_text
             )
           rescue PGError => e
             fail InternalError, "Error in #{__method__}: #{e.message}", nil
@@ -56,7 +56,7 @@ module Libertree
 
           begin
             comments = Model::Comment.
-              where( 'remote_id' => params['id'] ).
+              where( remote_id: params['id'] ).
               reject { |c| c.member.server != @remote_tree }
 
             fail_if_nil comments[0], "Unrecognized comment ID: #{params['id'].inspect}"

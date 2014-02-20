@@ -7,8 +7,8 @@ module Libertree
 
           begin
             member = Model::Member[
-              'username' => params['username'],
-              'server_id' => @remote_tree.id,
+              username: params['username'],
+              server_id: @remote_tree.id,
             ]
             fail_if_nil member, "Unrecognized member username: #{params['username'].inspect}"
 
@@ -18,17 +18,17 @@ module Libertree
             # but it's so small, I guess we'll ignore it for now.
 
             pool = Model::Pool[
-              'member_id' => member.id,
-              'remote_id' => params['id']
+              member_id: member.id,
+              remote_id: params['id']
             ]
             if pool
               pool.name = pool_name
             else
               Model::Pool.create(
-                'member_id' => member.id,
-                'remote_id' => params['id'],
-                'name'      => pool_name,
-                'sprung'    => true
+                member_id: member.id,
+                remote_id: params['id'],
+                name:      pool_name,
+                sprung:    true
               )
             end
           rescue PGError => e
@@ -41,14 +41,14 @@ module Libertree
 
           begin
             member = Model::Member[
-              'username' => params['username'],
-              'server_id' => @remote_tree.id,
+              username: params['username'],
+              server_id: @remote_tree.id,
             ]
             fail_if_nil member, "Unrecognized member username: #{params['username'].inspect}"
 
             pool = Model::Pool[
-              'member_id' => member.id,
-              'remote_id' => params['id']
+              member_id: member.id,
+              remote_id: params['id']
             ]
             fail_if_nil pool, "Unrecognized pool: #{params['id']}"
             pool.delete_cascade

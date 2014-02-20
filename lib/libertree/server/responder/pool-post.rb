@@ -8,14 +8,14 @@ module Libertree
           begin
             # TODO: This can be DRYed up with the code in rsp_pool_post_delete
             member = Model::Member[
-              'username' => params['username'],
-              'server_id' => @remote_tree.id,
+              username: params['username'],
+              server_id: @remote_tree.id,
             ]
             fail_if_nil member, "Unrecognized member username: #{params['username'].inspect}"
 
             pool = Model::Pool[
-              'member_id' => member.id,
-              'remote_id' => params['pool_id'],
+              member_id: member.id,
+              remote_id: params['pool_id'],
             ]
             fail_if_nil pool, "Unrecognized pool for given member: pool_id #{params['pool_id']}, username #{params['username'].inspect}"
 
@@ -29,7 +29,7 @@ module Libertree
 
             if origin.nil?
               # origin is supposedly this local server
-              post = Model::Post[ params['post_id'] ]
+              post = Model::Post[ params['post_id'].to_i ]
             else
               posts = Model::Post.where( remote_id: params['post_id'] )
               posts.reject! { |p|
@@ -51,14 +51,14 @@ module Libertree
           begin
             # TODO: This can be DRYed up with the code in rsp_pool_post
             member = Model::Member[
-              'username' => params['username'],
-              'server_id' => @remote_tree.id,
+              username: params['username'],
+              server_id: @remote_tree.id,
             ]
             fail_if_nil member, "Unrecognized member username: #{params['username'].inspect}"
 
             pool = Model::Pool[
-              'member_id' => member.id,
-              'remote_id' => params['pool_id'],
+              member_id: member.id,
+              remote_id: params['pool_id'],
             ]
             fail_if_nil pool, "Unrecognized pool for given member: pool_id #{params['pool_id']}, username #{params['username'].inspect}"
 
@@ -72,7 +72,7 @@ module Libertree
 
             if origin.nil?
               # origin is supposedly this local server
-              post = Model::Post[ params['post_id'] ]
+              post = Model::Post[ params['post_id'].to_i ]
             else
               posts = Model::Post.where( remote_id: params['post_id'] )
               posts.reject! { |p|

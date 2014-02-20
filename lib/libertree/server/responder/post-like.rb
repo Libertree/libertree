@@ -7,8 +7,8 @@ module Libertree
 
           begin
             member = Model::Member[
-              'username' => params['username'],
-              'server_id' => @remote_tree.id,
+              username: params['username'],
+              server_id: @remote_tree.id,
             ]
             fail_if_nil member, "Unrecognized member username: #{params['username'].inspect}"
 
@@ -32,9 +32,9 @@ module Libertree
             fail_if_nil post, 'Unrecognized post.'
 
             Model::PostLike.find_or_create(
-              'member_id' => member.id,
-              'post_id' => post.id,
-              'remote_id' => params['id'],
+              member_id: member.id,
+              post_id: post.id,
+              remote_id: params['id'],
             )
           rescue PGError => e
             fail InternalError, "Error in #{__method__}: #{e.message}", nil
@@ -46,7 +46,7 @@ module Libertree
 
           begin
             likes = Model::PostLike.
-              where( 'remote_id' => params['id'] ).
+              where( remote_id: params['id'] ).
               find_all { |like| like.member.server == @remote_tree }
 
             fail_if_nil likes[0], "Unrecognized like ID: #{params['id'].inspect}"
