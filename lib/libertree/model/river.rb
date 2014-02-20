@@ -16,6 +16,10 @@ module Libertree
         retval
       end
 
+      def add_post( post )
+        Libertree::DB.dbh.i "INSERT INTO river_posts ( river_id, post_id ) VALUES ( ?, ? )", self.id, post.id
+      end
+
       def posts( opts = {} )
         time = Time.at( opts.fetch(:time, Time.now.to_f) ).strftime("%Y-%m-%d %H:%M:%S.%6N%z")
         Post.s(%{SELECT * FROM posts_in_river(?,?,?,?,?,?)},
