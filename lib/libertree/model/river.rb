@@ -14,7 +14,7 @@ module Libertree
       end
 
       def add_post( post )
-        Libertree::DB.dbh.i "INSERT INTO river_posts ( river_id, post_id ) VALUES ( ?, ? )", self.id, post.id
+        Libertree::DB.dbh[ "INSERT INTO river_posts ( river_id, post_id ) VALUES ( ?, ? )", self.id, post.id ].get
       end
 
       def posts( opts = {} )
