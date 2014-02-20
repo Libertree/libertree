@@ -262,7 +262,7 @@ module Libertree
       end
 
       def contact_lists
-        ContactList.where  account_id: self.id
+        ContactList.where(account_id: self.id).all
       end
 
       # All contacts, from all contact lists
