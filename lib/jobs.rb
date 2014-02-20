@@ -180,7 +180,7 @@ module Jobs
         else
           Libertree::Model::River.each do |river|
             if river.should_contain? post
-              Libertree::DB.dbh.i "INSERT INTO river_posts ( river_id, post_id ) VALUES ( ?, ? )", river.id, post.id
+              river.add_post(post)
             end
           end
         end
