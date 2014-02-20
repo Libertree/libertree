@@ -31,10 +31,8 @@ module Libertree
               # origin is supposedly this local server
               post = Model::Post[ params['post_id'].to_i ]
             else
-              posts = Model::Post.where( remote_id: params['post_id'] )
-              posts.reject! { |p|
-                p.member.server != origin
-              }
+              posts = Model::Post.where( remote_id: params['post_id'].to_i ).
+                find_all {|p| p.member.server == origin }
               post = posts[0]  # There should only be one or none
             end
 
@@ -74,10 +72,8 @@ module Libertree
               # origin is supposedly this local server
               post = Model::Post[ params['post_id'].to_i ]
             else
-              posts = Model::Post.where( remote_id: params['post_id'] )
-              posts.reject! { |p|
-                p.member.server != origin
-              }
+              posts = Model::Post.where( remote_id: params['post_id'].to_i ).
+                find_all {|p| p.member.server == origin }
               post = posts[0]  # There should only be one or none
             end
 

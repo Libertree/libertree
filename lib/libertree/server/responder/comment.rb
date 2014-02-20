@@ -24,10 +24,8 @@ module Libertree
               # origin is supposedly this local server
               post = Model::Post[ params['post_id'] ]
             else
-              posts = Model::Post.where( remote_id: params['post_id'] )
-              posts.reject! { |p|
-                p.member.server != origin
-              }
+              posts = Model::Post.where( remote_id: params['post_id'] ).
+                find_all {|p| p.member.server == origin }
               post = posts[0]  # There should only be one or none
             end
             fail_if_nil post, 'Unrecognized post.'

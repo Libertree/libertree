@@ -22,10 +22,8 @@ module Libertree
               # origin is supposedly this local server
               comment = Model::Comment[ params['comment_id'] ]
             else
-              comments = Model::Comment.where( remote_id: params['comment_id'] )
-              comments.reject! { |p|
-                p.member.server != origin
-              }
+              comments = Model::Comment.where( remote_id: params['comment_id'] ).
+                find_all {|c| c.member.server == origin }
               comment = comments[0]  # There should only be one or none
             end
 

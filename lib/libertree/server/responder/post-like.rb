@@ -20,9 +20,9 @@ module Libertree
 
             if origin.nil?
               # origin is supposedly this local server
-              post = Model::Post[ params['post_id'] ]
+              post = Model::Post[ params['post_id'].to_i ]
             else
-              posts = Model::Post.where( remote_id: params['post_id'] )
+              posts = Model::Post.where( remote_id: params['post_id'].to_i ).all
               posts.reject! { |p|
                 p.member.server != origin
               }

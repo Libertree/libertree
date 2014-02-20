@@ -86,10 +86,10 @@ module Libertree
           end
 
           if local
-            entities = model.where( id: ref['id'].to_i )
+            entities = model.where( id: ref['id'].to_i ).all
           else
-            entities = model.where( remote_id: ref['id'].to_i ).
-                       reject {|e| e.member.server != server }
+            entities = model.where( remote_id: ref['id'].to_i ).all.
+              reject {|e| e.member.server != server }
           end
 
           if entities.empty?
