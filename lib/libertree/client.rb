@@ -145,27 +145,25 @@ module Libertree
       end
     end
 
-    def build_references_xml(refs)
-      Nokogiri::XML::Builder.new {|x|
-        x.references  {
-          refs.each do |ref|
-            x.reference {
-              x.match  ref['match']
-              ['post', 'comment', 'spring'].each do |type|
-                if ref[type]
-                  # Nokogiri uses `comment` for XML comments
-                  type_ = type == 'comment' ? 'comment_' : type
-                  x.send(type_) {
-                    x.url     ref[type]['url']
-                    x.id_     ref[type]['id']
-                    x.origin  ref[type]['origin']  if ref[type]['origin']
-                  }
-                end
+    def build_references_xml(refs, x)
+      x.references  {
+        refs.each do |ref|
+          x.reference {
+            x.match  ref['match']
+            ['post', 'comment', 'spring'].each do |type|
+              if ref[type]
+                # Nokogiri uses `comment` for XML comments
+                type_ = type == 'comment' ? 'comment_' : type
+                x.send(type_) {
+                  x.url     ref[type]['url']
+                  x.id_     ref[type]['id']
+                  x.origin  ref[type]['origin']  if ref[type]['origin']
+                }
               end
-            }
-          end
-        }
-      }.doc.root
+            end
+          }
+        end
+      }
     end
 
     public
@@ -225,7 +223,7 @@ module Libertree
           x.username    comment.member.username
           x.text_       comment.text
           unless references.empty?
-            build_references_xml references
+            build_references_xml references, x
           end
         }
       }
@@ -322,7 +320,7 @@ module Libertree
           x.text_       post.text
           x.via         post.via  if post.via
           unless references.empty?
-            build_references_xml references
+            build_references_xml references, x
           end
         }
       }

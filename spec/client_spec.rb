@@ -106,7 +106,8 @@ XML
                   "url" => "/128",
                   "id" => 127,
                   "origin" => "some.remote.tree" }}]
-      expect( @c.send(:build_references_xml, refs).to_xml ).to eq(expected.strip)
+      result = Nokogiri::XML::Builder.new {|x| @c.send(:build_references_xml, refs, x)}.doc.root
+      expect( result.to_xml ).to eq(expected.strip)
     end
   end
 
@@ -287,6 +288,79 @@ XML
 </post>
 XML
         expect( @c.req_post(@post) ).to eq(strip_xml(expected))
+      end
+
+      it 'includes references when they are provided' do
+      expected =<<XML
+<post>
+  <username>#{@post.member.username}</username>
+  <id>#{@post.id}</id>
+  <visibility>#{@post.visibility}</visibility>
+  <text>#{@post.text}</text>
+  <references>
+    <reference>
+      <match>(/posts/show/366</match>
+      <post>
+        <url>/posts/show/366</url>
+        <id>366</id>
+        <origin>some.remote.tree</origin>
+      </post>
+    </reference>
+    <reference>
+      <match> /posts/show/366/128#comment-128</match>
+      <post>
+        <url>/posts/show/366</url>
+        <id>365</id>
+        <origin>some.remote.tree</origin>
+      </post>
+      <comment>
+        <url>/128#comment-128</url>
+        <id>127</id>
+        <origin>some.remote.tree</origin>
+      </comment>
+    </reference>
+    <reference>
+      <match>http://never-mind.org/posts/show/366/128</match>
+      <post>
+        <url>/posts/show/366</url>
+        <id>365</id>
+        <origin>some.remote.tree</origin>
+      </post>
+      <comment>
+        <url>/128</url>
+        <id>127</id>
+        <origin>some.remote.tree</origin>
+      </comment>
+    </reference>
+  </references>
+</post>
+XML
+
+      refs = [{ "match" => "(/posts/show/366",
+                "post" => {
+                  "url" => "/posts/show/366",
+                  "id" => 366,
+                  "origin" => "some.remote.tree" }},
+              { "match" => " /posts/show/366/128#comment-128",
+                "post" => {
+                  "url" => "/posts/show/366",
+                  "id" => 365,
+                  "origin" => "some.remote.tree" },
+                "comment" => {
+                  "url" => "/128#comment-128",
+                  "id" => 127,
+                  "origin" => "some.remote.tree" }},
+              { "match" => "http://never-mind.org/posts/show/366/128",
+                "post" => {
+                  "url" => "/posts/show/366",
+                  "id" => 365,
+                  "origin" => "some.remote.tree" },
+                "comment" => {
+                  "url" => "/128",
+                  "id" => 127,
+                  "origin" => "some.remote.tree" }}]
+
+        expect( @c.req_post(@post, refs) ).to eq(strip_xml(expected))
       end
     end
 
