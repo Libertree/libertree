@@ -10,7 +10,7 @@ module Libertree
       end
 
       def contains?( post )
-        Libertree::DB.dbh[ "SELECT river_contains_post(?, ?)", self.id, post.id ].simple_value
+        Libertree::DB.dbh[ "SELECT river_contains_post(?, ?)", self.id, post.id ].single_value
       end
 
       def add_post( post )
