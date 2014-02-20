@@ -229,6 +229,7 @@ module Libertree
 
         account.password_reset_code = SecureRandom.hex(16)
         account.password_reset_expiry = Time.now + 60 * 60
+        account.save
         account
       end
 
