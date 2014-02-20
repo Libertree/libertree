@@ -15,15 +15,15 @@ describe Libertree::Server::Gateway do
     msg.to = @gateway
     ns = msg.class.registered_ns
 
-    @client.should_receive(:write) do |stanza|
+    expect( @client ).to receive(:write) do |stanza|
       # upstream bug: stanza.identities and stanza.features always
       # returns an empty array
-      stanza.xpath('.//ns:identity[@name="Libertree Gateway" and @type="libertree" and @category="gateway"]',
-                   :ns => ns).should_not be_empty
+      expect( stanza.xpath('.//ns:identity[@name="Libertree Gateway" and @type="libertree" and @category="gateway"]',
+                           :ns => ns) ).not_to be_empty
 
       features = stanza.xpath('.//ns:feature/@var', :ns => ns).map(&:value)
-      features.should match_array([ 'http://jabber.org/protocol/disco#info',
-                                    'jabber:iq:register' ])
+      expect( features ).to match_array([ 'http://jabber.org/protocol/disco#info',
+                                          'jabber:iq:register' ])
     end
     @client.handle_data msg
   end
@@ -44,10 +44,10 @@ describe Libertree::Server::Gateway do
       msg.add_child Nokogiri::XML.fragment("<query xmlns='jabber:iq:register'/>")
       ns = 'jabber:iq:register'
 
-      @client.should_receive(:write) do |stanza|
-        stanza.xpath('.//ns:instructions', :ns => ns).should_not be_empty
-        stanza.xpath('.//ns:username',     :ns => ns).should_not be_empty
-        stanza.xpath('.//ns:password',     :ns => ns).should_not be_empty
+      expect( @client ).to receive(:write) do |stanza|
+        expect( stanza.xpath('.//ns:instructions', :ns => ns) ).not_to be_empty
+        expect( stanza.xpath('.//ns:username',     :ns => ns) ).not_to be_empty
+        expect( stanza.xpath('.//ns:password',     :ns => ns) ).not_to be_empty
       end
       @client.handle_data msg
     end
@@ -65,8 +65,8 @@ describe Libertree::Server::Gateway do
         }
       }.doc.root
 
-      @client.should_receive(:write) do |stanza|
-        stanza.xpath('.//error').should_not be_empty
+      expect( @client ).to receive(:write) do |stanza|
+        expect( stanza.xpath('.//error') ).not_to be_empty
       end
       @client.handle_data msg
     end
@@ -84,8 +84,8 @@ describe Libertree::Server::Gateway do
         }
       }.doc.root
 
-      @client.should_receive(:write) do |stanza|
-        stanza.xpath('.//error').should_not be_empty
+      expect( @client ).to receive(:write) do |stanza|
+        expect( stanza.xpath('.//error') ).not_to be_empty
       end
       @client.handle_data msg
     end
@@ -106,14 +106,17 @@ describe Libertree::Server::Gateway do
       }.doc.root
 
       account = Libertree::Model::Account[ username: "username" ]
-      account.should_not be_nil
-      account.gateway_jid.should be_nil
-      @client.should_receive(:write) do |stanza|
-        stanza.xpath('.//error').should be_empty
+      expect( account ).not_to be_nil
+      expect( account.gateway_jid ).to be_nil
+
+      # server acknowledges stanza
+      expect( @client ).to receive(:write) do |stanza|
+        expect( stanza.xpath('.//error') ).to be_empty
       end
+
       @client.handle_data msg
       account = Libertree::Model::Account[ username: "username" ]
-      account.gateway_jid.should eq(jid)
+      expect( account.gateway_jid ).to eq(jid)
     end
   end
 
@@ -135,13 +138,13 @@ describe Libertree::Server::Gateway do
       msg.add_child Nokogiri::XML.fragment("<query xmlns='jabber:iq:register'/>")
       ns = 'jabber:iq:register'
 
-      @client.should_receive(:write) do |stanza|
-        stanza.xpath('.//ns:registered', :ns => ns).should_not be_empty
-        stanza.xpath('.//ns:username',   :ns => ns).should_not be_empty
-        stanza.xpath('.//ns:password',   :ns => ns).should_not be_empty
+      expect( @client ).to receive(:write) do |stanza|
+        expect( stanza.xpath('.//ns:registered', :ns => ns) ).not_to be_empty
+        expect( stanza.xpath('.//ns:username',   :ns => ns) ).not_to be_empty
+        expect( stanza.xpath('.//ns:password',   :ns => ns) ).not_to be_empty
 
-        stanza.xpath('.//ns:username',   :ns => ns).text.should eq(@account.username)
-        stanza.xpath('.//ns:password',   :ns => ns).text.should eq(@account.password)
+        expect( stanza.xpath('.//ns:username',   :ns => ns).text ).to eq(@account.username)
+        expect( stanza.xpath('.//ns:password',   :ns => ns).text ).to eq(@account.password)
       end
       @client.handle_data msg
     end
@@ -161,19 +164,19 @@ describe Libertree::Server::Gateway do
 
       username = @account.username
 
-      @client.should_receive(:write) do |stanza|
+      expect( @client ).to receive(:write) do |stanza|
         expect( stanza.xpath('.//error', :ns => ns) ).to be_empty
         account = Libertree::Model::Account[ username: username ]
         expect( account.gateway_jid ).to be_nil
       end
 
-      @client.should_receive(:write) do |stanza|
+      expect( @client ).to receive(:write) do |stanza|
         expect( stanza.type ).to eq(:unsubscribe)
       end
-      @client.should_receive(:write) do |stanza|
+      expect( @client ).to receive(:write) do |stanza|
         expect( stanza.type ).to eq(:unsubscribed)
       end
-      @client.should_receive(:write) do |stanza|
+      expect( @client ).to receive(:write) do |stanza|
         expect( stanza.type ).to eq(:unavailable)
       end
 
