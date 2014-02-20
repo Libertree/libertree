@@ -80,8 +80,8 @@ module Libertree
         end
 
         Libertree::Model::Job.create(
-          'task' => 'post:add-to-rivers',
-          'params' => { 'post_id' => self.id, }.to_json
+          task: 'post:add-to-rivers',
+          params: { 'post_id' => self.id, }.to_json
         )
       end
 
@@ -199,8 +199,8 @@ module Libertree
       def self.create(*args)
         post = super
         Libertree::Model::Job.create(
-          'task' => 'post:add-to-rivers',
-          'params' => { 'post_id' => post.id, }.to_json
+          task: 'post:add-to-rivers',
+          params: { 'post_id' => post.id, }.to_json
         )
         if post.member.account
           post.mark_as_read_by post.member.account
@@ -267,13 +267,13 @@ module Libertree
 
       def revise(text_new, visibility = self.visibility)
         PostRevision.create(
-          'post_id' => self.id,
-          'text'    => self.text
+          post_id: self.id,
+          text:    self.text
         )
         self.update(
-          'text'         => text_new,
-          'visibility'   => visibility,
-          'time_updated' => Time.now
+          text:         text_new,
+          visibility:   visibility,
+          time_updated: Time.now
         )
         mark_as_unread_by_all
       end
