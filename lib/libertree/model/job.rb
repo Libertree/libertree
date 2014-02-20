@@ -58,7 +58,7 @@ module Libertree
 
       def unreserve
         new_tries = self.tries+1
-        self.set(
+        self.update(
           time_started: nil,
           pid: nil,
           tries: new_tries,

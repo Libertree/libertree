@@ -270,7 +270,7 @@ module Libertree
           'post_id' => self.id,
           'text'    => self.text
         )
-        self.set(
+        self.update(
           'text'         => text_new,
           'visibility'   => visibility,
           'time_updated' => Time.now
