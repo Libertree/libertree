@@ -6,6 +6,31 @@ describe Libertree::Model::Account do
     @member = @account.member
   end
 
+  describe '#messages' do
+    it 'returns messages sent and received' do
+      other_account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
+      other_member = other_account.member
+
+      message_sent = Libertree::Model::Message.
+        create_with_recipients({ :sender_member_id => @member.id,
+                                 :recipient_member_ids => [other_member.id],
+                                 :text => 'Hello'
+                               })
+      message_received = Libertree::Model::Message.
+        create_with_recipients({ :sender_member_id => other_member.id,
+                                 :recipient_member_ids => [@member.id],
+                                 :text => 'Bye'
+                               })
+      message_other = Libertree::Model::Message.
+        create_with_recipients({ :sender_member_id => other_member.id,
+                                 :recipient_member_ids => [other_member.id],
+                                 :text => 'None of your business'
+                               })
+
+      expect( @account.messages ).to match_array [message_sent, message_received]
+    end
+  end
+
   describe '#delete_cascade' do
     context 'given an account with some posts and other entities' do
       before :each do
