@@ -170,7 +170,7 @@ module Libertree
           limit_clause = "LIMIT #{opt[:limit].to_i}"
         end
 
-        Comment.s("SELECT * FROM comments WHERE post_id = ? #{from_clause} #{to_clause} ORDER BY id DESC #{limit_clause}", *params)
+        Comment.s("SELECT * FROM comments WHERE post_id = ? #{from_clause} #{to_clause} ORDER BY id DESC #{limit_clause}", *params).sort_by(&:id)
       end
     end
   end
