@@ -182,6 +182,7 @@ module Libertree
             }.to_json
           )
         end
+        self.save
       end
 
       def delete_cascade(force=false)
