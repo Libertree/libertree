@@ -97,11 +97,9 @@ module Libertree
         end
         @client.write stanza.reply!
 
-        [ 'unsubscribe', 'unsubscribed', 'unavailable' ].each do |presence_type|
-          p = Blather::Stanza::Presence.new
-          p.to = stanza.to
+        [ 'unsubscribe', 'unsubscribed', 'unavailable' ].each do |type|
+          p = Blather::Stanza::Presence::Subscription.new(stanza.to, type)
           p.from = stanza.from
-          p.type = presence_type
           @client.write p
         end
       end
