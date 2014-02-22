@@ -77,7 +77,7 @@ module Libertree
       end
 
       def chat_partners_current
-        Libertree::Model::Member.s(
+        Member.s_wrap(
           %{
             (
               SELECT
