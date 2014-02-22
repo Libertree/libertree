@@ -118,6 +118,17 @@ describe Libertree::Server::Gateway do
       account = Libertree::Model::Account[ username: "username" ]
       expect( account.gateway_jid ).to eq(jid)
     end
+
+    it 'rejects subscriptions to the gateway' do
+      p = Blather::Stanza::Presence::Subscription.new(@gateway, :subscribe)
+      p.from = "tester@test"
+
+      expect( @client ).to receive(:write) do |stanza|
+        expect( stanza.type ).to eq(:unsubscribed)
+      end
+
+      @client.handle_data p
+    end
   end
 
   context "when the sender's jid is registered with an account" do
@@ -181,6 +192,17 @@ describe Libertree::Server::Gateway do
       end
 
       @client.handle_data msg
+    end
+
+    it 'approves subscriptions to the gateway' do
+      p = Blather::Stanza::Presence::Subscription.new(@gateway, :subscribe)
+      p.from = @jid
+
+      expect( @client ).to receive(:write) do |stanza|
+        expect( stanza.type ).to eq(:subscribed)
+      end
+
+      @client.handle_data p
     end
   end
 

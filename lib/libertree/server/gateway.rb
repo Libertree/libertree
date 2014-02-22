@@ -116,6 +116,18 @@ module Libertree
             register_auth(stanza)
           end
         end
+
+        # only approve subscription requests from users that are
+        # already registered with the gateway
+        client.register_handler :subscription, :request? do |subscription|
+          account = Libertree::Model::Account[ gateway_jid: subscription.from.to_s ]
+          if account
+            # TODO: register subscription somewhere...
+            @client.write subscription.approve!
+          else
+            @client.write subscription.refuse!
+          end
+        end
       end
     end
   end
