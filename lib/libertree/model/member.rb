@@ -164,10 +164,10 @@ module Libertree
       end
 
       def pools
-        @pools ||= Pool.where( member_id: self.id )
+        @pools ||= Pool.where( member_id: self.id ).all
       end
       def springs
-        @springs ||= Pool.where( member_id: self.id, sprung: true )
+        @springs ||= Pool.where( member_id: self.id, sprung: true ).all
       end
 
       def online?
