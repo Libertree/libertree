@@ -163,6 +163,7 @@ module Libertree
 
       def generate_api_token
         self.api_token = SecureRandom.hex(16)
+        self.save
       end
 
       # @param [Time] time The time to compare to
