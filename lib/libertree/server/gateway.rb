@@ -76,7 +76,10 @@ module Libertree
             begin
               account.gateway_jid = stanza.from.to_s
               @client.write stanza.reply!
-              # TODO: presence subscribe
+
+              # subscribe to user presence
+              @client.write Blather::Stanza::Presence::Subscription.
+                new(stanza.from, :subscribe)
             rescue StandardError => e
               respond to: stanza, with: [error, stanza]
             end

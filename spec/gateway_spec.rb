@@ -114,6 +114,11 @@ describe Libertree::Server::Gateway do
         expect( stanza.xpath('.//error') ).to be_empty
       end
 
+      # gateway subscribes to user's presence
+      expect( @client ).to receive(:write) do |stanza|
+        expect( stanza.type ).to eq(:subscribe)
+      end
+
       @client.handle_data msg
       account = Libertree::Model::Account[ username: "username" ]
       expect( account.gateway_jid ).to eq(jid)
