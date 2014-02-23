@@ -221,6 +221,14 @@ describe Libertree::Server::Gateway do
 
       @client.handle_data p
     end
-  end
 
+    it 'responds to "log in" stanzas with presence' do
+      p = Blather::Stanza::Presence.new(@gateway)
+      p.from = @jid
+
+      expect( @client ).to receive(:write)
+      @client.handle_data p
+    end
+
+  end
 end

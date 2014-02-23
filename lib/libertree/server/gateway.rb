@@ -143,6 +143,15 @@ module Libertree
           log_out stanza
         end
 
+        client.register_handler :presence do |stanza|
+          account = Libertree::Model::Account[ gateway_jid: stanza.from.to_s ]
+          if account
+            @client.write stanza.reply!
+            # TODO: If this is directed presence, report presence of
+            # Libertree user, if subscribed to that user.
+          end
+        end
+
       end
     end
   end
