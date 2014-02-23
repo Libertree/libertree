@@ -11,6 +11,8 @@ require 'libertree/server/responder/pool-post'
 require 'libertree/server/responder/post'
 require 'libertree/server/responder/post-like'
 
+require 'libertree/server/gateway'
+
 module Libertree
   module Server
     module Responder
@@ -30,6 +32,8 @@ module Libertree
 
       # set @client for the `respond` helper method
       @client = client
+      Gateway.init(client)
+
       when_ready {
         puts "\nLibertree started."
         puts "Send messages to #{jid.stripped}."
