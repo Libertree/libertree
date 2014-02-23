@@ -7,6 +7,7 @@ describe Libertree::Server::Gateway do
 
   before :each do
     @client = LSR.connection
+    @client.stub :write
     @gateway = "gateway.liber.tree"
   end
 
@@ -114,9 +115,33 @@ describe Libertree::Server::Gateway do
         expect( stanza.xpath('.//error') ).to be_empty
       end
 
+      # gateway subscribes to user's presence
+      expect( @client ).to receive(:write) do |stanza|
+        expect( stanza.type ).to eq(:subscribe)
+      end
+
       @client.handle_data msg
       account = Libertree::Model::Account[ username: "username" ]
       expect( account.gateway_jid ).to eq(jid)
+    end
+
+    it 'rejects subscriptions to the gateway' do
+      p = Blather::Stanza::Presence::Subscription.new(@gateway, :subscribe)
+      p.from = "tester@test"
+
+      expect( @client ).to receive(:write) do |stanza|
+        expect( stanza.type ).to eq(:unsubscribed)
+      end
+
+      @client.handle_data p
+    end
+
+    it 'responds to chat messages from unregistered non-Libertree users with an error' do
+      msg = Blather::Stanza::Message.new("localuser@#{@gateway}", "test", :chat)
+      msg.from = 'stranger@not-in-the-forest'
+
+      expect( LSR ).not_to receive(:handle).with('chat')
+      @client.handle_data msg
     end
   end
 
@@ -183,6 +208,49 @@ describe Libertree::Server::Gateway do
 
       @client.handle_data msg
     end
-  end
 
+    it 'approves subscriptions to the gateway' do
+      p = Blather::Stanza::Presence::Subscription.new(@gateway, :subscribe)
+      p.from = @jid
+
+      expect( @client ).to receive(:write) do |stanza|
+        expect( stanza.type ).to eq(:subscribed)
+      end
+
+      @client.handle_data p
+    end
+
+    it 'responds to "log out" stanzas' do
+      p = Blather::Stanza::Presence.new(@gateway)
+      p.type = :unavailable
+      p.from = @jid
+
+      expect( @client ).to receive(:write) do |stanza|
+        expect( stanza.type ).to eq(:unavailable)
+      end
+
+      @client.handle_data p
+    end
+
+    it 'responds to "log in" stanzas with presence' do
+      p = Blather::Stanza::Presence.new(@gateway)
+      p.from = @jid
+
+      expect( @client ).to receive(:write)
+      @client.handle_data p
+    end
+
+    it 'forwards chat messages to local users' do
+      localuser = Libertree::Model::Account.create({
+        username: "localuser",
+        password_encrypted: BCrypt::Password.create("1234")
+      })
+
+      msg = Blather::Stanza::Message.new("localuser@#{@gateway}", "test", :chat)
+      msg.from = @jid
+
+      expect( Libertree::Model::ChatMessage ).to receive(:create)
+      @client.handle_data msg
+    end
+  end
 end

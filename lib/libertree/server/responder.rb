@@ -11,6 +11,8 @@ require 'libertree/server/responder/pool-post'
 require 'libertree/server/responder/post'
 require 'libertree/server/responder/post-like'
 
+require 'libertree/server/gateway'
+
 module Libertree
   module Server
     module Responder
@@ -30,6 +32,8 @@ module Libertree
 
       # set @client for the `respond` helper method
       @client = client
+      Gateway.init(client)
+
       when_ready {
         puts "\nLibertree started."
         puts "Send messages to #{jid.stripped}."
@@ -84,22 +88,38 @@ module Libertree
       end
 
       message :chat? do |stanza|
-        # when we get messages from unknown remotes: ignore for now
-        # TODO: check recipient's roster instead
-        @remote_tree = Libertree::Model::Server[ :domain => stanza.from.domain ]
-        if ! @remote_tree || @remote_tree.forests.none?(&:local_is_member?)
+        # Is the sender registered with the gateway?
+        account = Libertree::Model::Account[ gateway_jid: stanza.from.to_s ]
+        if account
+          sender_username = account.username
+          recipient = Libertree::Model::Account[ username: stanza.to.node.to_s ]
+          if recipient
+            Libertree::Model::ChatMessage.
+              create(from_member_id: account.member.id,
+                     to_member_id: recipient.id,
+                     text: stanza.body)
+          end
           halt
+        else
+          # when we get messages from unknown remotes: ignore for now
+          # TODO: check recipient's roster instead
+          @remote_tree = Libertree::Model::Server[ :domain => stanza.from.domain ]
+          if ! @remote_tree || @remote_tree.forests.none?(&:local_is_member?)
+            @client.write Blather::StanzaError.new(stanza, 'registration-required', :cancel)
+            halt
+          end
+          sender_username = stanza.from.node
+
+          params = {
+            'username' => sender_username,
+            'recipient_username' => stanza.to.node,
+            'text' => stanza.body
+          }
+
+          # handle chat message, ignore errors
+          handle 'chat', params
+          halt # stop further processing
         end
-
-        params = {
-          'username' => stanza.from.node,
-          'recipient_username' => stanza.to.node,
-          'text' => stanza.body
-        }
-
-        # handle chat message, ignore errors
-        handle 'chat', params
-        halt # stop further processing
       end
 
       # only log errors, never respond to errors!
@@ -110,12 +130,6 @@ module Libertree
 
       # catch all
       message do |stanza|
-        respond to: stanza, with: (error code: 'UNKNOWN COMMAND')
-      end
-      presence do |stanza|
-        # TODO: not yet implemented
-        # Presence stanzas are used to indicate chat availability for
-        # remote users.
         respond to: stanza, with: (error code: 'UNKNOWN COMMAND')
       end
 

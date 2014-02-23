@@ -15,6 +15,7 @@ describe Libertree::Server::Responder do
     @remote_tree = double
     @remote_tree.stub :id
     @client = LSR.connection
+    @client.stub :write
 
     # requester using client library
     Libertree::Client.any_instance.stub(:connect)
@@ -50,15 +51,6 @@ describe Libertree::Server::Responder do
              Blather::Stanza::Message.new(target, 'body', :error)
            ]
 
-    presences = [ Blather::Stanza::Presence.new(:unavailable),
-                  Blather::Stanza::Presence.new(:subscribe),
-                  Blather::Stanza::Presence.new(:subscribed),
-                  Blather::Stanza::Presence.new(:unsubscribe),
-                  Blather::Stanza::Presence.new(:unsubscribed),
-                  Blather::Stanza::Presence.new(:probe),
-                  Blather::Stanza::Presence.new(:error)
-                ]
-
     msgs.each do |msg|
       LSR.should_receive(:respond) do |args|
         args[:to].should eq msg
@@ -66,15 +58,6 @@ describe Libertree::Server::Responder do
       end
 
       @client.send :call_handler_for, :message, msg
-    end
-
-    presences.each do |p|
-      LSR.should_receive(:respond) do |args|
-        args[:to].should eq p
-        args[:with].to_s.should eq expected_response.to_s
-      end
-
-      @client.send :call_handler_for, :presence, p
     end
   end
 
@@ -129,7 +112,6 @@ XML
       LSR::VALID_COMMANDS.each do |command|
         stanza = helper.build_stanza("localhost.localdomain", "<#{command}/>")
         stanza.from = @requester.domain
-        @client.stub :write
         LSR.should_receive "rsp_#{command.gsub('-', '_')}".to_sym
         catch(:halt) { @client.send :call_handler_for, :iq, stanza }
       end
@@ -138,7 +120,6 @@ XML
     it 'calls the correct handler for chat messages' do
       stanza = Blather::Stanza::Message.new("localhost.localdomain", 'text', :chat)
       stanza.from = @requester.domain
-      @client.stub :write
       LSR.should_receive :rsp_chat
       catch(:halt) { @client.send :call_handler_for, :message, stanza }
     end

@@ -77,7 +77,10 @@ module Libertree
               account.gateway_jid = stanza.from.to_s
               account.save
               @client.write stanza.reply!
-              # TODO: presence subscribe
+
+              # subscribe to user presence
+              @client.write Blather::Stanza::Presence::Subscription.
+                new(stanza.from, :subscribe)
             rescue StandardError => e
               respond to: stanza, with: [error, stanza]
             end
@@ -96,11 +99,18 @@ module Libertree
         end
         @client.write stanza.reply!
 
-        [ 'unsubscribe', 'unsubscribed', 'unavailable' ].each do |presence_type|
-          p = Blather::Stanza::Presence.new
-          p.to = stanza.to
+        [ 'unsubscribe', 'unsubscribed', 'unavailable' ].each do |type|
+          p = Blather::Stanza::Presence::Subscription.new(stanza.to, type)
           p.from = stanza.from
-          p.type = presence_type
+          @client.write p
+        end
+      end
+
+      def self.log_out(stanza)
+        account = Libertree::Model::Account[ gateway_jid: stanza.from.to_s ]
+        if account
+          # TODO: forward "unavailable" presence to all Libertree contacts
+          p = Blather::Stanza::Presence::Subscription.new(stanza.from, :unavailable)
           @client.write p
         end
       end
@@ -118,6 +128,32 @@ module Libertree
             register_auth(stanza)
           end
         end
+
+        # only approve subscription requests from users that are
+        # already registered with the gateway
+        client.register_handler :subscription, :request? do |subscription|
+          account = Libertree::Model::Account[ gateway_jid: subscription.from.to_s ]
+          if account
+            # TODO: register subscription somewhere...
+            @client.write subscription.approve!
+          else
+            @client.write subscription.refuse!
+          end
+        end
+
+        client.register_handler :presence, :unavailable? do |stanza|
+          log_out stanza
+        end
+
+        client.register_handler :presence do |stanza|
+          account = Libertree::Model::Account[ gateway_jid: stanza.from.to_s ]
+          if account
+            @client.write stanza.reply!
+            # TODO: If this is directed presence, report presence of
+            # Libertree user, if subscribed to that user.
+          end
+        end
+
       end
     end
   end
