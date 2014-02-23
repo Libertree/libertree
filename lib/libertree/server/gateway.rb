@@ -104,6 +104,15 @@ module Libertree
         end
       end
 
+      def self.log_out(stanza)
+        account = Libertree::Model::Account[ gateway_jid: stanza.from.to_s ]
+        if account
+          # TODO: forward "unavailable" presence to all Libertree contacts
+          p = Blather::Stanza::Presence::Subscription.new(stanza.from, :unavailable)
+          @client.write p
+        end
+      end
+
       public
       def self.init(client)
         # set @client for the `respond` helper method
@@ -129,6 +138,11 @@ module Libertree
             @client.write subscription.refuse!
           end
         end
+
+        client.register_handler :presence, :unavailable? do |stanza|
+          log_out stanza
+        end
+
       end
     end
   end

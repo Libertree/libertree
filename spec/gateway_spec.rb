@@ -209,6 +209,18 @@ describe Libertree::Server::Gateway do
 
       @client.handle_data p
     end
+
+    it 'responds to "log out" stanzas' do
+      p = Blather::Stanza::Presence.new(@gateway)
+      p.type = :unavailable
+      p.from = @jid
+
+      expect( @client ).to receive(:write) do |stanza|
+        expect( stanza.type ).to eq(:unavailable)
+      end
+
+      @client.handle_data p
+    end
   end
 
 end
