@@ -84,15 +84,23 @@ module Libertree
       end
 
       message :chat? do |stanza|
-        # when we get messages from unknown remotes: ignore for now
-        # TODO: check recipient's roster instead
-        @remote_tree = Libertree::Model::Server[ :domain => stanza.from.domain ]
-        if ! @remote_tree || @remote_tree.forests.none?(&:local_is_member?)
-          halt
+        # Is the sender registered with the gateway?
+        account = Libertree::Model::Account[ gateway_jid: stanza.from.to_s ]
+        if account
+          username = account.username
+        else
+          # when we get messages from unknown remotes: ignore for now
+          # TODO: check recipient's roster instead
+          @remote_tree = Libertree::Model::Server[ :domain => stanza.from.domain ]
+          if ! @remote_tree || @remote_tree.forests.none?(&:local_is_member?)
+            @client.write Blather::StanzaError.new(stanza, 'registration-required', :cancel)
+            halt
+          end
+          username = stanza.from.node
         end
 
         params = {
-          'username' => stanza.from.node,
+          'username' => username,
           'recipient_username' => stanza.to.node,
           'text' => stanza.body
         }

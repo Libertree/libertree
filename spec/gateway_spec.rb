@@ -135,6 +135,14 @@ describe Libertree::Server::Gateway do
 
       @client.handle_data p
     end
+
+    it 'responds to chat messages from unregistered non-Libertree users with an error' do
+      msg = Blather::Stanza::Message.new("localuser@#{@gateway}", "test", :chat)
+      msg.from = 'stranger@not-in-the-forest'
+
+      expect( LSR ).not_to receive(:handle).with('chat')
+      @client.handle_data msg
+    end
   end
 
   context "when the sender's jid is registered with an account" do
@@ -231,5 +239,16 @@ describe Libertree::Server::Gateway do
       @client.handle_data p
     end
 
+    it 'forwards chat messages to local users' do
+      msg = Blather::Stanza::Message.new("localuser@#{@gateway}", "test", :chat)
+      msg.from = @jid
+
+      expect( LSR ).to receive(:handle).
+        with('chat',
+             { "username" => "username",
+               "recipient_username" => "localuser",
+               "text"=>"test"})
+      @client.handle_data msg
+    end
   end
 end
