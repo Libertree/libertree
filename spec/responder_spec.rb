@@ -50,15 +50,6 @@ describe Libertree::Server::Responder do
              Blather::Stanza::Message.new(target, 'body', :error)
            ]
 
-    presences = [ Blather::Stanza::Presence.new(:unavailable),
-                  Blather::Stanza::Presence.new(:subscribe),
-                  Blather::Stanza::Presence.new(:subscribed),
-                  Blather::Stanza::Presence.new(:unsubscribe),
-                  Blather::Stanza::Presence.new(:unsubscribed),
-                  Blather::Stanza::Presence.new(:probe),
-                  Blather::Stanza::Presence.new(:error)
-                ]
-
     msgs.each do |msg|
       LSR.should_receive(:respond) do |args|
         args[:to].should eq msg
@@ -66,15 +57,6 @@ describe Libertree::Server::Responder do
       end
 
       @client.send :call_handler_for, :message, msg
-    end
-
-    presences.each do |p|
-      LSR.should_receive(:respond) do |args|
-        args[:to].should eq p
-        args[:with].to_s.should eq expected_response.to_s
-      end
-
-      @client.send :call_handler_for, :presence, p
     end
   end
 
