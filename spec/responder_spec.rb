@@ -15,6 +15,7 @@ describe Libertree::Server::Responder do
     @remote_tree = double
     @remote_tree.stub :id
     @client = LSR.connection
+    @client.stub :write
 
     # requester using client library
     Libertree::Client.any_instance.stub(:connect)
@@ -111,7 +112,6 @@ XML
       LSR::VALID_COMMANDS.each do |command|
         stanza = helper.build_stanza("localhost.localdomain", "<#{command}/>")
         stanza.from = @requester.domain
-        @client.stub :write
         LSR.should_receive "rsp_#{command.gsub('-', '_')}".to_sym
         catch(:halt) { @client.send :call_handler_for, :iq, stanza }
       end
@@ -120,7 +120,6 @@ XML
     it 'calls the correct handler for chat messages' do
       stanza = Blather::Stanza::Message.new("localhost.localdomain", 'text', :chat)
       stanza.from = @requester.domain
-      @client.stub :write
       LSR.should_receive :rsp_chat
       catch(:halt) { @client.send :call_handler_for, :message, stanza }
     end

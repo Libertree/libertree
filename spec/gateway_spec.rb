@@ -7,6 +7,7 @@ describe Libertree::Server::Gateway do
 
   before :each do
     @client = LSR.connection
+    @client.stub :write
     @gateway = "gateway.liber.tree"
   end
 
