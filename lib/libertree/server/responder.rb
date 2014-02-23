@@ -91,7 +91,15 @@ module Libertree
         # Is the sender registered with the gateway?
         account = Libertree::Model::Account[ gateway_jid: stanza.from.to_s ]
         if account
-          username = account.username
+          sender_username = account.username
+          recipient = Libertree::Model::Account[ username: stanza.to.node.to_s ]
+          if recipient
+            Libertree::Model::ChatMessage.
+              create(from_member_id: account.member.id,
+                     to_member_id: recipient.id,
+                     text: stanza.body)
+          end
+          halt
         else
           # when we get messages from unknown remotes: ignore for now
           # TODO: check recipient's roster instead
@@ -100,18 +108,18 @@ module Libertree
             @client.write Blather::StanzaError.new(stanza, 'registration-required', :cancel)
             halt
           end
-          username = stanza.from.node
+          sender_username = stanza.from.node
+
+          params = {
+            'username' => sender_username,
+            'recipient_username' => stanza.to.node,
+            'text' => stanza.body
+          }
+
+          # handle chat message, ignore errors
+          handle 'chat', params
+          halt # stop further processing
         end
-
-        params = {
-          'username' => username,
-          'recipient_username' => stanza.to.node,
-          'text' => stanza.body
-        }
-
-        # handle chat message, ignore errors
-        handle 'chat', params
-        halt # stop further processing
       end
 
       # only log errors, never respond to errors!

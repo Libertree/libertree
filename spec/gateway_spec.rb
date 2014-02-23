@@ -240,14 +240,15 @@ describe Libertree::Server::Gateway do
     end
 
     it 'forwards chat messages to local users' do
+      localuser = Libertree::Model::Account.create({
+        username: "localuser",
+        password_encrypted: BCrypt::Password.create("1234")
+      })
+
       msg = Blather::Stanza::Message.new("localuser@#{@gateway}", "test", :chat)
       msg.from = @jid
 
-      expect( LSR ).to receive(:handle).
-        with('chat',
-             { "username" => "username",
-               "recipient_username" => "localuser",
-               "text"=>"test"})
+      expect( Libertree::Model::ChatMessage ).to receive(:create)
       @client.handle_data msg
     end
   end
