@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 gem 'sequel'
-gem 'libertree-model', :git => 'git://github.com/Libertree/libertree-model-rb.git', :branch => 'sequel'
+gem 'libertree-model', :git => 'git://github.com/Libertree/libertree-model-rb.git'
 gem 'libertree-client', :git => 'git://github.com/Libertree/libertree-client-rb.git'
 gem 'json'
 gem 'mail'
