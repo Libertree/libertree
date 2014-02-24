@@ -88,23 +88,25 @@ module Libertree
         raise Libertree::JobUndefined unless task
         task.send(:perform, job.params)
         job.time_finished = Time.now
+        job.save
 
         log "Leaving: job #{job.id}"
       rescue Libertree::JobInvalid => e
         reason = "Invalid job #{job.id}: #{e.message}\n"
         log_error reason
-        job.retry_reason = reason
         job.delete
       rescue Libertree::JobFailed => e
         reason = "Failed job #{job.id}: #{e.message}\n"
         log_error reason
         # TODO: mark the job as failed instead of unreserving it
         job.retry_reason = reason
+        job.save
         job.unreserve
       rescue Libertree::RetryJob => e
         log_error "Retry job #{job.id} later: #{e.message}\n"
         # TODO: mark the job as failed instead of unreserving it
         job.retry_reason = e.message
+        job.save
         job.unreserve
       rescue Libertree::JobUndefined
         log_error "Skipping unknown task #{job.task} in job #{job.id}"
@@ -112,6 +114,7 @@ module Libertree
       rescue StandardError => e
         log_error "Error processing job #{job.id}: #{e.class} #{e.message}\n" + e.backtrace.join("\n\t")
         job.retry_reason = e.message
+        job.save
         job.unreserve
       end
     end
