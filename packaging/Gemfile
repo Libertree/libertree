@@ -1,13 +1,11 @@
-source 'http://rubygems.org'
+source 'http://ruby.taobao.org'
 
-gem 'm4dbi'
-gem 'rdbi', :git => 'git://github.com/RDBI/rdbi.git'
-gem 'rdbi-driver-postgresql', :git => 'git://github.com/RDBI/rdbi-driver-postgresql.git', :branch => 'fix-execute-memory-leak'
 gem 'mail'
 gem 'mail-gpg'
-gem 'libertree-model', :git => 'git://github.com/Libertree/libertree-model-rb.git', :branch => 'xmpp'
-gem 'libertree-client', :git => 'git://github.com/Libertree/libertree-client-rb.git', :branch => 'xmpp'
+gem 'libertree-model', :git => 'git://github.com/Libertree/libertree-model-rb.git'
+gem 'libertree-client', :git => 'git://github.com/Libertree/libertree-client-rb.git'
 gem 'json'
+gem 'sequel'
 
 group 'libertree-model' do
   gem 'ruby-oembed'

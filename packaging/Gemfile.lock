@@ -1,36 +1,19 @@
 GIT
   remote: git://github.com/Libertree/libertree-client-rb.git
-  revision: f6d9dae951de224ab1b6b19caacf0d9f6f1d699c
-  branch: xmpp
+  revision: d7bca4ac1752a1d7670470aba6f0e89e300a6e5b
   specs:
     libertree-client (0.0.2)
 
 GIT
   remote: git://github.com/Libertree/libertree-model-rb.git
-  revision: 326dfec38aae3ac2cab09e539e47de319b94e25b
-  branch: xmpp
+  revision: c39fb3771a6e833a3fa87c987feee580c8fd4b97
   specs:
-    libertree-model (0.0.1)
-
-GIT
-  remote: git://github.com/RDBI/rdbi-driver-postgresql.git
-  revision: be571a9909f74160be8b0c638275e33fe62c75cf
-  branch: fix-execute-memory-leak
-  specs:
-    rdbi-driver-postgresql (0.9.1)
-      epoxy (>= 0.3.1)
-      methlab
-      pg (= 0.9.0)
-      rdbi
-
-GIT
-  remote: git://github.com/RDBI/rdbi.git
-  revision: 6b4103aac8e28fec4e51dc1bc8ac9ccc08828679
-  specs:
-    rdbi (0.9.1)
-      epoxy (>= 0.3.1)
-      methlab (>= 0.0.9)
-      typelib
+    libertree-model (0.6.0)
+      bcrypt-ruby (= 3.0.1)
+      nokogiri (~> 1.5)
+      pg
+      ruby-oembed (~> 0.8.8)
+      sequel
 
 GEM
   remote: http://rubygems.org/
@@ -46,7 +29,6 @@ GEM
       niceogiri (~> 1.0)
       nokogiri (~> 1.5, >= 1.5.6)
     connection_pool (1.0.0)
-    epoxy (0.3.1)
     eventmachine (1.0.3)
     girl_friday (0.11.2)
       connection_pool (~> 1.0)
@@ -54,17 +36,12 @@ GEM
     gpgme (2.0.2)
     i18n (0.6.1)
     json (1.8.0)
-    m4dbi (0.8.8)
-      metaid
-      rdbi
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mail-gpg (0.1.2)
       gpgme (~> 2.0.2)
       mail (~> 2.5.3)
-    metaid (1.0)
-    methlab (0.1.0)
     mime-types (1.23)
     multi_json (1.7.6)
     niceogiri (1.1.2)
@@ -76,10 +53,10 @@ GEM
       rubinius-core-api
     rubinius-core-api (0.0.1)
     ruby-oembed (0.8.9)
+    sequel (4.7.0)
     treetop (1.4.14)
       polyglot
       polyglot (>= 0.3.1)
-    typelib (0.1.0)
 
 PLATFORMS
   ruby
@@ -90,10 +67,8 @@ DEPENDENCIES
   json
   libertree-client!
   libertree-model!
-  m4dbi
   mail
   mail-gpg
   pg
-  rdbi!
-  rdbi-driver-postgresql!
   ruby-oembed
+  sequel
