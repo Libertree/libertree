@@ -27,10 +27,10 @@ If the Libertree installation is configured to use memcache, start memcached:
 
 ### Ruby services
 
-Libertree consists of two main components: the frontend and the backend.  In
-addition to these two services, there is a background job processing script
-for the backend.  The websocket server is optional.  Some of these
-services might be served by more than one process or daemon.
+Libertree consists of two main components: the frontend and the
+backend.  In addition to these two services, there is a background job
+processing script for the backend.  Some of these services might be
+served by more than one process or daemon.
 
 #### Backend
 
@@ -70,15 +70,9 @@ standard HTTP port (80) to this port.  If you run more than one frontend
 (unicorn) process, you _must_ use memcached to store sessions, or else members
 will not be able to remain logged in.
 
-Optional (recommended) web socket server:
-
-    % cd ~/git/libertree-frontend-ramaze
-    % rvm use 2.0.0@libertree-frontend-ramaze
-    % LIBERTREE_ENV=production bundle exec ruby websocket-server.rb
-
 Note: to run processes in the background, add nohup and & to all the commands above, e.g.:
 
-    % LIBERTREE_ENV=production nohup bundle exec ruby websocket-server.rb &
+    % LIBERTREE_ENV=production nohup bundle exec unicorn -p 1234 &
 
 ## Maintenance
 
