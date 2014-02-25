@@ -91,29 +91,29 @@ describe Libertree::Server::Responder::Post do
                    { "match" => "(/posts/show/366",
                      "post" => {
                        "url" => "/posts/show/366",
-                       "id" => 366,
+                       "id" => "366",
                        "origin" => "some.remote.tree" }}
                  },
                  { 'reference' =>
                    { "match" => " /posts/show/366/128#comment-128",
                      "post" => {
                        "url" => "/posts/show/366",
-                       "id" => 365,
+                       "id" => "365",
                        "origin" => "some.remote.tree" },
                      "comment" => {
                        "url" => "/128#comment-128",
-                       "id" => 127,
+                       "id" => "127",
                        "origin" => "some.remote.tree" }}
                  },
                  { 'reference' =>
                    { "match" => "http://never-mind.org/posts/show/366/128",
                      "post" => {
                        "url" => "/posts/show/366",
-                       "id" => 365,
+                       "id" => "365",
                        "origin" => "some.remote.tree" },
                      "comment" => {
                        "url" => "/128",
-                       "id" => 127,
+                       "id" => "127",
                        "origin" => "some.remote.tree" }}
                  }]
 
