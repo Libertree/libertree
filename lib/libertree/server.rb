@@ -6,6 +6,8 @@ require 'yaml'
 require 'libertree/model'
 require 'libertree/server/responder'
 require 'libertree/server/relay'
+require 'libertree/server/websocket'
+
 
 module Libertree
   module Server
@@ -126,6 +128,7 @@ module Libertree
           EventMachine.run {
             Responder.run
             EventMachine.start_unix_domain_server socket, Relay
+            Websocket.run(@conf)
           }
         rescue Blather::Stream::ConnectionTimeout
           log_error "Connection to the XMPP server on #{host} timed out; retrying."
