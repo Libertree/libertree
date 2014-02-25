@@ -44,6 +44,13 @@ debug: false
 # Specify a pid_dir to have the process id written to a file in that dir.
 # pid_dir: /path/to/libertree-backend-rb/pids
 
+# websocket server settings
+websocket_listen_host: 0.0.0.0
+secure_websocket: false
+#websocket_ssl_cert: /path/to/cert
+#websocket_ssl_private_key: /path/to/private/key
+
+
 # What the system will use for sending email
 smtp:
   host: mail.example.org

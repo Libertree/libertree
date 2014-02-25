@@ -44,6 +44,9 @@ GEM
     connection_pool (1.1.0)
     debugger-ruby_core_source (1.2.0)
     diff-lcs (1.2.5)
+    em-websocket (0.5.0)
+      eventmachine (>= 0.12.9)
+      http_parser.rb (~> 0.5.3)
     eventmachine (1.0.3)
     factory_girl (4.3.0)
       activesupport (>= 3.0.0)
@@ -51,6 +54,7 @@ GEM
       connection_pool (~> 1.0)
       rubinius-actor
     gpgme (2.0.2)
+    http_parser.rb (0.5.3)
     i18n (0.6.9)
     json (1.8.1)
     mail (2.5.4)
@@ -109,6 +113,7 @@ PLATFORMS
 DEPENDENCIES
   bcrypt-ruby
   blather
+  em-websocket
   factory_girl
   json
   libertree-client!
