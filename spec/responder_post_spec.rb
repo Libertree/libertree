@@ -124,6 +124,29 @@ describe Libertree::Server::Responder::Post do
           'text'       => 'A test post.',
           'references' => refs,
         }
+
+        expect { subject.rsp_post(h) }.
+          not_to raise_error
+      end
+
+      it 'raises no errors with a single reference' do
+        ref = {
+          'reference' => {
+            "match" => "(/posts/show/366",
+            "post" => {
+              "url" => "/posts/show/366",
+              "id" => "366",
+              "origin" => "some.remote.tree" }}
+        }
+
+        h = {
+          'username'   => @member.username,
+          'id'         => 6,
+          'visibility' => 'forest',
+          'text'       => 'A test post.',
+          'references' => ref,
+        }
+
         expect { subject.rsp_post(h) }.
           not_to raise_error
       end

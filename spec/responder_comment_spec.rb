@@ -171,6 +171,28 @@ describe Libertree::Server::Responder::Comment do
           not_to raise_error
       end
 
+      it 'raises no errors with a single reference' do
+        refs = { 'reference' => {
+            "match" => "(/posts/show/366",
+            "post" => {
+              "url" => "/posts/show/366",
+              "id" => "366",
+              "origin" => "some.remote.tree" }
+          }
+        }
+
+        h = {
+          'id'       => 999,
+          'username' => @member.username,
+          'origin'   => @post.member.server.domain,
+          'post_id'  => @post.remote_id,
+          'text'     => 'A test comment.',
+          'references' => refs,
+        }
+        expect { subject.rsp_comment(h) }.
+          not_to raise_error
+      end
+
     end
   end
 end

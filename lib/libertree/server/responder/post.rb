@@ -15,7 +15,7 @@ module Libertree
             fail_if_nil member, "Unrecognized member username: #{params['username'].inspect}"
 
             if params.has_key? 'references'
-              refs = params['references'].map {|r| r['reference']}
+              refs = [params['references']].flatten.map {|r| r['reference']}
               post_text = Libertree::References::replace(params['text'], refs, @remote_tree.id, Server.conf['domain'])
             else
               post_text = params['text']
