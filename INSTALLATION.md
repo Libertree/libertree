@@ -176,7 +176,7 @@ As the libertree user:
     % ${EDITOR} config.yaml
 
 Change every setting in the config.yaml file, providing values appropriate for
-the installation.  The "forest" setting can be left alone to start with.
+the installation.
 
 Run the test suite:
 
