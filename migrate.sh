@@ -72,6 +72,15 @@ function apply_migrations
 
 function load_functions
 {
+  # drop all existing triggers, because they might depend on functions
+  # that are to be dropped
+  while read pair; do
+    local trigger=$( echo "$pair" | cut -d'|' -f1)
+    local table=$( echo "$pair" | cut -d'|' -f2)
+    echo "Dropping trigger $trigger ON table $table"
+    execute "DROP TRIGGER IF EXISTS $trigger ON $table"
+  done < <(execute "SELECT trigger_name, event_object_table FROM information_schema.triggers;")
+
   # drop all existing user functions
   while read func; do
     echo "Dropping function $func"
