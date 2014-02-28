@@ -64,31 +64,15 @@ If you don't trust the installer, please follow the instructions below.
 
 ### Ruby
 
-Libertree uses the system Ruby package per default. If for some reason you do not wish to use the system package, a Ruby version manager can be used instead, such as
-[RVM](https://rvm.io/) or
+Libertree uses the system Ruby package per default. If for some reason
+you do not wish to use the system package, a Ruby version manager can
+be used instead, such as [RVM](https://rvm.io/) or
 [rbenv](https://github.com/sstephenson/rbenv).
 
-#### Using the system Ruby
-
-To keep the gems used by Libertree separate from other gems that may be installed
-on your system, it is recommended to use [Bundler](http://gembundler.com/).
-
-
-#### RVM
-
-Install RVM using the installation instructions found on
-[the RVM website](https://rvm.io/) (one simple line at the time
-of this writing).
-
-Once RVM is installed (including configuration of your shell startup script),
-install Ruby 2.0 as follows:
-
-    % rvm install 2.0.0
-
 There are Gemfile files in the repositories.  These are used by
-[Bundler](http://gembundler.com/) to install and manage Ruby gems (Ruby
-libraries).  Use of Bundler is optional; the required gems can be managed in
-other ways, if desired.
+[Bundler](http://gembundler.com/) to install and manage Ruby gems
+(Ruby libraries).  Use of Bundler is optional; the required gems can
+be managed in other ways, if desired.
 
 ### System user
 
@@ -164,7 +148,6 @@ After your first account is created (later, once all the daemons are running
 As the libertree user:
 
     % cd ~/git/libertree-backend-rb
-    % rvm use --create 2.0.0@libertree-backend-rb
     % gem install bundler
     % bundle install
     % ./generate-key-pair.sh
@@ -186,7 +169,6 @@ worked out.
 As the libertree user:
 
     % cd ~/git/libertree-frontend-ramaze
-    % rvm use --create 2.0.0@libertree-frontend-ramaze
     % gem install bundler
     % bundle install
     % cd config
