@@ -26,7 +26,12 @@ module Libertree
         end
 
         EventMachine::WebSocket.run(config) {|ws| self.server(ws)}
-        self.monitor_changes
+        [:notifications, :chat_messages, :comments].each do |channel|
+          EventMachine.defer do
+            Libertree::DB.dbh.listen(channel, :loop => true) {|channel| self.handle(channel)}
+          end
+        end
+        self.heartbeat
       end
 
       def self.server(ws)
@@ -86,98 +91,100 @@ module Libertree
         }
       end
 
-      def self.monitor_changes
-        EventMachine.add_periodic_timer(2) do
+      def self.heartbeat
+        EventMachine.add_periodic_timer(1) do
           $sessions.each do |sid,session_data|
             session_data[:sockets].each do |ws,socket_data|
-              account = session_data[:account]
-              account.dirty
 
-              # Heartbeat every 60 seconds
-              if Time.now.strftime("%S") =~ /[0][01]/
-                ws.send(
-                  {
-                    'command'   => 'heartbeat',
-                    'timestamp' => Time.now.strftime('%H:%M:%S'),
-                  }.to_json
-                )
-              end
+              ws.send({ 'command'   => 'heartbeat',
+                        'timestamp' => Time.now.strftime('%H:%M:%S'),
+                      }.to_json)
+            end
+          end
+        end
+      end
 
-              # TODO: This is disabled until it is debugged.  Too many false positives.
+      def self.handle(channel)
+        case channel
+        when 'notifications'
+          self.handle_notifications
+        when 'chat_messages'
+          self.handle_chat_messages
+        when 'comments'
+          self.handle_comments
+        else
+          $stderr.puts "No handler for channel: #{channel}"
+        end
+      end
 
-              # # TODO: The first new post since websocket server start is missed
-              # # TODO: The new post text is never updated when it is once set.
-              # #       When at first only one new post is detected, but on the
-              # #       next iteration 100 new posts are discovered, the hint will
-              # #       still say "1 new post".
-              # account.rivers_not_appended.each do |river|
-                # posts = Libertree::Model::Post.
-                  # s("SELECT p.* FROM posts p, river_posts rp WHERE rp.river_id = ? AND p.id = rp.post_id AND p.id > ?",
-                   # river.id,
-                   # socket_data[:last_post_id][river.id])
-                # num_posts = posts.count
-                # if num_posts > 0
-                  # post_ids = posts.map(&:id)
-                  # ws.send(
-                    # {
-                      # 'command' => 'river-posts',
-                      # 'riverId' => river.id,
-                      # 'postIds' => post_ids,
-                      # # TODO: i18n
-                      # 'newPostsMessage' => "#{num_posts} new post#{num_posts == 1 ? '' : 's'}",
-                    # }.to_json
-                  # )
-                  # socket_data[:last_post_id][river.id] = post_ids.max
-                # end
-              # end
+      def self.handle_notifications
+        $sessions.each do |sid,session_data|
+          session_data[:sockets].each do |ws,socket_data|
+            account = session_data[:account]
+            account.dirty
 
-              notifs = Libertree::Model::Notification.s(
-                "SELECT * FROM notifications WHERE id > ? AND account_id = ? ORDER BY id LIMIT 1",
-                socket_data[:last_notification_id],
-                account.id
+            notifs = Libertree::Model::Notification.s(
+              "SELECT * FROM notifications WHERE id > ? AND account_id = ? ORDER BY id LIMIT 1",
+              socket_data[:last_notification_id],
+              account.id
+            )
+            notifs.each do |n|
+              ws.send({ 'command' => 'notification',
+                        'id' => n.id,
+                        'n' => account.num_notifications_unseen
+                      }.to_json)
+              socket_data[:last_notification_id] = n.id
+            end
+          end
+        end
+      end
+
+      def self.handle_chat_messages
+        $sessions.each do |sid,session_data|
+          session_data[:sockets].each do |ws,socket_data|
+            account = session_data[:account]
+            account.dirty
+
+            chat_messages = Libertree::Model::ChatMessage.s(
+              "SELECT * FROM chat_messages WHERE id > ? AND ( to_member_id = ? OR from_member_id = ? ) ORDER BY id",
+              socket_data[:last_chat_message_id],
+              account.member.id,
+              account.member.id
+            )
+
+            chat_messages.each do |cm|
+              partner = cm.partner_for(account)
+              ws.send(
+                {
+                  'command'             => 'chat-message',
+                  'id'                  => cm.id,
+                  'partnerMemberId'     => partner.id,
+                  'numUnseen'           => account.num_chat_unseen,
+                  'numUnseenForPartner' => account.num_chat_unseen_from_partner(partner),
+                }.to_json
               )
-              notifs.each do |n|
-                ws.send(
-                  {
-                    'command' => 'notification',
-                    'id' => n.id,
-                    'n' => account.num_notifications_unseen
-                  }.to_json
-                )
-                socket_data[:last_notification_id] = n.id
-              end
+              socket_data[:last_chat_message_id] = cm.id
+            end
+          end
+        end
+      end
 
-              comments = Libertree::Model::Comment.comments_since_id( socket_data[:last_comment_id] )
-              comments.each do |c|
-                ws.send(
-                  {
-                    'command'   => 'comment',
-                    'commentId' => c.id,
-                    'postId'    => c.post.id,
-                  }.to_json
-                )
-                socket_data[:last_comment_id] = c.id
-              end
+      def self.handle_comments
+        $sessions.each do |sid,session_data|
+          session_data[:sockets].each do |ws,socket_data|
+            account = session_data[:account]
+            account.dirty
 
-              chat_messages = Libertree::Model::ChatMessage.s(
-                "SELECT * FROM chat_messages WHERE id > ? AND ( to_member_id = ? OR from_member_id = ? ) ORDER BY id",
-                socket_data[:last_chat_message_id],
-                account.member.id,
-                account.member.id
+            comments = Libertree::Model::Comment.comments_since_id( socket_data[:last_comment_id] )
+            comments.each do |c|
+              ws.send(
+                {
+                  'command'   => 'comment',
+                  'commentId' => c.id,
+                  'postId'    => c.post.id,
+                }.to_json
               )
-              chat_messages.each do |cm|
-                partner = cm.partner_for(account)
-                ws.send(
-                  {
-                    'command'             => 'chat-message',
-                    'id'                  => cm.id,
-                    'partnerMemberId'     => partner.id,
-                    'numUnseen'           => account.num_chat_unseen,
-                    'numUnseenForPartner' => account.num_chat_unseen_from_partner(partner),
-                  }.to_json
-                )
-                socket_data[:last_chat_message_id] = cm.id
-              end
+              socket_data[:last_comment_id] = c.id
             end
           end
         end
