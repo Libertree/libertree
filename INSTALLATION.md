@@ -37,10 +37,31 @@ The following components are runtime dependencies:
 * an XMPP server (such as Prosody or ejabberd)
 
 
+### Database configuration
+
+To simplify database administration, it is recommended to configure
+PostgreSQL to trust local connections.  Please confirm that the
+configuration file \`pg_hba.conf' contains the following lines:
+
+    local  all  all       trust
+    local  all  postgres  trust
+
+If you see 'peer', 'ident', or 'md5' instead of 'trust', please change
+the lines and reload the PostgreSQL server configuration (or restart
+the postgresql daemon).  While this change is not required, it is
+highly recommended because authentication often gets in the way.
+
+Common locations of the pg_hba.conf file are:
+
+* Debian & Ubuntu Server: /etc/postgresql/9.1/main/pg_hba.conf
+
+* Fedora: /var/lib/pgsql/data/pg_hba.conf
+
+Start up the PostgreSQL server daemon before attempting the
+installation.
 
 
-
-
+### Optional dependencies
 
 If a web server proxy will be used (recommended), install it as well.  This
 could be Apache, or Nginx, or anything equivalent.  Under Gentoo:
