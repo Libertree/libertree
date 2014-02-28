@@ -29,15 +29,13 @@ least 384 MB of RAM.
 It is assumed that certain core packages are already on the system, including
 OpenSSL and a shell (bash, zsh, etc.).
 
-Install the required system packages:
+The following components are runtime dependencies:
 
 * PostgreSQL 8 or 9
 * GraphicsMagick (or ImageMagick)
-* git
-* Ruby >= 1.9 (unless RVM is used)
+* Ruby >= 1.9
+* an XMPP server (such as Prosody or ejabberd)
 
-Check the /packages directory to see if there is a meta-package for you system
-to install the dependencies through your package manager.
 
 
 
