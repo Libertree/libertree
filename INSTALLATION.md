@@ -39,14 +39,9 @@ Install the required system packages:
 Check the /packages directory to see if there is a meta-package for you system
 to install the dependencies through your package manager.
 
-Under Gentoo Linux, this is done with this command as the root user:
 
-    # emerge -1atv postgresql-server graphicsmagick git
 
-Configure PostgreSQL as desired.  The defaults should work, though.
-Start up the PostgreSQL server.  Under Gentoo:
 
-    # /etc/init.d/postgresql-9.1 start
 
 On Debian and Ubuntu, you will likely also need to install the development
 package, libpq-dev, or the Ruby 'pg' gem may fail to install.
