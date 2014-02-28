@@ -10,12 +10,15 @@ used instead to achieve a full, functional Libertree installation.
 
 ## Using the installer script
 
-We provide an experimental installer script that sets up Libertree according to
-the following instructions. To use the installer, [download the latest
-version](https://github.com/Libertree/libertree/archive/master.zip) of this
-repository, unpack it and then run `./install` in the `installer` subdirectory.
+We provide an installer script that sets up Libertree according to the
+following instructions. To use the installer,
+[download the latest version](https://github.com/Libertree/libertree/archive/master.zip)
+of this repository, unpack it and then run `./install` in the
+`installer` subdirectory.  The installer is well-behaved and asks for
+your permission at every important step.
 
-If you don't trust the installer, please follow the instructions below.
+If you are an expert system administrator and don't want to use the
+installer, the instructions below are for you.
 
 
 ## System
