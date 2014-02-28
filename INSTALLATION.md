@@ -41,8 +41,6 @@ The following components are runtime dependencies:
 
 
 
-On Debian and Ubuntu, you will likely also need to install the development
-package, libpq-dev, or the Ruby 'pg' gem may fail to install.
 
 If a web server proxy will be used (recommended), install it as well.  This
 could be Apache, or Nginx, or anything equivalent.  Under Gentoo:
@@ -59,7 +57,7 @@ Note that it _is_ required if you intend to run more than one frontend process.
 
 
 
-### Ruby
+### Ruby dependencies
 
 Libertree uses the system Ruby package per default. If for some reason
 you do not wish to use the system package, a Ruby version manager can
@@ -70,6 +68,11 @@ There are Gemfile files in the repositories.  These are used by
 [Bundler](http://gembundler.com/) to install and manage Ruby gems
 (Ruby libraries).  Use of Bundler is optional; the required gems can
 be managed in other ways, if desired.
+
+Some gems have extensions that are compiled at installation time.
+Compilation will abort if certain development headers or development
+tools are missing.
+
 
 ### System user
 
