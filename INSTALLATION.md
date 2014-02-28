@@ -185,6 +185,26 @@ Run the test suite:
 If the suite does not pass, the installation has some issues that need to be
 worked out.
 
+### Connecting Libertree to a local XMPP server
+
+The Libertree backend is designed as an XMPP server component and
+should work with any popular XMPP server implementation.  To add
+Libertree services to your XMPP server refer to the section about
+server components in your XMPP server's documentation.  Make sure that
+the component secret and domain in the backend configuration file
+match the values specified in your XMPP server's component
+configuration.
+
+Remember to change the component secret from "secret" to something
+else.
+
+This is an example component configuration for Prosody:
+
+    Component "libertree.myserver.net"
+    	component_secret = "the-component-secret"
+
+
+
 ## Frontend
 
 As the libertree user:
