@@ -92,7 +92,7 @@ module Libertree
       end
 
       def self.heartbeat
-        EventMachine.add_periodic_timer(1) do
+        EventMachine.add_periodic_timer(60) do
           $sessions.each do |sid,session_data|
             session_data[:sockets].each do |ws,socket_data|
 
