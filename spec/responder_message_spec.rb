@@ -142,6 +142,19 @@ describe Libertree::Server::Responder::Message do
           expect { subject.rsp_message(h) }.
             not_to raise_error
         end
+
+        it 'with a single recipient it responds with OK' do
+          h = {
+            'username' => @member.username,
+            'recipients' => {
+              'username' => @member_remote.username,
+              'origin'   => @member_remote.server.domain,
+            },
+            'text' => 'a direct message',
+          }
+          expect { subject.rsp_message(h) }.
+            not_to raise_error
+        end
       end
     end
   end
