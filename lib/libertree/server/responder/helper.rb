@@ -7,7 +7,7 @@ module Libertree
         # (opts[:to]) and sends out the reply stanza.
         def respond(opts)
           stanza = opts[:to]
-          response = stanza.reply
+          response = stanza.reply!
           if opts[:with]
             # we cannot use Array() here because it results in an empty
             # array when only one fragment is given
@@ -16,8 +16,8 @@ module Libertree
               response.add_child child
             end
 
-            if fragments[0].node_name == "error"
-              response.type = :error
+            if opts[:type]
+              response.type = opts[:type]
             end
           end
 

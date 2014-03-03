@@ -67,6 +67,7 @@ describe Libertree::Server::Gateway do
       }.doc.root
 
       expect( @client ).to receive(:write) do |stanza|
+        expect( stanza.type ).to eq(:error)
         expect( stanza.xpath('.//error') ).not_to be_empty
       end
       @client.handle_data msg
@@ -86,6 +87,7 @@ describe Libertree::Server::Gateway do
       }.doc.root
 
       expect( @client ).to receive(:write) do |stanza|
+        expect( stanza.type ).to eq(:error)
         expect( stanza.xpath('.//error') ).not_to be_empty
       end
       @client.handle_data msg

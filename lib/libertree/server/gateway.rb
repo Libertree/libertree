@@ -58,14 +58,13 @@ module Libertree
         unregister = ! stanza.xpath('.//ns:remove', :ns => ns).empty?
 
         error = Nokogiri::XML.fragment(%{<error code='406' type='modify'>
-                                           <not-acceptable
-                                             xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/>
+                                           <not-acceptable xmlns='urn:ietf:params:xml:ns:xmpp-stanzas'/>
                                          </error>})
 
         if unregister
           self.register_remove(stanza)
         elsif [username_node, password_node].any?(&:empty?)
-          respond to: stanza, with: [error, stanza]
+          respond to: stanza, with: [error, stanza.children.first], type: :error
         else
           account = Libertree::Model::Account.authenticate({
             'username' => username_node.text,
@@ -82,11 +81,11 @@ module Libertree
               @client.write Blather::Stanza::Presence::Subscription.
                 new(stanza.from, :subscribe)
             rescue StandardError => e
-              respond to: stanza, with: [error, stanza]
+              respond to: stanza, with: [error, stanza.children.first], type: :error
             end
           else
             # failure
-            respond to: stanza, with: [error, stanza]
+            respond to: stanza, with: [error, stanza.children.first], type: :error
           end
         end
       end
