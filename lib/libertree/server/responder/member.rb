@@ -31,6 +31,10 @@ module Libertree
               end
             end
 
+            if params['gateway_jid']
+              member.gateway_jid = params['gateway_jid']
+            end
+
             # fetch avatar asynchronously
             if params['avatar_url']
               URI.parse(params['avatar_url'])

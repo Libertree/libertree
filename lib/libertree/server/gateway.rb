@@ -75,6 +75,9 @@ module Libertree
             begin
               account.gateway_jid = stanza.from.to_s
               account.save
+              # distribute member record with gateway_jid
+              account.member.gateway_jid = account.gateway_jid
+              account.member.save
               @client.write stanza.reply!
 
               # subscribe to user presence

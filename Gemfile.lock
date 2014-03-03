@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/Libertree/libertree-client-rb.git
-  revision: d7bca4ac1752a1d7670470aba6f0e89e300a6e5b
+  revision: 2ef50e76de1a893cebba2c665632fb3046fa0534
   specs:
     libertree-client (0.0.2)
 
