@@ -279,6 +279,7 @@ module Libertree
         x.member {
           x.username  member.username
           x.avatar_url  "#{@frontend_url_base}#{member.avatar_path}"  if member.avatar_path
+          x.gateway_jid  member.account.gateway_jid  if member.account.gateway_jid
           x.profile {
             x.name_display  member.profile.name_display
             x.description   member.profile.description
