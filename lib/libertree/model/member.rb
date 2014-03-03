@@ -4,33 +4,12 @@ module Libertree
 
       def after_create
         super
-        if self.local?
-          Libertree::Model::Job.create_for_forests(
-            {
-              task: 'request:MEMBER',
-              params: {
-                'username' => self.account.username,
-                'avatar_url' => self.avatar_path
-              }
-            }
-          )
-        end
+        self.distribute
       end
 
-      # TODO: merge with after_create
       def after_update
         super
-        if self.local?
-          Libertree::Model::Job.create_for_forests(
-            {
-              task: 'request:MEMBER',
-              params: {
-                'username' => self.account.username,
-                'avatar_url' => self.avatar_path
-              }
-            }
-          )
-        end
+        self.distribute
       end
 
       def before_destroy
@@ -48,6 +27,15 @@ module Libertree
           )
         end
         super
+      end
+
+      def distribute
+        return  if ! self.local?
+        Libertree::Model::Job.create_for_forests(
+          { task: 'request:MEMBER',
+            params: { 'username' => self.account.username }
+          }
+        )
       end
 
       def local?
