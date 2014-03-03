@@ -1,6 +1,24 @@
 module Libertree
   module Model
     class ChatMessage < Sequel::Model(:chat_messages)
+      def after_create
+        super
+        self.distribute
+      end
+
+      def distribute
+        return  if ! self.recipient.tree
+        Libertree::Model::Job.create(
+          {
+            task: 'request:CHAT',
+            params: {
+              'chat_message_id' => self.id,
+              'server_id'       => self.recipient.tree.id,
+            }.to_json,
+          }
+        )
+      end
+
       def sender
         @sender ||= Member[self.from_member_id]
       end

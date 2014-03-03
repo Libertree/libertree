@@ -6,6 +6,29 @@ module Libertree
       end
       alias :member :sender
 
+      def distribute
+        trees = self.recipients.reduce(Set.new) { |_trees, recipient|
+          if recipient.tree
+            _trees << recipient.tree
+          end
+          _trees
+        }
+        recipient_ids = self.recipients.map(&:id)
+
+        trees.each do |tree|
+          Libertree::Model::Job.create(
+            {
+              task: 'request:MESSAGE',
+              params: {
+                'message_id'           => self.id,
+                'server_id'            => tree.id,
+                'recipient_member_ids' => recipient_ids,
+              }.to_json,
+            }
+          )
+        end
+      end
+
       def recipients
         return @recipients  if @recipients
         @recipients = Member.s(
@@ -40,6 +63,7 @@ module Libertree
           sender_member_id: args[:sender_member_id],
           text: args[:text]
         )
+        message.distribute
 
         sender_member = Model::Member[ args[:sender_member_id].to_i ]
 
