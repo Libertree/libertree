@@ -27,6 +27,15 @@ module Libertree
           @client.write response
         end
 
+        def with_account(stanza, &blk)
+          account = Libertree::Model::Account[ gateway_jid: stanza.from.stripped.to_s ]
+          if account
+            yield(account, stanza)
+          else
+            throw :pass
+          end
+        end
+
         # Generates an error XML fragment given an optional
         # error code and an optional error message
         def error(opts={ code: 'ERROR' })
