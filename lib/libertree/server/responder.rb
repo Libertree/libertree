@@ -12,6 +12,7 @@ require 'libertree/server/responder/post'
 require 'libertree/server/responder/post-like'
 
 require 'libertree/server/gateway'
+require 'libertree/server/api'
 
 module Libertree
   module Server
@@ -33,6 +34,7 @@ module Libertree
       # set @client for the `respond` helper method
       @client = client
       Gateway.init(client)
+      Api.init(client)
 
       when_ready {
         puts "\nLibertree started."
