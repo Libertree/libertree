@@ -26,7 +26,7 @@ module Libertree
       # XEP-0100: Gateway Interaction
       def self.register_query(stanza)
         if stanza.from
-          account = Libertree::Model::Account[ gateway_jid: stanza.from.to_s ]
+          account = Libertree::Model::Account[ gateway_jid: stanza.from.stripped.to_s ]
         end
 
         # if the JID is already registered, respond with record info
@@ -73,7 +73,7 @@ module Libertree
           if account
             # success!  Try to register jid with account
             begin
-              account.gateway_jid = stanza.from.to_s
+              account.gateway_jid = stanza.from.stripped.to_s
               account.save
               # distribute member record with gateway_jid
               account.member.gateway_jid = account.gateway_jid
@@ -82,7 +82,7 @@ module Libertree
 
               # subscribe to user presence
               @client.write Blather::Stanza::Presence::Subscription.
-                new(stanza.from, :subscribe)
+                new(stanza.from.stripped, :subscribe)
             rescue StandardError => e
               respond to: stanza, with: [error, stanza.children.first], type: :error
             end
@@ -94,7 +94,7 @@ module Libertree
       end
 
       def self.register_remove(stanza)
-        account = Libertree::Model::Account[ gateway_jid: stanza.from.to_s ]
+        account = Libertree::Model::Account[ gateway_jid: stanza.from.stripped.to_s ]
         if account
           account.gateway_jid = nil
           account.save
@@ -103,16 +103,16 @@ module Libertree
 
         [ 'unsubscribe', 'unsubscribed', 'unavailable' ].each do |type|
           p = Blather::Stanza::Presence::Subscription.new(stanza.to, type)
-          p.from = stanza.from
+          p.from = stanza.from.stripped
           @client.write p
         end
       end
 
       def self.log_out(stanza)
-        account = Libertree::Model::Account[ gateway_jid: stanza.from.to_s ]
+        account = Libertree::Model::Account[ gateway_jid: stanza.from.stripped.to_s ]
         if account
           # TODO: forward "unavailable" presence to all Libertree contacts
-          p = Blather::Stanza::Presence::Subscription.new(stanza.from, :unavailable)
+          p = Blather::Stanza::Presence::Subscription.new(stanza.from.stripped, :unavailable)
           @client.write p
         end
       end
@@ -134,7 +134,7 @@ module Libertree
         # only approve subscription requests from users that are
         # already registered with the gateway
         client.register_handler :subscription, :request? do |subscription|
-          account = Libertree::Model::Account[ gateway_jid: subscription.from.to_s ]
+          account = Libertree::Model::Account[ gateway_jid: subscription.from.stripped.to_s ]
           if account
             # TODO: register subscription somewhere...
             @client.write subscription.approve!
@@ -148,8 +148,7 @@ module Libertree
         end
 
         client.register_handler :presence do |stanza|
-          account = Libertree::Model::Account[ gateway_jid: stanza.from.to_s ]
-          if account
+          with_account(stanza) do
             @client.write stanza.reply!
             # TODO: If this is directed presence, report presence of
             # Libertree user, if subscribed to that user.
