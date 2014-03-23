@@ -159,6 +159,12 @@ CREATE OR REPLACE FUNCTION delete_cascade_river(river_id INTEGER) RETURNS void A
     DELETE FROM rivers WHERE id = $1;
 $$ LANGUAGE SQL;
 
+CREATE OR REPLACE FUNCTION delete_cascade_message(message_id INTEGER) RETURNS void AS $$
+    DELETE FROM message_recipients
+           WHERE message_id = $1;
+    DELETE FROM messages WHERE id = $1;
+$$ LANGUAGE SQL;
+
 CREATE OR REPLACE FUNCTION delete_cascade_member(member_id INTEGER) RETURNS void AS $$
     SELECT delete_cascade_pool(p.id)
            FROM pools p WHERE p.member_id = $1;
