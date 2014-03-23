@@ -46,6 +46,46 @@ module Libertree
         )
       end
 
+      # the subset of participants who have not deleted the message
+      def active_local_participants
+        recipients = Member.s(%{SELECT DISTINCT m.* FROM members m
+                                JOIN accounts a ON (a.id = m.account_id)
+                                JOIN message_recipients mr ON (m.id = mr.member_id)
+                                WHERE mr.message_id = ?
+                                AND NOT mr.deleted
+                               }, self.id)
+        if ! self.deleted && self.sender.local?
+          ( recipients + [self.sender] ).uniq
+        else
+          recipients
+        end
+      end
+
+      def delete_for_participant(local_member)
+        # Delete the message for the local participant only, i.e. by
+        # removing the assignment.  If this is the last local
+        # participant, delete the whole message.  Note that other
+        # recipients / the sender will not see a change in the number
+        # of recipients when one of the recipients "deletes" their
+        # "copy" of the Message
+        participants = active_local_participants
+
+        # not authorised to delete
+        return  if participants.empty?
+
+        if participants == [local_member]
+          # This is the only member interested in this message; delete it completely.
+          self.delete_cascade
+        elsif local_member == self.sender
+          self.deleted = true
+          self.save
+        else
+          # there are other local members with a pointer to the message. Only mark this recipient.
+          DB.dbh[ "UPDATE message_recipients SET deleted=true WHERE message_id = ? AND member_id = ?",
+                  self.id, local_member.id ].get
+        end
+      end
+
       def visible_to?(account)
         self.sender == account.member || recipients.include?(account.member)
       end
@@ -91,6 +131,10 @@ module Libertree
         end
 
         message
+      end
+
+      def delete_cascade
+        DB.dbh[ "SELECT delete_cascade_message(?)", self.id ].get
       end
 
       def to_hash
