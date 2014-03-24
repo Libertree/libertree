@@ -76,14 +76,17 @@ module Libertree
         if participants == [local_member]
           # This is the only member interested in this message; delete it completely.
           self.delete_cascade
-        elsif local_member == self.sender
-          self.deleted = true
-          self.save
         else
-          # there are other local members with a pointer to the message. Only mark this recipient.
+          # there are other local members with a pointer to the
+          # message. Only mark as deleted for this recipient.
           DB.dbh[ "UPDATE message_recipients SET deleted=true WHERE message_id = ? AND member_id = ?",
                   self.id, local_member.id ].get
+          if local_member == self.sender
+            self.deleted = true
+            self.save
+          end
         end
+        return true
       end
 
       def visible_to?(account)

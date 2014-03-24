@@ -34,6 +34,11 @@ describe Libertree::Model::Message do
                                :recipient_member_ids => [@member.id],
                                :text => 'dupe'
                              })
+    @message_self2 = Libertree::Model::Message.
+      create_with_recipients({ :sender_member_id => @member.id,
+                               :recipient_member_ids => [@member.id, @local_member.id],
+                               :text => 'dupe'
+                             })
   end
 
   describe 'active_local_recipients' do
@@ -59,6 +64,13 @@ describe Libertree::Model::Message do
       expect( @message_remote ).to receive(:delete_cascade)
       @message_remote.delete_for_participant(@member)
       @message_remote.delete_for_participant(@local_member)
+    end
+
+    it 'marks the message as deleted for a given recipient (even if it is the same as the sender)' do
+      @message_self2.delete_for_participant(@member)
+      deleted = Libertree::DB.dbh[ "SELECT deleted FROM message_recipients WHERE message_id = ? AND member_id = ?",
+                                 @message_self2.id, @member.id ].single_value
+      expect( deleted ).to be_true
     end
   end
 end
