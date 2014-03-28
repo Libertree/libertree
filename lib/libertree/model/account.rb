@@ -1,9 +1,14 @@
 require 'bcrypt'
+require 'net/ldap'
 require 'securerandom'
 
 module Libertree
   module Model
     class Account < Sequel::Model(:accounts)
+      def self.set_auth_settings(type, settings)
+        @@auth_type = type
+        @@auth_settings = settings
+      end
 
       # These two password methods provide a seamless interface to the BCrypted
       # password.  The pseudo-field "password" can be treated like a normal
@@ -20,6 +25,17 @@ module Libertree
       # Used by Ramaze::Helper::UserHelper.
       # @return [Account] authenticated account, or nil on failure to authenticate
       def self.authenticate(creds)
+        return  if creds['username'].nil? || creds['password'].nil?
+        if @@auth_type == :ldap
+          self.authenticate_ldap(creds['username'].to_s,
+                                 creds['password'].to_s,
+                                 @@auth_settings)
+        else
+          self.authenticate_db(creds)
+        end
+      end
+
+      def self.authenticate_db(creds)
         if creds['password_reset_code'].to_s
           account = Account.where(%{password_reset_code = ? AND NOW() <= password_reset_expiry},
                                   creds['password_reset_code'].to_s).first
@@ -30,6 +46,56 @@ module Libertree
 
         account = Account[ username: creds['username'].to_s ]
         if account && account.password == creds['password'].to_s
+          account
+        end
+      end
+
+      # Authenticates against LDAP.  On success returns the matching Libertree
+      # account or creates a new one.
+      # TODO: override email= and password= methods when LDAP is used
+      def self.authenticate_ldap(username, password, settings)
+        ldap_connection_settings = {
+          :host => settings['connection']['host'],
+          :port => settings['connection']['port'],
+          :base => settings['connection']['base'],
+          :auth => {
+            :method => :simple,
+            :username => settings['connection']['bind_dn'],
+            :password => settings['connection']['password']
+          }
+        }
+
+        @ldap ||= Net::LDAP.new(ldap_connection_settings)
+
+        mapping = settings['mapping'] || {
+          'username'     => 'uid',
+          'email'        => 'mail',
+          'display_name' => 'displayName'
+        }
+        username.downcase!
+        result = @ldap.bind_as(:filter => "(#{mapping['username']}=#{username})",
+                               :password => password)
+
+        if result
+          account = self[ username: username ]
+
+          if account
+            # update email address
+            account.email = result.first[mapping['email']].first
+            # update the password
+            account.password_encrypted = BCrypt::Password.create( password )
+            account.save
+          else
+            # No Libertree account exists for this authenticated LDAP
+            # user; create a new one.  We will set up the password even
+            # though it won't be used while LDAP authentication is
+            # enabled to make sure that the account will be protected if
+            # LDAP authentication is ever disabled.
+            account = self.create( username: username,
+                                   password_encrypted: BCrypt::Password.create( password ),
+                                   email: result.first[mapping['email']].first )
+          end
+
           account
         end
       end

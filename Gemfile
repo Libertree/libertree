@@ -3,6 +3,7 @@ gem 'sequel'
 gem 'pg'
 gem 'ruby-oembed'
 gem 'json'
+gem 'net-ldap'
 
 group 'extensions' do
   gem 'pg'
