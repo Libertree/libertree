@@ -80,9 +80,8 @@ module Libertree
           account = self[ username: username ]
 
           if account
-            # update email address
+            # update email address and password
             account.email = result.first[mapping['email']].first
-            # update the password
             account.password_encrypted = BCrypt::Password.create( password )
             account.save
           else
@@ -96,6 +95,8 @@ module Libertree
                                    email: result.first[mapping['email']].first )
           end
 
+          account.member.profile.name_display = result.first[mapping['display_name']].first
+          account.member.profile.save
           account
         end
       end
