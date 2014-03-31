@@ -1,6 +1,5 @@
 source 'http://rubygems.org'
 gem 'sequel'
-gem 'pg'
 gem 'ruby-oembed'
 gem 'json'
 gem 'net-ldap'
