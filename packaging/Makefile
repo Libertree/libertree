@@ -74,7 +74,7 @@ libertree-backend-$(VERSION_BACKEND).$(PKG_TYPE) : gems \
 		--version $(VERSION_BACKEND) \
 		--license AGPL3 \
 		-p $@ \
-		-C ../../libertree-backend-rb \
+		-C ../libertree-backend-rb \
 		--directories . \
 		-s dir -t $(PKG_TYPE) -n libertree-backend \
 		lib/ bin/server.rb bin/job-processor.rb generate-key-pair.sh \
@@ -112,8 +112,8 @@ gems_with_extensions : $(addprefix $(PKG_PREFIX)-,$(addsuffix .$(PKG_TYPE),bcryp
 
 # TODO: add libertree-client.gemspec as prerequisite?
 libertree-client-$(VERSION_CLIENT).gem :
-	cd ../../libertree-client-rb; gem build libertree-client.gemspec
-	mv $(addprefix ../../libertree-client-rb/,$@) .
+	cd ../libertree-client-rb; gem build libertree-client.gemspec
+	mv $(addprefix ../libertree-client-rb/,$@) .
 
 libertree-client-$(VERSION_CLIENT).$(PKG_TYPE) : libertree-client-$(VERSION_CLIENT).gem
 	$(call BUILDPKG, libertree-client-$(VERSION_CLIENT).gem, $(VERSION_CLIENT), $@, libertree-client)
@@ -121,8 +121,8 @@ libertree-client-$(VERSION_CLIENT).$(PKG_TYPE) : libertree-client-$(VERSION_CLIE
 # TODO: specify database.yaml.example as config file
 # TODO: share database.yaml with other packages?
 libertree-model-$(VERSION_MODEL).gem :
-	cd ../../libertree-model-rb; gem build libertree-model.gemspec
-	mv $(addprefix ../../libertree-model-rb/,$@) .
+	cd ../libertree-model-rb; gem build libertree-model.gemspec
+	mv $(addprefix ../libertree-model-rb/,$@) .
 
 libertree-model-$(VERSION_MODEL).$(PKG_TYPE) : libertree-model-$(VERSION_MODEL).gem
 	$(call BUILDPKG, libertree-model-$(VERSION_MODEL).gem, $(VERSION_MODEL), $@, libertree-model)
