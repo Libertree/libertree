@@ -1,0 +1,9 @@
+config.yaml
+public.key
+private.key
+*.log
+log
+pids
+database.yaml
+vendor/*
+.bundle/*
