@@ -26,14 +26,6 @@ MKPACKAGE = fpm -d ruby -d rubygems $(2) \
 		--gem-bin-path $(addprefix $(PREFIX_GEMS)/,bin) \
 		-s gem -t $(PKG_TYPE) $(addprefix $(GEMDIR)/,$(1))
 
-# Create a deb/rpm package from an unpacked ruby gem.
-# $(1) : ?
-# $(2) : ?
-# $(3) : optional deb/rpm dependencies for the built package
-WRAPGEMDIR = fpm -d ruby -d rubygems $(3) \
-		--prefix $(PREFIX_GEMS) \
-		-s dir -t $(PKG_TYPE) -n $(addprefix $(PKG_PREFIX)-,$(2)) $(addprefix $(GEMDIR)/,$(1))
-
 # Build a deb/rpm package from a libertree gem
 # Dependencies are set according to the gemspec file.
 # $(1) : gem file name
