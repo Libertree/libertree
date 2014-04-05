@@ -9,6 +9,7 @@ gem 'sequel'
 
 group 'libertree-model' do
   gem 'ruby-oembed'
+  gem 'net-ldap'
 end
 
 group 'extensions' do

@@ -6,10 +6,11 @@ GIT
 
 GIT
   remote: git://github.com/Libertree/libertree-model-rb.git
-  revision: c39fb3771a6e833a3fa87c987feee580c8fd4b97
+  revision: 29d31e3011d2fb6276bfa10fc059c2d0ccfbc109
   specs:
-    libertree-model (0.6.0)
+    libertree-model (0.7.0)
       bcrypt-ruby (= 3.0.1)
+      net-ldap (~> 0.5.1)
       nokogiri (~> 1.5)
       pg
       ruby-oembed (~> 0.8.8)
@@ -44,6 +45,7 @@ GEM
       mail (~> 2.5.3)
     mime-types (1.23)
     multi_json (1.7.6)
+    net-ldap (0.5.1)
     niceogiri (1.1.2)
       nokogiri (~> 1.5)
     nokogiri (1.5.9)
@@ -69,6 +71,7 @@ DEPENDENCIES
   libertree-model!
   mail
   mail-gpg
+  net-ldap
   pg
   ruby-oembed
   sequel
