@@ -70,7 +70,7 @@ dev_dependencies() {
           cat<<EOF
 To install the development dependencies, please first run
 
-    apt-get install gcc g++ make bzip2 ruby1.9-dev libpq-dev libglib2.0-dev libcurl-dev libmagic-dev libgpgme11-dev openssl-dev
+    apt-get install gcc g++ make bzip2 ruby-dev libpq-dev libglib2.0-dev libcurl-dev libmagic-dev libgpgme11-dev libssl-dev
 EOF
           ;;
       fedora)
