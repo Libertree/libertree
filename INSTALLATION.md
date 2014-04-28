@@ -70,11 +70,11 @@ could be Apache, or Nginx, or anything equivalent.  Under Gentoo:
     # # OR
     # emerge -1atv apache
 
-Usage of memcached is recommended, but not required:
+Usage of memcached is recommended for persistent user sessions, but
+not required.  (Note that it _is_ required if you intend to run more
+than one frontend process.)
 
     # emerge -1atv memcached
-
-Note that it _is_ required if you intend to run more than one frontend process.
 
 
 
