@@ -131,7 +131,11 @@ $(PKG_PREFIX)-nokogiri-1.5.9.$(PKG_TYPE) : | prepare
 
 # needs gpgme
 $(PKG_PREFIX)-gpgme-2.0.2.$(PKG_TYPE) : $(GEMDIR)/gpgme-2.0.2.gem
+ifeq ($(PKG_TYPE), rpm)
 	$(call MKPACKAGE, gpgme-2.0.2.gem, -p $@ -d gpgme)
+else
+	$(call MKPACKAGE, gpgme-2.0.2.gem, -p $@ -d libgpgme11)
+endif
 
 # TODO: does this depend on a system library?
 $(PKG_PREFIX)-bcrypt-ruby-3.0.1.$(PKG_TYPE) : | prepare
