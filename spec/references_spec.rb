@@ -2,7 +2,7 @@ require 'spec_helper'
 require_relative '../lib/libertree/references'
 
 describe Libertree::References do
-  before :each do
+  before :all do
     @server = Libertree::Model::Server.create( FactoryGirl.attributes_for(:server) )
     @member = Libertree::Model::Member.create(
       FactoryGirl.attributes_for(:member, :server_id => @server.id)
@@ -51,7 +51,7 @@ describe Libertree::References do
     end
 
     context 'with a local spring' do
-      before :each do
+      before :all do
         @pool = Libertree::Model::Pool.create(
           FactoryGirl.attributes_for(:pool, member_id: @member.id, sprung: true, name: "myspring")
         )

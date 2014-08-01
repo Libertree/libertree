@@ -3,7 +3,6 @@ require 'spec_helper'
 require 'libertree/client'
 
 describe Libertree::Server::Responder do
-  LSR = Libertree::Server::Responder
   helper_class = Class.new
   helper_class.class_eval {
     include Libertree::XML::Helper

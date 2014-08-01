@@ -12,7 +12,7 @@ module Libertree
             ]
             fail_if_nil sender_member, "Unrecognized member username: #{params['username'].inspect}"
 
-            recipients = [params['recipients']].flatten
+            recipients = [params['recipients']].flatten.map {|m| m['recipient']}
             members = recipients.reduce([]) { |ms, recipient|
               origin = Model::Server[ domain: recipient['origin'] ]
               if origin
@@ -30,26 +30,20 @@ module Libertree
             }
 
             member_ids = members.map(&:id)
+            if params['id']
+              remote_id = params['id'].to_i
+            end
+
             Libertree::Model::Message.create_with_recipients(
               sender_member_id: sender_member.id,
               text: params['text'],
+              remote_id: remote_id,
               recipient_member_ids: member_ids
             )
           rescue PGError => e
             fail InternalError, "Error in #{__method__}: #{e.message}", nil
           end
         end
-
-        # TODO
-        # def rsp_message_delete(params)
-          # require_parameters(params, 'id')
-
-          # begin
-            # # TODO
-          # rescue PGError => e
-            # fail InternalError, "Error in #{__method__}: #{e.message}", nil
-          # end
-        # end
       end
     end
   end

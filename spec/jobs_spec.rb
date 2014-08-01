@@ -5,7 +5,7 @@ require_relative '../lib/jobs'
 
 describe Jobs do
   LM = Libertree::Model
-  before :each do
+  before :all do
     @server = LM::Server.create( FactoryGirl.attributes_for(:server) )
     @server.domain = "here"
     @other_server = LM::Server.create( FactoryGirl.attributes_for(:server) )
@@ -28,7 +28,7 @@ describe Jobs do
     end
   end
 
-  describe Jobs::Email, "#perform" do
+  describe Jobs::Email::Simple, "#perform" do
     it 'sends an email' do
       Mail.defaults do
         delivery_method :test
@@ -37,11 +37,35 @@ describe Jobs do
       Mail::TestMailer.deliveries.clear
       Mail::TestMailer.deliveries.length.should == 0
 
-      Jobs::Email.from = "sender@localhost"
-      Jobs::Email.perform({ 'to'      => 'test@localhost',
-                            'subject' => 'testing',
-                            'body'    => 'this is a test' })
+      Jobs::Email::Simple.from = "sender@localhost"
+      Jobs::Email::Simple.perform({ 'to'      => 'test@localhost',
+                                    'subject' => 'testing',
+                                    'body'    => 'this is a test' })
       Mail::TestMailer.deliveries.length.should == 1
+    end
+  end
+
+  describe Jobs::Email::Forward, "#perform" do
+    before :all do
+      @account = LM::Account.create(username: "libertreejobs",
+                                    email: "email@localhost",
+                                    password_encrypted: BCrypt::Password.create("1234"))
+      @message = LM::Message.create(sender_member_id: @account.member.id, text: 'test')
+    end
+    it 'triggers Jobs::Email::Simple.perform' do
+      expect( Jobs::Email::Simple ).to receive(:perform)
+      Jobs::Email::Simple.stub(:perform)
+      Jobs::Email::Forward.perform({ 'username'   => @account.username,
+                                     'message_id' => @message.id })
+    end
+
+    it 'raises JobInvalid if there is no email address' do
+      @account.email = nil
+      @account.save
+      expect {
+        Jobs::Email::Forward.perform({ 'username'   => @account.username,
+                                       'message_id' => @message.id })
+      }.to raise_exception(Libertree::JobInvalid)
     end
   end
 

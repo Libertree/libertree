@@ -46,6 +46,7 @@ debug: false
 
 # websocket server settings
 websocket_listen_host: 0.0.0.0
+websocket_port: 8080
 secure_websocket: false
 #websocket_ssl_cert: /path/to/cert
 #websocket_ssl_private_key: /path/to/private/key
@@ -60,4 +61,5 @@ smtp:
   authentication: plain  # plain, login, cram_md5, or comment out for no auth
   helo_domain: localhost.localdomain
   starttls_auto: false
+  ssl: false
   from_address: 'exampleusername@example.org'

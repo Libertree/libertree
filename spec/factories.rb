@@ -48,4 +48,18 @@ FactoryGirl.define do
     sequence(:name) { |n| "Pool #{n}" }
     sequence(:remote_id, 1000)
   end
+
+  factory :node, :class => Libertree::Model::Node do
+    sequence(:address) { |n| "node-#{n}" }
+    access_model 'open'
+  end
+
+  factory :node_subscription, :class => Libertree::Model::NodeSubscription do
+    sequence(:sub_id) { |n| "sub-id-#{n}" }
+    state 'subscribed'
+  end
+
+  factory :node_affiliation, :class => Libertree::Model::NodeAffiliation do
+    affiliation 'member'
+  end
 end

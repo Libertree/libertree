@@ -1,19 +1,31 @@
 GIT
   remote: git://github.com/Libertree/libertree-client-rb.git
-  revision: 2ef50e76de1a893cebba2c665632fb3046fa0534
+  revision: c453364a5a64ebd685523efadbcb0630a489964c
   specs:
     libertree-client (0.0.2)
 
 GIT
   remote: git://github.com/Libertree/libertree-model-rb.git
-  revision: c39fb3771a6e833a3fa87c987feee580c8fd4b97
+  revision: f7cadc4afb7e3f1a5eea09c46938e27cbe5ec3a1
   specs:
-    libertree-model (0.6.0)
+    libertree-model (0.7.0)
       bcrypt-ruby (= 3.0.1)
+      net-ldap (~> 0.5.1)
       nokogiri (~> 1.5)
       pg
       ruby-oembed (~> 0.8.8)
       sequel
+
+GIT
+  remote: git://github.com/adhearsion/blather.git
+  revision: 50055bd2de7c7a21430910f00b17c18fa0a38176
+  specs:
+    blather (1.0.0)
+      activesupport (>= 2.3.11)
+      eventmachine (>= 1.0.0)
+      girl_friday
+      niceogiri (~> 1.0)
+      nokogiri (~> 1.5, >= 1.5.6)
 
 GIT
   remote: git://github.com/mark-moseley/linecache
@@ -34,14 +46,8 @@ GEM
     archive-tar-minitar (0.5.2)
     atomic (1.1.14)
     bcrypt-ruby (3.0.1)
-    blather (0.8.5)
-      activesupport (>= 2.3.11)
-      eventmachine (>= 1.0.0)
-      girl_friday
-      niceogiri (~> 1.0)
-      nokogiri (~> 1.5, >= 1.5.6)
     columnize (0.3.6)
-    connection_pool (1.1.0)
+    connection_pool (1.2.0)
     debugger-ruby_core_source (1.2.0)
     diff-lcs (1.2.5)
     em-websocket (0.5.0)
@@ -67,6 +73,7 @@ GEM
     mini_portile (0.5.2)
     minitest (4.7.5)
     multi_json (1.8.2)
+    net-ldap (0.5.1)
     niceogiri (1.1.2)
       nokogiri (~> 1.5)
     nokogiri (1.6.0)
@@ -112,7 +119,7 @@ PLATFORMS
 
 DEPENDENCIES
   bcrypt-ruby
-  blather
+  blather!
   em-websocket
   factory_girl
   json
