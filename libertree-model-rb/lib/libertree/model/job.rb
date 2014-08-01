@@ -43,8 +43,7 @@ module Libertree
 
       # @return [Job] nil if no job was reserved
       def self.reserve(tasks)
-        placeholders = ( ['?'] * tasks.count ).join(', ')
-        job = self.where("task IN (#{placeholders}) AND pid IS NULL AND tries < #{MAX_TRIES} AND time_to_start <= NOW()", *tasks).order(:time_to_start).limit(1).first
+        job = self.where("task IN ? AND pid IS NULL AND tries < #{MAX_TRIES} AND time_to_start <= NOW()", tasks).order(:time_to_start).limit(1).first
         return nil  if job.nil?
 
         self.where({ id: job.id, pid: nil }).

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 require 'spec_helper'
 
 describe Libertree::Model::River do
@@ -11,7 +12,14 @@ describe Libertree::Model::River do
       river = Libertree::Model::River.create(
         FactoryGirl.attributes_for( :river, label: query, query: query, account_id: @account.id )
       )
-      river.query_components.should == expected
+      expect( river.query_components.values.flatten ).to match_array(expected)
+    end
+
+    def test_exact( query, expected )
+      river = Libertree::Model::River.create(
+        FactoryGirl.attributes_for( :river, label: query, query: query, account_id: @account.id )
+      )
+      expect( river.query_components ).to eq(expected)
     end
 
     it "splits the text of the river's query along spaces into an Array of words" do
@@ -94,6 +102,14 @@ describe Libertree::Model::River do
       test_one  ':via "something or other"', [ ':via "something or other"', ]
       test_one  'foo :via "abcdef"', [ 'foo', ':via "abcdef"', ]
     end
+
+    it 'considers single word terms as static' do
+      test_exact 'foo bar baz', {:static => ['foo', 'bar', 'baz'], :dynamic => []}
+    end
+
+    it 'considers special terms as dynamic' do
+      test_exact 'foo bar baz :word-count > 10', {:static => ['foo', 'bar', 'baz'], :dynamic => [':word-count > 10']}
+    end
   end
 
   describe '#matches_post?' do
@@ -125,6 +141,15 @@ describe Libertree::Model::River do
     it 'only matches whole words' do
       try_one  'test', 'testing', false
       try_one  'test', 'It was tested.', false
+    end
+
+    it 'matches non-ASCII characters' do
+      try_one  '♲', '♲ Friendica reshare', true
+      try_one  '♲', 'This is a ♲ Friendica reshare', true
+      try_one  '♲', 'Friendica reshare', false
+      try_one  '-♲', '♲ Friendica reshare', false
+      try_one  '-♲', 'This is a ♲ Friendica reshare', false
+      try_one  '-♲', 'Friendica reshare', true
     end
 
     it 'avoids matching when a minus term matches' do

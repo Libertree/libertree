@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Libertree::Model::Comment do
-  before do
+  before :all do
     @account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
     @member = @account.member
     @post = Libertree::Model::Post.create(
@@ -17,7 +17,7 @@ describe Libertree::Model::Comment do
 
   describe '#glimpse' do
     context 'when the text is short' do
-      before :each do
+      before :all do
         new_comment 'Short text.'
       end
       it 'is all the text' do
@@ -26,7 +26,7 @@ describe Libertree::Model::Comment do
     end
 
     context 'when the text is long' do
-      before :each do
+      before :all do
         new_comment 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a diam lectus. Sed sit amet ipsum mauris. Maecenas congue ligula ac quam viverra nec consectetur ante hendrerit.'
       end
       it 'is only some of the beginning of the text' do
@@ -35,7 +35,7 @@ describe Libertree::Model::Comment do
     end
 
     context 'when the text has a quotation' do
-      before :each do
+      before :all do
         new_comment "> Here is a quote.\n\nHere is a reply."
       end
       it 'the quotation is not included' do
@@ -45,7 +45,7 @@ describe Libertree::Model::Comment do
   end
 
   describe '.search' do
-    before :each do
+    before :all do
       Libertree::DB.dbh.execute 'TRUNCATE comments CASCADE'
       @p1 = new_comment 'This is a test comment.'
       @p2 = new_comment 'This is also a test comment.'

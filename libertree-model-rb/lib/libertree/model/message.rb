@@ -1,6 +1,8 @@
 module Libertree
   module Model
     class Message < Sequel::Model(:messages)
+      include HasDisplayText
+
       def sender
         @sender ||= Member[self.sender_member_id]
       end
@@ -27,6 +29,20 @@ module Libertree
             }
           )
         end
+      end
+
+      # forward direct message to the given email address of the provided account
+      def forward_via_email(account)
+        return  unless account
+        return  unless self.visible_to?(account)
+
+        Libertree::Model::Job.create(
+          task: 'forward-via-email',
+          params: {
+            'username' => account.username,
+            'message_id' => self.id
+          }.to_json
+        )
       end
 
       def recipients
@@ -93,21 +109,12 @@ module Libertree
         self.sender == account.member || recipients.include?(account.member)
       end
 
-      def glimpse( length = 60 )
-        if self.text.length <= length
-          self.text
-        else
-          self.text[0...length] + '...'
-        end
-      end
-
       def self.create_with_recipients(args)
         message = self.create(
           sender_member_id: args[:sender_member_id],
+          remote_id: args[:remote_id],
           text: args[:text]
         )
-        message.distribute
-
         sender_member = Model::Member[ args[:sender_member_id].to_i ]
 
         recipient_member_ids = Array(args[:recipient_member_ids])
@@ -117,22 +124,12 @@ module Libertree
           if m.account
             a = m.account
             a.notify_about  'type' => 'message', 'message_id' => message.id
-
-            # forward via email for those local recipients who requested it
             if a.email && a.settings.forward_dms_via_email
-              Libertree::Model::Job.create(
-                task: 'email',
-                params: {
-                  'to'      => a.email,
-                  'pubkey'  => a.pubkey,
-                  'subject' => '[Libertree] Direct message', # TODO: translate
-                  'body'    => "#{sender_member.handle} wrote:\n\n#{args[:text]}"
-                }.to_json
-              )
+              message.forward_via_email(a)
             end
           end
         end
-
+        message.distribute  if sender_member.local?
         message
       end
 

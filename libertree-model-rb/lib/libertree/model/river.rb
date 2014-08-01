@@ -40,6 +40,8 @@ module Libertree
         visibility_pat = /([+-]?:visibility [a-z-]+)/
         word_count_pat = /([+-]?:word-count [<>] ?[0-9]+)/
         two_text_args_pat = /([+-]?:(?:spring) ".+?" ".+?")/
+        zero_text_args_pat = /([+-]?:(?:forest|tree|unread|liked|commented|subscribed))/
+        tag_pat = /([+-]?#\S+)/
         word_pat = /(\S+)/
 
         pattern = Regexp.union [ phrase_pat,
@@ -47,12 +49,59 @@ module Libertree
                                  visibility_pat,
                                  word_count_pat,
                                  two_text_args_pat,
+                                 zero_text_args_pat,
+                                 tag_pat,
                                  word_pat ]
 
-        @query_components ||= full_query.scan(pattern).map { |c|
-          c[5] || c[4] || c[3] || c[2] || c[1] || c[0].gsub(/^([+-])"/, "\\1").gsub(/^"|"$/, '')
-        }
+        if ! @query_components
+          # Collect static terms on a separate pile to leverage full text search.
+          # Static parts are phrases, individual words, or tags
+          # - phrases have a space character somewhere; they need to be searched with ILIKE
+          # - tags must begin with "#"; they must be searched on the tags field
+          # - all others are words; they are searched with tsvector queries
+          # At the moment only simple words are treated differently.
+          static  = []
+          dynamic = []
+
+          full_query.scan(pattern).each { |m|
+            # m[0] = match of phrase_pat
+            # m[6] = match of tag_pat
+            # m[7] = match of word_pat
+            static  << m[7]
+
+            # the gsub expression takes the phrase out of its quotes
+            phrase = m[0].gsub(/^([+-])"/, "\\1").gsub(/^"|"$/, '')  if m[0]
+            dynamic << (m[6] || m[5] || m[4] || m[3] || m[2] || m[1] || phrase)
+          }
+          @query_components = {
+            :static  => static.compact,
+            :dynamic => dynamic.compact
+          }
+        end
+
         @query_components.dup
+      end
+
+      def query_parts
+        if ! @query_parts
+          @query_parts = {
+            :static  => {:negations => [], :requirements => [], :regular => []},
+            :dynamic => {:negations => [], :requirements => [], :regular => []}
+          }
+
+          [:static, :dynamic].each do |group|
+            query_components[group].each { |term|
+              if term =~ /^-(.+)$/
+                @query_parts[group][:negations] << $1
+              elsif term =~ /^\+(.+)$/
+                @query_parts[group][:requirements] << $1
+              else
+                @query_parts[group][:regular] << term
+              end
+            }
+          end
+        end
+        @query_parts.dup
       end
 
       def term_matches_post?(term, post)
@@ -101,49 +150,49 @@ module Libertree
         end
       end
 
-      def matches_post?(post)
-        parts = {:negations => [], :requirements => [], :regular => []}
-        query_components.reduce(parts) { |acc,term|
-          if term =~ /^-(.+)$/
-            acc[:negations] << $1
-          elsif term =~ /^\+(.+)$/
-            acc[:requirements] << $1
-          else
-            acc[:regular] << term
-          end
-          acc
-        }
-
+      def matches_post?(post, perform_static_checks=true)
         # Negations: Must not satisfy any of the conditions
         # Requirements: Must satisfy every required condition
         # Regular terms: Must satisfy at least one condition
-        test = lambda {|term| term_matches_post?(term, post)}
 
+        parts = query_parts[:dynamic].dup
+        if perform_static_checks
+          parts[:negations]    += query_parts[:static][:negations]
+          parts[:requirements] += query_parts[:static][:requirements]
+          parts[:regular]      += query_parts[:static][:regular]
+        end
+
+        test = lambda {|term| term_matches_post?(term, post)}
         parts[:negations].none?(&test) &&
           parts[:requirements].all?(&test) &&
           (parts[:regular].any? ? parts[:regular].any?(&test) : true)
       end
 
       def refresh_posts( n = 512 )
-        DB.dbh[ "DELETE FROM river_posts WHERE river_id = ?", self.id ].get
-        posts = Post.s(
-          %{
-            SELECT
-              p.*
-            FROM
-              posts p
-            WHERE
-              NOT river_contains_post( ?, p.id )
-              AND NOT post_hidden_by_account( p.id, ? )
-            ORDER BY id DESC LIMIT #{n.to_i}
-          },
-          self.id, account.id
-        )
+        # TODO: this is slow despite indices.
+        posts = Post.where{|p| ~Sequel.function(:post_hidden_by_account, p.id, account.id)}
 
-        matching = posts.find_all { |post| self.matches_post? post }
+        parts = query_parts[:static]
+        if parts.values.flatten.count > 0
+          # strip query characters
+          parts.each_pair {|k,v| parts[k].each {|word| word.gsub!(/[\(\)&|!]/, '')}}
+
+          # filter by simple terms first to avoid having to check so many posts
+          posts = posts.where(%{to_tsvector('simple', text)
+                               @@ (to_tsquery('simple', ?)
+                               && to_tsquery('simple', ?)
+                               && to_tsquery('simple', ?))},
+                             parts[:negations].map{|w| "!#{w}" }.join(' & '),
+                             parts[:requirements].join(' & '),
+                             parts[:regular].join(' | '))
+        end
+
+        matching = posts.order(:id).limit(n).find_all { |post| self.matches_post?(post, false) }
+
+        # delete late to minimise interruption
+        DB.dbh[ "DELETE FROM river_posts WHERE river_id = ?", self.id ].get
         if matching.any?
-          placeholders = ( ['?'] * matching.count ).join(', ')
-          DB.dbh[ "INSERT INTO river_posts SELECT ?, id FROM posts WHERE id IN (#{placeholders})", self.id, *matching.map(&:id)].get
+          DB.dbh[ "INSERT INTO river_posts SELECT ?, id FROM posts WHERE id IN ?", self.id, matching.map(&:id)].get
         end
       end
 

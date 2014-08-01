@@ -11,9 +11,9 @@ module Sequel
         end
 
         private
-        # Creates a message model object and augments it with methods
-        # for otherwise undefined values.  There are no setters for
-        # those keys that are no valid column identifiers.
+        # Creates a model object and augments it with methods for
+        # otherwise undefined values.  There are no setters for those
+        # keys that are no valid column identifiers.
         def wrap_dataset(values)
           undefined = values.keys - self.columns
           object = self.new values.reject{|key| undefined.include? key}

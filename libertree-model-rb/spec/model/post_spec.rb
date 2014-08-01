@@ -203,4 +203,28 @@ describe Libertree::Model::Post do
       expect_search_match 'post this', [ @p1, @p2, @p3 ]
     end
   end
+
+  describe 'mark_as_unread_by_all' do
+    before :all do
+      @john, @paul, @george, @ringo = [ 'john', 'paul', 'george', 'ringo'].map do |name|
+        Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
+      end
+      @account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
+      @member = @account.member
+      new_post "read post"
+    end
+
+    it 'leaves the post untouched for excluded accounts' do
+      [ @john, @paul, @george, @ringo ].each do |account|
+        @post.mark_as_read_by account
+      end
+
+      @post.mark_as_unread_by_all except: [@ringo]
+
+      expect( @post.read_by?(@john)   ).to be_false
+      expect( @post.read_by?(@paul)   ).to be_false
+      expect( @post.read_by?(@george) ).to be_false
+      expect( @post.read_by?(@ringo)  ).to be_true
+    end
+  end
 end

@@ -1,7 +1,9 @@
 module Libertree
   module Model
     class Comment < Sequel::Model(:comments)
+      include IsRemoteOrLocal
       extend HasSearchableText
+      include HasDisplayText
 
       def after_create
         super
@@ -14,10 +16,6 @@ module Libertree
             *self.forests
           )
         end
-      end
-
-      def local?
-        ! remote_id
       end
 
       # TODO: DB: association
@@ -60,37 +58,25 @@ module Libertree
         DB.dbh[ "SELECT delete_cascade_comment(?)", self.id ].get
       end
 
-      # TODO: DRY up with Post#glimpse
-      def glimpse( length = 60 )
-        t = self.text.lines.reject { |l| l =~ /^> / }.join("\n")
-        if t.strip.empty?
-          t = self.text
-        end
-        t.strip!
-
-        if t.length <= length
-          t
-        else
-          t[0...length] + '...'
-        end
-      end
-
       def self.create(*args)
         comment = super
         account = comment.member.account
-        comment.post.time_commented = comment.time_created
-        comment.post.mark_as_unread_by_all  except: [account]
+        post = comment.post
+
+        post.time_commented = comment.time_created
+        post.mark_as_unread_by_all  except: [account]
         if account
-          comment.post.mark_as_read_by account
+          post.mark_as_read_by account
           account.subscribe_to comment.post
         end
-        comment.post.notify_about_comment comment
+        post.notify_about_comment comment
+        post.save
+
         comment
       end
 
       def likes
-        return @likes  if @likes
-        @likes = CommentLike.s("SELECT * FROM comment_likes WHERE comment_id = ? ORDER BY id DESC", self.id)
+        @likes ||= CommentLike.where(comment_id: self.id).reverse_order(:id)
       end
 
       def notify_about_like(like)
@@ -101,23 +87,21 @@ module Libertree
         local_comment_author = like.comment.member.account
         like_author = like.member.account
 
-        if local_comment_author && local_comment_author != like_author
+        if local_comment_author && local_comment_author.id != like_author.id
           local_comment_author.notify_about notification_attributes
         end
       end
 
       def like_by(member)
-        CommentLike[ member_id: member.id, comment_id: self.id ]
+        # take advantage of cached self.likes
+        if self.likes.is_a? Array
+          self.likes.find {|like| like.member.id == member.id}
+        else
+          CommentLike[ member_id: member.id, comment_id: self.id ]
+        end
       end
 
-      def server
-        self.member.server
-      end
-
-      def public_id
-        self.remote_id || self.id
-      end
-
+      # overriding method from IsRemoteOrLocal
       def forests
         if self.post.remote?
           self.post.server.forests
@@ -138,39 +122,20 @@ module Libertree
 
       # TODO: When more visibilities come, restrict this result set by visibility
       def self.comments_since_id(comment_id)
-        self.s(
-          %{
-            SELECT
-              c.*
-            FROM
-              comments c
-            WHERE
-              c.id > ?
-            ORDER BY
-              c.id
-          },
-          comment_id
-        )
+        self.where{ :id > comment_id }.order(:id)
       end
 
       # @param [Hash] opt options for restricting the comment set returned
       # @option opts [Fixnum] :from_id Only return comments with id greater than or equal to this id
       # @option opts [Fixnum] :to_id Only return comments with id less than this id
       def self.on_post(post, opt = {})
-        params = [ post.id, ]
-        if opt[:from_id]
-          from_clause = "AND id >= ?"
-          params << opt[:from_id].to_i
-        end
-        if opt[:to_id]
-          to_clause = "AND id < ?"
-          params << opt[:to_id].to_i
-        end
-        if opt[:limit]
-          limit_clause = "LIMIT #{opt[:limit].to_i}"
-        end
-
-        Comment.s("SELECT * FROM comments WHERE post_id = ? #{from_clause} #{to_clause} ORDER BY id DESC #{limit_clause}", *params).sort_by(&:id)
+        # reverse ordering is required in order to get the *last* n
+        # comments, rather than the first few when using :limit
+        res = Comment.where( :post_id => post.id ).reverse_order(:id)
+        res = res.where{ id >= opt[:from_id].to_i }  if opt[:from_id]
+        res = res.where{ id < opt[:to_id].to_i }     if opt[:to_id]
+        res = res.limit(opt[:limit].to_i)            if opt[:limit]
+        res.all.reverse
       end
     end
   end

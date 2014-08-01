@@ -1,5 +1,6 @@
 source 'http://rubygems.org'
 gem 'sequel'
+gem 'timedcache'
 gem 'ruby-oembed'
 gem 'json'
 gem 'net-ldap'

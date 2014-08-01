@@ -51,4 +51,14 @@ FactoryGirl.define do
   factory :pool, :class => Libertree::Model::Pool do
     sequence(:name) { |n| "Pool #{n}" }
   end
+
+  factory :node, :class => Libertree::Model::Node do
+    sequence(:address) { |n| "node-#{n}" }
+    access_model 'open'
+  end
+
+  factory :node_subscription, :class => Libertree::Model::NodeSubscription do
+    sequence(:sub_id) { |n| "sub-id-#{n}" }
+    state 'subscribed'
+  end
 end
