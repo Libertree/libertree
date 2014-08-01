@@ -3,7 +3,14 @@ require 'spec_helper'
 require 'libertree/client'
 
 describe Libertree::Server::Gateway do
-  LSR = Libertree::Server::Responder
+  before :all do
+    Libertree::DB.dbh.execute 'TRUNCATE accounts CASCADE'
+    @jid = "tester@test.net"
+    @account = Libertree::Model::Account.create({
+      username: "username",
+      password_encrypted: BCrypt::Password.create("1234"),
+    })
+  end
 
   before :each do
     @client = LSR.connection
@@ -23,19 +30,16 @@ describe Libertree::Server::Gateway do
                            :ns => ns) ).not_to be_empty
 
       features = stanza.xpath('.//ns:feature/@var', :ns => ns).map(&:value)
-      expect( features ).to match_array([ 'http://jabber.org/protocol/disco#info',
-                                          'jabber:iq:register' ])
+      expect( features ).to include('http://jabber.org/protocol/disco#info',
+                                    'jabber:iq:register')
     end
     @client.handle_data msg
   end
 
   context "when the sender's jid is not yet registered" do
     before :each do
-      Libertree::DB.dbh.execute 'TRUNCATE accounts CASCADE'
-      @account = Libertree::Model::Account.create({
-        username: "username",
-        password_encrypted: BCrypt::Password.create("1234")
-      })
+      @account.gateway_jid = nil
+      @account.save
     end
 
     it 'requests credentials when a jabber:iq:register query is received' do
@@ -149,12 +153,6 @@ describe Libertree::Server::Gateway do
 
   context "when the sender's jid is registered with an account" do
     before :each do
-      Libertree::DB.dbh.execute 'TRUNCATE accounts CASCADE'
-      @jid = "tester@test.net"
-      @account = Libertree::Model::Account.create({
-        username: "username",
-        password_encrypted: BCrypt::Password.create("1234")
-      })
       @account.gateway_jid = @jid
       @account.save
     end

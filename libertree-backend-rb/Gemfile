@@ -9,7 +9,7 @@ gem 'em-websocket'
 
 group 'extensions' do
   gem 'pg'
-  gem 'blather'
+  gem 'blather', :git => 'git://github.com/adhearsion/blather.git'
   gem 'bcrypt-ruby'
 end
 

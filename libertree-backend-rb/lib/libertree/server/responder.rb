@@ -11,6 +11,7 @@ require 'libertree/server/responder/pool-post'
 require 'libertree/server/responder/post'
 require 'libertree/server/responder/post-like'
 
+require 'libertree/server/disco'
 require 'libertree/server/gateway'
 require 'libertree/server/api'
 
@@ -33,6 +34,7 @@ module Libertree
 
       # set @client for the `respond` helper method
       @client = client
+      Disco.init(client)
       Gateway.init(client)
       Api.init(client)
 

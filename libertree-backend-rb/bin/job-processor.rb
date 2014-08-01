@@ -21,7 +21,7 @@ jobp.extend Jobs
 Jobs::Http::Avatar.options = {
   :avatar_dir => jobp.conf['avatar_dir']
 }
-Jobs::Email.from = jobp.conf['smtp']['from_address']
+Jobs::Email::Simple.from = jobp.conf['smtp']['from_address']
 Jobs::Request.init_client_conf(jobp.conf)
 Mail.defaults do
   delivery_method :smtp, {
@@ -31,6 +31,7 @@ Mail.defaults do
     :password             => jobp.conf['smtp']['password'],
     :authentication       => jobp.conf['smtp']['authentication'],
     :domain               => jobp.conf['smtp']['helo_domain'],
+    :ssl                  => jobp.conf['smtp']['ssl'],
     :enable_starttls_auto => jobp.conf['smtp']['starttls_auto'],
   }
 end

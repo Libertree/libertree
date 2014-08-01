@@ -6,21 +6,11 @@ module Libertree
       extend Libertree::Server::Responder::Helper
 
       private
-      # XEP-0030: Service Discovery
-      def self.disco_info(stanza)
-        identity = Blather::Stanza::Iq::DiscoInfo::Identity.
-          new({ :name => 'Libertree Gateway',
-                :type => 'libertree',
-                :category => 'gateway' })
-
-        features = [ "http://jabber.org/protocol/disco#info",
-                     "jabber:iq:register" ]
-
-        info = stanza.reply
-        info.identities = [identity]
-        info.features = features
-
-        @client.write info
+      def self.init_disco_info
+        Libertree::Server::Disco.register_identity({ :name => 'Libertree Gateway',
+                                                     :type => 'libertree',
+                                                     :category => 'gateway' })
+        Libertree::Server::Disco.register_feature "jabber:iq:register"
       end
 
       # XEP-0100: Gateway Interaction
@@ -122,7 +112,7 @@ module Libertree
         # set @client for the `respond` helper method
         @client = client
 
-        client.register_handler(:disco_info) {|stanza| disco_info(stanza)}
+        init_disco_info
         client.register_handler :iq, '/iq/ns:query', :ns => 'jabber:iq:register' do |stanza|
           if stanza.get?
             register_query(stanza)

@@ -11,7 +11,8 @@ require 'uri'
 module Jobs
   def self.list
     {
-      "email"                        => Email,
+      "email"                        => Email::Simple,
+      "forward-via-email"            => Email::Forward,
       "http:avatar"                  => Http::Avatar,
       "http:embed"                   => Http::Embed,
       "post:add-to-rivers"           => Post::AddToRivers,
@@ -38,24 +39,44 @@ module Jobs
     }
   end
 
-  class Email
-    def self.from=(address)
-      @@from_address ||= address
-    end
-    def self.perform(params)
-      begin
-        GPGME::Engine.home_dir = Dir.tmpdir
-        Mail.deliver do
-          to       params['to']
-          from     @@from_address
-          subject  params['subject']
-          body     params['body']
-          if params['pubkey']
-            gpg encrypt: true, keys: { params['to'] => params['pubkey'] }
+  module Email
+    class Simple
+      def self.from=(address)
+        @@from_address ||= address
+      end
+      def self.perform(params)
+        begin
+          GPGME::Engine.home_dir = Dir.tmpdir
+          Mail.deliver do
+            to       params['to']
+            from     @@from_address
+            subject  params['subject']
+            body     params['body']
+            if params['pubkey']
+              gpg encrypt: true, keys: { params['to'] => params['pubkey'] }
+            end
           end
+        rescue Errno::ECONNRESET => e
+          raise Libertree::RetryJob, "Email: #{e.message}"
         end
-      rescue Errno::ECONNRESET => e
-        raise Libertree::RetryJob, "Email: #{e.message}"
+      end
+    end
+
+    class Forward
+      def self.perform(params)
+        account = Libertree::Model::Account[ username: params['username'] ]
+        message = Libertree::Model::Message[ params['message_id'].to_i ]
+        if !account || !account.email || !message
+          raise Libertree::JobInvalid, "Forward: no account, email address or message"
+        end
+
+        email_params = {
+          'to'      => account.email,
+          'subject' => '[Libertree] Direct message', # TODO: translate
+          'body'    => "#{message.sender.handle} wrote:\n\n#{message.text}"
+        }
+        email_params['pubkey'] = account.pubkey  if account.pubkey
+        Email::Simple.perform(email_params)
       end
     end
   end

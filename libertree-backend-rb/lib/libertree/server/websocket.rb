@@ -11,7 +11,7 @@ module Libertree
         config = if conf['secure_websocket']
           {
             :host => conf['websocket_listen_host'],
-            :port => 8080,
+            :port => conf['websocket_port'],
             :secure => true,
             :tls_options => {
               :private_key_file => conf['websocket_ssl_private_key'],
@@ -21,7 +21,7 @@ module Libertree
         else
           {
             :host => conf['websocket_listen_host'],
-            :port => 8080,
+            :port => conf['websocket_port'],
           }
         end
 

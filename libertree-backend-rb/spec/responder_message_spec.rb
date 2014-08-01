@@ -22,12 +22,12 @@ describe Libertree::Server::Responder::Message do
       it 'raises NotFoundError' do
         h = {
           'username' => 'sender',
-          'recipients' => [
+          'recipients' => { 'recipient' =>
             {
               'username' => 'recipient',
               'origin'   => 'does.not.matter',
             },
-          ],
+          },
           'text' => 'a direct message',
         }
         expect { subject.rsp_message(h) }.
@@ -45,12 +45,12 @@ describe Libertree::Server::Responder::Message do
       it 'raises MissingParameterError when a parameter is missing or blank' do
         h = {
           'username' => @member.username,
-          'recipients' => [
+          'recipients' => { 'recipient' =>
             {
               'username' => 'recipient',
               'origin'   => 'does.not.matter',
             },
-          ],
+          },
           'text' => 'a direct message',
         }
 
@@ -78,12 +78,12 @@ describe Libertree::Server::Responder::Message do
         it 'raises NotFoundError' do
           h = {
             'username' => @member.username,
-            'recipients' => [
+            'recipients' => { 'recipient' =>
               {
                 'username' => 'recipient',
                 'origin'   => 'does.not.matter',
               },
-            ],
+            },
             'text' => 'a direct message',
           }
           expect { subject.rsp_message(h) }.
@@ -102,11 +102,11 @@ describe Libertree::Server::Responder::Message do
         it 'raises no errors with valid data' do
           h = {
             'username' => @member.username,
-            'recipients' => [
+            'recipients' => { 'recipient' =>
               {
                 'username' => @member_local.username,
               },
-            ],
+            },
             'text' => 'a direct message',
           }
           expect { subject.rsp_message(h) }.
@@ -128,15 +128,14 @@ describe Libertree::Server::Responder::Message do
         it 'with valid data it responds with OK' do
           h = {
             'username' => @member.username,
-            'recipients' => [
-              {
-                'username' => @member_local.username,
-              },
-              {
-                'username' => @member_remote.username,
-                'origin'   => @member_remote.server.domain,
-              },
-            ],
+            'recipients' => [{ 'recipient' => {
+                                 'username' => @member_local.username,
+                               }},
+                             { 'recipient' => {
+                                 'username' => @member_remote.username,
+                                 'origin'   => @member_remote.server.domain,
+                               }},
+                            ],
             'text' => 'a direct message',
           }
           expect { subject.rsp_message(h) }.
@@ -146,10 +145,10 @@ describe Libertree::Server::Responder::Message do
         it 'with a single recipient it responds with OK' do
           h = {
             'username' => @member.username,
-            'recipients' => {
+            'recipients' => { 'recipient' => {
               'username' => @member_remote.username,
               'origin'   => @member_remote.server.domain,
-            },
+              }},
             'text' => 'a direct message',
           }
           expect { subject.rsp_message(h) }.

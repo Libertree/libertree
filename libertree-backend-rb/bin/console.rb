@@ -2,24 +2,28 @@ require 'irb'
 require 'libertree/db'
 require 'libertree/client'
 
-########################
-# FIXME: M4DBI wants us to connect to the db before defining models.  As model
-# definitions are loaded when 'libertree/server' is required, we have to do
-# this first.
-Libertree::DB.load_config "#{File.dirname( __FILE__ ) }/../database.yaml"
+if ARGV[0].nil?
+  $stderr.puts "#{$0} <config.yaml> <database.yaml>"
+  exit 1
+end
+
+if ARGV[1].nil?
+  $stderr.puts "no database configuration file given; assuming #{File.dirname( __FILE__ ) }/../database.yaml"
+  db_config = "#{File.dirname( __FILE__ ) }/../database.yaml"
+else
+  db_config = ARGV[1]
+end
+
+# As model definitions are loaded when 'libertree/server' is required,
+# we have to connect to the db first.
+Libertree::DB.load_config db_config
 Libertree::DB.dbh
-########################
+
 
 require 'libertree/server'
 require_relative '../lib/jobs'
 
 LM = Libertree::Model
-
-if ARGV[0].nil?
-  $stderr.puts "#{$0} <config.yaml>"
-  exit 1
-end
-
 conf = YAML.load( File.read(ARGV[0]) )
 
 # it's a little weird that all this client initialisation
