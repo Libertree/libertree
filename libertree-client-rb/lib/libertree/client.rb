@@ -145,6 +145,32 @@ module Libertree
       end
     end
 
+    # TODO: use atom:link elements with rel=related for references.
+    # example for a reference to a post with id 1234 and origin
+    # oak.elephly.net that is referenced in the post text as
+    # "http://maple.lt.net/posts/show/5678" (the sender is
+    # maple.lt.net):
+    #
+    #    <link rel="related"
+    #          href="xmpp:oak.elephly.net?;node=/posts;item=1234"
+    #          libertree-match="http://maple.lt.net/posts/show/5678" />
+    #
+    # Here is another example with a reference to a comment.  The
+    # comment's sender-local id is 999 and it's origin is again oak:
+    #
+    #    <link rel="related"
+    #          href="xmpp:oak.elephly.net?;node=/comments;item=1234"
+    #          libertree-match="http://maple.lt.net/posts/5678/comments/999" />
+    #
+    # Note that the comment's origin and origin id are sufficient to
+    # allow the receiver to rebuild the full URL.  The post id does
+    # not have to be sent along.
+
+    # See for info about atom:link:
+    #  <https://tools.ietf.org/html/rfc4287#section-4.2.7>
+    # See for PubSub IRIs:
+    #  <XEP-0060> and <RFC5122>
+
     def build_references_xml(refs, x)
       x.references  {
         refs.each do |ref|
@@ -216,8 +242,10 @@ module Libertree
       xml {|x|
         x.comment_ {
           x.id_         comment.id
+          x.uid         "xmpp:#{origin}?;node=/comments;item=#{comment.id}"
           x.post_id     post.public_id
           x.origin      origin
+          x.send('thr:in-reply-to', {ref: "xmpp:#{origin}?;node=/posts;item=#{post.public_id}"})
           x.username    comment.member.username
           x.text_       comment.text
           unless references.empty?
@@ -297,6 +325,7 @@ module Libertree
       xml {|x|
         x.message {
           x.username    message.sender.account.username
+          x.id_         message.id
           x.text_       message.text
           x.recipients  {
             for member in recipients
@@ -315,6 +344,7 @@ module Libertree
         x.post {
           x.username    post.member.username
           x.id_         post.id
+          x.uid         "xmpp:#{@domain}?;node=/posts;item=#{post.id}"
           x.visibility  post.visibility
           x.text_       post.text
           x.via         post.via  if post.via
