@@ -30,25 +30,18 @@ module Libertree
         end
       end
 
-      def self.mark_seen_for_account_and_comment_id(account, comment_id)
-        self.where("account_id = ? AND data = ?", account.id, %|{"type":"comment","comment_id":#{comment_id.to_i}}|).
-          update(seen: true)
+      def self.mark_seen_for_account_and_comment_id(account, comment_ids)
+        data = comment_ids.map {|id| %|{"type":"comment","comment_id":#{id.to_i}}| }
+        data += CommentLike.where(comment_id: comment_ids).
+          map {|like| %|{"type":"comment-like","comment_like_id":#{like.id}}| }
 
-        Comment[comment_id.to_i].likes.each do |like|
-          self.where("account_id = ? AND data = ?", account.id, %|{"type":"comment-like","comment_like_id":#{like.id}}|).
-            update(seen: true)
-        end
-
+        self.where(account_id: account.id, data: data).update(seen: true)
         account.dirty
       end
 
       def self.mark_seen_for_account_and_post(account, post)
-        # TODO: Is it more efficient to build a (?,?,?...) list and do the
-        # update in a single query?
-        post.likes.each do |like|
-          self.where("account_id = ? AND data = ?", account.id, %|{"type":"post-like","post_like_id":#{like.id}}|).
-            update(seen: true)
-        end
+        data = post.likes.map {|like| %|{"type":"post-like","post_like_id":#{like.id.to_i}}| }
+        self.where(account_id: account.id, data: data).update(seen: true)
         account.dirty
       end
 

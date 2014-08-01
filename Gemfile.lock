@@ -51,6 +51,7 @@ GEM
     ruby_core_source (0.1.5)
       archive-tar-minitar (>= 0.5.2)
     sequel (4.7.0)
+    timedcache (0.4.0)
 
 PLATFORMS
   ruby
@@ -68,3 +69,4 @@ DEPENDENCIES
   ruby-debug19
   ruby-oembed
   sequel
+  timedcache

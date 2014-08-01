@@ -6,6 +6,7 @@ module Libertree
     class Post < Sequel::Model(:posts)
       include IsRemoteOrLocal
       extend HasSearchableText
+      include HasDisplayText
 
       def after_create
         super
@@ -72,9 +73,7 @@ module Libertree
       def mark_as_unread_by_all( options = {} )
         except_accounts = options.fetch(:except, [])
         if except_accounts.any?
-          ids = except_accounts.map { |a| a.id }
-          placeholders = ( ['?'] * ids.count ).join(', ')
-          DB.dbh[ "DELETE FROM posts_read WHERE post_id = ? AND NOT account_id IN (#{placeholders})", self.id, *ids ].get
+          DB.dbh[:posts_read].where('post_id = ? AND NOT account_id IN ?', self.id, except_accounts.map(&:id)).delete
         else
           DB.dbh[ "DELETE FROM posts_read WHERE post_id = ?", self.id ].get
         end
@@ -89,7 +88,7 @@ module Libertree
         DB.dbh[ %{SELECT mark_all_posts_as_read_by(?)}, account.id ].get
       end
 
-      # @param [Hash] opt options for restricting the comment set returned.  See Comment.to_post .
+      # @param [Hash] opt options for restricting the comment set returned.  See Comment.on_post .
       def comments(opt = nil)
         opt ||= {}  # We put this here instead of in the method signature because sometimes nil is literally sent
         Comment.on_post(self, opt)
@@ -122,8 +121,7 @@ module Libertree
           'comment_id' => comment.id,
         }
         accounts = comment.post.subscribers
-        accounts.delete comment.member.account
-        accounts.each do |a|
+        accounts.select {|a| a.id != comment.member.account.id }.each do |a|
           if ! comment.post.hidden_by?(a)
             a.notify_about notification_attributes
           end
@@ -138,7 +136,7 @@ module Libertree
         local_post_author = like.post.member.account
         like_author = like.member.account
 
-        if local_post_author && local_post_author != like_author
+        if local_post_author && local_post_author.id != like_author.id
           local_post_author.notify_about notification_attributes
         end
       end
@@ -155,20 +153,13 @@ module Libertree
       end
 
       def mentioned_accounts
+        # TODO: work on the parsed HTML representation instead?
         pattern = %r{(?:\W|^)@(\w+)}
         author_name = self.member.username
         usernames = self.text.scan(pattern).flatten.uniq - [author_name]
         return []  if usernames.empty?
 
         Libertree::Model::Account.where(username: usernames).all
-      end
-
-      def glimpse( length = 60 )
-        if self.text.length <= length
-          self.text
-        else
-          self.text[0...length] + '...'
-        end
       end
 
       def before_destroy
@@ -193,6 +184,10 @@ module Libertree
       # NOTE: deletion is NOT distributed when force=true
       def delete_cascade(force=false)
         self.before_destroy  unless force
+        # clear cached posts
+        Libertree::MODELCACHE.delete(self.cache_key)
+        Libertree::MODELCACHE.delete("#{self.cache_key}:get_full")
+
         DB.dbh[ "SELECT delete_cascade_post(?)", self.id ].get
       end
 
@@ -275,6 +270,10 @@ module Libertree
           visibility:   visibility,
           time_updated: Time.now
         )
+
+        # clear cached posts
+        Libertree::MODELCACHE.delete(self.cache_key)
+        Libertree::MODELCACHE.delete("#{self.cache_key}:get_full")
         mark_as_unread_by_all
       end
 
@@ -303,6 +302,93 @@ module Libertree
       end
       def distribute?
         self.visibility != 'tree'
+      end
+
+      def self.as_nested_json(id)
+        post = self[id]
+        JSON[ post.to_json( :include => {
+                              :member => {},
+                              :likes => {
+                                :include => {
+                                  :member => {}
+                                }},
+                              :comments => {
+                                :include => {
+                                  :member => {},
+                                  :likes => {
+                                    :include => {
+                                      :member => {}
+                                    }
+                                  }
+                                }
+                              }
+                            }) ]
+      end
+
+      # Expand and embed all associated records.
+      def self.get_full(id)
+        if cached = Libertree::MODELCACHE.get("#{self.cache_key(id)}:get_full")
+          return cached
+        end
+
+        post = self[id]
+        return  unless post
+
+        # cache member records
+        members = Hash.new
+        members.default_proc = proc do |hash, key|
+          member = Member[ key ]
+          name = member.name_display
+          member.define_singleton_method(:name_display) { name }
+          hash[key] = member
+        end
+
+        post_likes = post.likes
+        comments = post.comments
+
+        comment_likes = CommentLike.where('comment_id IN ?', comments.map(&:id)).reduce({}) do |hash, like|
+          if hash[like.comment_id]
+            hash[like.comment_id] << like
+          else
+            hash[like.comment_id] = [like]
+          end
+          hash
+        end
+
+        like_proc = proc do |like|
+          like.define_singleton_method(:member) { members[like.member_id] }
+          like
+        end
+
+        comments = comments.map do |comment|
+          likes = if comment_likes[comment.id]
+                    comment_likes[comment.id].map{|l| like_proc.call(l)}
+                  else
+                    []
+                  end
+
+          comment.define_singleton_method(:member) { members[comment.member_id] }
+          comment.define_singleton_method(:likes) { likes }
+          comment.define_singleton_method(:post) { post }
+
+          comment
+        end
+
+        # enhance post object with expanded associations
+        post.define_singleton_method(:member) { members[post.member_id] }
+        post.define_singleton_method(:likes)  { post_likes.map{|l| like_proc.call(l)} }
+        post.define_singleton_method(:comments) {|opts={}|
+          res = comments
+          if opts
+            res = res.find_all {|c| c.id >= opts[:from_id].to_i}  if opts[:from_id]
+            res = res.find_all {|c| c.id < opts[:to_id].to_i}     if opts[:to_id]
+            res = res.last(opts[:limit].to_i)                     if opts[:limit]
+          end
+          res
+        }
+
+        Libertree::MODELCACHE.set("#{self.cache_key(id)}:get_full", post, 60)
+        post
       end
     end
   end

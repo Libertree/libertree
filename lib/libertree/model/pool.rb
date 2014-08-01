@@ -72,35 +72,26 @@ module Libertree
         @member ||= Member[self.member_id]
       end
 
+      # TODO: DRY up with member.posts?
       def posts( opts = {} )
-        @posts ||= Hash.new
-        return @posts[opts]  if @posts[opts]
-
         limit = opts.fetch(:limit, 30)
-        if opts[:newer]
-          time_comparator = '>'
-        else
-          time_comparator = '<'
-        end
         time = Time.at( opts.fetch(:time, Time.now.to_f) ).strftime("%Y-%m-%d %H:%M:%S.%6N%z")
+        time_clause = if opts[:newer]
+                        proc { time_created > time }
+                      else
+                        proc { time_created < time }
+                      end
 
-        @posts[opts] = Post.s(
-          %{
-            SELECT
-              p.*
-            FROM
-                posts p
-              , pools_posts pp
-            WHERE
-              p.id = pp.post_id
-              AND pp.pool_id = ?
-              AND p.time_created #{time_comparator} ?
-            ORDER BY
-              p.id DESC
-            LIMIT #{limit}
-          },
-          self.id, time
-        )
+        res = Post.qualify.
+          join(:pools_posts, :post_id=>:id).
+          where(&time_clause).
+          where(:pool_id => self.id).
+          reverse_order(:posts__id).
+          limit(limit)
+
+        # optionally restrict to Internet visible posts
+        res = res.where(visibility: 'internet')  if opts[:public]
+        res
       end
 
       def includes?(post)

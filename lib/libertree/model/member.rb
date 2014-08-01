@@ -123,32 +123,25 @@ module Libertree
 
       def posts( opts = {} )
         limit = opts.fetch(:limit, 30)
-        if opts[:newer]
-          time_comparator = '>'
-        else
-          time_comparator = '<'
-        end
         time = Time.at( opts.fetch(:time, Time.now.to_f) ).strftime("%Y-%m-%d %H:%M:%S.%6N%z")
+        time_clause = if opts[:newer]
+                        proc { time_created > time }
+                      else
+                        proc { time_created < time }
+                      end
 
-        Post.s(
-          %{
-            SELECT
-              p.*
-            FROM
-              posts p
-            WHERE
-              member_id = ?
-              AND p.time_created #{time_comparator} ?
-            ORDER BY p.time_created DESC
-            LIMIT #{limit}
-          },
-          self.id,
-          time
-        )
+        res = Post.where(member_id: self.id).
+          where(&time_clause).
+          reverse_order(:time_created).
+          limit(limit)
+
+        # optionally restrict to Internet visible posts
+        res = res.where(visibility: 'internet')  if opts[:public]
+        res
       end
 
       def comments(n = 10)
-        Comment.s  "SELECT * FROM comments WHERE member_id = ? ORDER BY id DESC LIMIT #{n.to_i}", self.id
+        Comment.where(member_id: self.id).reverse_order(:id).limit(n)
       end
 
       def pools

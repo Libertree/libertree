@@ -12,6 +12,57 @@ describe Libertree::Model::Message do
     @remote_member = Libertree::Model::Member.create( FactoryGirl.attributes_for(:member, :server_id => remote.id, :username => 'remote'))
   end
 
+  describe 'create_with_recipients' do
+    it 'calls #distribute' do
+      expect_any_instance_of(Libertree::Model::Message).to receive(:distribute)
+      message = Libertree::Model::Message.
+        create_with_recipients({ :sender_member_id => @member.id,
+                                 :recipient_member_ids => [@local_member.id],
+                                 :text => 'Hello'
+                               })
+    end
+
+    it 'creates a new local message record' do
+      c = Libertree::Model::Message.count
+      message = Libertree::Model::Message.
+        create_with_recipients({ :sender_member_id => @member.id,
+                                 :recipient_member_ids => [@local_member.id],
+                                 :text => 'Hello'
+                               })
+      expect( Libertree::Model::Message.count ).to be(c + 1)
+    end
+
+    it 'creates records for local recipients' do
+      message = Libertree::Model::Message.
+        create_with_recipients({ :sender_member_id => @member.id,
+                                 :recipient_member_ids => [@local_member.id],
+                                 :text => 'Hello'
+                               })
+      expect( Libertree::DB.dbh["SELECT * FROM message_recipients WHERE message_id = ?", message.id].count ).not_to be 0
+    end
+  end
+
+  describe 'distribute' do
+    it 'creates a distribution job for each remote server' do
+      expect( Libertree::Model::Job ).to receive(:create) do |args|
+        expect( args[:task] ).to eq('request:MESSAGE')
+      end
+      message = Libertree::Model::Message.
+        create_with_recipients({ :sender_member_id => @member.id,
+                                 :recipient_member_ids => [@remote_member.id],
+                                 :text => 'Hello'
+                               })
+    end
+    it 'creates no distribution job for messages to local members' do
+      expect( Libertree::Model::Job ).not_to receive(:create)
+      message = Libertree::Model::Message.
+        create_with_recipients({ :sender_member_id => @member.id,
+                                 :recipient_member_ids => [@local_member.id],
+                                 :text => 'Hello'
+                               })
+    end
+  end
+
   before :each do
     Libertree::DB.dbh[ "TRUNCATE messages, message_recipients" ].get
     @message_sent = Libertree::Model::Message.
