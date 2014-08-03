@@ -157,6 +157,7 @@ clean :
 	rm -rf *.$(PKG_TYPE)
 
 cleanall : clean
+	rm Gemfile*
 	rm -rf $(GEMDIR)
 	rm -rf libertree-client-$(VERSION_CLIENT).gem
 	rm -rf libertree-model-$(VERSION_MODEL).gem
@@ -164,9 +165,12 @@ cleanall : clean
 nuke : cleanall
 	rm -rf vendor
 
+Gemfile:
+	ruby build_gemfile.rb > Gemfile
+
 # Download all gems listed in the Gemfile
 # and place them in the cache in vendor/cache
-prepare :
+prepare : Gemfile
 	bundle pack --all
 
 rebuild: cleanall libertree-backend-$(VERSION_BACKEND).$(PKG_TYPE)
