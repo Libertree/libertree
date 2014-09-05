@@ -6,10 +6,10 @@ gem 'json'
 gem 'mail'
 gem 'mail-gpg'
 gem 'em-websocket'
+gem 'blather'
 
 group 'extensions' do
   gem 'pg'
-  gem 'blather', :git => 'git://github.com/adhearsion/blather.git'
   gem 'bcrypt-ruby'
 end
 

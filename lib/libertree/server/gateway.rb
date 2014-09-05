@@ -84,10 +84,12 @@ module Libertree
       end
 
       def self.register_remove(stanza)
-        account = Libertree::Model::Account[ gateway_jid: stanza.from.stripped.to_s ]
-        if account
+        with_account(stanza) do |account|
           account.gateway_jid = nil
           account.save
+          # distribute member record with gateway_jid
+          account.member.gateway_jid = nil
+          account.member.save
         end
         @client.write stanza.reply!
 
@@ -99,8 +101,7 @@ module Libertree
       end
 
       def self.log_out(stanza)
-        account = Libertree::Model::Account[ gateway_jid: stanza.from.stripped.to_s ]
-        if account
+        with_account(stanza) do |account|
           # TODO: forward "unavailable" presence to all Libertree contacts
           p = Blather::Stanza::Presence::Subscription.new(stanza.from.stripped, :unavailable)
           @client.write p

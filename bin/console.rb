@@ -1,6 +1,5 @@
-require 'irb'
-require 'libertree/db'
-require 'libertree/client'
+require 'libertree/console'
+require_relative '../../libertree-client-rb/lib/libertree/client'
 
 if ARGV[0].nil?
   $stderr.puts "#{$0} <config.yaml> <database.yaml>"
@@ -14,11 +13,7 @@ else
   db_config = ARGV[1]
 end
 
-# As model definitions are loaded when 'libertree/server' is required,
-# we have to connect to the db first.
-Libertree::DB.load_config db_config
-Libertree::DB.dbh
-
+Libertree::Console.init(db_config)
 
 require 'libertree/server'
 require_relative '../lib/jobs'
@@ -31,7 +26,6 @@ conf = YAML.load( File.read(ARGV[0]) )
 Jobs::Request.init_client_conf(conf)
 @c = Jobs::Request.client
 banner=<<EOF
-== Libertree console ==
 
 make requests like this:
     @c.request('some.target.domain', @c.req_introduce)
@@ -42,4 +36,4 @@ EOF
 
 puts banner
 ARGV.clear
-IRB.start
+Libertree::Console.start

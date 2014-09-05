@@ -81,8 +81,12 @@ module Libertree
 
             # Look-behind does not support pattern repetition with * or +,
             # so we have to first extract the post id from the url.
-            post_id = res.match(%r{/posts/show/(?<post_id>\d+)/})['post_id']
-            target = %r{(?<=/posts/show/#{post_id})#{Regexp.quote(segment)}}
+            if m = res.match(%r{/posts/show/(?<post_id>\d+)/})
+              post_id = m['post_id']
+              target = %r{(?<=/posts/show/#{post_id})#{Regexp.quote(segment)}}
+            else
+              next res
+            end
           end
 
           if local
