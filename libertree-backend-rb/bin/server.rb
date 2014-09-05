@@ -21,8 +21,6 @@ Libertree::DB.dbh
 ########################
 
 require 'libertree/server'
-# TODO: take the appropriate setting from the config file
-Libertree::Model::Account.set_auth_settings(:default, nil)
 
 Thread.abort_on_exception = true
 Libertree::Server.run ARGV[0]

@@ -93,14 +93,31 @@ module Libertree
 
       message :chat? do |stanza|
         # Is the sender registered with the gateway?
-        account = Libertree::Model::Account[ gateway_jid: stanza.from.to_s ]
-        if account
+
+        # There will be an Account for users registered with the local
+        # gateway; for users at a remote Libertree site, there will be
+        # a Member record with gateway_jid.  We trust the remote site
+        # that it has done steps to authenticate the user against the
+        # gateway.  The gateway_jid is simply distributed to the
+        # forest upon registration.
+
+        if account = Libertree::Model::Account[ gateway_jid: stanza.from.stripped.to_s ]
           sender_username = account.username
+          sender_member = account.member
+        elsif sender_member = Libertree::Model::Member[ gateway_jid: stanza.from.stripped.to_s ]
+          sender_username = sender_member.username
+        end
+
+        if sender_username && sender_member
+          # Although this message was not sent through a Libertree
+          # server, we know that the sender is registered with a
+          # Libertree gateway (either local or remote) and thus has a
+          # Libertree account/member record.
           recipient = Libertree::Model::Account[ username: stanza.to.node.to_s ]
           if recipient
             Libertree::Model::ChatMessage.
-              create(from_member_id: account.member.id,
-                     to_member_id: recipient.id,
+              create(from_member_id: sender_member.id,
+                     to_member_id: recipient.member.id,
                      text: stanza.body)
           end
           halt
@@ -112,6 +129,9 @@ module Libertree
             @client.write Blather::StanzaError.new(stanza, 'registration-required', :cancel)
             halt
           end
+
+          # At this point we know that the message was sent through a
+          # known Libertree server in the forest.
           sender_username = stanza.from.node
 
           params = {

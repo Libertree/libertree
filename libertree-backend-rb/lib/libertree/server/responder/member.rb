@@ -33,7 +33,10 @@ module Libertree
 
             if params['gateway_jid']
               member.gateway_jid = params['gateway_jid']
+            else
+              member.gateway_jid = nil
             end
+            member.save
 
             # fetch avatar asynchronously
             if params['avatar_url']

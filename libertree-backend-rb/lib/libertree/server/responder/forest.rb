@@ -46,7 +46,6 @@ module Libertree
             # TODO: validate before storing these values
             @remote_tree.public_key = params['public_key']
             @remote_tree.contact    = params['contact']
-            @remote_tree.name_given = params['name_given']
             @remote_tree.save
           end
         end

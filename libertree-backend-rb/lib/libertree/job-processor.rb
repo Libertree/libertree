@@ -12,6 +12,9 @@ module Libertree
       @config_filename = config_filename
       @conf = YAML.load( File.read(config_filename) )
 
+      # initialise own domain (used for local member handles)
+      Libertree::Model::Server.own_domain = @conf['domain']
+
       if @conf && @conf['pid_dir']
         if ! Dir.exists?(@conf['pid_dir'])
           Dir.mkdir @conf['pid_dir']

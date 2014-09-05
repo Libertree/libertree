@@ -1,31 +1,22 @@
 GIT
   remote: git://github.com/Libertree/libertree-client-rb.git
-  revision: c453364a5a64ebd685523efadbcb0630a489964c
+  revision: 50d052d78886924394d293a6f1c91570fc7fa2a1
   specs:
-    libertree-client (0.0.2)
+    libertree-client (0.0.3)
 
 GIT
   remote: git://github.com/Libertree/libertree-model-rb.git
-  revision: f7cadc4afb7e3f1a5eea09c46938e27cbe5ec3a1
+  revision: d43f34641d33c31c30b34be0b6e43a4b64f76556
   specs:
-    libertree-model (0.7.0)
+    libertree-model (0.9.1)
       bcrypt-ruby (= 3.0.1)
       net-ldap (~> 0.5.1)
       nokogiri (~> 1.5)
+      parkdown (~> 1.4.23)
       pg
       ruby-oembed (~> 0.8.8)
       sequel
-
-GIT
-  remote: git://github.com/adhearsion/blather.git
-  revision: 50055bd2de7c7a21430910f00b17c18fa0a38176
-  specs:
-    blather (1.0.0)
-      activesupport (>= 2.3.11)
-      eventmachine (>= 1.0.0)
-      girl_friday
-      niceogiri (~> 1.0)
-      nokogiri (~> 1.5, >= 1.5.6)
+      timedcache
 
 GIT
   remote: git://github.com/mark-moseley/linecache
@@ -46,6 +37,12 @@ GEM
     archive-tar-minitar (0.5.2)
     atomic (1.1.14)
     bcrypt-ruby (3.0.1)
+    blather (1.0.0)
+      activesupport (>= 2.3.11)
+      eventmachine (>= 1.0.0)
+      girl_friday
+      niceogiri (~> 1.0)
+      nokogiri (~> 1.5, >= 1.5.6)
     columnize (0.3.6)
     connection_pool (1.2.0)
     debugger-ruby_core_source (1.2.0)
@@ -78,6 +75,7 @@ GEM
       nokogiri (~> 1.5)
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
+    parkdown (1.4.23)
     pg (0.17.0)
     polyglot (0.3.3)
     rake (10.1.1)
@@ -103,12 +101,13 @@ GEM
       columnize (>= 0.3.1)
       linecache19 (>= 0.5.11)
       ruby-debug-base19 (>= 0.11.19)
-    ruby-oembed (0.8.9)
+    ruby-oembed (0.8.10)
     ruby_core_source (0.1.5)
       archive-tar-minitar (>= 0.5.2)
     sequel (4.7.0)
     thread_safe (0.1.3)
       atomic
+    timedcache (0.4.0)
     treetop (1.4.15)
       polyglot
       polyglot (>= 0.3.1)
@@ -119,7 +118,7 @@ PLATFORMS
 
 DEPENDENCIES
   bcrypt-ruby
-  blather!
+  blather
   em-websocket
   factory_girl
   json
