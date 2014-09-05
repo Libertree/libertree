@@ -87,7 +87,7 @@ module Libertree
         local_comment_author = like.comment.member.account
         like_author = like.member.account
 
-        if local_comment_author && local_comment_author.id != like_author.id
+        if local_comment_author && (!like_author || local_comment_author.id != like_author.id)
           local_comment_author.notify_about notification_attributes
         end
       end
@@ -122,7 +122,7 @@ module Libertree
 
       # TODO: When more visibilities come, restrict this result set by visibility
       def self.comments_since_id(comment_id)
-        self.where{ :id > comment_id }.order(:id)
+        self.where{ id > comment_id }.order(:id)
       end
 
       # @param [Hash] opt options for restricting the comment set returned

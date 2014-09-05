@@ -2,118 +2,265 @@
 require 'spec_helper'
 
 describe Libertree::Model::River do
-  before do
+  before :all do
     @account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
   end
 
-  describe '#query_components' do
-
-    def test_one( query, expected )
-      river = Libertree::Model::River.create(
-        FactoryGirl.attributes_for( :river, label: query, query: query, account_id: @account.id )
-      )
-      expect( river.query_components.values.flatten ).to match_array(expected)
-    end
-
-    def test_exact( query, expected )
-      river = Libertree::Model::River.create(
-        FactoryGirl.attributes_for( :river, label: query, query: query, account_id: @account.id )
-      )
-      expect( river.query_components ).to eq(expected)
-    end
-
-    it "splits the text of the river's query along spaces into an Array of words" do
-      test_one  'test', ['test']
-      test_one  'test two', ['test', 'two']
-      test_one  'a b c', ['a', 'b', 'c']
-      test_one  '1 _ !', ['1', '_', '!']
-    end
-
-    it 'treats quoted strings as single components' do
-      test_one  %{match "as is"}, [ 'match', 'as is' ]
-    end
-
-    it 'ignores unmatched quotes' do
-      test_one  %{match "as is}, [ 'match', '"as', 'is' ]
-      test_one  %{match "as is" "hey there}, [ 'match', 'as is', '"hey', 'there' ]
-      test_one  %{match "as is" hey" there}, [ 'match', 'as is', 'hey"', 'there' ]
-    end
-
-    it 'ignores quotes inside words' do
-      test_one  %{match a"s is}, [ 'match', 'a"s', 'is' ]
-      test_one  %{match a"s i"s}, [ 'match', 'a"s', 'i"s' ]
-    end
-
-    it 'treats "minused" quoted strings as single components' do
-      test_one  %{match -"as is" yo}, [ 'match', '-as is', 'yo' ]
-    end
-
-    it 'treats a term with a quoted argument as a single query component' do
-      [
-        ':from',
-        ':river',
-        ':contact-list',
-      ].each do |term|
-        test_one  %{#{term} "abc"}, [ %{#{term} "abc"}, ]
-        test_one  %{#{term} "abc def"}, [ %{#{term} "abc def"}, ]
-        test_one  %{abc #{term} "def"}, [ 'abc', %{#{term} "def"}, ]
-        test_one  %{abc #{term} "def ghi" jkl}, [ 'abc', %{#{term} "def ghi"}, 'jkl', ]
-
-        test_one  %{-#{term} "abc"}, [ %{-#{term} "abc"}, ]
-        test_one  %{-#{term} "abc def"}, [ %{-#{term} "abc def"}, ]
-        test_one  %{abc -#{term} "def"}, [ 'abc', %{-#{term} "def"}, ]
-        test_one  %{abc -#{term} "def ghi" jkl}, [ 'abc', %{-#{term} "def ghi"}, 'jkl', ]
-
-        test_one  %{+#{term} "abc"}, [ %{+#{term} "abc"}, ]
-        test_one  %{+#{term} "abc def"}, [ %{+#{term} "abc def"}, ]
-        test_one  %{abc +#{term} "def"}, [ 'abc', %{+#{term} "def"}, ]
-        test_one  %{abc +#{term} "def ghi" jkl}, [ 'abc', %{+#{term} "def ghi"}, 'jkl', ]
+  describe '#refresh_posts' do
+    it 'limits the result set' do
+      id = @account.member.id
+      (1..25).each do |n|
+        Libertree::Model::Post.create(FactoryGirl.attributes_for( :post, member_id: id, text: n ))
       end
+      river = Libertree::Model::River.create(
+        FactoryGirl.attributes_for( :river, label: ':forest', query: ':forest', account_id: @account.id )
+      )
+      river.refresh_posts(10)
+      expect( river.posts.count ).to eq(10)
+
+      river.refresh_posts(100)
+      expect( river.posts({limit: 1000}).count ).to eq([Libertree::Model::Post.count, 100].min)
+    end
+  end
+
+  describe '#parsed_query' do
+    before :all do
+      @river = Libertree::Model::River.create(
+        FactoryGirl.attributes_for( :river, label: 'parsed-query-river', query: '', account_id: @account.id )
+      )
     end
 
-    it 'treats :visibility ... as a single term' do
-      test_one  %{:visibility abc}, [ ':visibility abc', ]
-      test_one  %{abc :visibility def}, [ 'abc', ':visibility def', ]
-      test_one  %{-:visibility abc}, [ '-:visibility abc', ]
-      test_one  %{abc -:visibility def}, [ 'abc', '-:visibility def', ]
-      test_one  %{+:visibility abc}, [ '+:visibility abc', ]
-      test_one  %{abc +:visibility def}, [ 'abc', '+:visibility def', ]
+    it 'returns an empty hash for an empty query' do
+      expect( @river.parsed_query(true) ).to eq({})
     end
 
-    it 'treats :word-count < n as a single term' do
-      test_one  %{:word-count < 5}, [ ':word-count < 5', ]
-      test_one  %{abc :word-count < 5}, [ 'abc', ':word-count < 5', ]
-      test_one  %{:word-count < 987}, [ ':word-count < 987', ]
-      test_one  %{abc :word-count < 987}, [ 'abc', ':word-count < 987', ]
-      test_one  %{:word-count > 5}, [ ':word-count > 5', ]
-      test_one  %{abc :word-count > 5}, [ 'abc', ':word-count > 5', ]
-      test_one  %{-:word-count < 5}, [ '-:word-count < 5', ]
-      test_one  %{abc -:word-count < 5}, [ 'abc', '-:word-count < 5', ]
-      test_one  %{+:word-count < 5}, [ '+:word-count < 5', ]
-      test_one  %{abc +:word-count < 5}, [ 'abc', '+:word-count < 5', ]
+    it 'sorts elements into one of the buckets "negations", "requirements", or "regular"' do
+      @river.update(query: '+hello -goodbye sleepy kitty')
+      expected = {
+        'word' => {
+          :negations    => ['goodbye'],
+          :requirements => ['hello'],
+          :regular      => ['sleepy', 'kitty']
+        }
+      }
+      expect( @river.parsed_query(true) ).to eq(expected)
+
+      @river.update(query: '+hello +world')
+      expected = {
+        'word' => {
+          :negations    => [],
+          :requirements => ['hello', 'world'],
+          :regular      => []
+        }
+      }
+      expect( @river.parsed_query(true) ).to eq(expected)
     end
 
-    it 'treats :spring "..." "..." as a single term' do
-      test_one  ':spring "Spring Name" "username@treename"', [ ':spring "Spring Name" "username@treename"', ]
-      test_one  'foo :spring "Spring Name" "username@treename"', [ 'foo', ':spring "Spring Name" "username@treename"', ]
+    it 'identifies and groups flags' do
+      @river.update(query: '+:forest -:tree :unread :liked :commented :subscribed')
+      expected = {
+        'flag' => {
+          :negations    => ['tree'],
+          :requirements => ['forest'],
+          :regular      => ['unread', 'liked', 'commented', 'subscribed']
+        }
+      }
+      expect( @river.parsed_query(true) ).to eq(expected)
     end
 
-    it 'treats :via "..." as a single term' do
-      test_one  ':via "something or other"', [ ':via "something or other"', ]
-      test_one  'foo :via "abcdef"', [ 'foo', ':via "abcdef"', ]
+    it 'identifies and groups phrase, via, visibility, word-count and tag' do
+      @river.update(query: '+"hello world" -"goodbye ruby tuesday" "sleepy kitty"')
+      expected = {
+        'phrase' => {
+          :negations    => ['goodbye ruby tuesday'],
+          :requirements => ['hello world'],
+          :regular      => ['sleepy kitty']
+        }
+      }
+      expect( @river.parsed_query(true) ).to eq(expected)
+
+      @river.update(query: '+:via "api" -:via "source of spam" :via "tree"')
+      expected = {
+        'via' => {
+          :negations    => ['source of spam'],
+          :requirements => ['api'],
+          :regular      => ['tree']
+        }
+      }
+      expect( @river.parsed_query(true) ).to eq(expected)
+
+      @river.update(query: '+:visibility tree -:visibility forest :visibility internet')
+      expected = {
+        'visibility' => {
+          :negations    => ['forest'],
+          :requirements => ['tree'],
+          :regular      => ['internet']
+        }
+      }
+      expect( @river.parsed_query(true) ).to eq(expected)
+
+      @river.update(query: '+:word-count >12 -:word-count < 20 :word-count > 100')
+      expected = {
+        'word-count' => {
+          :negations    => ['< 20'],
+          :requirements => ['>12'],
+          :regular      => ['> 100']
+        }
+      }
+      expect( @river.parsed_query(true) ).to eq(expected)
+
+
+      @river.update(query: '+#awesome -#lame #whatever')
+      expected = {
+        'tag' => {
+          :negations    => ['lame'],
+          :requirements => ['awesome'],
+          :regular      => ['whatever']
+        }
+      }
+      expect( @river.parsed_query(true) ).to eq(expected)
     end
 
-    it 'considers single word terms as static' do
-      test_exact 'foo bar baz', {:static => ['foo', 'bar', 'baz'], :dynamic => []}
+    it 'looks up a member to verify :from query' do
+      user = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
+      @river.update(query: ":from \"#{user.member.handle}\"")
+      expected = {
+        'from' => {
+          :negations    => [],
+          :requirements => [],
+          :regular      => [user.member.id]
+        }
+      }
+      expect( @river.parsed_query(true) ).to eq(expected)
     end
 
-    it 'considers special terms as dynamic' do
-      test_exact 'foo bar baz :word-count > 10', {:static => ['foo', 'bar', 'baz'], :dynamic => [':word-count > 10']}
+    it 'returns an empty hash for an invalid :from query' do
+      @river.update(query: ':from "thisuserdoesnotexist@thishostdoesnotexist"')
+      expect( @river.parsed_query(true) ).to eq({})
+    end
+
+    it 'merges the parsed query of a referenced river into the current query' do
+      pending 'this requires more rigorous logic processing'
+      river = Libertree::Model::River.create( query: 'some whatever',
+                                              label: 'river-spec-included-river',
+                                              account_id: @account.id )
+      @river.update(query: "some terms :river \"#{river.label}\"")
+      expected = {
+        'word' => {
+          :negations    => [],
+          :requirements => [],
+          :regular      => ['some', 'terms', 'whatever']
+        }
+      }
+      expect( @river.parsed_query(true) ).to eq(expected)
+    end
+
+    it 'ignores self-referential river queries' do
+      @river.update(query: ":river \"#{@river.label}\"")
+      expect( @river.parsed_query(true) ).to eq({})
+    end
+
+    it 'looks up a contact list to verify :contact-list query' do
+      a = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
+      member1 = a.member
+      b = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
+      member2 = b.member
+      list = Libertree::Model::ContactList.create( account_id: @river.account.id,
+                                                   name: "river-spec-list-name1" )
+      list << member1
+      list << member2
+
+      @river.update(query: ':contact-list "river-spec-list-name1"')
+      expected = {
+        'contact-list' => {
+          :negations    => [],
+          :requirements => [],
+          :regular      => [list.member_ids]
+        }
+      }
+      expect( @river.parsed_query(true) ).to eq(expected)
+    end
+
+    it 'ignores empty contact list' do
+      list = Libertree::Model::ContactList.create( account_id: @river.account.id,
+                                                   name: "river-spec-list-name2" )
+      @river.update(query: ':contact-list "river-spec-list-name2"')
+      expect( @river.parsed_query(true) ).to eq({})
+    end
+
+    it 'looks up a spring to verify :spring query' do
+      user = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
+      spring = Libertree::Model::Pool.create( member_id: user.member.id,
+                                              sprung: true,
+                                              name: 'river-spec-spring')
+      @river.update(query: ":spring \"river-spec-spring\" \"#{user.member.handle}\"")
+      expected = {
+        'spring' => {
+          :negations    => [],
+          :requirements => [],
+          :regular      => [spring]
+        }
+      }
+      expect( @river.parsed_query(true) ).to eq(expected)
+    end
+
+    it 'ignores the :spring query if the pool does not exist or is not sprung' do
+      user = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
+      spring = Libertree::Model::Pool.create( member_id: user.member.id,
+                                              sprung: false,
+                                              name: 'river-spec-pool')
+      @river.update(query: ":spring \"river-spec-pool\" \"#{user.member.handle}\"")
+      expect( @river.parsed_query(true) ).to eq({})
+
+      @river.update(query: ":spring \"river-spec-pool-does-not-exist\" \"#{user.member.handle}\"")
+      expect( @river.parsed_query(true) ).to eq({})
+    end
+
+    it 'treats words with special characters as phrases' do
+      @river.update(query: "http://google.com duckduckgo o'brian stop&go")
+      expected = {
+        'phrase' => {
+          :negations    => [],
+          :requirements => [],
+          :regular      => ['http://google.com', 'o\'brian', 'stop&go']
+        },
+        'word' => {
+          :negations    => [],
+          :requirements => [],
+          :regular      => ['duckduckgo']
+        }
+      }
+      expect( @river.parsed_query(true) ).to eq(expected)
+    end
+
+    it 'does not mind long whitespace stretches' do
+      @river.update(query: "     hello    bye   ")
+      expected = {
+        'word' => {
+          :negations    => [],
+          :requirements => [],
+          :regular      => ['hello', 'bye']
+        }
+      }
+      expect( @river.parsed_query(true) ).to eq(expected)
+    end
+
+    it 'does not mind new line or odd whitespace characters' do
+      @river.update(query: "\t  \fhello  \n  bye\r\nciao\rhi   ")
+      expected = {
+        'word' => {
+          :negations    => [],
+          :requirements => [],
+          :regular      => ['hello', 'bye', 'ciao', 'hi']
+        }
+      }
+      expect( @river.parsed_query(true) ).to eq(expected)
     end
   end
 
   describe '#matches_post?' do
     before do
+      @account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
       other_account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
       @member = other_account.member
     end
@@ -182,9 +329,9 @@ describe Libertree::Model::River do
     end
 
     context 'given two different remote posters' do
-      before do
+      before :all do
         server = Libertree::Model::Server.create(
-          FactoryGirl.attributes_for(:server, name_given: 'remote' )
+          FactoryGirl.attributes_for(:server, domain: 'remote' )
         )
         @member4 = Libertree::Model::Member.create(
           FactoryGirl.attributes_for( :member, username: 'poster3', server_id: server.id )
@@ -202,11 +349,9 @@ describe Libertree::Model::River do
       end
 
       context 'with display names' do
-        before do
-          @member4.profile.name_display = 'First1 Last1'
-          @member4.profile.save
-          @member5.profile.name_display = 'First2 Last2'
-          @member5.profile.save
+        before :all do
+          @member4.profile.update(name_display: 'First1 Last1')
+          @member5.profile.update(name_display: 'First2 Last2')
         end
 
         it 'matches :from "member display name"' do
@@ -254,6 +399,8 @@ describe Libertree::Model::River do
       try_one  '+"foo bar"', 'foo bar', true
       try_one  '+"foo bar" baz', 'foo bar bleh', false
       try_one  '+"foo bar" baz', 'foo bar baz', true
+      try_one  '+"foo bar" baz bleh', 'foo bar baz', true
+      try_one  '+"foo bar" baz bleh', 'foo bar bleh', true
     end
 
     it "matches posts liked by the river's account" do
@@ -631,14 +778,6 @@ describe Libertree::Model::River do
 
         @pool_private << @post_private
         @spring << @post_feed
-      end
-
-      it 'does not match posts in pools that have not been sprung' do
-        river = Libertree::Model::River.create(
-          FactoryGirl.attributes_for( :river, query: %|:spring "My Pool" "#{@member.handle}"|, account_id: @account.id )
-        )
-        river.matches_post?(@post_private).should be_false
-        river.matches_post?(@post_feed).should be_false
       end
 
       it 'matches posts in sprung pools' do

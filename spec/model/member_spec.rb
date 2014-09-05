@@ -24,8 +24,38 @@ describe Libertree::Model::Member do
     end
   end
 
+  describe '#handle' do
+    it 'returns the username and domain part for local and remote members' do
+      account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
+      local = account.member
+      expect( local.handle ).to eq(account.username + '@' + Libertree::Model::Server.own_domain)
+
+      server = Libertree::Model::Server.create( FactoryGirl.attributes_for(:server) )
+      remote = Libertree::Model::Member.create(
+        FactoryGirl.attributes_for(:member, :server_id => server.id)
+      )
+      expect( remote.handle ).to eq(remote.username + '@' + server.domain)
+    end
+  end
+
+  describe '.with_handle' do
+    it 'gets the member record with a matching handle on a remote server' do
+      @server = Libertree::Model::Server.create( FactoryGirl.attributes_for(:server) )
+      @member = Libertree::Model::Member.create(
+        FactoryGirl.attributes_for(:member, :server_id => @server.id)
+      )
+      expect( Libertree::Model::Member.with_handle(@member.handle) ).to eq(@member)
+    end
+
+    it 'gets the member record with a matching handle on the local server' do
+      account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
+      @member = account.member
+      expect( Libertree::Model::Member.with_handle(@member.handle) ).to eq(@member)
+    end
+  end
+
   describe '.search' do
-    before :each do
+    before :all do
       Libertree::DB.dbh.execute 'TRUNCATE members CASCADE'
       Libertree::DB.dbh.execute 'TRUNCATE accounts CASCADE'
     end

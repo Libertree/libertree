@@ -6,8 +6,7 @@ FactoryGirl.define do
   end
 
   factory :server, :class => Libertree::Model::Server do
-    sequence(:ip) { |n| "67.67.#{n/256}.#{n%256}" }
-    sequence(:name_given) { |n| "server#{n}" }
+    sequence(:domain) { |n| "server#{n}.example.net" }
   end
 
   factory :account, :class => Libertree::Model::Account do

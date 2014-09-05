@@ -27,7 +27,16 @@ describe Libertree::Model::Account do
                                  :text => 'None of your business'
                                })
 
-      expect( @account.messages ).to match_array [message_sent, message_received]
+      # Individual messages have a "deleted" flag while the members of
+      # the result set returned by #messages do not.  In #messages the
+      # "deleted" flag is used as a filter parameter only, so that
+      # only existing messages are returned.  For this test it is thus
+      # required to ignore the "deleted" flag.
+
+      # TODO: we only compare message ids for now.  Expand this later
+      # to match against the full objects.
+      result = [message_sent, message_received].map(&:id)
+      expect( @account.messages.map(&:id) ).to match_array result
     end
   end
 
@@ -68,6 +77,16 @@ describe Libertree::Model::Account do
         Libertree::Model::Account[@account_id].should_not be_nil
 
         @account.delete_cascade
+
+        # invalidate cached records; they would expire within minutes in a live system
+        [ Libertree::Model::Post[@post1_id],
+          Libertree::Model::Post[@post2_id],
+          Libertree::Model::Comment[@comment1_id],
+          Libertree::Model::Comment[@comment2_id],
+          Libertree::Model::Member[@member_id]
+        ].each do |cached|
+          Libertree::MODELCACHE.delete(cached.cache_key)
+        end
 
         Libertree::Model::Post[@post1_id].should be_nil
         Libertree::Model::Post[@post2_id].should_not be_nil

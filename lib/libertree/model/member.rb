@@ -49,19 +49,19 @@ module Libertree
       # TODO: DB: association
       #many_to_one :server
       def server
-        @server = Server[self.server_id]
+        @server ||= Server[self.server_id]
       end
       alias :tree :server
 
       def name_display
-        @name_display ||= ( profile && profile.name_display || self.handle )
+        @name_display ||= ( profile && profile.name_display || self.username )
       end
 
       def handle
         if self.username && self.server
           self.username + "@#{self.server.name_display}"
-        else
-          account.username  if account
+        elsif account
+          account.username + "@#{Server.own_domain}"
         end
       end
 
@@ -69,37 +69,40 @@ module Libertree
         if h =~ /^(.+?)@(.+?)$/
           username = $1
           host = $2
-          self.s(
-            %{
-              SELECT m.*
-              FROM
-                  members m
-                , servers s
-              WHERE
-                m.username = ?
-                AND s.id = m.server_id
-                AND (
-                  s.name_given = ?
-                  OR s.domain = ?
-                )
-            },
-            username, host, host
-          ).first
+          if host == Server.own_domain
+            local = true
+          end
         else
-          self.s(
-            %{
-              SELECT
-                m.*
-              FROM
-                  members m
-                , accounts a
-              WHERE
-                a.id = m.account_id
-                AND a.username = ?
-            },
-            h
-          ).first
+          username = h
+          local = true
         end
+
+        if local
+          self.qualify.
+            join(:accounts, :id=>:account_id).
+            where(:accounts__username => username).
+            limit(1).
+            first
+        else
+          # TODO: servers.name_given is no longer used.  Remove it after
+          # migrating user rivers/contact lists etc.
+          self.qualify.
+            join(:servers, :id=>:server_id).
+            where(:members__username => username).
+            where(Sequel.or(:servers__domain => host, :servers__name_given => host)).
+            limit(1).
+            first
+        end
+      end
+
+      # TODO: this is a temporary helper because with_handle no longer includes display name matches.
+      # This will eventually be removed when river :from queries no longer accept display names.
+      def self.with_display_name(name)
+        self.qualify.
+          join(:profiles, :member_id=>:id).
+          where(:profiles__name_display => name).
+          limit(1).
+          first
       end
 
       def username
