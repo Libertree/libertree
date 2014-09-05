@@ -3,6 +3,8 @@ require 'yaml'
 
 module Libertree
   module DB
+    LAST_MIGRATION = "2014-08-31-2050-search-indices.sql"
+
     def self.config
       @config
     end
@@ -23,6 +25,12 @@ module Libertree
                                database: config['database'],
                                user:     config['username'],
                                password: config['password'])
+
+      # ensure the latest required migration exists
+      if @dbh[:schema_migrations].where(filename: LAST_MIGRATION).count == 0
+        fail "Libertree::DB: migration `#{LAST_MIGRATION}' not found.  Please update libertree-db."
+      end
+      @dbh
     end
   end
 end

@@ -1,5 +1,4 @@
-require 'libertree/db'
-Libertree::DB.load_config 'database.yaml'
-Libertree::DB.dbh  # connect
-require 'libertree/model'
-include Libertree::Model
+require 'libertree/console'
+
+Libertree::Console.init
+Libertree::Console.start

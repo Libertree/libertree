@@ -18,7 +18,7 @@ module Libertree
       end
 
       def self.search(query)
-        s  "SELECT * FROM profiles WHERE name_display ILIKE '%' || ? || '%' OR description ILIKE '%' || ? || '%'", query, query
+        self.where("(to_tsvector('simple', description) || to_tsvector('english', description)) @@ plainto_tsquery(?)", query).or("name_display ILIKE '%' || ? || '%'", query)
       end
     end
   end

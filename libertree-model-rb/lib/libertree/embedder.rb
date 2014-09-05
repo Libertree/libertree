@@ -58,20 +58,11 @@ module Libertree
     end
 
     def self.extract_urls(text)
-      # Strip off trailing closing parentheses that may be followed by any
-      # number of periods/commas.  More often than not they are not part of the
-      # URL.  We match against the reverse of the URL to avoid complicating the
-      # regular expression with non-greedy look-behind.
-
-      urls = URI.extract(text).map { |url|
-        matches = url.reverse.match(/^(?:\.*[,\?]*\.*\)?)?(.+)/)
-        if matches
-          matches[1].reverse
-        else
-          url
-        end
-      }
-      urls.find_all {|u| u =~ self.supported}.map(&:strip).uniq
+      Render.to_html_nodeset(text).
+        xpath('.//a/@href').
+        map {|href| href.value.strip}.
+        uniq.
+        find_all {|href| href =~ self.supported }
     end
 
   end

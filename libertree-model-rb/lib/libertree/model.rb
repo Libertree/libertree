@@ -5,6 +5,11 @@ Sequel::Model.plugin :compat
 Sequel::Model.unrestrict_primary_key
 Sequel::Model.plugin :json_serializer
 
+Libertree::DB.dbh.extension :pg_array
+Sequel.extension :pg_array_ops
+
+require_relative 'query'
+
 require_relative 'model/is-remote-or-local'
 require_relative 'model/has-searchable-text'
 require_relative 'model/has-display-text'

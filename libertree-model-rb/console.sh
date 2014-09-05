@@ -1,1 +1,1 @@
-bundle exec irb -Ilib -r'./console-init.rb'
+bundle exec ruby -Ilib ./console-init.rb

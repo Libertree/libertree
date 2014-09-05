@@ -36,7 +36,6 @@ describe Libertree::Embedder do
     end
 
     it 'deals with URLs inside markdown links' do
-      pending "hard to fix; how about rendering markdown first?"
       text = "Stupid [http://youtube.com/watch?v=123.1](http://youtube.com/watch?v=123.1)"
       Libertree::Embedder.extract_urls(text).should == ["http://youtube.com/watch?v=123.1"]
     end
