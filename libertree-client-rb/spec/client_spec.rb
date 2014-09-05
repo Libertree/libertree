@@ -15,7 +15,6 @@ describe Libertree::Client do
     @public_key = key.public_key.to_pem
     @contact = "admin@localhost"
     @domain = "localhost"
-    @server_name = "server"
 
     @c = Libertree::Client.new({ private_key: key,
                                  contact: @contact,
@@ -24,7 +23,6 @@ describe Libertree::Client do
 
     @c.instance_variable_set(:@contact, @contact)
     @c.instance_variable_set(:@domain, @domain)
-    @c.instance_variable_set(:@server_name, @server_name)
   end
 
   describe 'build_stanza' do
@@ -35,7 +33,7 @@ describe Libertree::Client do
       )
       example = %{
 <iq type="set" to="libertree.localhost.localdomain" id="blather0001">
-  <libertree xmlns="urn:libertree">content</libertree>
+  <libertree xmlns="urn:libertree" xmlns:thr="http://purl.org/syndication/thread/1.0">content</libertree>
 </iq>
 }
       expect(stanza.to_xml).to eq Nokogiri::XML::fragment(example).to_xml.strip
@@ -120,8 +118,6 @@ XML
       @member = Libertree::Model::Member.create(
         FactoryGirl.attributes_for(:member, :server_id => @requester.id)
       )
-      @member.profile.description = "foo bar"
-      @member.profile.name_display = "Jim"
 
       @member2 = Libertree::Model::Member.create(
         FactoryGirl.attributes_for(:member, :server_id => @requester.id)
@@ -131,6 +127,8 @@ XML
         FactoryGirl.attributes_for(:account)
       )
       @member3 = local_account.member
+      @member3.profile.description = "foo bar"
+      @member3.profile.name_display = "Jim"
 
       @message = Libertree::Model::Message.create_with_recipients(:text => "hello world", :sender_member_id => @member3.id, :recipient_member_ids => [@member.id, @member2.id])
 
@@ -156,8 +154,10 @@ XML
         expected =<<XML
 <comment>
   <id>#{@comment.id}</id>
+  <uid>xmpp:#{@domain}?;node=/comments;item=#{@comment.id}</uid>
   <post_id>#{@post.public_id}</post_id>
   <origin>#{@requester.domain}</origin>
+  <thr:in-reply-to ref="xmpp:#{@requester.domain}?;node=/posts;item=#{@post.public_id}"/>
   <username>#{@comment.member.username}</username>
   <text>#{@comment.text}</text>
 </comment>
@@ -224,7 +224,6 @@ XML
 <introduce>
   <public_key>#{@public_key}</public_key>
   <contact>#{@contact}</contact>
-  <server_name>#{@server_name}</server_name>
 </introduce>
 XML
         expect( @c.req_introduce ).to eq(strip_xml(expected))
@@ -235,14 +234,14 @@ XML
       it 'produces expected xml' do
         expected =<<XML
 <member>
-  <username>#{@member.username}</username>
+  <username>#{@member3.username}</username>
   <profile>
-    <name_display>#{@member.profile.name_display}</name_display>
+    <name_display>#{@member3.profile.name_display}</name_display>
     <description>foo bar</description>
   </profile>
 </member>
 XML
-        expect( @c.req_member(@member) ).to eq(strip_xml(expected))
+        expect( @c.req_member(@member3) ).to eq(strip_xml(expected))
       end
     end
     describe 'req_member_delete' do
@@ -260,6 +259,7 @@ XML
         expected =<<XML
 <message>
   <username>#{@member3.username}</username>
+  <id>#{@message.id}</id>
   <text>#{@message.text}</text>
   <recipients>
     <recipient>
@@ -283,6 +283,7 @@ XML
 <post>
   <username>#{@post.member.username}</username>
   <id>#{@post.id}</id>
+  <uid>xmpp:#{@domain}?;node=/posts;item=#{@post.id}</uid>
   <visibility>#{@post.visibility}</visibility>
   <text>#{@post.text}</text>
 </post>
@@ -295,6 +296,7 @@ XML
 <post>
   <username>#{@post.member.username}</username>
   <id>#{@post.id}</id>
+  <uid>xmpp:#{@domain}?;node=/posts;item=#{@post.id}</uid>
   <visibility>#{@post.visibility}</visibility>
   <text>#{@post.text}</text>
   <references>

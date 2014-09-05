@@ -5,7 +5,7 @@ module Libertree
     module Helper
       def build_stanza(target, payload)
         stanza = Blather::Stanza::Iq.new(:set, target)
-        content = "<libertree xmlns=\"urn:libertree\">#{payload}</libertree>"
+        content = "<libertree xmlns='urn:libertree' xmlns:thr='http://purl.org/syndication/thread/1.0'>#{payload}</libertree>"
         stanza.add_child content
         stanza
       end
