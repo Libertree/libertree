@@ -21,6 +21,8 @@ class GemfileMerger
       elsif  m = item.match(/^end/)
         group = nil
       else
+        # strip off any comments
+        item = item.gsub(/(.+)#.*/, '\1').rstrip
         if group
           res[group] << item
         else
@@ -43,7 +45,7 @@ class GemfileMerger
         else
           puts "group '#{key}' do"
         end
-        puts stuff.join
+        puts stuff.join("\n")
         puts "end"  unless ignore
       end
     end
