@@ -131,30 +131,30 @@ libertree-model-$(VERSION_MODEL).$(PKG_TYPE) : libertree-model-$(VERSION_MODEL).
 ####################################
 
 # needs OpenSSL library
-$(PKG_PREFIX)-eventmachine-1.0.3.$(PKG_TYPE) : $(GEMDIR)/eventmachine-1.0.3.gem
-	$(call MKPACKAGE, eventmachine-1.0.3.gem, -p $@ -d openssl-libs)
+$(PKG_PREFIX)-eventmachine-%.$(PKG_TYPE) : $(GEMDIR)/eventmachine-%.gem
+	$(call MKPACKAGE, eventmachine-$*.gem, -p $@ -d openssl-libs)
 
 # needs libxml2 libxslt
-$(PKG_PREFIX)-nokogiri-1.5.9.$(PKG_TYPE) : $(GEMDIR)/nokogiri-1.5.9.gem
-	$(call MKPACKAGE, nokogiri-1.5.9.gem, -p $@ -d libxml2 -d libxslt)
+$(PKG_PREFIX)-nokogiri-%.$(PKG_TYPE) : $(GEMDIR)/nokogiri-%.gem
+	$(call MKPACKAGE, nokogiri-$*.gem, -p $@ -d libxml2 -d libxslt)
 
 # needs gpgme
-$(PKG_PREFIX)-gpgme-2.0.2.$(PKG_TYPE) : $(GEMDIR)/gpgme-2.0.2.gem
+$(PKG_PREFIX)-gpgme-%.$(PKG_TYPE) : $(GEMDIR)/gpgme-%.gem
 ifeq ($(PKG_TYPE), rpm)
-	$(call MKPACKAGE, gpgme-2.0.2.gem, -p $@ -d gpgme)
+	$(call MKPACKAGE, gpgme-$*.gem, -p $@ -d gpgme)
 else
-	$(call MKPACKAGE, gpgme-2.0.2.gem, -p $@ -d libgpgme11)
+	$(call MKPACKAGE, gpgme-$*.gem, -p $@ -d libgpgme11)
 endif
 
 # TODO: does this depend on a system library?
-$(PKG_PREFIX)-bcrypt-ruby-3.0.1.$(PKG_TYPE) : $(GEMDIR)/bcrypt-ruby-3.0.1.gem
+$(PKG_PREFIX)-bcrypt-ruby-%.$(PKG_TYPE) : $(GEMDIR)/bcrypt-ruby-%.gem
 	$(call MKPACKAGE, bcrypt-ruby-3.0.1.gem, -p $@)
 
-$(PKG_PREFIX)-pg-0.9.0.$(PKG_TYPE) : $(GEMDIR)/pg-0.9.0.gem
+$(PKG_PREFIX)-pg-%.$(PKG_TYPE) : $(GEMDIR)/pg-%.gem
 ifeq ($(PKG_TYPE), rpm)
-	$(call MKPACKAGE, pg-0.9.0.gem, -p $@ -d postgresql-libs)
+	$(call MKPACKAGE, pg-$*.gem, -p $@ -d postgresql-libs)
 else
-	$(call MKPACKAGE, pg-0.9.0.gem, -p $@ -d libpq5)
+	$(call MKPACKAGE, pg-$*.gem, -p $@ -d libpq5)
 endif
 
 # standard rule for gems that are converted to rpm/deb
