@@ -67,6 +67,7 @@ BUILDPKG = fpm -d ruby -d rubygems \
 all: libertree-frontend-$(VERSION_FRONTEND).$(PKG_TYPE) libertree-backend-$(VERSION_BACKEND).$(PKG_TYPE)
 
 # TODO: remove backend gems from prerequisites
+# TODO: what about empty paths like public/avatars, log/, pids/?
 libertree-frontend-$(VERSION_FRONTEND).$(PKG_TYPE) : gems \
 	libertree-model-$(VERSION_MODEL).$(PKG_TYPE)
 	fpm -d ruby -d rubygems \
@@ -94,13 +95,10 @@ libertree-frontend-$(VERSION_FRONTEND).$(PKG_TYPE) : gems \
 		LICENCE \
 		locale/ \
 		public/ \
-		public/avatars/ \
 		README.md \
 		spec/ \
 		test.sh \
-		view/ \
-		log/ \
-		pids/
+		view/
 
 # TODO: share database config file?
 # TODO: add built rpms/debs as dependencies
