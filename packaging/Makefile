@@ -72,7 +72,6 @@ libertree-frontend-$(VERSION_FRONTEND).$(PKG_TYPE) : gems \
 	libertree-model-$(VERSION_MODEL).$(PKG_TYPE)
 	fpm -d ruby -d rubygems \
 		-d libertree-model \
-		--edit \
 		--prefix $(PREFIX_FRONTEND) \
 		--url "http://libertreeproject.org" \
 		--maintainer "rekado+libertree@elephly.net" \
