@@ -160,7 +160,6 @@ DEPENDENCIES
   linecache19!
   mini_magick
   nokogiri
-  pg
   pry-byebug
   racksh
   ramaze!
@@ -171,6 +170,5 @@ DEPENDENCIES
   ruby-oembed
   sass
   selenium-webdriver
-  sequel
   thin
   unicorn
