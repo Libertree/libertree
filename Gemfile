@@ -6,7 +6,7 @@ gem 'json'
 gem 'net-ldap'
 
 group 'extensions' do
-  gem 'parkdown', git: 'git://github.com/rekado/parkdown.git'
+  gem 'parkdown'
   gem 'pg'
   gem 'bcrypt-ruby'
   gem 'nokogiri', '~> 1.5'
