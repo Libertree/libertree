@@ -1,3 +1,15 @@
+# needed to run these recipes:
+# - fpm gem
+# - mini_portile gem
+# - bundler
+# - ruby-filemagic depends on libmagic-dev (Debian) / file-devel (Fedora)
+# - openssl headers for eventmachine
+# - libxml2 and libxslt headers for nokogiri
+# - gpgme headers
+# - postgresql headers
+# - curb depends on libcurl-dev (Debian) / libcurl-devel (Fedora)
+
+
 # TODO:
 #   - add support for frontend
 #   - add architecture ("-a all" or "-a native")
