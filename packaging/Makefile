@@ -76,29 +76,38 @@ libertree-backend-$(VERSION_BACKEND).$(PKG_TYPE) : gems \
 #		--config-files config.yaml.example \
 
 
-gems : prepare regular_gems gems_with_extensions
-regular_gems : $(addprefix $(PKG_PREFIX)-,$(addsuffix .$(PKG_TYPE),activesupport-3.2.13 \
-	blather-0.8.5 \
-	connection_pool-1.0.0 \
+# generate this list from Gemfile.lock with the following command:
+# egrep -e '^    [a-z]+' Gemfile.lock | sed -e 's/^    //' -e 's/ (/-/' -e 's/)$//' | egrep -v -e '^libertree-' 
+
+gems : Gemfile.lock regular_gems gems_with_extensions
+regular_gems : $(addprefix $(PKG_PREFIX)-,$(addsuffix .$(PKG_TYPE),activesupport-4.1.5 \
+	blather-1.0.0 \
+	connection_pool-1.2.0 \
+	em-websocket-0.5.1 \
 	girl_friday-0.11.2 \
-	i18n-0.6.1 \
-	mail-2.5.4 \
-	mail-gpg-0.1.2 \
-	mime-types-1.23 \
-	multi_json-1.7.6 \
+	http_parser.rb-0.6.0 \
+	i18n-0.6.11 \
+	mail-2.6.1 \
+	mail-gpg-0.2.2 \
+	mime-types-2.3 \
+	mini_portile-0.6.0 \
+	minitest-5.4.1 \
+	net-ldap-0.5.1 \
 	niceogiri-1.1.2 \
-	polyglot-0.3.3 \
 	rubinius-actor-0.0.2 \
-	ruby-oembed-0.8.9 \
-	sequel-4.7.0 \
-	treetop-1.4.14))
+	ruby-oembed-0.8.10 \
+	sequel-4.14.0 \
+	thread_safe-0.3.4 \
+	timedcache-0.4.0 \
+	tzinfo-1.2.2))
 
 gems_with_extensions : $(addprefix $(PKG_PREFIX)-,$(addsuffix .$(PKG_TYPE),bcrypt-ruby-3.0.1 \
 	eventmachine-1.0.3 \
-	gpgme-2.0.2 \
-	json-1.8.0 \
-	nokogiri-1.5.9 \
-	pg-0.9.0 \
+	gpgme-2.0.6 \
+	json-1.8.1 \
+	nokogiri-1.6.3.1 \
+	parkdown-1.4.23 \
+	pg-0.17.1 \
 	rubinius-core-api-0.0.1))
 
 
