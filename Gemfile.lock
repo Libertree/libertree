@@ -127,8 +127,6 @@ DEPENDENCIES
   linecache19!
   mail
   mail-gpg
-  pg
   rspec
   ruby-debug-base19x (~> 0.11.30.pre4)
   ruby-debug19
-  sequel

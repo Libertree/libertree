@@ -1,5 +1,4 @@
 source 'http://rubygems.org'
-gem 'sequel'
 gem 'libertree-model', git: 'git://github.com/Libertree/libertree-model-rb.git'
 gem 'libertree-client', git: 'git://github.com/Libertree/libertree-client-rb.git'
 gem 'json'
@@ -9,7 +8,6 @@ gem 'em-websocket'
 gem 'blather'
 
 group 'extensions' do
-  gem 'pg'
   gem 'bcrypt-ruby'
 end
 
