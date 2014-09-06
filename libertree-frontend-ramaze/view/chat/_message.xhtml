@@ -1,0 +1,9 @@
+<?r if @message ?>
+  <div class="message" data-chat-message-id="#{@message.id}">
+    <span class="sender">#{@message.sender.name_display}</span>
+    <span class="age">#{ago(@message.time_created)}</span>
+    <div class="text">
+      #{@message.text_rendered(account)}
+    </div>
+  </div>
+<?r end ?>

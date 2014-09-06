@@ -1,0 +1,20 @@
+# 
+# Translators:
+# mlelao <mlelao@aim.com>, 2012
+msgid ""
+msgstr ""
+"Project-Id-Version: Libertree\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-06-08 10:12+0300\n"
+"PO-Revision-Date: 2014-02-01 12:38+0000\n"
+"Last-Translator: Loelo <autre7273@laposte.net>\n"
+"Language-Team: French (http://www.transifex.com/projects/p/libertree/language/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: view/login.xhtml
+msgid "[Libertree] Password reset"
+msgstr "[Libertree] Réinitialiser le mot de passe"

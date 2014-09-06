@@ -1,0 +1,87 @@
+@import "colours.scss";
+@import "../scss-include/mixins.scss";
+
+html.splash {
+  // This background image is based on photos copyright by Jim Champion
+  // (http://www.geograph.org.uk/profile/1086), available under a CC licence.
+  background: url('../images/silhouette-dust.png') bottom center repeat-x $dust;
+  height: 100%;
+  font-family: 'Droid Sans', Tahoma, Arial, sans-serif;
+}
+
+body.splash {
+  margin: 0 auto;
+  max-width: 450px;
+  background: transparent;
+  color: $text;
+
+  div.image-wrapper {
+    margin-bottom: 1em;
+    text-align: center;
+  }
+
+  div.label {
+    text-align: right;
+    margin-right: 0.5em;
+    width: 100px;
+    float: left;
+    clear: left;
+  }
+
+  p.note {
+    margin-top: 1.5em;
+    font-size: 0.9em;
+    color: $bark;
+  }
+
+  input[type="text"], input[type="password"] {
+    background: #fff;
+  }
+
+  .language-bar {
+    font-size: 0.7em;
+    text-align: center;
+  }
+
+  form, p {
+    padding-left: 1em;
+    padding-right: 1em;
+  }
+}
+
+html.signup {
+  background: url('../images/bg-green.png') fixed bottom center repeat-x $main;
+  height: 100%;
+}
+body.signup {
+  background: transparent;
+  form {
+    @include shadow;
+    @include rounded;
+    min-width: 60%;
+    max-width: 700px;
+    margin: 2em auto;
+    background: $dust;
+    padding: 30px;
+    margin-top: 2em;
+    overflow: auto;
+  }
+  label {
+      width: 200px;
+      text-align: right;
+      margin-right: 1.5em;
+      float: left;
+      clear: left;
+  }
+  .field {
+      margin-bottom: 1em;
+  }
+  h1 {
+    @include rounded;
+    margin: -30px -30px 1em;
+    padding: 1em;
+    padding-left: 160px;
+    background: $sand url(../images/logo-in-heading.png) no-repeat 20px bottom;
+    color: $main;
+  }
+}

@@ -1,0 +1,50 @@
+<h2>#{_('Pools')}</h2>
+
+<p>
+#{_('Use pools to collect posts.')}
+</p>
+
+<form action="/pools/create" method="POST">
+  <div class="field">
+    <label>
+      #{s_('new-pool|Name:')}
+    </label>
+    <input type="text" name="name"/>
+  </div>
+
+  <div class="field">
+    <label>
+      #{s_('Spring this pool:')}
+      #{help_bubble s_("&quot;Springing&quot; a pool causes the pool and which posts it contains to become publicly visible.  Members can add other members&#39; springs to rivers.")}
+    </label>
+    <input type="checkbox" name="sprung"/>
+  </div>
+
+  <input type="submit" value="#{s_('new-pool|Create')}"/>
+</form>
+
+<h3>#{_('Your pools')}</h3>
+<ul>
+  <?r @pools.each do |p| ?>
+    <li class="pool">
+      <a href="/pools/show/#{p.id}">#{p.name}</a>
+      <a href="/pools/edit/#{p.id}">#{img 'icon-edit.png', {alt:s_('pool|edit'), title:s_('pool|edit'), class:"size-16"}}</a>
+      <a href="/pools/destroy/#{p.id}" rel="confirm" data-msg="#{_('All record of collected posts will be lost. Delete this pool?')}" class="delete">#{img 'icon-delete.png', {alt:s_('pool|Delete'), class:"size-16"}}</a>
+    </li>
+  <?r end ?>
+</ul>
+
+<h3>#{_('Your springs')}</h3>
+<?r if @springs.empty? ?>
+<p>#{_("You don't have any springs.  Springs are post collections that are visible to other people.  &ldquo;Spring&rdquo; a pool to make it public!")}</p>
+<?r else ?>
+<ul>
+  <?r @springs.each do |p| ?>
+    <li class="pool">
+      <a href="/pools/show/#{p.id}">#{p.name}</a>
+      <a href="/pools/edit/#{p.id}">#{img 'icon-edit.png', {alt:s_('pool|edit'), title:s_('pool|edit'), class:"size-16"}}</a>
+      <a href="/pools/destroy/#{p.id}" rel="confirm" data-msg="#{_('All record of collected posts will be lost. Delete this pool?')}" class="delete">#{img 'icon-delete.png', {alt:s_('pool|Delete'), class:"size-16"}}</a>
+    </li>
+  <?r end ?>
+</ul>
+<?r end ?>

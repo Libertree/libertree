@@ -1,0 +1,13 @@
+<div class="image-wrapper">
+  #{img 'error.png', {class: "logo", alt: "Error"}}
+</div>
+
+<h2>#{_('Something went wrong...')}</h2>
+
+<p>
+#{_('Time of error: %s') % @t}
+</p>
+
+<p>
+#{_('Referrer: %s') % request.referrer}
+</p>

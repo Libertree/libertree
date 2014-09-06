@@ -1,0 +1,10 @@
+<form id="new-message" action="/messages/create" method="POST" data-member-id="#{account.member.id}">
+
+  <input id="recipients" name="recipients" data-placeholder="#{s_('direct-message|Recipients')}" tabindex="1"/>
+
+  #{ Controller::Main.render_partial '_markdown_injector' }
+  <textarea name="text" rows="5" id="textarea-message-new" tabindex="2">#{session[:saved_text]['textarea-message-new']}</textarea><br/>
+  <input class="preview" type="button" value="#{_('Preview')}" tabindex="4" data-type="post" data-preview-heading="#{_('Preview')}" data-preview-close-label="#{s_('preview|close')}" />
+  <input type="submit" value="#{s_('direct-message|Send')}" tabindex="3"/>
+  <a rel="popover" href="#" title="#{s_('direct-message-warning|please note...')}" data-content="#{_('Please note that direct messages are not fully private, encrypted nor secure.  As with all data on this tree, direct messages are fully accessible to the arborista (administrator).')}">#{img 'icon-exclamation.png', {title:s_('direct-message-warning|please note...'), class:"size-16"}}</a>
+</form>

@@ -1,0 +1,1519 @@
+# 
+# Translators:
+# Mauricio Mejía <hectormejia@riseup.net>, 2012
+# LunaChik <lunachik@zoho.com>, 2012
+# Mauricio Mejía <hectormejia@riseup.net>, 2012
+# Miguel Aguilar <miguel.aguilarmolina@gmail.com>, 2012
+# obado <simbobo@cooptel.net>, 2012
+msgid ""
+msgstr ""
+"Project-Id-Version: Libertree\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-06-08 10:12+0300\n"
+"PO-Revision-Date: 2014-01-28 09:21+0000\n"
+"Last-Translator: Pistos <transifex.pistos@purepistos.net>\n"
+"Language-Team: Spanish (http://www.transifex.com/projects/p/libertree/language/es/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: view/login.xhtml
+msgid "Username"
+msgstr "Nombre de usuario"
+
+msgid "Password"
+msgstr "Contraseña"
+
+msgid "Login"
+msgstr "Iniciar Sesión"
+
+msgid "Not a member yet?"
+msgstr "¿Aún no eres miembro?"
+
+# "Sign up now" is wrapped in a link
+msgid "Sign up now!"
+msgstr "¡Regístrate ahora!"
+
+msgid "Forgot your credentials?"
+msgstr "¿Has olvidado tus credenciales?"
+
+msgid ""
+"You can %sreset your password%s if your account has an email address on "
+"record."
+msgstr "Puedes %sreinicializar tu contraseña%s si registraste tu dirección de correo electrónico."
+
+#: controller/main.rb
+msgid "Invalid credentials."
+msgstr "Credenciales inválidos"
+
+msgid "A valid invitation code is required."
+msgstr "Se necesita código de invitación."
+
+msgid "This invitation code has already been used. Try another one!"
+msgstr "Este código de invitación ya fue utilizado. Prueba con otro."
+
+msgid "You mistyped your password."
+msgstr "La contraseña introducida es incorrecta."
+
+msgid "Username %s is taken.  Please choose another."
+msgstr "Nombre de usario %s está en uso.  Por favor, escoge otro."
+
+msgid ""
+"Username must be at least 2 characters long and consist only of lowercase "
+"letters, numbers, underscores and dashes."
+msgstr "El nombre de usuario debe tener más de 2 caracteres y consiste solamente de letras minúsculas, números,  guiones bajos  y guiones."
+
+msgid ""
+"A password reset link has been sent for the account with that email address."
+msgstr "Un hipervinculo para recuperar tu constreña se ha enviado para la cuenta con esa dirección de correo electrónico. "
+
+msgid "You have been logged out."
+msgstr "Has cerrado sesión."
+
+#: controller/base.rb
+msgid "not-authenticated|Please log in."
+msgstr "Por favor, abre sesión."
+
+#: controller/invitations.rb
+msgid ""
+"Failed to create invitation.  You may only have up to 5 unaccepted "
+"invitations at once."
+msgstr "Error al crear invitación. No puede tener a la vez más de cinco invitaciones sin aceptar . "
+
+#: view/home/index.xhtml
+msgid "In order to see posts here, you need to have at least one river."
+msgstr ""
+
+msgid "%sCreate one now%s"
+msgstr ""
+
+#: view/home/_menu.xhtml
+msgid "by post time"
+msgstr "Publicado recientemente"
+
+msgid "by update time"
+msgstr "Actualizado recientemente"
+
+msgid "mark all read"
+msgstr "Marcar todo como leído"
+
+#: view/posts/new.xhtml
+msgid "New Post"
+msgstr "Nueva Publicación"
+
+msgid "new-post|Post"
+msgstr "Publicación"
+
+msgid "Publish to these springs:"
+msgstr ""
+
+#: view/comments/_comments.xhtml, view/posts/{new,edit}.xhtml
+msgid "Preview"
+msgstr "Vista previa"
+
+msgid "Visibility"
+msgstr "Visibilidad"
+
+msgid "visibility|Internet"
+msgstr "Público"
+
+msgid "visibility|Forest"
+msgstr "Bosque"
+
+msgid "visibility|Tree"
+msgstr ""
+
+msgid "preview|close"
+msgstr ""
+
+#: helper/post.rb
+msgid "This post and its comments are visible to the whole Internet"
+msgstr "Esta publicación y sus comentarios son visible en toda la red."
+
+msgid ""
+"This post and its comments are only visible to members of this Libertree "
+"forest"
+msgstr "Esta publicación y sus comentarios son sólo visibles a los miembros de este bosque de Libertree."
+
+#: helper/views.rb
+msgid "Click here for help"
+msgstr ""
+
+msgid "help|What does this mean?"
+msgstr ""
+
+#: view/posts/edit.xhtml
+msgid "Edit Post"
+msgstr "Editar Publicación"
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "post|Update"
+msgstr "Actualizar"
+
+#: view/posts/show.xhtml
+msgid "Start receiving notifications about comments on this post"
+msgstr "Comienza a recibir notificaciones de los comentarios de esta publicación"
+
+msgid "subscribe"
+msgstr "Suscribir"
+
+msgid "Stop receiving notifications about comments on this post"
+msgstr "Dejar de recibir notificaciones de los comentarios de esta publicación"
+
+msgid "unsubscribe"
+msgstr "No subscribir"
+
+msgid "mark post unread"
+msgstr "Marcar publicación como no leída"
+
+msgid "mark post read"
+msgstr "Marcar publicación como leída"
+
+msgid "edit"
+msgstr "Editar"
+
+msgid "delete"
+msgstr "Eliminar"
+
+msgid "collect"
+msgstr "Coleccionar"
+
+msgid "unlike"
+msgstr "Ya no me gusta"
+
+msgid "like"
+msgstr "Me gusta"
+
+msgid "likes"
+msgstr "Les gusta"
+
+msgid "Delete this post?"
+msgstr "¿Eliminar esta publicación?"
+
+msgid "posted with: %s"
+msgstr ""
+
+#: view/posts/_excerpts.xhtml
+msgid "No more posts (for now)."
+msgstr ""
+
+msgid ""
+"The system is still matching posts with this river. Check in a few minutes "
+"for more posts."
+msgstr "El sistema aún está buscando las publicaciones correspondientes para este río. Revisa en unos minutos para más publicaciones."
+
+#: view/posts/_excerpt.xhtml
+msgid "back to top"
+msgstr "Volver arriba"
+
+msgid "Liked by %s"
+msgstr "Le gusta a %s"
+
+msgid "1 comment by %1$s"
+msgstr "1 comentario de %1$s"
+
+msgid "%2$d comments by %1$s"
+msgstr "%2$d comentarios de %1$s"
+
+msgid "comments"
+msgstr "Comentarios"
+
+msgid "comment"
+msgstr "Comentar"
+
+msgid "Likes:"
+msgstr ""
+
+msgid "Comments:"
+msgstr ""
+
+msgid "Visibility:"
+msgstr ""
+
+msgid "mark read"
+msgstr "Marcar como leído"
+
+msgid "mark unread"
+msgstr "Marcar como no leído"
+
+msgid ""
+"Hiding a post prevents it from showing in your rivers or triggering "
+"notifications."
+msgstr "Ocultar una publicación previene que se muestre en tus ríos o que recibas sus notificaciones."
+
+msgid "hide"
+msgstr "Ocultar"
+
+msgid "Click to confirm hiding of this post."
+msgstr "Hacer un clic para confirmar que desea ocultar esta publicación."
+
+msgid "confirm"
+msgstr "Confirmar"
+
+msgid "Collect this post in a pool"
+msgstr "Coleccionar esta publicación en una charca"
+
+msgid "collected"
+msgstr "Coleccionada"
+
+msgid "Remove this post from this pool"
+msgstr "Eliminar esta publicación de esta charca. "
+
+msgid "remove"
+msgstr "Eliminar"
+
+msgid ""
+"View post. Middle click, Shift-click, or Ctrl-Shift-click to open in new "
+"tab/window"
+msgstr ""
+
+msgid "view post"
+msgstr "Ver la publicación"
+
+msgid "show more"
+msgstr "Mostrar más"
+
+msgid "show less"
+msgstr "Mostrar menos"
+
+#: controller/posts.rb
+msgid "Post may not be empty."
+msgstr "La publicación no puede estar vacía"
+
+msgid "Please submit fewer than 16,000 characters."
+msgstr ""
+
+msgid "Successfully posted."
+msgstr ""
+
+msgid ""
+"Note that your post cannot be seen here because it does not match this "
+"river."
+msgstr ""
+
+#: controller/pools.rb
+msgid "You already have a pool with that name."
+msgstr "Ya tienes una charca con ese nombre. "
+
+msgid "Failed to create pool or add post."
+msgstr "Fallo al crear charca o al agregar publicación."
+
+msgid "Failed to add post to pool."
+msgstr "Fallo al agregar publicación a la charca."
+
+msgid "Post added to &ldquo;%s&rdquo; pool."
+msgstr "Publicación agregada a &ldquo;%s&rdquo; charca."
+
+msgid "The spring URL may only consist of letters, hyphens or underscores."
+msgstr ""
+
+msgid "You already have a spring with this name."
+msgstr ""
+
+msgid "The custom spring URL is too long.  You may use up to 64 characters."
+msgstr ""
+
+#: controller/profiles.rb
+msgid "Special characters are not allowed in display names."
+msgstr "Los caracteres especiales no está permitido en los nombres de exhibir."
+
+msgid "Avatar deleted."
+msgstr "Avatar se ha eliminado."
+
+msgid "Avatar changed."
+msgstr "Avatar se ha cambiado."
+
+msgid "Failed to reset avatar."
+msgstr "El Avatar no se ha restablecido."
+
+msgid "Only image files may be used as avatars."
+msgstr "Para Avatar, solamente pueden usarse archivos de imágenes."
+
+msgid "Only .png, .jpeg and .gif files may be used as avatars."
+msgstr "Solamente se puede usar archivos  .png, .jpeg, y .gif como Avatares."
+
+#: controller/rivers.rb
+msgid "You already have a river for that."
+msgstr "Ya tienes un río para eso."
+
+msgid "Please input a valid label for this river."
+msgstr ""
+
+#: view/comments/_comments.xhtml
+msgid "1 comment"
+msgstr "Un comentario"
+
+msgid "showing 1 comment"
+msgstr "Mostrando 1 comentario"
+
+msgid "%d comments"
+msgstr "%d comentarios"
+
+msgid "showing %d of %d comments"
+msgstr "Mostrando %d of %d comentarios"
+
+msgid "show %smore%s / %sall%s comments"
+msgstr "Mostrar %smás%s / %stodos%s comentarios"
+
+msgid "more comments"
+msgstr "más comentarios"
+
+msgid "jump-to-comment|Comment"
+msgstr "Comentar"
+
+msgid "Comment successfully posted."
+msgstr "El comentario publicó con éxito."
+
+msgid "detach"
+msgstr "Separar"
+
+msgid "attach"
+msgstr "Adjuntar"
+
+msgid "Clear"
+msgstr "Limpiar"
+
+msgid "Comment"
+msgstr "Comentar"
+
+#: view/comments/_comment.xhtml
+msgid "1 like"
+msgstr "A uno, le gusta"
+
+msgid "%d likes"
+msgstr "A %d, les gusta"
+
+msgid "back-to-referencing-comment|back"
+msgstr "Regresar"
+
+msgid "Unlike this comment"
+msgstr "No me gusta este comentario"
+
+msgid "Like this comment"
+msgstr "Me gusta este comentario"
+
+msgid "shareable link for this comment"
+msgstr "Hiperví­nculo para distributir este comentario "
+
+msgid "Delete this comment?"
+msgstr ""
+
+#: view/_markdown_injector.xhtml
+msgid "markdown|title"
+msgstr "Titulo"
+
+msgid "markdown|subtitle"
+msgstr "Subtitulo"
+
+msgid "markdown|link"
+msgstr "Hiperví­nculo"
+
+msgid "markdown|image"
+msgstr "Imagen"
+
+msgid "markdown|image link"
+msgstr "Hiperví­nculo de imagen"
+
+msgid "markdown|quote"
+msgstr "Cita"
+
+msgid "markdown|list"
+msgstr "Listo"
+
+msgid "markdown|bold"
+msgstr "Negrita"
+
+msgid "markdown|italic"
+msgstr "Cursiva"
+
+#: view/accounts/edit.xhtml
+msgid "Account Settings"
+msgstr "Configuración de Cuenta"
+
+msgid "Edit profile"
+msgstr "Editar perfil"
+
+msgid "Manage rivers"
+msgstr "Administrar ríos"
+
+msgid "Manage pools and springs"
+msgstr ""
+
+msgid "Manage remote storage"
+msgstr ""
+
+msgid "Change password"
+msgstr "Cambiar constreña"
+
+msgid "Email:"
+msgstr "Correo Electrónico:"
+
+msgid "Use of Email Address"
+msgstr ""
+
+msgid ""
+"Your email address is only used for password recovery. It is never made "
+"public and never shared."
+msgstr ""
+
+msgid "Forward direct messages via email:"
+msgstr ""
+
+msgid "Post excerpt maximum height:"
+msgstr "La altura máxima de extracto de publicación:"
+
+msgid "pixels"
+msgstr "pixeles"
+
+msgid "Custom menu link:"
+msgstr "Hipervínculo del menú personalizado:"
+
+msgid "Custom CSS:"
+msgstr "CSS Personalizado:"
+
+msgid "Custom JS:"
+msgstr "JS Personalizado:"
+
+msgid "Automatic embedding:"
+msgstr "Incrustación de Objetos Automática "
+
+msgid "Filter images:"
+msgstr ""
+
+msgid "Display post tools as:"
+msgstr ""
+
+msgid "Make thumbnails for images in post excerpts:"
+msgstr "Imágenes en miniatura para los extractos de publicaciones:"
+
+msgid "Hide markdown bar:"
+msgstr ""
+
+msgid "Enable posting from river view:"
+msgstr ""
+
+msgid "Language:"
+msgstr "Idioma:"
+
+msgid "Theme:"
+msgstr ""
+
+msgid "Save"
+msgstr "Guardar"
+
+msgid "Invite Others"
+msgstr "Invitar a otros"
+
+msgid "Generate a new invitation"
+msgstr "Generar una nueva invitación"
+
+msgid "My Invitations"
+msgstr "Mis Invitaciones"
+
+msgid "Member API"
+msgstr "API de miembro"
+
+msgid "Current API token:"
+msgstr "API token actual:"
+
+msgid "API documentation"
+msgstr "Documentación de API"
+
+msgid "Generate API token"
+msgstr "Generar API token"
+
+msgid "Generate a new API token"
+msgstr ""
+
+msgid "settings|Other actions"
+msgstr ""
+
+msgid "Data Export"
+msgstr "Exportar Datos"
+
+msgid ""
+"Download your account settings, profile, posts, comments and direct "
+"messages:"
+msgstr "Descargar tus configuraciones de cuenta, perfil, publicaciones, comentarios y mensajes directos:"
+
+msgid "Remote storage connection"
+msgstr ""
+
+msgid "remote-storage|Remote storage handle"
+msgstr ""
+
+msgid "remote-storage|Remote storage URL"
+msgstr ""
+
+msgid "remote-storage|Access token"
+msgstr ""
+
+msgid "remote-storage|Connect"
+msgstr ""
+
+msgid "remote-storage|Destroy connection"
+msgstr ""
+
+msgid "remote-storage|The remote storage handle may not be empty."
+msgstr ""
+
+msgid "remote-storage|The remote storage provider could not be found."
+msgstr ""
+
+msgid ""
+"remote-storage|The connection to the remote storage provider timed out."
+msgstr ""
+
+msgid "remote-storage|The remote server does not offer remote storage."
+msgstr ""
+
+msgid "remote-storage|Please connect your remote storage account first."
+msgstr ""
+
+msgid "remote-storage|An error occurred. Please try again later."
+msgstr ""
+
+msgid "remote-storage|An error occurred during file upload: "
+msgstr ""
+
+msgid "Your remote storage account (%s) has been connected!"
+msgstr ""
+
+msgid "The connection to your remote storage account has been removed."
+msgstr ""
+
+msgid "remote-storage|Manage files"
+msgstr ""
+
+msgid "remote-storage|File %s has been deleted."
+msgstr ""
+
+msgid "remote-storage|Successfully uploaded %s to remote storage."
+msgstr ""
+
+#: view/remotestorage/files.xhtml
+msgid "Files in your remote storage"
+msgstr ""
+
+msgid "remote-storage|View connection details"
+msgstr ""
+
+msgid "There are currently no files in your remote storage."
+msgstr ""
+
+msgid "Delete this file?"
+msgstr ""
+
+msgid "remote-storage|delete"
+msgstr ""
+
+msgid "remote-storage|The file has been uploaded successfully."
+msgstr ""
+
+#: controller/accounts.rb
+msgid "Settings saved."
+msgstr "La configuración se ha guardado."
+
+msgid ""
+"Post excerpt maximum height: Please enter a number greater than or equal to "
+"200, or no number for no maximum."
+msgstr "La altura máxima de los extractos de publicaciones: Por favor, introduce un número mayor o igual a 200, o sin número para no limitar la altura."
+
+msgid "Passwords did not match.  Please reenter."
+msgstr "Las contraseñas no igualan.  Por favor, entras de nuevo."
+
+msgid "Password changed."
+msgstr "La contraseña se ha cambiado."
+
+msgid ""
+"account-delete|The username you provided does not match your username. "
+"Please input your own username to confirm account deletion."
+msgstr ""
+
+msgid "Account Deletion"
+msgstr ""
+
+msgid "Delete your account"
+msgstr ""
+
+msgid "Account deletion is permanent!"
+msgstr ""
+
+msgid ""
+"Also note that after your account is deleted, anyone is free to claim the "
+"username that you have abandoned, and impersonation becomes a possibility."
+msgstr ""
+
+msgid "(read warnings above)"
+msgstr ""
+
+msgid ""
+"To delete your account and all associated data, input your username below:"
+msgstr ""
+
+msgid "account-delete|Confirm"
+msgstr ""
+
+msgid ""
+"The provided public key could not be read.  Is it a valid PGP public key?"
+msgstr ""
+
+msgid ""
+"You imported a secret key!  Although we did not store it you should consider"
+" this key compromised."
+msgstr ""
+
+#: view/accounts/change_password.xhtml
+msgid "Change Password"
+msgstr "Cambiar contraseña"
+
+msgid "New password:"
+msgstr "Contraseña nueva:"
+
+msgid "Re-enter new password:"
+msgstr "Entra de nuevo la nueva contraseña."
+
+msgid "button|Change Password"
+msgstr "Cambiar contraseña"
+
+#: view/notifications/{index,_index}.xhtml
+msgid "Notifications"
+msgstr "Notificaciones"
+
+msgid "You have no new notifications."
+msgstr "No tienes notificaciones nuevas."
+
+msgid "mark all seen"
+msgstr "Marcar todo como leídas"
+
+msgid "view all"
+msgstr "Ver todo"
+
+msgid "%d more"
+msgstr "%d más"
+
+#: view/notifications/_comment.xhtml
+msgid "singular|%1$s commented on your %2$spost%3$s."
+msgstr "%1$s comentó en tu %2$spublicación%3$s."
+
+msgid "plural|%1$s commented on your %2$spost%3$s."
+msgstr "%1$s comentó en tu %2$spublicación%3$s."
+
+msgid "singular|%1$s commented on %2$s's %3$spost%4$s."
+msgstr ""
+
+msgid "plural|%1$s commented on %2$s's %3$spost%4$s."
+msgstr ""
+
+#: view/notifications/_comment_like.xhtml
+msgid "singular|%1$s liked your %2$scomment%3$s on your post."
+msgstr "A %1$s le gustó tu %2$s comentario %3$s en tu publicación."
+
+msgid "plural|%1$s liked your %2$scomment%3$s on your post."
+msgstr ""
+
+msgid "singular|%1$s liked your %2$scomment%3$s on %4$s's post."
+msgstr ""
+
+msgid "plural|%1$s liked your %2$scomment%3$s on %4$s's post."
+msgstr ""
+
+#: view/notifications/_post_like.xhtml
+msgid "singular|%1$s liked your %2$spost%3$s."
+msgstr "A %1$s le gusta tu %2$s publicación %3$s."
+
+msgid "plural|%1$s liked your %2$spost%3$s."
+msgstr ""
+
+#: view/notifications/_message.xhtml
+msgid "%1$s sent you a %2$smessage%3$s."
+msgstr "%1$s te envió un %2$s mensaje %3$s."
+
+msgid "%1$s added your %2$spost%3$s to a spring called \"%4$s\"."
+msgstr ""
+
+#: view/notifications/_mention.xhtml
+msgid "%1$s mentioned you in a %2$spost%3$s."
+msgstr ""
+
+#: helper/wording.rb, view/messages/show.xhtml
+msgid "list-comma|, "
+msgstr ","
+
+msgid "list-and| and "
+msgstr "y"
+
+#: helper/age.rb
+msgid "1 day ago"
+msgstr "Hace 1 día"
+
+msgid "%d days ago"
+msgstr "Hace %d días"
+
+msgid "1 hour ago"
+msgstr "Hace 1 hora"
+
+msgid "%d hours ago"
+msgstr "Hace %d horas"
+
+msgid "1 minute ago"
+msgstr "Hace 1 minuto"
+
+msgid "%d minutes ago"
+msgstr "Hace %d minutos"
+
+msgid "seconds ago"
+msgstr "Hace segundos"
+
+#: helper/comment.rb
+msgid "Click to see previous comment by %s"
+msgstr ""
+
+#: view/search.xhtml
+msgid "Search Results for \"%s\""
+msgstr "Los Resultados de Buscar \"%s\""
+
+msgid "search-results|Nothing found."
+msgstr "No encontrado."
+
+msgid "search-results|Profiles"
+msgstr "Perfiles"
+
+msgid "search-results|Posts"
+msgstr "Publicaciones"
+
+msgid "search-results|Comments"
+msgstr "Comentarios"
+
+#: controller/contact-lists.rb
+msgid "Contact list updated."
+msgstr "La lista de contactos ha sido actualizada."
+
+msgid "Contact list name may not be empty."
+msgstr "Debe dar un nombre a la lista de contactos."
+
+msgid "The contact list &ldquo;%s&rdquo; has been deleted."
+msgstr "La lista de contactos &ldquo;%s&rdquo; ha sido eliminada."
+
+#: view/contact-lists/index.xhtml
+msgid "Contact Lists"
+msgstr "Listas de contactos"
+
+msgid "Create Contact List"
+msgstr ""
+
+msgid "contact-list|Name:"
+msgstr "Nombre:"
+
+msgid "contact-list|Members:"
+msgstr ""
+
+msgid "(type here to search)"
+msgstr ""
+
+msgid "new-contact-list|Create"
+msgstr "Crear"
+
+msgid "contact-list|delete"
+msgstr "Eliminar"
+
+msgid "Delete this contact list?"
+msgstr ""
+
+#: view/contact-lists/show.xhtml
+msgid "Contact List: %s"
+msgstr "Lista de contactos: %s"
+
+msgid "contact-list|Save"
+msgstr "Guardar"
+
+msgid "contact-list|Cancel"
+msgstr "Cancelar"
+
+#: controller/admin/base.rb
+msgid "Administrative privileges required."
+msgstr "Requiere privilegios administrativos."
+
+#: controller/admin/forests.rb
+msgid "The tree is already a member of the forest."
+msgstr "El árbol ya es un miembro del bosque."
+
+#: view/admin/index.xhtml
+msgid "Libertree Administration"
+msgstr "La Administración de Libertree"
+
+msgid "Forests"
+msgstr "Bosques"
+
+msgid ""
+"Drag trees in and out of forests.  The local tree is automatically a part of"
+" each forest originating from it."
+msgstr "Arrastra y coloca los árboles dentro y fuera de los bosques. El árbol local es automáticament una parte de cada bosque de donde es originado. "
+
+msgid "create-forest|Name:"
+msgstr "Nombre:"
+
+msgid "create-forest|Add"
+msgstr "Agregar"
+
+msgid "forest|Origin:"
+msgstr "Origen:"
+
+msgid "forest-origin|this tree"
+msgstr "Este árbol"
+
+msgid "Trees"
+msgstr "Árboles"
+
+msgid "introduce-tree|Hostname or IP address:"
+msgstr ""
+
+msgid "introduce-tree|Introduce"
+msgstr ""
+
+msgid "INTRODUCE request pending for remote tree @ %s"
+msgstr ""
+
+msgid "Job queue"
+msgstr "Trabajo en espera"
+
+#: view/admin/jobs/index.xhtml
+msgid "Unfinished Jobs"
+msgstr "Trabajos sin finalizar"
+
+msgid "Unfinished Jobs: %s"
+msgstr "Trabajos sin finalizar:%s"
+
+msgid "jobs|Show all"
+msgstr "Mostrar todos"
+
+msgid "jobs|ID"
+msgstr "ID"
+
+msgid "jobs|Task"
+msgstr "Tareas"
+
+msgid "jobs|Params"
+msgstr "Parámetros"
+
+msgid "jobs|Time created"
+msgstr "Tiempo de creación"
+
+msgid "jobs|Time started"
+msgstr "Tiempo de Inicio"
+
+msgid "jobs|Tries"
+msgstr "Intenta"
+
+msgid "jobs|Retry reason"
+msgstr ""
+
+msgid "jobs|Actions"
+msgstr "Acciones"
+
+msgid "jobs|Retry"
+msgstr "Vuelva a intentar"
+
+msgid "jobs|Delete"
+msgstr "Eliminar"
+
+msgid "jobs|Back to forest administration"
+msgstr "Regresar a la administración del bosque"
+
+msgid "jobs|Retry all displayed jobs"
+msgstr ""
+
+msgid "jobs|Retry all unfinished jobs"
+msgstr ""
+
+msgid "Delete this job?"
+msgstr "¿Eliminar este trabajo?"
+
+#: view/404.xhtml
+msgid "404|No such page"
+msgstr "La página no existe."
+
+msgid ""
+"404|Please use your browser's Back button, or %sgo to your home page%s."
+msgstr "Por favor, usa tu botón de átras, o %sgo vaya a tu página inicial%s."
+
+#: view/error.xhtml
+msgid "Something went wrong..."
+msgstr "Algo salió mal..."
+
+msgid "Time of error: %s"
+msgstr "La hora del error: %s"
+
+msgid "Referrer: %s"
+msgstr "Persona quien te refiere: %s"
+
+#: view/messages/{index,show}.xhtml
+msgid "Direct Messages"
+msgstr "Mensajes Directos"
+
+msgid "direct-message|New Message"
+msgstr "Mensaje Nuevo"
+
+msgid "direct-message|Messages"
+msgstr "Mensajes"
+
+msgid "direct-message|From:"
+msgstr "De:"
+
+msgid "direct-message|To:"
+msgstr "A:"
+
+#: view/messages/_new.xhtml
+msgid "direct-message|Send"
+msgstr "Enviar"
+
+msgid "direct-message|Recipients"
+msgstr "Destinatarios"
+
+msgid "direct-message-warning|please note..."
+msgstr "Por favor toma nota..."
+
+msgid ""
+"Please note that direct messages are not fully private, encrypted nor "
+"secure.  As with all data on this tree, direct messages are fully accessible"
+" to the arborista (administrator)."
+msgstr "Por favor nota que los mensajes directos no son privado completemente, encriptado, ni seguro.  Como con todos los datos en este árbol, los mensajes directos son accesible al arborista (administrador)."
+
+msgid ""
+"Your message is longer than 4096 characters. Please shorten it and try "
+"again."
+msgstr ""
+
+msgid "You cannot send an empty message."
+msgstr ""
+
+msgid "You did not specify a recipient. Please try again."
+msgstr ""
+
+#: view/messages/show.xhtml
+msgid "direct-message|reply"
+msgstr "Responder"
+
+msgid "direct-message|reply to all"
+msgstr "Responder a todos"
+
+#: view/pools/_index.xhtml
+msgid "pool-selector|Collect in..."
+msgstr "Coleccionar en..."
+
+#: view/pools/index.xhtml
+msgid "Pools"
+msgstr "Charcas"
+
+msgid "Use pools to collect posts."
+msgstr "Usa las charcas para coleccionar publicaciones."
+
+msgid "pool|Name:"
+msgstr "Nombre:"
+
+msgid ""
+"&quot;Springing&quot; a pool causes the pool and which posts it contains to "
+"become publicly visible.  Members can add other members&#39; springs to "
+"rivers."
+msgstr ""
+
+msgid "new-pool|Create"
+msgstr "Crear:"
+
+msgid "pool|Delete"
+msgstr "Eliminar"
+
+msgid "All record of collected posts will be lost. Delete this pool?"
+msgstr "Se perderá todo el registro de las publiaciones coleccionadas en la charca. ¿Desea eliminar esta charca?"
+
+msgid "Your pools"
+msgstr ""
+
+msgid "Your springs"
+msgstr ""
+
+msgid ""
+"You don't have any springs.  Springs are post collections that are visible "
+"to other people.  &ldquo;Spring&rdquo; a pool to make it public!"
+msgstr ""
+
+#: view/pools/show.xhtml
+msgid "Pool: %s"
+msgstr "Charca: %s"
+
+msgid "Add this spring to a river"
+msgstr ""
+
+msgid "Added to river."
+msgstr ""
+
+msgid "Spring this pool:"
+msgstr ""
+
+msgid "pool|Sprung:"
+msgstr ""
+
+#: view/pools/edit.xhtml
+msgid "Edit Pool: %s"
+msgstr "Editar Charca:%s"
+
+msgid "pool|Update"
+msgstr "Actualizar"
+
+msgid "(You can remove posts from this pool via %1$sthe pool's page%2$s.)"
+msgstr ""
+
+msgid "pool|Public spring URL:"
+msgstr ""
+
+msgid ""
+"Leave this field empty if you do not want the spring to be accessible "
+"outside of Libertree."
+msgstr ""
+
+#: view/profiles/edit.xhtml
+msgid "My Profile"
+msgstr "Mi Perfil"
+
+msgid "Display name:"
+msgstr "Nombre de exhibir:"
+
+msgid "About Me (Markdown allowed):"
+msgstr "Acerca de mi (Se permite uso de Markdown):"
+
+msgid "profile|Update"
+msgstr "Actualizar"
+
+msgid "Avatar"
+msgstr "Avatar"
+
+msgid "avatar|Upload file:"
+msgstr "Subir archivo:"
+
+msgid "avatar-upload|Submit"
+msgstr "Aplicar"
+
+msgid "Reset avatar"
+msgstr "Restablecer avatar"
+
+msgid "Delete your avatar and reset it to the default?"
+msgstr "¿Eliminar este avatar y volver al avatar por defecto?"
+
+#: view/profiles/show.xhtml
+msgid "profile|Edit"
+msgstr "Editar"
+
+msgid "Posts by %s"
+msgstr "Publicaciones de %s"
+
+msgid "Add %s to a contact list"
+msgstr ""
+
+msgid "Added %s to contact list."
+msgstr ""
+
+#: view/request_password_reset.xhtml
+msgid "Password Reset"
+msgstr "Restablecer contraseña"
+
+msgid ""
+"To reset your password, enter the email address associated with your "
+"account."
+msgstr "Para restablecer tu contraseña, introduce la dirección de email que está asociado con tu cuenta."
+
+msgid "password-reset|Submit"
+msgstr "Aplicar"
+
+#: view/signup.xhtml
+msgid "Create a New Account"
+msgstr "Crear una Nueva Cuenta"
+
+msgid "Invitation code:"
+msgstr "Código de invitación:"
+
+msgid "Username:"
+msgstr "Nombre de usuario:"
+
+msgid "Password:"
+msgstr "Contraseña:"
+
+msgid "Confirm password:"
+msgstr "Confirma contraseña:"
+
+msgid "(optional)"
+msgstr "(Opcional)"
+
+msgid "button|Sign up"
+msgstr "Registrar"
+
+#: view/rivers/{new,edit}.xhtml
+msgid "Edit River"
+msgstr "Editar el Río"
+
+msgid "river-query|Search:"
+msgstr "Buscar:"
+
+msgid "river|Label:"
+msgstr "Etiqueta:"
+
+msgid "append to all other rivers"
+msgstr "adjuntar a los otros ríos"
+
+msgid "river|Update"
+msgstr "Actualizar"
+
+msgid "river|Create"
+msgstr "Crear"
+
+#: view/rivers/index.xhtml
+msgid "My Rivers"
+msgstr "Mis Ríos"
+
+msgid "new river"
+msgstr "Nuevo Río"
+
+msgid "river|Global Queries"
+msgstr "Búsqueda Globales"
+
+msgid ""
+"The following river queries are being appended to every other river query."
+msgstr "Las búsquedas del río siguientes están adjuntando a todas las otras búsquedas del río.  "
+
+#: view/rivers/_list.xhtml
+msgid "(home river)"
+msgstr "(Río de  inicio)"
+
+msgid "Set as home river"
+msgstr "Establecer como el Río de  inicio."
+
+msgid "river|edit"
+msgstr "Editar"
+
+msgid "river|delete"
+msgstr "Eliminar"
+
+#: view/rivers/_river.xhtml
+msgid "Delete this river?"
+msgstr "¿Eliminar este río?"
+
+#: view/rivers/_tips_and_examples.xhtml
+msgid "river-tips|Tips:"
+msgstr "Consejos:"
+
+msgid ""
+"For the search, enter one or more words or hashtags, separated by spaces."
+msgstr "Para la búsqueda, ingresa una o más palabras o etiquetas, separadas por espacios."
+
+msgid "Posts having any of the words will be included in the river."
+msgstr "Las publicaciones que tienen algunas de las palabras estarán incluidas en el Río. "
+
+msgid ""
+"Use a minus sign (-) in front of a word to exclude posts with that word."
+msgstr "Usa un guión (-) antes de una palabra (sin espacio) para excluirla las publicaciones que contengan esa palabra."
+
+msgid ""
+"Example: %s#music -#classical%s will find posts about music, but not "
+"classical music."
+msgstr "Ejemplo: %s#music -#classical%s encontrarán publicaciones de música, pero no las de música clásica."
+
+msgid ""
+"Use a plus sign (+) in front of a word to include only posts with that word."
+msgstr "Usa un signo más (+) antes de una palabra (sin espacio) para incluir solamente las publicaciones que contengan esa palabra."
+
+msgid ""
+"Use the special term %s to include only posts which you have not read yet."
+msgstr "Usa el término especial %s para incluir solamente las publicaciones que aún no has leído."
+
+msgid ""
+"Use the special term %s to include only posts by members of the same tree as"
+" you."
+msgstr "Usa el término especial %s para incluir solamente las publicaciones hechas por miembros de tu mismo árbol."
+
+msgid ""
+"Use double quotes to match multi-word phrases, or exact matches involving "
+"symbols."
+msgstr "Usa comillas dobles para coincidir con frases de varias palabras, frases exactas o coincidir con expresiones que involucran símbolos"
+
+msgid ""
+"Use the special term %s followed by a name in quotes to match all posts by "
+"that person."
+msgstr "Usa el término especial %s seguido por el nombre de una persona en comillas para coincidir con todas las publicaciones hechas por esa persona."
+
+msgid ""
+"Use the special term %s followed by a contact list name in quotes to match "
+"all posts by the people in that contact list."
+msgstr ""
+
+msgid "Example: %s:river \"Special Interests\"%s"
+msgstr "Ejemplo: %s:river \"Intereses Especiales\"%s"
+
+msgid ""
+"Use the special term %s followed by %s or %s to match posts with a given "
+"visibility."
+msgstr ""
+
+msgid ""
+"Other special terms: %s, %s and %s. These are for narrowing down to posts "
+"you have liked, commented on and subscribed to, respectively."
+msgstr "Otros Términos Especiales: %s, %s, y %s. Estos son para limitar a publicaciones que te gustan, comentaste en, y subscribiste a, respectivamente."
+
+msgid ""
+"(advanced) Use the special term %s followed by a source name in quotes to "
+"match posts posted with a given source or tool."
+msgstr ""
+
+msgid ""
+"(advanced) Use the special term %s followed by a river label in quotes to "
+"compose rivers using other rivers."
+msgstr "(avanzado) Usa el término especial %s seguido de una etiqueta del río en comillas para composer ríos usando otros ríos. "
+
+msgid ""
+"(advanced) Use the special term %s followed by &lt; or &gt; and a number to "
+"match posts by their approximate number of words."
+msgstr ""
+
+msgid "Example: %s:word-count < 16%s"
+msgstr ""
+
+msgid "river|Examples"
+msgstr "Ejemplos"
+
+msgid "river|Query"
+msgstr "Búsqueda"
+
+msgid "river|Description"
+msgstr "Descripción"
+
+msgid "All posts originating from your tree"
+msgstr "Todas de publicaciones de tu árbol de origen."
+
+msgid ""
+"All posts transmitted to your tree from every other tree in the forest, plus"
+" posts from your tree"
+msgstr "Todas de publicaciones trasmitidas a tu árbol de todos los otras arboles en el bosque, más las publicaciones de tu árbol. "
+
+msgid ""
+"+:unread #knitting%sPosts tagged with %s#knitting%s which you have not read "
+"yet"
+msgstr "+:unread #knitting%sPublicaciones etiquetadas con %s#knitting%s que no han sido leídas"
+
+msgid ""
+"#funny -#cats -#lolcats%sPosts tagged %s#funny%s, but not including posts "
+"about cats"
+msgstr "#funny -#cats -#lolcats%sLas publicaciones que se etiquetaron con %s#funny%s, pero que no tienen publicaciones sobre gatos"
+
+msgid ""
+"environment%sPosts that mention the environment, whether or not they were "
+"hashtagged with #environment"
+msgstr "Ambiente%sLas publicaciones que mencionan el ambiente, tengan o no la etiqueta #ambiente"
+
+msgid ""
+"+:tree #bug #feature%sBug reports and feature requests made by your "
+"treemates"
+msgstr "+:tree #bug #feature%sReporte de errores y petición de carácterísticas realizadas por los miembros del árbol"
+
+msgid ""
+"\"new york\"%sPosts about New York, but not posts only having the word "
+"%snew%s"
+msgstr "\"new york\"%sLas publicaciones de Nueva York, pero no las publicaciones que solamente tienen la palabra %snew%s"
+
+msgid ""
+"brazil -\"world cup\"%sPosts about Brazil, but not those mentioning the "
+"World Cup"
+msgstr "Brasil -\"Copa Mundial\"%sLas publicaciones de Brasil, pero no las que mencionen la Copa Mundial"
+
+msgid ":from \"rekado\"%sPosts written by rekado"
+msgstr ":from \"rekado\"%sLas publicaciones escritas por rekado"
+
+msgid ""
+"#photography -:from \"Photophile\"%sPosts tagged with %s#photography%s, but "
+"not those by Photophile"
+msgstr "#photography -:from \"Photophile\"%sLas publicaciones etiqutaron con %s#photography%s, pero nada de Photophile"
+
+msgid ""
+"#restaurants :river \"Important\"%sPosts tagged with %s#restaurants%s, or "
+"posts matching the river \"Important\""
+msgstr "#restaurants :river \"Important\"%sPublicaciones etiquetaron con %s#restaurants%s, o las publicaciones que igualan el río se llama \"Important\""
+
+msgid ""
+"#restaurants +:river \"News Articles\"%sPosts tagged with %s#restaurants%s "
+"which also match the river \"News Articles\""
+msgstr "#restaurants +:river \"News Articles\"%sLas publicaciones etiquetaron con %s#restaurants%s cuales tambien igualan el río se llama \"News Articles\""
+
+msgid ""
+"#restaurants -:river \"International News\"%sPosts tagged with "
+"%s#restaurants%s, but not those which match the river \"International News\""
+msgstr "#restaurants -:river \"International News\"%sLas publicaciones etiquetaron con %s#restaurants%s, pero nada que igualan el río se llama \"International News\""
+
+msgid ""
+"#government -:visibility internet%sPosts about government, but not those "
+"which are exposed to the Internet"
+msgstr ""
+
+#: view/chat/_index.xhtml
+msgid "Chat"
+msgstr "Chat"
+
+msgid "chat-contacts|Online:"
+msgstr "Conectados:"
+
+msgid "chat|(no contacts online)"
+msgstr "(No hay contactos conectados)"
+
+msgid "Start new chat with..."
+msgstr "Iniciar una nueva conversación con..."
+
+#: layout/_sidebar.xhtml
+msgid "Rivers"
+msgstr "Ríos"
+
+msgid "manage rivers"
+msgstr "Administrar los Ríos"
+
+#: layout/_menu.xhtml
+msgid "menu|Profile"
+msgstr "Perfil"
+
+msgid "menu|Settings"
+msgstr "Configuraciones"
+
+msgid "menu|Contact Lists"
+msgstr "Listas de contacto"
+
+msgid "menu|Legible font size"
+msgstr "Tamaño de fuente legible"
+
+msgid "menu|Small font size"
+msgstr "Tamaño de fuente pequeña"
+
+msgid "menu|legible"
+msgstr "Legible"
+
+msgid "menu|small"
+msgstr "Pequeño"
+
+msgid "menu|Administrate"
+msgstr "Administrar"
+
+msgid "menu|Log out"
+msgstr "Cerrar sesión"
+
+msgid "menu|Go Home"
+msgstr "Ir al Inicio"
+
+msgid "menu|You are at Home"
+msgstr "Estás en el Inicio"
+
+msgid "menu|New Post"
+msgstr "Nueva publicación"
+
+msgid "menu|Known Issues"
+msgstr "Problemas Conocidos"
+
+msgid "menu|Toggle sidebar"
+msgstr ""
+
+msgid "menu|Log in"
+msgstr ""
+
+#: layout/_notifications.xhtml
+msgid "No notifications"
+msgstr "No hay notificaciones"
+
+msgid "1 notification"
+msgstr "1 notificación"
+
+msgid "%d notifications"
+msgstr "%d notificaciones"
+
+#: layout/_chat.xhtml
+msgid "1 unread chat message from %1$s"
+msgstr "1 mensaje de chat sin leer de %1$s"
+
+msgid "%2$d unread chat messages from %1$s"
+msgstr "%2$d mensajes de chat sin leer de %1$s"
+
+#: public/js/comments.js
+msgid "Failed to post comment."
+msgstr "Fallo al publicar comentario."
+
+#: view/tags/index.xhtml
+msgid "Save this hashtag listing as a river."
+msgstr ""
+
+msgid "Add this hashtag to an existing river."
+msgstr ""
+
+msgid "Added hashtag #%s to river."
+msgstr ""
+
+msgid "There are no posts matching this hashtag."
+msgstr ""
+
+#: view/intro/index.xhtml
+msgid "tutorial-river-label|My interests"
+msgstr ""
+
+msgid "tutorial|Back"
+msgstr ""
+
+msgid "tutorial|Next"
+msgstr ""
+
+msgid "tutorial|Skip"
+msgstr ""
+
+msgid "tutorial|Done!"
+msgstr ""
+
+msgid "tutorial|An error occurred while trying to create a river."
+msgstr ""
+
+msgid "tutorial-step-1\n"
+msgstr "# Welcome to Libertree!\nHello, and welcome to Libertree! We'd like to take a minute to explain the most important concepts in Libertree, as this will help you get the most out of it. You can [skip this tutorial](/home) and resume it at a later time.\n\nLibertree is a place where people write things in public, or share interesting stuff with others.\n\n - Someone who is a part of Libertree is called a *member*.\n - Members write posts <a href='#' class='help' rel='popover' title='What is a post?' data-content='A post is a message. What exactly is in these posts can vary widely; different people are interested in different things, and say many different things. Posts can be as short as a single sentence, or as long as a newspaper article.'>?</a> for other members to see.\n - Members can comment <a href='#' class='help' rel='popover' title='What is a comment?' data-content='Comments are written responses to posts or other comments.'>?</a> on posts.\n\n"
+
+msgid "tutorial-step-2a"
+msgstr "# Your interests\nThere are a lot of posts made to Libertree every day. If you like, you can take a minute right now to let us know what your interests are. We'll use this information to narrow down what posts you see at first, so you don't get overwhelmed. You can always change things later, or explore ways to read more posts.  Enter a list of interests (one word each):"
+
+msgid "tutorial-step-2b"
+msgstr "Congratulations! You have just created your first river."
+
+msgid "tutorial-step-3-heading"
+msgstr "# Rivers"
+
+msgid "tutorial-step-3a"
+msgstr "Rivers are a powerful feature that lets you pick or filter posts from the torrent of posts on Libertree. Here is a list of rivers that you may find useful. Select those that you would like added to your account."
+
+msgid "tutorial-step-3b"
+msgstr "Be sure to check out the river management page after this tutorial to see interesting examples of what you can do with rivers."
+
+msgid "tutorial-step-4-heading"
+msgstr "# Friends"
+
+msgid "intro-contact-list-name|Friends"
+msgstr ""
+
+msgid "tutorial-step-4"
+msgstr "If you think some of your friends are already Libertree members, you can try to find them and add them as contacts now."
+
+msgid "tutorial-river-label|Unread posts"
+msgstr ""
+
+msgid "tutorial|All posts on Libertree which you haven't read yet"
+msgstr ""
+
+msgid "tutorial-river-label|Posts from the forest"
+msgstr ""
+
+msgid "tutorial|All posts on Libertree"
+msgstr ""
+
+msgid "tutorial-river-label|My activity"
+msgstr ""
+
+msgid "tutorial|Posts that you have liked, commented on, or are subscribed to"
+msgstr ""

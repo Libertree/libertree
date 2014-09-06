@@ -1,0 +1,5 @@
+<div class="notification #{@notifications.any? { |n| ! n.seen } ? 'unseen' : 'seen'}" data-notification-ids="#{@notifications.map(&:id).to_json}">
+  #{member_avatar_link(@avatar_member)}
+  <span class="age">#{ago(@notifications[0].time_created)}</span>
+  #{@body}
+</div>

@@ -1,0 +1,7 @@
+This is almost the same as the default theme except for a few tweaks that have
+been the default on oak.elephly.net.
+
+To keep in sync with the default theme follow these steps:
+
+  cp -r ../default/scss/ scss/
+  patch -n -p1 < oak.patch

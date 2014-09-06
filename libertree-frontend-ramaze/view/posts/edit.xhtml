@@ -1,0 +1,18 @@
+<form id="post-edit" action="/posts/update" method="POST">
+  <h3>#{_('Edit Post')}</h3>
+  <input type="hidden" name="post_id" value="#{@post.id}"/>
+  #{ Controller::Main.render_partial '_markdown_injector' }
+  <textarea name="text" rows="5" id="textarea-post-edit">#{session[:saved_text]['textarea-post-edit']}</textarea>
+
+  <div id="settings">
+    #{_('Visibility')}: <select name="visibility">
+      <option value="internet" #{@post.visibility == 'internet' ? 'selected' : ''}>#{s_('visibility|Internet')}</option>
+      <option value="forest" #{@post.visibility == 'forest' ? 'selected' : ''}>#{s_('visibility|Forest')}</option>
+      <option value="tree" #{@post.visibility == 'tree' ? 'selected' : ''}>#{s_('visibility|Tree')}</option>
+    </select>
+  </div>
+
+  <input class="preview" type="button" value="#{_('Preview')}" tabindex="2" data-type="post" data-preview-heading="#{_('Preview')}" data-preview-close-label="#{s_('preview|close')}" />
+  <input class="cancel" name="cancel" type="submit" value="#{_('Cancel')}" tabindex="3"/>
+  <input type="submit" value="#{s_('post|Update')}" tabindex="1"/>
+</form>

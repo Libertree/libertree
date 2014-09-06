@@ -1,0 +1,17 @@
+<form action="/contact-lists/create" method="POST" class="contact-list-form">
+  <div class="field">
+    <label>
+      #{s_('contact-list|Name:')}
+    </label>
+    <input type="text" name="name" value="#{@list_name}" size="20"/>
+  </div>
+
+  <div class="field">
+    <label>
+      #{s_('contact-list|Members:')}
+    </label>
+    <input id="contact-list-members" name="members" data-placeholder="#{_('(type here to search)')}" />
+  </div>
+
+  <input class="submit" type="submit" value="#{s_('new-contact-list|Create')}"/>
+</form>

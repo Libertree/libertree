@@ -1,0 +1,146 @@
+@import "colours.scss";
+$threshold: 700px;
+
+#chat-window {
+    top: 41px;
+    left: 50%;
+    margin-left: -100px;
+    padding: 0px 0px 5px 0px;
+    min-width: 150px;
+    min-height: 150px;
+
+    @media screen and (max-width: $threshold) {
+        left: 0;
+        width: 100%;
+        margin: 0;
+    }
+
+    .header {
+        .title {
+            font-weight: bold;
+        }
+        padding: 0.3em;
+        cursor: move;
+        @media screen and (max-width: $threshold) {
+            cursor: default;
+        }
+    }
+
+    #online-contacts {
+        padding: 5px;
+        margin: 0px;
+        background-color: $main_light;
+        a {
+            margin: 0px;
+            .avatar {
+                cursor: pointer;
+            }
+        }
+    }
+
+    #chat-new-partner-wrapper {
+        padding: 8px 0px;
+        background-color: $main_light;
+        select#chat-new-partner {
+            width: 380px;
+            @media screen and (max-width: $threshold) {
+                width: 100%;
+            }
+        }
+    }
+
+    .tabs {
+        width: 100%;
+        height: 35px;
+        background-color: $main_light;
+        overflow: hidden;
+
+        .tab {
+            background-color: $dust;
+            float: left;
+            border-top: 1px solid $main;
+            border-right: 1px solid $main;
+            border-left: 1px solid $main;
+            margin-top: 5px;
+            margin-left: 3px;
+            padding: 2px;
+            opacity: 0.7;
+            cursor: pointer;
+
+            &.active {
+                font-weight: bold;
+                border-top: 2px solid $main;
+                border-right: 2px solid $main;
+                border-left: 2px solid $main;
+                opacity: 1.0;
+            }
+
+            .label {
+                max-width: 75px;
+                overflow: hidden;
+                white-space: nowrap;
+                float: left;
+            }
+            a.close {
+                margin-left: 4px;
+            }
+        }
+    }
+
+    .logs {
+        clear: both;
+
+        .log {
+            display: none;
+            &.active { display: block; }
+
+            .messages {
+                @media screen and (max-width: $threshold) {
+                    max-height: 300px;
+                }
+                overflow: auto;
+                .message {
+                    margin: 0px 0px 5px 0px;
+                    padding: 0.5em;
+                    .sender {
+                        float: left;
+                        font-weight: bold;
+                    }
+                    .age {
+                        float: right;
+                    }
+                    .text {
+                        clear: both;
+                    }
+                }
+            }
+
+            form {
+                margin-left: 0.5em;
+                margin-top: 7px;
+                textarea {
+                    width: 90%;
+                    height: 40px;
+                }
+            }
+        }
+    }
+}
+
+#num-chat-unseen {
+    padding: 1px 2px 2px 2px;
+    top: 9px;
+    left: 8px;
+    position: absolute;
+    float: right;
+    background-color: $autumn_red;
+    color: white;
+}
+.num-chat-unseen {
+    padding: 1px 2px 2px 2px;
+    position: relative;
+    margin-left: 2px;
+    float: right;
+    background-color: $autumn_red;
+    color: white;
+}

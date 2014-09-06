@@ -1,0 +1,5 @@
+<?r if @like ?>
+  #{ render_file 'view/notifications/_notification_head.xhtml', notifications: @notifications, avatar_member: @like.member }
+    #{s_("#{@sg_or_pl}|%1$s liked your %2$spost%3$s.") % [@actors, "<a href=\"/posts/show/#{@like.post.id}\" title=\"#{::CGI.escape_html(@like.post.glimpse)}\">", "</a>"]}
+  #{ render_file 'view/notifications/_notification_foot.xhtml', notifications: @notifications, glimpse: @like.post.glimpse }
+<?r end ?>

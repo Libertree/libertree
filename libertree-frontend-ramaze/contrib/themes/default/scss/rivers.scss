@@ -1,0 +1,33 @@
+@import "../scss-include/mixins.scss";
+@import "colours.scss";
+$threshold: 700px; // TODO same as in application.scss
+
+body.rivers {
+    ul.actions {
+        margin-bottom: 1em;
+        margin-left: 0;
+        padding-left: 0;
+        li {
+            list-style: none;
+        }
+    }
+    .main {
+        div.river {
+            margin-bottom: 1em;
+            .river-tools {}
+            .query {
+                display: block;
+                clear: both;
+            }
+        }
+        #form-river-new, #form-river-edit {
+            input[type="text"], textarea {
+                @include border-box;
+                width: 400px;
+                @media screen and (max-width: $threshold) {
+                    width: 100%;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,56 @@
+# Either live or development
+environment: live
+
+# log HTTP requests in live environment
+#log_http_requests: false
+
+websocket_js_host: domain.of.your.tree.com
+websocket_path: /ws
+websocket_port: 8080
+secure_websocket: false
+
+# These accounts (by username) will have websockets disabled
+# websocket_blacklist:
+  # - 'ruskie'
+
+# graphicsmagick: false means use ImageMagick
+graphicsmagick: true
+
+# Whether to store session data in memcache
+memcache: false
+
+# API throttling.
+# The number of seconds callers must wait between API calls
+# (or the request is rejected)
+api_min_time_between: 5
+
+# Some text to insert into the HTML title of every page.
+# This could be the tree's name, for example.
+# title_insert: "A New Tree"
+
+# The URL base of the frontend web interface
+frontend_url_base: 'http://domain-or-ip-without-trailing-slash'
+
+# The fully qualified host name of the Libertree server (used for user handles)
+domain: 'libertree.domain.net'
+
+# Themes from which members can select.
+# The first in this list will be the default.
+themes:
+  - default
+
+# Uncomment the following line to use post tool icons per default
+#post_tools_default: icons
+
+# Uncomment the following settings to authenticate users against LDAP
+#ldap:
+#  connection:
+#    host: 'localhost'
+#    port: 389
+#    base: 'dc=localdomain'
+#    bind_dn: 'cn=Directory Manager'
+#    password: '12345678'
+#  mapping:
+#    username:     'uid'
+#    email:        'mail'
+#    display_name: 'displayName'

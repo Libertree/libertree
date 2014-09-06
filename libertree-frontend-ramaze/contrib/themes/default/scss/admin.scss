@@ -1,0 +1,64 @@
+@import "../scss-include/mixins.scss";
+@import "colours.scss";
+
+body.admin {
+    .main {
+        @include shadow;
+        @include rounded;
+        background: $dust;
+        padding: 30px;
+        & > h2 {
+            @include rounded-top;
+            background: $sand;
+            padding: 1em;
+            margin: -30px -30px 1em;
+        }
+    }
+    .forest {
+        background: $main_light;
+        padding: 1em;
+        margin-bottom: 0.5em;
+
+        .name {
+            font-weight: bold;
+        }
+    }
+
+    .server {
+        background: $stone;
+        padding: 0.3em;
+        margin-bottom: 0.3em;
+        cursor: not-allowed;
+        &.draggable {
+            cursor: move;
+        }
+
+        .name {
+            font-weight: bold;
+        }
+    }
+
+    table.job {
+      width: 100%;
+      border-spacing: 5px;
+      border-collapse: collapse;
+      margin-bottom: 0.5em;
+      background: $sand;
+      border-radius: 3px;
+      th {
+        width: 10em;
+        text-align: right;
+        border-right: 1px dotted $bark;
+        font-weight: normal;
+        font-style: italic;
+        padding-top: 0.25em;
+        padding-bottom: 0.25em;
+        padding-right: 0.5em;
+      }
+      td {
+        padding-left: 0.5em;
+        padding-top: 0.25em;
+        padding-bottom: 0.25em;
+      }
+    }
+}

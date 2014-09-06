@@ -1,0 +1,29 @@
+<h2>#{_('My Profile')}</h2>
+
+<form action="update" method="POST">
+  <div class="field">
+    <label>#{_('Display name:')}</label><input type="text" name="name_display" value="#{@profile.name_display}"/>
+  </div>
+
+  <div class="field">
+    <label>#{_('About Me (Markdown allowed):')}</label>
+    #{ Controller::Main.render_partial '_markdown_injector' }
+    <textarea name="description" id="textarea-description" rows="10">#{@profile.description}</textarea>
+  </div>
+  <input type="submit" value="#{s_('profile|Update')}"/>
+  <a href="/profiles/show/#{account.member.id}">#{_('Cancel')}</a>
+</form>
+
+<h4>#{_('Avatar')}</h4>
+
+<form action="avatar_upload" method="POST" enctype="multipart/form-data">
+  <div class="field">
+    <label>#{s_('avatar|Upload file:')}</label><input type="file" name="file" />
+  </div>
+  <input type="submit" name="submit" value="#{s_('avatar-upload|Submit')}" />
+
+  <?r if @has_avatar ?>
+    <a id="avatar-reset" rel="confirm" data-msg="#{_('Delete your avatar and reset it to the default?')}" href="/profiles/avatar_reset">#{_('Reset avatar')}</a>
+  <?r end ?>
+</form>
+

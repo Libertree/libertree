@@ -1,0 +1,45 @@
+diff -r ../default/scss/excerpts-view.scss scss/excerpts-view.scss
+79a80,82
+>       @include shadow;
+>       @include rounded;
+>       margin-bottom: 1em;
+83d85
+<       border-radius: $border-radius $border-radius 0 0;
+92a95
+>       @include rounded;
+94d96
+<       border-radius: 0 0 $border-radius $border-radius;
+106c108,117
+<     #post-excerpts, form#post-new {
+---
+>     #post-excerpts {
+>         @include rounded;
+>         float: right;
+>         @media screen and (max-width: $dynamic-excerpt-width-threshold) {
+>             float: none;
+>         }
+>         @include dynamic-excerpt-width;
+>         position: relative;
+>     }
+>     form#post-new {
+119,120c130,135
+<         padding: 0px 0px 2em 0px;
+<         border-bottom: 1px dotted $main;
+---
+>         @include shadow;
+>         @include rounded;
+>         background-color: $dust;
+>         border-bottom: none;
+>         margin-bottom: 1em;
+>         padding: 0px 0px 1em 0px;
+194c209
+<               min-height: 200px;
+---
+>               min-height: auto;
+237,242d251
+<         }
+<     }
+<     .post-excerpt.first {
+<         @include rounded-top;
+<         .meta {
+<             @include rounded-top;

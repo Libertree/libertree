@@ -1,0 +1,20 @@
+<h2>#{_('Contact List: %s') % @list.name}</h2>
+
+<form action="/contact-lists/update/#{@list.id}" method="POST" class="contact-list-form">
+  <div class="field">
+    <label>
+      #{s_('contact-list|Name:')}
+    </label>
+    <input type="text" name="name" value="#{@list_name}" size="20"/>
+  </div>
+
+  <div class="field">
+    <label>
+      #{s_('contact-list|Members:')}
+    </label>
+    <input id="contact-list-members" name="members" data-placeholder="#{_('(type here to search)')}" value='#{@list.members.map{|m| "#{m.id}=#{m.handle}"}.join(",")}' />
+  </div>
+
+  <input type="submit" value="#{s_('contact-list|Save')}"/>
+  <a href="/contact-lists">#{s_('contact-list|Cancel')}</a>
+</form>

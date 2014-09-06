@@ -1,0 +1,82 @@
+## frontend application server
+upstream unicorn_cluster {
+  server localhost:8088;
+}
+
+## websocket backend server
+upstream websocket_server {
+  server localhost:8080;
+}
+
+## redirect unencrypted requests to SSL
+server {
+  listen       80;
+  server_name  MY.SERVER.NET;
+  rewrite      ^ https://MY.SERVER.NET$request_uri? permanent;
+}
+
+## frontend server
+server {
+  listen       443;
+  server_name  MY.SERVER.NET;
+  root         /home/libertree/git/libertree-frontend-ramaze/public;
+
+  ssl on;
+  ssl_certificate      /PATH/TO/YOUR/SSL/cert.pem;
+  ssl_certificate_key  /PATH/TO/YOUR/private.key;
+
+  ## Use a SSL/TLS cache for SSL session resume.
+  ssl_session_cache shared:SSL:10m;
+  ssl_session_timeout 10m;
+
+  ## proxy websockets
+  location /ws {
+    rewrite /ws/(.*)$ /$1 break;
+    proxy_read_timeout 999999999;
+    proxy_pass http://websocket_server;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "Upgrade";
+  }
+
+  ## cache resources
+  location ~* \.(?:js|css|png|jpg|jpeg|gif|ico)$ {
+    expires 7d;
+    log_not_found off;
+    add_header Pragma public;
+    add_header Cache-Control "public";
+  }
+
+  ## cache themes
+  location ~ ^/(themes)/ {
+    gzip_static on;
+    expires modified +1h;
+    add_header Cache-Control "public";
+  }
+
+  try_files $uri $uri/ @ruby;
+
+  location @ruby {
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_pass http://unicorn_cluster;
+  }
+
+  location / {
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    proxy_set_header Host $http_host;
+    proxy_redirect off;
+    proxy_pass http://unicorn_cluster;
+
+    client_max_body_size 4M;
+    client_body_buffer_size 128K;
+  }
+}
+
+## websocket connection upgrade
+map $http_upgrade $connection_upgrade {
+  default upgrade;
+  '' close;
+}

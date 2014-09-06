@@ -1,0 +1,12 @@
+<h2>#{_('Invite Others')}</h2>
+
+<p>
+  <a href="/invitations/create">#{_('Generate a new invitation')}</a>
+</p>
+
+<?r if @invitations.any? ?>
+<h3>#{_('My Invitations')}</h3>
+<textarea readonly="true" id="invitations" rows="5">#{
+  @invitations.map { |i| "http://#{@host}/signup?invitation_code=#{i.code}" }.join("\n")
+}</textarea>
+<?r end ?>

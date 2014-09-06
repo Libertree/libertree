@@ -1,0 +1,994 @@
+/*
+
+Attributions:
+
+Default leaf avatar by http://joshladella005.deviantart.com
+Icon set by http://icons8.com/
+
+*/
+
+@import "colours.scss";
+@import "../scss-include/mixins.scss";
+$threshold: 700px;
+
+html {
+    height: 100%;
+}
+
+body {
+    padding: 0px;
+    margin: 0px;
+    color: $text;
+    background: url('../images/bg-green.png') fixed bottom center repeat-x $main;
+    width: 100%;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 0px;
+}
+div, p, form, ul {
+    + h2, + h3, + h4 {
+        margin-top: 1em;
+    }
+}
+
+img {
+    border: 0px;
+}
+img.size-16 {
+    height: 16px;
+    width: 16px;
+}
+img.size-24 {
+    height: 24px;
+    width: 24px;
+}
+img.size-32 {
+    height: 32px;
+    width: 32px;
+}
+
+p {
+    margin-top: 0px;
+    margin-bottom: 1em;
+}
+
+pre, code {
+    white-space: pre-wrap;
+}
+
+pre {
+    margin-left: 1em;
+}
+
+pre code {
+    border: none;
+    background: transparent;
+}
+
+code {
+    border: 1px solid $sand;
+    background: $dust;
+    @include rounded;
+    padding: 2px;
+}
+
+a {
+    color: $main;
+    border-bottom: 1px dotted $main;
+    text-decoration: none;
+}
+a:visited {
+    border-bottom: 1px dotted;
+}
+a:hover {
+    color: $autumn_red;
+    border-bottom: 1px dotted $autumn_red;
+}
+a:active {
+    color: $autumn_red;
+    border-bottom: 1px dotted $autumn_red;
+}
+a.icon:hover { background: none };
+a.member-name, a.member-name:visited {
+    border: 0px;
+    color: $text;
+}
+.typed-text a.member-name, .typed-text a.member-name:visited {
+    border-bottom: 1px dotted $main;
+    color: $main;
+}
+
+
+a.help {
+  vertical-align: super;
+  padding: 2px;
+  border-radius: 1em;
+  background: $dust;
+  border: 1px solid $main;
+  font-size: 12px;
+}
+
+textarea,
+input[type="text"],
+input[type="password"],
+.chzn-container-multi .chzn-choices,
+.chzn-container-active .chzn-choices,
+.select2-container-multi .select2-choices {
+    background-color: $sand;
+    background-image: none;
+    border: 1px solid $path;
+    color: $text;
+}
+
+.select2-container, .select2-container-multi {
+    margin-bottom: 1em;
+}
+
+textarea, input[type="text"], input[type="password"] {
+    @include rounded;
+    box-shadow: inset 0px 2px 5px 0px rgba(0,0,0,0.30);
+}
+
+textarea:focus, input:focus {
+    outline: 0;
+    /* TODO: Use some other colour that matches with the Libertree theme */
+}
+
+.main {
+    @include border-box;
+    max-width: 1000px;
+    min-width: 500px;
+    width: 90%;
+    margin: 70px auto 30px auto;
+    padding: 30px;
+    background: transparent;
+    @include rounded;
+
+    background-color: $dust; /* fallback for browsers that don't support opacity in colour definitions */
+    background-color: $dust_translucent;
+
+    @media screen and (max-width: $threshold) {
+        padding: 1em;
+    }
+    div.panel {
+        /* double override for when .main is set transparent */
+        background-color: $dust; /* fallback for browsers that don't support opacity in colour definitions */
+        background-color: $dust_translucent;
+    }
+}
+
+.post-new .main, .post-edit .main {
+    padding: 0;
+    background-color: transparent;
+    #sidebar {
+        margin-left: 0;  // override .main padding correction
+    }
+}
+
+body.accounts.edit, body.profile.edit, body.contact-lists, body.messages, body.notifications, body.pools, body.rivers {
+    .main {
+        @include shadow;
+        @include rounded;
+        background: $dust;
+        padding: 30px;
+        @media screen and (max-width: $threshold) {
+            padding: 1em;
+        }
+        & > h2 {
+            @include rounded-top;
+            background: $sand;
+            padding: 1em;
+            margin: -30px -30px 1em;
+        }
+        h4 {
+            margin-top: 1em;
+        }
+        label {
+            width: 200px;
+            text-align: right;
+            margin-right: 1.5em;
+            float: left;
+            clear: left;
+            @media screen and (max-width: $threshold) {
+                width: auto;
+                text-align: left;
+                margin-right: 0.5em;
+                float: none;
+                clear: both;
+            }
+        }
+        .field {
+            margin-bottom: 1em;
+            overflow: auto;
+        }
+        textarea {
+            padding: 1em;
+        }
+    }
+}
+
+
+
+.flash {
+  @include border-box;
+  position: fixed;
+  z-index: 100;
+  top: 0;
+  left: 50%;
+  width: 500px;
+  margin: 0 0 0 -250px;
+  padding-left: 50px; //make room for icon
+  @media screen and (max-width: $threshold) {
+      width: 100%;
+      margin: 0 0 0 -50%;
+  }
+  &.error {
+    background: url('../images/flash-error.png') no-repeat scroll 10px 0.5em $rose;
+    border: 1px solid $red;
+  }
+  &.notice {
+    background: url('../images/flash-notice.png') no-repeat scroll 10px 0.5em $water;
+    border: 1px solid $sky;
+  }
+}
+
+#logo {
+    float: left;
+    margin-right: 2px;
+    height: 40px;
+}
+
+.menu {
+    height: 40px;
+    position: fixed;
+    top: 0px;
+    left: 50%;
+    width: 100%;
+    margin-left: -50%;
+    padding: 0px;
+    z-index: 3;
+
+    background-color: $menu_colour_1;
+    background: -moz-linear-gradient($header_gradient_start,  $menu_colour_1 0%, $menu_colour_2 70%);
+    background: -webkit-gradient(linear, left $header_gradient_start, left $header_gradient_stop, color-stop(0%,$menu_colour_1), color-stop(70%,$menu_colour_2));
+    background: -webkit-linear-gradient($header_gradient_start,  $menu_colour_1 0%,$menu_colour_2 70%);
+    background: -o-linear-gradient($header_gradient_start,  $menu_colour_1 0%,$menu_colour_2 70%);
+    background: -ms-linear-gradient($header_gradient_start,  $menu_colour_1 0%,$menu_colour_2 70%);
+    background: linear-gradient($header_gradient_start,  $menu_colour_1 0%,$menu_colour_2 70%);
+
+    #menu-narrower {
+        min-width: 700px;
+        max-width: 1000px;
+        margin: 0px auto;
+        position: relative;
+
+        a {
+            margin-left: 5px;
+            border-bottom: 0px;
+        }
+        a#home {
+            float: left;
+            margin-left: 0px;
+            #logo {
+                @media screen and (max-width: 400px) {
+                    display: none;
+                }
+            }
+            #wordmark {
+                @media screen and (max-width: $threshold) {
+                    display: none;
+                }
+            }
+        }
+
+        .avatar {
+            float: none;
+            margin: 0px;
+        }
+
+        img {
+            vertical-align: middle;
+        }
+
+        .menu-item {
+            width: 26px;
+            height: 26px;
+            cursor: pointer;
+            position: relative;
+            @media screen and (max-width: $threshold) {
+                #account-name {
+                    display: none;
+                }
+            }
+        }
+
+        #main-menu-container {
+            margin: 0 auto;
+            padding-left: 190px;
+            padding-right: 190px;
+            width: 360px;
+            padding-top: 6px;
+            height: 26px;
+            @media screen and (max-width: $threshold) {
+                width: 100%;
+            }
+        }
+        #main-menu-container.with-custom {
+            width: 400px;
+        }
+
+        #menu-notifications {
+            white-space: nowrap;
+        }
+
+        #menu-account {
+            width: auto;
+            padding-top: 4px;
+            float: right;
+
+            img {
+                height: 32px;
+                width: 32px;
+            }
+        }
+
+        #menu-log-in {
+            width: auto;
+            padding-top: 7px;
+            float: right;
+        }
+
+        #account-window {
+            top: 46px;
+            right: 0px;
+            width: 180px;
+            padding: 5px;
+
+            a {
+                line-height: 28px;
+                margin-left: 0px;
+            }
+
+            img {
+                vertical-align: middle;
+                height: 24px;
+                width: 24px;
+            }
+        }
+
+    }
+}
+
+// used for old-style post stats and comments
+.age, .age-update {
+    color: $faint_text;
+    font-size: 0.9em;
+}
+.post-stats.text .age, .post-stats.text .age-update {
+    color: inherit;
+    font-size: inherit;
+}
+
+img.avatar {
+    float: left;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    overflow: hidden;
+}
+
+.typed-text {
+    line-height: 1.6em;
+    text-align: left;
+    word-wrap: break-word;
+    a img { border-bottom: 2px dotted $main; }
+    a:visited img { border-bottom: 2px dotted $main_light; }
+    a:hover img { border-bottom: 2px dotted $autumn_red; }
+    a:active img { border-bottom: 2px dotted $autumn_red; }
+
+    h1, h2, h3, h4, h5, h6 {
+        text-align: center;
+    }
+}
+
+.post-text {
+    clear: left;
+}
+
+div.comments {
+    .success {
+        display: none;
+        margin-bottom: 1em;
+    }
+    @media screen and (max-width: 400px) {
+        form.comment {
+            width: 100%;
+        }
+        .content .avatar {
+            display: none;
+        }
+    }
+}
+
+div.comment {
+    .avatar {
+        height: 30px;
+        width: 30px;
+    }
+    .text {
+        clear: left;
+    }
+
+    .comment-tools {
+        float: right;
+        visibility: hidden;
+
+        a {
+            margin-left: 10px;
+            cursor: pointer;
+        }
+    }
+
+    .num-likes {
+        text-align: right;
+        float: right;
+        margin-left: 10px;
+    }
+}
+
+.hidden {
+    display: none;
+}
+
+div.comment, .detachable .content {
+    margin-top: 20px;
+    border-top: 1px dotted $separator;
+    padding-top: 10px;
+}
+
+form.comment {
+    text-align: center;
+
+    .avatar {
+        height: 40px;
+        width: 40px;
+    }
+
+    a.attach, a.detach {
+        display: none;
+    }
+}
+
+#post-new, #post-edit {
+    @include shadow;
+    @include rounded;
+    @include border-box;
+    margin: 0px auto;
+    text-align: center;
+    /* TODO: make the width somewhat flexible */
+    width: 600px;
+    background: $dust;
+    padding: 30px;
+    & > h3, .preview-box > h3 {
+        @include rounded-top;
+        background: $sand;
+        padding: 1em;
+        margin: -30px -30px 1em;
+    }
+    #urls-already-posted-message {
+      display: none;
+      margin: 0.5em;
+      padding: 1em;
+      border: 2px solid $bark;
+      color: $bark;
+      font-weight: bold;
+      text-align: left;
+    }
+    #settings {
+        margin-top: 1em;
+        text-align: left;
+        #springs {
+            margin-top: 1em;
+        }
+    }
+}
+
+.post-tools {
+    text-align: left;
+    right: 1em;
+    margin-right: 16px;
+    opacity: 0.3;
+    float: right;
+    a {
+        cursor: pointer;
+        white-space: nowrap;
+        margin-left: 0px;
+        margin-right: 5px;
+        border: none;
+    }
+    a.confirm-hide {
+        display: none;
+    }
+}
+
+.post-tools.iconic {
+    span.admin {
+        display: inline-block;
+        border-right: 1px solid $bark;
+        line-height: 3em;
+        margin-right: 0.25em;
+        padding-right: 0.25em;
+    }
+    span.mutation {
+        display: inline-block;
+        vertical-align: middle;
+    }
+    span.excerpt_links {
+        display: inline-block;
+        line-height: 3em;
+        border-left: 1px solid $bark;
+        margin-left: 0.25em;
+        padding-left: 0.75em;
+    }
+}
+
+.post-stats, .post-tools {
+    display: inline-block;
+    height: 35px;
+    line-height: 1.5em;
+}
+
+.window {
+    display: none;
+    position: absolute;
+    z-index: 4;
+    background-color: $sand;
+    border-top: 0px;
+    border-left: 1px solid $stone;
+    border-right: 1px solid $stone;
+    border-bottom: 1px solid $stone;
+    text-align: left;
+}
+
+#notifications-window {
+    top: 46px;
+    margin-left: 250px;
+    width: 300px;
+    min-height: 100px;
+    padding: 10px;
+
+    .header {
+        margin-bottom: 8px;
+        height: 20px;
+
+        .title {
+            float: left;
+        }
+
+        .tools {
+            float: right;
+        }
+    }
+    .notification a {
+        margin-left: 0;
+    }
+}
+
+#num-notifications-unseen {
+    padding: 1px 2px 2px 2px;
+    top: 8px;
+    left: -2px;
+    position: absolute;
+    background-color: $autumn_red;
+    color: white;
+}
+
+.has-shadow {
+    @include shadow;
+}
+
+.notification {
+    border-bottom: 1px dotted $separator;
+    cursor: pointer;
+    min-height: 40px;
+    width: 100%;
+
+    img.avatar {
+        height: 30px;
+        width: 30px;
+        margin: 0px;
+    }
+
+    td {
+        padding: 0px;
+        vertical-align: top;
+        .glimpse {
+            font-style: italic;
+            opacity: 0.8;
+        }
+    }
+    td.avatar {
+        padding-right: 5px;
+        width: 35px;
+    }
+}
+.notification.unseen {
+    opacity: 1.0;
+}
+.notification.seen {
+    opacity: 0.8;
+}
+
+#notifications-more {
+    text-align: right;
+}
+
+blockquote {
+    border-left: 4px solid $path;
+    padding: 0.5em 0px 0.1em 1em;
+    margin-left: 0px;
+    text-align: left;
+}
+
+.preview-box {
+    position: relative;
+    background-color: $sand;
+    padding: 1em;
+    margin-top: 1em;
+    margin-bottom: 1em;
+    border: 1px solid $path;
+
+    h3.preview {
+        padding-top: 0px;
+        margin-top: 0px;
+        border-bottom: 1px solid $path;
+    }
+    a.close-preview {
+        position: absolute;
+        right: 1em;
+        top: 1em;
+    }
+    img {
+      max-width: 100%;
+    }
+}
+
+#post-new .preview-box, #post-edit .preview-box {
+    padding: 0px;
+    background-color: transparent;
+    border: none;
+    margin-top: 60px;
+    h3.preview {
+        border: none;
+    }
+}
+
+.form-buttons {
+    margin: 10px auto 0px auto;
+    display: inline-block;
+
+    input {
+        margin-left: 5px;
+        height: 24px;
+        padding-left: 4px;
+        padding-right: 4px;
+        float: right;
+    }
+
+    a.attach, a.detach {
+        float: right;
+        margin-right: 4px;
+    }
+}
+
+#comments-show {
+    display: none;
+}
+
+a.hashtag, a.commenter-ref {
+    cursor: pointer;
+}
+
+.load-comments.disabled {
+    opacity: 0.5;
+    border-bottom: 0px;
+    cursor: default;
+}
+
+.input-and-filler {
+    position: relative;
+}
+
+.filler {
+    position: absolute;
+    left: 34px;
+    cursor: text;
+    vertical-align: middle;
+    padding-top: 2px;
+    color: $text;
+}
+
+form.search {
+    margin-top: 2px;
+    margin-right: 7px;
+    float: left;
+    input {
+        width: 100px;
+        height: 20px;
+        background-image: url('../images/icon-search.png');
+        background-position: right;
+        background-repeat: no-repeat;
+        padding-right: 30px;
+    }
+}
+form.big-search {
+    display: block;
+    float: none;
+    width: 100%;
+    margin-bottom: 0.5em;
+    input {
+        @include border-box;
+        width: 100%;
+        padding: 0.5em;
+        background-image: url('../images/icon-search.png');
+        background-position: right;
+        background-repeat: no-repeat;
+    }
+}
+
+a.go-ref-back {
+    display: none;
+}
+
+table.table {
+    border: 1px solid $main;
+    border-collapse: collapse;
+    th {
+        text-align: left;
+    }
+    th, td {
+        border: 1px solid $main;
+        padding: 0.5em;
+    }
+}
+
+#query-examples {
+    td:first-child {
+        white-space: nowrap;
+    }
+}
+
+textarea#invitations {
+    width: 85%;
+}
+
+#textarea-post-new,
+#textarea-post-edit,
+#textarea-message-new {
+    @include border-box;
+    width: 100%;
+    padding: 1em;
+}
+
+#post-excerpts {
+    div.spinner {
+        text-align: center;
+    }
+}
+
+.markdown-injector {
+    margin-bottom: 5px;
+    opacity: 0.3;
+    a.button {
+        border-bottom: 0px;
+        margin-left: 0.3em;
+        cursor: pointer;
+        width: 16px;
+        height: 16px;
+        display: inline-block;
+        /* These icons were taken from the FAMFAMFAM Silk set.
+         * The set was made available under the CC-BY licence.
+         * http://www.famfamfam.com/lab/icons/silk/
+         */
+        //FIXME: may not hard-code default theme
+        background: url("/themes/default/images/markdown.png");
+        background-repeat: no-repeat;
+        text-indent: -100em;
+        overflow: hidden;
+        &.subtitle   { background-position:  -16px 0; }
+        &.url        { background-position:  -32px 0; }
+        &.image      { background-position:  -48px 0; }
+        &.image-link { background-position:  -64px 0; }
+        &.quote      { background-position:  -80px 0; }
+        &.list       { background-position:  -96px 0; }
+        &.bold       { background-position: -112px 0; }
+        &.italic     { background-position: -128px 0; }
+        &.strike     { background-position: -144px 0; }
+    }
+}
+
+.markdown-injector:hover {
+    opacity: 1.0;
+}
+
+div.pools {
+    z-index: 2;
+    width: 250px;
+    padding: 1em;
+    display: none;
+
+    select#pool-selector {
+        width: 100%;
+    }
+}
+
+.post-excerpt div.pools {
+    right: 0px;
+}
+.post div.pools {
+    left: 300px;
+    @media screen and (max-width: $threshold) {
+        left: 5px;
+    }
+}
+div.pools .chzn-container .chzn-results li {
+    line-height: 24px;
+}
+
+.fading-alert {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 3;
+    padding: 1em;
+    border: 1px solid $stone;
+    background-color: $sand;
+}
+
+.profile #contact-list-selector, .excerpts-view.pool #river-selector {
+    width: 400px;
+}
+
+.more-posts {
+    text-align: center;
+    padding: 1em;
+    margin: 0px;
+    display: none;
+    background-color: $faint_green;
+}
+
+.more-posts-divider {
+    border-top: 5px solid $bark;
+}
+
+.via {
+    font-style: italic;
+    font-size: 0.8em;
+    color: $faint_text;
+}
+
+.touch-only {
+    display: none;
+}
+
+.touch-interface {
+    div.touch-only {
+        display: block;
+    }
+}
+
+video {
+    max-width: 100%;
+}
+
+#sidebar {
+    display: none;
+    @include shadow;
+    @include border-box;
+    padding: (40px + 10px) 10px 10px; // 40px = height of the menu bar
+    position: fixed;
+    overflow-y: auto;
+    z-index: 2; // one less than the menu bar
+    top: 0;
+    left: auto;
+    margin-left: -30px; // .main padding correction
+    @media screen and (max-width: 1100px) {
+        left: 0;
+        margin-left: 0;
+    }
+
+    width: 250px;
+    height: 100%;
+    background-color: $dust;
+
+    .menu-item {
+        padding-left: 4px;
+        padding-right: 4px;
+    }
+    .menu-item + .menu-item {
+        border-left: 1px solid $main;
+    }
+
+    h3 {
+        text-align: center;
+        margin-top: 1em;
+        margin-bottom: 0;
+        padding-bottom: 0.5em;
+        border-bottom: 1px dotted $bark;
+        a {
+            border: none;
+        }
+    }
+    ul {
+        list-style: none;
+        margin: 0;
+        padding: 0.5em 0;
+        li {
+            padding: 5px;
+            margin: 0;
+            cursor: pointer;
+            &.selected {
+                cursor: default;
+            }
+            a {
+                display: block;
+                border: none;
+            }
+            &:hover {
+                background: $sand;
+            }
+        }
+    }
+}
+
+.select2-container, .select2-input, input {
+    max-width: 100%;
+}
+
+#notes > li {
+    margin-bottom: 0.5em;
+}
+#notes p {
+    display: inline;
+}
+
+body.filter-images {
+    a[href$=".jpg"]:before,
+    a[href$=".jpeg"]:before,
+    a[href$=".png"]:before,
+    a[href$=".gif"]:before,
+    a[href$=".JPG"]:before,
+    a[href$=".JPEG"]:before,
+    a[href$=".PNG"]:before,
+    a[href$=".GIF"]:before {
+        content: url("../images/image.png");
+        margin-right: 0.5em;
+    }
+}
+
+div.spoilers {
+    display: none;
+}
+
+.ui-autocomplete {
+  .ui-menu-item {
+    img {
+      width: 16px;
+      height: 16px;
+      margin-right: 4px;
+      position: relative;
+      top: 2px;
+    }
+
+    a {
+      border-bottom: none;
+    }
+
+    &.ui-state-focus {
+      color: $leaf;
+      border-color: $leaf;
+      background: $sand;
+      font-weight: normal;
+    }
+  }
+}

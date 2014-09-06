@@ -1,0 +1,99 @@
+<head>
+  <title>#{( @num_unseen && ( @num_unseen > 0 ) ) ? "(#{@num_unseen})" : ''} Libertree#{ $conf['title_insert'] ? " - #{::CGI.escape_html($conf['title_insert'])}" : '' }#{ @subtitle ? " - #{::CGI.escape_html(@subtitle)}" : '' }</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0"/>
+
+  #{ css 'ui-lightness/jquery-ui-1.11.0.custom' }
+  #{ css 'chosen' }
+  #{ css 'select2' }
+  #{ css 'bootstrap' }
+  #{ css_nocache 'application' }
+  <?r if logged_in? && account.font_css ?>
+    #{ css_nocache account.font_css }
+  <?r else ?>
+    #{ css_nocache 'fonts' }
+  <?r end ?>
+  #{ css_nocache 'single-post-view' }
+  #{ css_nocache 'excerpts-view' }
+  #{ css_nocache 'contact-lists' }
+  #{ css_nocache 'profiles' }
+  #{ css_nocache 'accounts' }
+  #{ css_nocache 'messages' }
+  #{ css_nocache 'chat' }
+  #{ css_nocache 'rivers' }
+  #{ css_nocache 'pools' }
+  #{ css_nocache 'search' }
+  <?r if logged_in? && account.admin? ?>
+    #{ css_nocache 'admin' }
+  <?r end ?>
+  #{ css_nocache 'narrow' }
+
+  #{ js 'jquery-1.11.1.min' }
+  #{ js 'jquery-ui-1.11.0.custom.min' }
+  #{ js 'jquery.expandable' }
+  #{ js 'jquery.cookie' }
+  #{ js 'jquery.mousewheel' }
+  #{ js 'remotestorage.min' }
+  #{ js 'chosen.jquery.min' }
+  #{ js 'select2.min' }
+  #{ js 'textinputs_jquery' }
+  #{ js 'bootstrap' }
+
+  #{ js_nocache 'libertree' }
+  #{ js_nocache 'libertree/post_loader' }
+  #{ js_nocache 'libertree/ui' }
+  #{ js_nocache 'libertree/session' }
+  #{ js_nocache 'libertree/pools' }
+  #{ js_nocache 'libertree/notifications' }
+  #{ js_nocache 'libertree/chat' }
+  #{ js_nocache 'libertree/likes' }
+  #{ js_nocache 'libertree/posts' }
+  #{ js_nocache 'libertree/comments' }
+  #{ js_nocache 'libertree/remotestorage' }
+  #{ js_nocache 'application' }
+  #{ js_nocache 'comments' }
+  #{ js_nocache 'notifications' }
+  #{ js_nocache 'pool' }
+  #{ js_nocache 'home' }
+
+  <script type="text/javascript">
+    var host = #{ $conf['websocket_js_host'].to_s.inspect || request.host.inspect };
+    var secure_websocket = #{ $conf['secure_websocket'].inspect || 'false' };
+    var websocket_path = #{ $conf['websocket_path'].to_s.inspect || '' };
+    var websocket_port = #{ $conf['websocket_port'].to_s.inspect || '8080' };
+  </script>
+  <?r if ! logged_in? || ! $conf['websocket_blacklist'].include?(account.username) ?>
+    #{ js_nocache 'websocket' }
+  <?r end ?>
+
+  <?r if logged_in? && account.admin? ?>
+    #{ js_nocache 'admin' }
+  <?r end ?>
+  #{ controller_js }
+
+  <?r if logged_in? ?>
+    <style type="text/css">
+      .excerpts-view .post-excerpt div.excerpt .overflowed {
+        max-height: #{
+          account.settings.excerpt_max_height ? account.settings.excerpt_max_height.to_s+'px' : 'auto'
+        };
+      }
+      .markdown-injector {
+        display: #{account.settings.hide_markdown_bar ? 'none' : 'inherit'};
+      }
+      #{account.settings.custom_css}
+    </style>
+  <?r end ?>
+
+  <script type="text/javascript">
+    var layout = #{ session[:layout].to_s.inspect };
+    if( layout === 'narrow' ) {
+      $('*').mouseover();
+    }
+    <?r if logged_in? ?>
+      Libertree.UI.autoResizeTextareas = #{account.settings.auto_resize_textareas};
+
+      #{account.settings.custom_js}
+    <?r end ?>
+  </script>
+</head>

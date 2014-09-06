@@ -1,0 +1,5 @@
+<div class="tab #{@active ? 'active' : ''}" data-member-id="#{@partner.id}">
+  <div class="label">#{member_img(@partner, 'size-24')} #{@partner.name_display}</div>
+  <div class="num-chat-unseen #{@n == 0 ? 'hidden' : ''}">#{@n}</div>
+  <a href="#" class="close">x</a>
+</div>

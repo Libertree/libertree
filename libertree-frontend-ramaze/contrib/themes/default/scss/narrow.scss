@@ -1,0 +1,120 @@
+@import "colours.scss";
+@import "../scss-include/mixins.scss";
+
+$threshold: 700px;
+
+@media screen and (max-width: $threshold) {
+    html {
+        height: auto;
+    }
+
+    body {
+        height: auto;
+    }
+
+    .main {
+        width: auto !important;
+        min-width: 0;
+    }
+
+    #sidebar {
+        display: none;
+    }
+
+    .menu {
+        text-align: left;
+        #menu-narrower {
+            width: 100%;
+            min-width: 0px;
+            #main-menu-container {
+                margin-left: 0px;
+                margin-right: 0px;
+                padding-left: 0px;
+                padding-right: 0px;
+            }
+            .menu-item {
+                margin-left: 2px;
+            }
+            #menu-account {
+                margin-right: 5px;
+            }
+        }
+        form.search {
+            margin-left: 5px;
+        }
+    }
+
+    textarea {
+        width: 85%;
+    }
+
+    #post-new {
+        width: 100%;
+    }
+    #textarea-post-new {
+        width: 100%;
+    }
+    #hashtags-input {
+        width: 100%;
+        input {
+            width: 100%;
+        }
+    }
+
+    #account-window {
+        top: 71px;
+        width: 150px;
+        padding: 0.5em;
+    }
+
+    #notifications-window {
+        left: 0.5em;
+        margin: 0 auto;
+        width: 280px;
+        min-height: 100px;
+        padding: 0.5em;
+    }
+
+    textarea.comment, form.comment .form-buttons {
+        width: 100%;
+    }
+
+    form.comment table {
+        width: 80%;
+    }
+
+    input#search {
+        width: 35px;
+    }
+
+    .excerpts-view {
+        #post-excerpts {
+            float: none;
+            margin-left: 0px;
+        }
+
+        #no-more-posts {
+            float: none;
+            width: auto;
+            padding: 1em 1em;
+        }
+
+        .post-excerpt {
+            width: auto;
+            div.meta {
+                float: none;
+                margin-bottom: 1em;
+                .post-tools {
+                    float: none;
+                }
+            }
+            div.excerpt {
+                .show-more, .show-less {
+                    a {
+                        padding: 0px 50px;
+                    }
+                }
+            }
+        }
+    }
+}

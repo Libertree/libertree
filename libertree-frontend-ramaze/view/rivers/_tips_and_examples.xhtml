@@ -1,0 +1,99 @@
+<h4>#{s_('river-tips|Tips:')}</h4>
+<ul>
+  <li>#{_('For the search, enter one or more words or hashtags, separated by spaces.')}</li>
+  <li>#{_('Posts having any of the words will be included in the river.')}</li>
+  <li>#{_('Use a minus sign (-) in front of a word to exclude posts with that word.')}
+  #{_('Example: %s#music -#classical%s will find posts about music, but not classical music.') % ["<code>", "</code>"]}</li>
+  <li>#{_('Use a plus sign (+) in front of a word to include only posts with that word.')}
+  <li>#{_('Use the special term %s to include only posts which you have not read yet.') % "<code>+:unread</code>"}</li>
+  <li>#{_('Use the special term %s to include only posts by members of the same tree as you.') % "<code>+:tree</code>"}</li>
+  <li>#{_('Use double quotes to match multi-word phrases, or exact matches involving symbols.')}</li>
+  <li>#{_('Use the special term %s followed by a JID in quotes to match all posts by that person.') % "<code>:from</code>"} #{_('Example: %s') % '<code>:from "rekado@oak.elephly.net"</code>'}</li>
+  <li>#{_('Use the special term %s followed by a contact list name in quotes to match all posts by the people in that contact list.') % "<code>:contact-list</code>"} #{_('Example: %s') % '<code>:contact-list "Close Friends"</code>'}</li>
+  <li>#{_('Use the special term %s followed by %s or %s to match posts with a given visibility.') % [ "<code>:visibility</code>", "<code>internet</code>", "<code>forest</code>",  ]}</li>
+  <li>#{_('Other special terms: %s, %s and %s. These are for matching posts you have liked, commented on and subscribed to, respectively.') % ["<code>:liked</code>", "<code>:commented</code>", "<code>:subscribed</code>"]}</li>
+  <li>#{_('(advanced) Use the special term %s followed by a source name in quotes to match posts posted with a given source or tool.') % [ "<code>:via</code>" ]}</li>
+  <li>#{_('(advanced) Use the special term %s followed by a river label in quotes to compose rivers using other rivers.') % "<code>:river</code>"} #{_('Example: %s:river "Special Interests"%s') % ['<code>', '</code>']}</li>
+  <li>#{_('(advanced) Use the special term %s followed by &lt; or &gt; and a number to match posts by their approximate number of words.') % "<code>:word-count</code>"} #{_('Example: %s:word-count < 16%s') % ['<code>', '</code>']}</li>
+</ul>
+
+<h4>#{s_('river|Examples')}</h4>
+
+<table class="table" id="query-examples">
+  <thead>
+    <tr>
+      <th>#{s_('river|Query')}</th>
+      <th>#{s_('river|Description')}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>:tree</td>
+      <td>#{_('All posts originating from your tree')}</td>
+    </tr>
+    <tr>
+      <td>:forest</td>
+      <td>#{_('All posts transmitted to your tree from every other tree in the forest, plus posts from your tree')}</td>
+    </tr>
+    <tr>
+      <td>
+        #{_('+:unread #knitting%sPosts tagged with %s#knitting%s which you have not read yet') % ["</td><td>", "<code>", "</code>"]}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        #{_('#funny -#cats -#lolcats%sPosts tagged %s#funny%s, but not including posts about cats') % ["</td><td>", "<code>", "</code>"]}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        #{_('environment%sPosts that mention the environment, whether or not they were hashtagged with %s#environment%s') % ["</td><td>", "<code>", "</code>"]}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        #{_('+:tree #bug #feature%sBug reports and feature requests made by your treemates') % "</td><td>"}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        #{_('"new york"%sPosts about New York, but not posts only having the word %snew%s') % ["</td><td>", "<i>", "</i>"]}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        #{_('brazil -"world cup"%sPosts about Brazil, but not those mentioning the World Cup') % "</td><td>"}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        #{_(':from "rekado@oak.elephly.net"%sPosts written by rekado') % "</td><td>"}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        #{_('#photography -:from \"photophile@example.net\"%sPosts tagged with %s#photography%s, but not those by the user photophile on example.net') % ["</td><td>", "<code>", "</code>"]}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        #{_('#restaurants :river "Important"%sPosts tagged with %s#restaurants%s, or posts matching the river "Important"') % ["</td><td>", "<code>", "</code>"]}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        #{_('#restaurants +:river "News Articles"%sPosts tagged with %s#restaurants%s which also match the river "News Articles"') % ["</td><td>", "<code>", "</code>"]}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        #{_('#restaurants -:river "International News"%sPosts tagged with %s#restaurants%s, but not those which match the river "International News"') % ["</td><td>", "<code>", "</code>"]}
+      </td>
+    </tr>
+    <tr>
+      <td>
+        #{_('#government -:visibility internet%sPosts about government, but not those which are exposed to the Internet') % ["</td><td>",]}
+      </td>
+    </tr>
+  </tbody>
+</table>

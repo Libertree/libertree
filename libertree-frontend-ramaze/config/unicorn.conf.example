@@ -1,0 +1,7 @@
+# Pass to unicorn, for example:
+# bundle exec unicorn -D -c unicorn.conf
+listen "127.0.0.1:8088"
+worker_processes 4
+pid "/home/libertree/git/libertree-frontend-ramaze/pids/unicorn.pid"
+stderr_path "/home/libertree/git/libertree-frontend-ramaze/log/unicorn.log"
+stdout_path "/home/libertree/git/libertree-frontend-ramaze/log/unicorn.log"

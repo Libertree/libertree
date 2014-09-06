@@ -1,0 +1,45 @@
+<div class="comments #{@hidden ? 'hidden' : ''}">
+  <?r all_comments = @post.comments ?>
+  <?r fetched_comments = @post.comments(@comment_fetch_options) ?>
+  #{ render_file 'view/comments/_num_comments.xhtml', num_shown: fetched_comments.count, num_total: all_comments.count }
+  <br/>
+
+  <?r if logged_in? ?>
+    <a href="#" class="jump-to-comment">#{s_('jump-to-comment|Comment')}</a>
+  <?r else ?>
+    | <a href="/login">Log in</a> to comment.
+  <?r end ?>
+
+  <?r loader_hidden = !( @comment_fetch_options && ( @comment_fetch_options[:limit] || @comment_fetch_options[:from_id] ) ) || ( fetched_comments.count == all_comments.count ) ?>
+  <a href="#" class="load-comments #{loader_hidden ? 'hidden' : ''}">#{_('more comments')}</a>
+
+  <?r commenters = commenters(all_comments) ?>
+  <?r offset = all_comments.count - fetched_comments.count ?>
+  <?r fetched_comments.each_with_index do |c,i| ?>
+    #{ render_file 'view/comments/_comment.xhtml', comment: c, commenters: commenters, i: i+offset }
+  <?r end ?>
+
+  <div class="detachable">
+    <div class="drag-handle-bar"></div>
+    <div class="content">
+      <?r if logged_in? ?>
+        #{ member_img(account.member) }
+        <div class="success">
+          #{_('Comment successfully posted.')}
+        </div>
+        <form method="POST" action="/comments/create" class="comment" data-post-id="#{@post.id}">
+          #{ Controller::Main.render_partial '_markdown_injector' }
+          <input type="hidden" name="post_id" value="#{@post.id}" />
+          <textarea name="text" class="comment textarea-comment-new" rows="4" id="textarea-comment-on-post-#{@post.id}">#{session[:saved_text]["textarea-comment-on-post-#{@post.id}"]}</textarea>
+          <div class="form-buttons">
+            <input class="submit" data-msg-failure="#{_('Failed to post comment.')}" type="submit" value="#{@post.v_internet? ? _('Comment to Internet') : _('Comment')}"/>
+            <input class="preview" type="button" value="#{_('Preview')}" data-type="comment" data-preview-heading="#{_('Preview')}" data-preview-close-label="#{s_('preview|close')}"/>
+            <input class="textarea-clear" data-textarea-id="textarea-comment-on-post-#{@post.id}" type="button" value="#{_('Clear')}"/>
+            <a class="detach" href="#">#{_('detach')}</a>
+            <a class="attach" href="#">#{_('attach')}</a>
+          </div>
+        </form>
+      <?r end ?>
+    </div>
+  </div>
+</div>
