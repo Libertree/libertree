@@ -1,0 +1,5 @@
+<?r if @num_shown == @num_total ?>
+  <span class="#{ @hidden ? 'hidden' : ''} num-comments" data-n="#{@num_total}" data-total="#{@num_total}">#{n_('1 comment', '%d comments', @num_total) % @num_total}</span>
+<?r else ?>
+  <span class="#{ @hidden ? 'hidden' : ''} num-comments" data-n="#{@num_shown}" data-total="#{@num_total}">#{n_('showing 1 comment', 'showing %d of %d comments', @num_total) % [@num_shown, @num_total,]}</span>
+<?r end ?>

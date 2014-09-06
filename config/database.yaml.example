@@ -1,0 +1,15 @@
+development:
+  username: libertree
+  database: libertree_development 
+  #host: localhost
+  #password: libertree
+test:
+  username: libertree
+  database: libertree_test
+  #host: localhost
+  #password: libertree
+production:
+  username: libertree
+  database: libertree_production
+  #host: localhost
+  #password: libertree

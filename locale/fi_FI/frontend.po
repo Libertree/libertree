@@ -1,0 +1,1516 @@
+# 
+# Translators:
+# Makailija <themanintheshadows@gmail.com>, 2012
+# Makailija <themanintheshadows@gmail.com>, 2012
+msgid ""
+msgstr ""
+"Project-Id-Version: Libertree\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2010-06-08 10:12+0300\n"
+"PO-Revision-Date: 2014-01-28 09:21+0000\n"
+"Last-Translator: Pistos <transifex.pistos@purepistos.net>\n"
+"Language-Team: Finnish (http://www.transifex.com/projects/p/libertree/language/fi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fi\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: view/login.xhtml
+msgid "Username"
+msgstr "Käyttäjänimi"
+
+msgid "Password"
+msgstr "Salasana"
+
+msgid "Login"
+msgstr "Kirjaudu sisään"
+
+msgid "Not a member yet?"
+msgstr "Etkö ole vielä jäsen?"
+
+# "Sign up now" is wrapped in a link
+msgid "Sign up now!"
+msgstr "Rekisteröidy nyt!"
+
+msgid "Forgot your credentials?"
+msgstr "Unohditko salasanasi?"
+
+msgid ""
+"You can %sreset your password%s if your account has an email address on "
+"record."
+msgstr "Voit %snollata salasanasi%s, jos tilillesi on asetettu sähköpostiosoite."
+
+#: controller/main.rb
+msgid "Invalid credentials."
+msgstr "Virheellinen käyttäjänimi tai salasana."
+
+msgid "A valid invitation code is required."
+msgstr "Rekisteröityminen edellyttää voimassa olevan kutsukoodin."
+
+msgid "This invitation code has already been used. Try another one!"
+msgstr "Tämä kutsukoodi on jo käytetty. Kokeile toista!"
+
+msgid "You mistyped your password."
+msgstr "Kirjoitit salasanasi väärin."
+
+msgid "Username %s is taken.  Please choose another."
+msgstr "Käyttäjänimi %s on varattu.  Valitse jokin muu."
+
+msgid ""
+"Username must be at least 2 characters long and consist only of lowercase "
+"letters, numbers, underscores and dashes."
+msgstr "Käyttäjänimessä täytyy olla vähintään kaksi merkkiä, ja se saa sisältää vain pieniä kirjaimia, numeroita, alaviivoja ja viivoja."
+
+msgid ""
+"A password reset link has been sent for the account with that email address."
+msgstr "Tilin salasanan nollaamiseen tarvittava linkki on lähetetty antamaasi sähköpostiosoitteeseen."
+
+msgid "You have been logged out."
+msgstr "Olet kirjautunut ulos."
+
+#: controller/base.rb
+msgid "not-authenticated|Please log in."
+msgstr "Sinun täytyy kirjautua sisään."
+
+#: controller/invitations.rb
+msgid ""
+"Failed to create invitation.  You may only have up to 5 unaccepted "
+"invitations at once."
+msgstr "Kutsun luominen epäonnistui.  Sinulla voi olla voimassa korkeintaan viisi hyväksymätöntä kutsua kerralla."
+
+#: view/home/index.xhtml
+msgid "In order to see posts here, you need to have at least one river."
+msgstr ""
+
+msgid "%sCreate one now%s"
+msgstr ""
+
+#: view/home/_menu.xhtml
+msgid "by post time"
+msgstr "lähettämisajan mukaan"
+
+msgid "by update time"
+msgstr "päivitysajan mukaan"
+
+msgid "mark all read"
+msgstr "merkitse kaikki luetuiksi"
+
+#: view/posts/new.xhtml
+msgid "New Post"
+msgstr "Uusi viesti"
+
+msgid "new-post|Post"
+msgstr "Lähetä"
+
+msgid "Publish to these springs:"
+msgstr ""
+
+#: view/comments/_comments.xhtml, view/posts/{new,edit}.xhtml
+msgid "Preview"
+msgstr "Esikatsele"
+
+msgid "Visibility"
+msgstr "Näkyvyys"
+
+msgid "visibility|Internet"
+msgstr "Internet"
+
+msgid "visibility|Forest"
+msgstr "Metsä"
+
+msgid "visibility|Tree"
+msgstr ""
+
+msgid "preview|close"
+msgstr ""
+
+#: helper/post.rb
+msgid "This post and its comments are visible to the whole Internet"
+msgstr "Tämä viesti ja sen kommentit näkyvä koko Internetille"
+
+msgid ""
+"This post and its comments are only visible to members of this Libertree "
+"forest"
+msgstr "Tämä viesti ja sen kommentit näkyvät vain tämän Libertree-metsän jäsenille"
+
+#: helper/views.rb
+msgid "Click here for help"
+msgstr ""
+
+msgid "help|What does this mean?"
+msgstr ""
+
+#: view/posts/edit.xhtml
+msgid "Edit Post"
+msgstr "Muokkaa viestiä"
+
+msgid "Cancel"
+msgstr "Peruuta"
+
+msgid "post|Update"
+msgstr "Päivitä"
+
+#: view/posts/show.xhtml
+msgid "Start receiving notifications about comments on this post"
+msgstr "Vastaanota huomautuksia tämän viestin kommenteista"
+
+msgid "subscribe"
+msgstr "tilaa"
+
+msgid "Stop receiving notifications about comments on this post"
+msgstr "Lopeta tämän viestin kommenteista tulevien huomautusten vastaanottaminen"
+
+msgid "unsubscribe"
+msgstr "lopeta tilaus"
+
+msgid "mark post unread"
+msgstr "merkitse kaikki viestit lukemattomiksi"
+
+msgid "mark post read"
+msgstr "merkitse kaikki viestit luetuiksi"
+
+msgid "edit"
+msgstr "muokkaa"
+
+msgid "delete"
+msgstr "poista"
+
+msgid "collect"
+msgstr "kerää"
+
+msgid "unlike"
+msgstr "peru tykkäys"
+
+msgid "like"
+msgstr "tykkää"
+
+msgid "likes"
+msgstr "tykkäystä"
+
+msgid "Delete this post?"
+msgstr "Poistetaanko tämä viesti?"
+
+msgid "posted with: %s"
+msgstr ""
+
+#: view/posts/_excerpts.xhtml
+msgid "No more posts (for now)."
+msgstr "Ei enempää viestejä (toistaiseksi)."
+
+msgid ""
+"The system is still matching posts with this river. Check in a few minutes "
+"for more posts."
+msgstr "Järjestelmä etsii yhä viestejä tähän jokeen. Katso uudelleen muutaman minuutin kuluttua."
+
+#: view/posts/_excerpt.xhtml
+msgid "back to top"
+msgstr "takaisin ylös"
+
+msgid "Liked by %s"
+msgstr "Tykkääjät: %s"
+
+msgid "1 comment by %1$s"
+msgstr "1 kommentti käyttäjältä %1$s"
+
+msgid "%2$d comments by %1$s"
+msgstr "%2$d kommenttia käyttäjiltä %1$s"
+
+msgid "comments"
+msgstr "kommenttia"
+
+msgid "comment"
+msgstr "kommentti"
+
+msgid "Likes:"
+msgstr ""
+
+msgid "Comments:"
+msgstr ""
+
+msgid "Visibility:"
+msgstr ""
+
+msgid "mark read"
+msgstr "merkitse luetuksi"
+
+msgid "mark unread"
+msgstr "merkitse lukemattomaksi"
+
+msgid ""
+"Hiding a post prevents it from showing in your rivers or triggering "
+"notifications."
+msgstr "Jos piilotat viestin, se ei näy joissasi eikä se aiheuta huomautuksia."
+
+msgid "hide"
+msgstr "piilota"
+
+msgid "Click to confirm hiding of this post."
+msgstr "Paina varmistaaksesi, että haluat piilottaa tämän viestin."
+
+msgid "confirm"
+msgstr "Vahvista"
+
+msgid "Collect this post in a pool"
+msgstr "Kerää tämä viesti lampeen."
+
+msgid "collected"
+msgstr "kerätty"
+
+msgid "Remove this post from this pool"
+msgstr "Poista tämä viesti tästä lammesta"
+
+msgid "remove"
+msgstr "poista"
+
+msgid ""
+"View post. Middle click, Shift-click, or Ctrl-Shift-click to open in new "
+"tab/window"
+msgstr ""
+
+msgid "view post"
+msgstr "näytä viesti"
+
+msgid "show more"
+msgstr "näytä lisää"
+
+msgid "show less"
+msgstr "näytä vähemmän"
+
+#: controller/posts.rb
+msgid "Post may not be empty."
+msgstr "Viesti ei voi olla tyhjä."
+
+msgid "Please submit fewer than 16,000 characters."
+msgstr ""
+
+msgid "Successfully posted."
+msgstr ""
+
+msgid ""
+"Note that your post cannot be seen here because it does not match this "
+"river."
+msgstr ""
+
+#: controller/pools.rb
+msgid "You already have a pool with that name."
+msgstr "Sinulla on jo tämänniminen lampi."
+
+msgid "Failed to create pool or add post."
+msgstr "Lammen luominen tai viestin lisääminen epäonnistui."
+
+msgid "Failed to add post to pool."
+msgstr "Viestin lisääminen lampeen epäonnistui."
+
+msgid "Post added to &ldquo;%s&rdquo; pool."
+msgstr "Viesti lisättiin lampeen &rdquo;%s&rdquo;."
+
+msgid "The spring URL may only consist of letters, hyphens or underscores."
+msgstr ""
+
+msgid "You already have a spring with this name."
+msgstr ""
+
+msgid "The custom spring URL is too long.  You may use up to 64 characters."
+msgstr ""
+
+#: controller/profiles.rb
+msgid "Special characters are not allowed in display names."
+msgstr "Näkyvissä nimissä ei voi käyttää erikoismerkkejä."
+
+msgid "Avatar deleted."
+msgstr "Avatar poistettu."
+
+msgid "Avatar changed."
+msgstr "Avatar vaihdettu."
+
+msgid "Failed to reset avatar."
+msgstr "Avatarin nollaaminen epäonnistui."
+
+msgid "Only image files may be used as avatars."
+msgstr "Avatareina voi käyttää vain kuvatiedostoja."
+
+msgid "Only .png, .jpeg and .gif files may be used as avatars."
+msgstr "Avatareina voi käyttää vain .png-, .jpeg- ja .gif-tiedostoja."
+
+#: controller/rivers.rb
+msgid "You already have a river for that."
+msgstr "Sinulla on jo joki tähän tarkoitukseen."
+
+msgid "Please input a valid label for this river."
+msgstr ""
+
+#: view/comments/_comments.xhtml
+msgid "1 comment"
+msgstr "1 kommentti"
+
+msgid "showing 1 comment"
+msgstr "näytetään 1 kommentti "
+
+msgid "%d comments"
+msgstr "%d kommenttia"
+
+msgid "showing %d of %d comments"
+msgstr "näytetään %d kommenttia %d:sta"
+
+msgid "show %smore%s / %sall%s comments"
+msgstr "näytä %slisää kommentteja%s / %skaikki kommentit%s"
+
+msgid "more comments"
+msgstr "lisää kommentteja"
+
+msgid "jump-to-comment|Comment"
+msgstr "Kommentoi"
+
+msgid "Comment successfully posted."
+msgstr "Kommentin lähetys onnistui."
+
+msgid "detach"
+msgstr "irrota"
+
+msgid "attach"
+msgstr "kiinnitä"
+
+msgid "Clear"
+msgstr "Tyhjennä"
+
+msgid "Comment"
+msgstr "Kommentoi"
+
+#: view/comments/_comment.xhtml
+msgid "1 like"
+msgstr "Yksi tykkäys"
+
+msgid "%d likes"
+msgstr "%d tykkäystä"
+
+msgid "back-to-referencing-comment|back"
+msgstr "takaisin"
+
+msgid "Unlike this comment"
+msgstr "Peru tykkäys tästä kommentista"
+
+msgid "Like this comment"
+msgstr "Tykkää tästä kommentista"
+
+msgid "shareable link for this comment"
+msgstr "jaettava linkki tälle kommentille"
+
+msgid "Delete this comment?"
+msgstr ""
+
+#: view/_markdown_injector.xhtml
+msgid "markdown|title"
+msgstr "otsikko"
+
+msgid "markdown|subtitle"
+msgstr "alaotsikko"
+
+msgid "markdown|link"
+msgstr "linkki"
+
+msgid "markdown|image"
+msgstr "kuva"
+
+msgid "markdown|image link"
+msgstr "kuvalinkki"
+
+msgid "markdown|quote"
+msgstr "lainaus"
+
+msgid "markdown|list"
+msgstr "luettelo"
+
+msgid "markdown|bold"
+msgstr "lihavointi"
+
+msgid "markdown|italic"
+msgstr "kursivointi"
+
+#: view/accounts/edit.xhtml
+msgid "Account Settings"
+msgstr "Tilin asetukset"
+
+msgid "Edit profile"
+msgstr "Muokkaa profiilia"
+
+msgid "Manage rivers"
+msgstr "Hallitse jokia"
+
+msgid "Manage pools and springs"
+msgstr ""
+
+msgid "Manage remote storage"
+msgstr ""
+
+msgid "Change password"
+msgstr "Vaihda salasana"
+
+msgid "Email:"
+msgstr "Sähköposti:"
+
+msgid "Use of Email Address"
+msgstr ""
+
+msgid ""
+"Your email address is only used for password recovery. It is never made "
+"public and never shared."
+msgstr ""
+
+msgid "Forward direct messages via email:"
+msgstr ""
+
+msgid "Post excerpt maximum height:"
+msgstr "Viestikatkelman maksimikorkeus"
+
+msgid "pixels"
+msgstr "pikseliä"
+
+msgid "Custom menu link:"
+msgstr "Mukautettu valikkolinkki:"
+
+msgid "Custom CSS:"
+msgstr "Mukautettu CSS:"
+
+msgid "Custom JS:"
+msgstr "Mukautettu JS:"
+
+msgid "Automatic embedding:"
+msgstr "Automaattinen upottaminen:"
+
+msgid "Filter images:"
+msgstr ""
+
+msgid "Display post tools as:"
+msgstr ""
+
+msgid "Make thumbnails for images in post excerpts:"
+msgstr "Luo viestikatkelmien kuvista pikkukuvia:"
+
+msgid "Hide markdown bar:"
+msgstr ""
+
+msgid "Enable posting from river view:"
+msgstr ""
+
+msgid "Language:"
+msgstr "Kieli:"
+
+msgid "Theme:"
+msgstr ""
+
+msgid "Save"
+msgstr "Tallenna"
+
+msgid "Invite Others"
+msgstr "Kutsu muita"
+
+msgid "Generate a new invitation"
+msgstr "Luo uusi kutsu"
+
+msgid "My Invitations"
+msgstr "Omat kutsuni"
+
+msgid "Member API"
+msgstr "Jäsen-API"
+
+msgid "Current API token:"
+msgstr "Nykyinen API-token:"
+
+msgid "API documentation"
+msgstr "API-ohje"
+
+msgid "Generate API token"
+msgstr "Luo API-token"
+
+msgid "Generate a new API token"
+msgstr ""
+
+msgid "settings|Other actions"
+msgstr ""
+
+msgid "Data Export"
+msgstr "Vie tietoja"
+
+msgid ""
+"Download your account settings, profile, posts, comments and direct "
+"messages:"
+msgstr "Lataa tilisi asetukset, profiilisi, viestisi, kommenttisi ja suoraviestisi:"
+
+msgid "Remote storage connection"
+msgstr ""
+
+msgid "remote-storage|Remote storage handle"
+msgstr ""
+
+msgid "remote-storage|Remote storage URL"
+msgstr ""
+
+msgid "remote-storage|Access token"
+msgstr ""
+
+msgid "remote-storage|Connect"
+msgstr ""
+
+msgid "remote-storage|Destroy connection"
+msgstr ""
+
+msgid "remote-storage|The remote storage handle may not be empty."
+msgstr ""
+
+msgid "remote-storage|The remote storage provider could not be found."
+msgstr ""
+
+msgid ""
+"remote-storage|The connection to the remote storage provider timed out."
+msgstr ""
+
+msgid "remote-storage|The remote server does not offer remote storage."
+msgstr ""
+
+msgid "remote-storage|Please connect your remote storage account first."
+msgstr ""
+
+msgid "remote-storage|An error occurred. Please try again later."
+msgstr ""
+
+msgid "remote-storage|An error occurred during file upload: "
+msgstr ""
+
+msgid "Your remote storage account (%s) has been connected!"
+msgstr ""
+
+msgid "The connection to your remote storage account has been removed."
+msgstr ""
+
+msgid "remote-storage|Manage files"
+msgstr ""
+
+msgid "remote-storage|File %s has been deleted."
+msgstr ""
+
+msgid "remote-storage|Successfully uploaded %s to remote storage."
+msgstr ""
+
+#: view/remotestorage/files.xhtml
+msgid "Files in your remote storage"
+msgstr ""
+
+msgid "remote-storage|View connection details"
+msgstr ""
+
+msgid "There are currently no files in your remote storage."
+msgstr ""
+
+msgid "Delete this file?"
+msgstr ""
+
+msgid "remote-storage|delete"
+msgstr ""
+
+msgid "remote-storage|The file has been uploaded successfully."
+msgstr ""
+
+#: controller/accounts.rb
+msgid "Settings saved."
+msgstr "Asetukset tallennettu."
+
+msgid ""
+"Post excerpt maximum height: Please enter a number greater than or equal to "
+"200, or no number for no maximum."
+msgstr "Viestikatkelman maksimikorkeus: Anna suurempi tai yhtä suuri luku kuin 200 tai ellet halua asettaa maksimikorkeutta, älä anna mitään lukua."
+
+msgid "Passwords did not match.  Please reenter."
+msgstr "Salasanat eivät vastaa toisiaan.  Kirjoita ne uudelleen."
+
+msgid "Password changed."
+msgstr "Salasana vaihdettu."
+
+msgid ""
+"account-delete|The username you provided does not match your username. "
+"Please input your own username to confirm account deletion."
+msgstr ""
+
+msgid "Account Deletion"
+msgstr ""
+
+msgid "Delete your account"
+msgstr ""
+
+msgid "Account deletion is permanent!"
+msgstr ""
+
+msgid ""
+"Also note that after your account is deleted, anyone is free to claim the "
+"username that you have abandoned, and impersonation becomes a possibility."
+msgstr ""
+
+msgid "(read warnings above)"
+msgstr ""
+
+msgid ""
+"To delete your account and all associated data, input your username below:"
+msgstr ""
+
+msgid "account-delete|Confirm"
+msgstr ""
+
+msgid ""
+"The provided public key could not be read.  Is it a valid PGP public key?"
+msgstr ""
+
+msgid ""
+"You imported a secret key!  Although we did not store it you should consider"
+" this key compromised."
+msgstr ""
+
+#: view/accounts/change_password.xhtml
+msgid "Change Password"
+msgstr "Vaihda salasana"
+
+msgid "New password:"
+msgstr "Uusi salasana:"
+
+msgid "Re-enter new password:"
+msgstr "Kirjoita uusi salasana uudelleen:"
+
+msgid "button|Change Password"
+msgstr "Vaihda salasana"
+
+#: view/notifications/{index,_index}.xhtml
+msgid "Notifications"
+msgstr "Huomautukset"
+
+msgid "You have no new notifications."
+msgstr "Sinulla ei ole uusia huomautuksia."
+
+msgid "mark all seen"
+msgstr "merkitse kaikki luetuiksi"
+
+msgid "view all"
+msgstr "näytä kaikki"
+
+msgid "%d more"
+msgstr "%d muuta"
+
+#: view/notifications/_comment.xhtml
+msgid "singular|%1$s commented on your %2$spost%3$s."
+msgstr "%1$s kommentoi %2$sviestiäsi%3$s."
+
+msgid "plural|%1$s commented on your %2$spost%3$s."
+msgstr "%1$s kommentoivat %2$sviestiäsi%3$s."
+
+msgid "singular|%1$s commented on %2$s's %3$spost%4$s."
+msgstr "%1$s kommentoi käyttäjän %2$s %3$sviestiä%4$s."
+
+msgid "plural|%1$s commented on %2$s's %3$spost%4$s."
+msgstr "%1$s kommentoivat käyttäjän %2$s %3$sviestiä%4$s."
+
+#: view/notifications/_comment_like.xhtml
+msgid "singular|%1$s liked your %2$scomment%3$s on your post."
+msgstr "%1$s tykkäsi %2$skommentistasi%3$s viestissäsi."
+
+msgid "plural|%1$s liked your %2$scomment%3$s on your post."
+msgstr "%1$s tykkäsivät %2$skommentistasi%3$s viestissäsi."
+
+msgid "singular|%1$s liked your %2$scomment%3$s on %4$s's post."
+msgstr "%1$s tykkäsi %2$skommentistasi%3$s käyttäjän %4$s viestissä."
+
+msgid "plural|%1$s liked your %2$scomment%3$s on %4$s's post."
+msgstr "%1$s tykkäsivät %2$skommentistasi%3$s käyttäjän %4$s viestissä."
+
+#: view/notifications/_post_like.xhtml
+msgid "singular|%1$s liked your %2$spost%3$s."
+msgstr "%1$s tykkäsi %2$sviestistäsi%3$s."
+
+msgid "plural|%1$s liked your %2$spost%3$s."
+msgstr "%1$s tykkäsivät %2$sviestistäsi%3$s."
+
+#: view/notifications/_message.xhtml
+msgid "%1$s sent you a %2$smessage%3$s."
+msgstr "%1$s lähetti sinulle %2$sviestin%3$s."
+
+msgid "%1$s added your %2$spost%3$s to a spring called \"%4$s\"."
+msgstr ""
+
+#: view/notifications/_mention.xhtml
+msgid "%1$s mentioned you in a %2$spost%3$s."
+msgstr ""
+
+#: helper/wording.rb, view/messages/show.xhtml
+msgid "list-comma|, "
+msgstr ","
+
+msgid "list-and| and "
+msgstr " ja"
+
+#: helper/age.rb
+msgid "1 day ago"
+msgstr "1 päivä sitten"
+
+msgid "%d days ago"
+msgstr "%d päivää sitten"
+
+msgid "1 hour ago"
+msgstr "1 tunti sitten"
+
+msgid "%d hours ago"
+msgstr "%d tuntia sitten"
+
+msgid "1 minute ago"
+msgstr "1 minuutti sitten"
+
+msgid "%d minutes ago"
+msgstr "%d minuuttia sitten"
+
+msgid "seconds ago"
+msgstr "muutama sekunti sitten"
+
+#: helper/comment.rb
+msgid "Click to see previous comment by %s"
+msgstr ""
+
+#: view/search.xhtml
+msgid "Search Results for \"%s\""
+msgstr "Haun ”%s” tulokset"
+
+msgid "search-results|Nothing found."
+msgstr "Mitään ei löytynyt."
+
+msgid "search-results|Profiles"
+msgstr "Profiilit"
+
+msgid "search-results|Posts"
+msgstr "Viestit"
+
+msgid "search-results|Comments"
+msgstr "Kommentit"
+
+#: controller/contact-lists.rb
+msgid "Contact list updated."
+msgstr "Kontaktiluettelo päivitetty."
+
+msgid "Contact list name may not be empty."
+msgstr "Kontaktiluettelon nimi ei voi olla tyhjä."
+
+msgid "The contact list &ldquo;%s&rdquo; has been deleted."
+msgstr "Kontaktiluettelo &rdquo;%s&rdquo; on poistettu."
+
+#: view/contact-lists/index.xhtml
+msgid "Contact Lists"
+msgstr "Kontaktiluettelot"
+
+msgid "Create Contact List"
+msgstr ""
+
+msgid "contact-list|Name:"
+msgstr "Nimi:"
+
+msgid "contact-list|Members:"
+msgstr ""
+
+msgid "(type here to search)"
+msgstr ""
+
+msgid "new-contact-list|Create"
+msgstr "Luo"
+
+msgid "contact-list|delete"
+msgstr "poista"
+
+msgid "Delete this contact list?"
+msgstr ""
+
+#: view/contact-lists/show.xhtml
+msgid "Contact List: %s"
+msgstr "Kontaktiluettelot: %s"
+
+msgid "contact-list|Save"
+msgstr "Tallenna"
+
+msgid "contact-list|Cancel"
+msgstr "Peruuta"
+
+#: controller/admin/base.rb
+msgid "Administrative privileges required."
+msgstr "Tarvitaan pääkäyttäjän oikeudet."
+
+#: controller/admin/forests.rb
+msgid "The tree is already a member of the forest."
+msgstr "Puu on jo metsän jäsen."
+
+#: view/admin/index.xhtml
+msgid "Libertree Administration"
+msgstr "Libertreen ylläpito"
+
+msgid "Forests"
+msgstr "Metsät"
+
+msgid ""
+"Drag trees in and out of forests.  The local tree is automatically a part of"
+" each forest originating from it."
+msgstr "Vedä puita metsään ja niistä pois.  Paikallinen puu on automaattisesta osa jokaista metsää, joka on siitä peräisin."
+
+msgid "create-forest|Name:"
+msgstr "Nimi:"
+
+msgid "create-forest|Add"
+msgstr "Lisää"
+
+msgid "forest|Origin:"
+msgstr "Alkuperä:"
+
+msgid "forest-origin|this tree"
+msgstr "tämä puu"
+
+msgid "Trees"
+msgstr "Puut"
+
+msgid "introduce-tree|Hostname or IP address:"
+msgstr ""
+
+msgid "introduce-tree|Introduce"
+msgstr ""
+
+msgid "INTRODUCE request pending for remote tree @ %s"
+msgstr ""
+
+msgid "Job queue"
+msgstr "Tehtäväjono"
+
+#: view/admin/jobs/index.xhtml
+msgid "Unfinished Jobs"
+msgstr "Keskeneräisiä tehtäviä"
+
+msgid "Unfinished Jobs: %s"
+msgstr "Keskeneräisiä tehtäviä: %s"
+
+msgid "jobs|Show all"
+msgstr "Näytä kaikki"
+
+msgid "jobs|ID"
+msgstr "ID"
+
+msgid "jobs|Task"
+msgstr "Tehtävä"
+
+msgid "jobs|Params"
+msgstr "Parametrit"
+
+msgid "jobs|Time created"
+msgstr "Luomisaika"
+
+msgid "jobs|Time started"
+msgstr "Aloitusaika"
+
+msgid "jobs|Tries"
+msgstr "Yritykset"
+
+msgid "jobs|Retry reason"
+msgstr ""
+
+msgid "jobs|Actions"
+msgstr "Toiminnat"
+
+msgid "jobs|Retry"
+msgstr "Yritä uudelleen"
+
+msgid "jobs|Delete"
+msgstr "Poista"
+
+msgid "jobs|Back to forest administration"
+msgstr "Takaisin metsän ylläpitoon"
+
+msgid "jobs|Retry all displayed jobs"
+msgstr ""
+
+msgid "jobs|Retry all unfinished jobs"
+msgstr ""
+
+msgid "Delete this job?"
+msgstr "Poistetaanko tämä tehtävä?"
+
+#: view/404.xhtml
+msgid "404|No such page"
+msgstr "Sivua ei löydy"
+
+msgid ""
+"404|Please use your browser's Back button, or %sgo to your home page%s."
+msgstr "Paina selaimesi Takaisin-nappia tai %smene kotisivullesi%s."
+
+#: view/error.xhtml
+msgid "Something went wrong..."
+msgstr "Jokin meni pieleen..."
+
+msgid "Time of error: %s"
+msgstr "Virheen ajankohta: %s"
+
+msgid "Referrer: %s"
+msgstr "Viittaaja: %s"
+
+#: view/messages/{index,show}.xhtml
+msgid "Direct Messages"
+msgstr "Suoraviestit"
+
+msgid "direct-message|New Message"
+msgstr "Uusi viesti"
+
+msgid "direct-message|Messages"
+msgstr "Viestit"
+
+msgid "direct-message|From:"
+msgstr "Käyttäjältä:"
+
+msgid "direct-message|To:"
+msgstr "Käyttäjälle:"
+
+#: view/messages/_new.xhtml
+msgid "direct-message|Send"
+msgstr "Lähetä"
+
+msgid "direct-message|Recipients"
+msgstr "Vastaanottajat"
+
+msgid "direct-message-warning|please note..."
+msgstr "huomaathan..."
+
+msgid ""
+"Please note that direct messages are not fully private, encrypted nor "
+"secure.  As with all data on this tree, direct messages are fully accessible"
+" to the arborista (administrator)."
+msgstr "Huomaathan, että suoraviestit eivät ole täysin yksityisiä, salattuja tai turvallisia. Kuten kaikki tämän puun muukin data, suoraviestit ovat arboristin (ylläpitäjän) luettavissa."
+
+msgid ""
+"Your message is longer than 4096 characters. Please shorten it and try "
+"again."
+msgstr ""
+
+msgid "You cannot send an empty message."
+msgstr ""
+
+msgid "You did not specify a recipient. Please try again."
+msgstr ""
+
+#: view/messages/show.xhtml
+msgid "direct-message|reply"
+msgstr "vastaa"
+
+msgid "direct-message|reply to all"
+msgstr "vastaa kaikille"
+
+#: view/pools/_index.xhtml
+msgid "pool-selector|Collect in..."
+msgstr "Kerää..."
+
+#: view/pools/index.xhtml
+msgid "Pools"
+msgstr "Lammet"
+
+msgid "Use pools to collect posts."
+msgstr "Käytä lampia kerätäksesi viestejä."
+
+msgid "pool|Name:"
+msgstr "Nimi:"
+
+msgid ""
+"&quot;Springing&quot; a pool causes the pool and which posts it contains to "
+"become publicly visible.  Members can add other members&#39; springs to "
+"rivers."
+msgstr ""
+
+msgid "new-pool|Create"
+msgstr "Luo"
+
+msgid "pool|Delete"
+msgstr "Poista"
+
+msgid "All record of collected posts will be lost. Delete this pool?"
+msgstr "Kaikki kerätyt viestit menetetään. Poistetaanko tämä lampi?"
+
+msgid "Your pools"
+msgstr ""
+
+msgid "Your springs"
+msgstr ""
+
+msgid ""
+"You don't have any springs.  Springs are post collections that are visible "
+"to other people.  &ldquo;Spring&rdquo; a pool to make it public!"
+msgstr ""
+
+#: view/pools/show.xhtml
+msgid "Pool: %s"
+msgstr "Lampi: %s"
+
+msgid "Add this spring to a river"
+msgstr ""
+
+msgid "Added to river."
+msgstr ""
+
+msgid "Spring this pool:"
+msgstr ""
+
+msgid "pool|Sprung:"
+msgstr ""
+
+#: view/pools/edit.xhtml
+msgid "Edit Pool: %s"
+msgstr "Muokkaa lampea: %s"
+
+msgid "pool|Update"
+msgstr "Päivitä"
+
+msgid "(You can remove posts from this pool via %1$sthe pool's page%2$s.)"
+msgstr ""
+
+msgid "pool|Public spring URL:"
+msgstr ""
+
+msgid ""
+"Leave this field empty if you do not want the spring to be accessible "
+"outside of Libertree."
+msgstr ""
+
+#: view/profiles/edit.xhtml
+msgid "My Profile"
+msgstr "Profiilini"
+
+msgid "Display name:"
+msgstr "Julkinen nimi:"
+
+msgid "About Me (Markdown allowed):"
+msgstr "Tietoja minusta (markdown sallittu):"
+
+msgid "profile|Update"
+msgstr "Päivitä"
+
+msgid "Avatar"
+msgstr "Avatar"
+
+msgid "avatar|Upload file:"
+msgstr "Tallenna tiedosto:"
+
+msgid "avatar-upload|Submit"
+msgstr "Lähetä"
+
+msgid "Reset avatar"
+msgstr "Nollaa avatar"
+
+msgid "Delete your avatar and reset it to the default?"
+msgstr "Poistetaanko avatarisi ja palautetaanko oletuskuva?"
+
+#: view/profiles/show.xhtml
+msgid "profile|Edit"
+msgstr "Muokkaa"
+
+msgid "Posts by %s"
+msgstr "Käyttäjän %s viestit"
+
+msgid "Add %s to a contact list"
+msgstr "Lisää %s kontaktiluetteloon"
+
+msgid "Added %s to contact list."
+msgstr ""
+
+#: view/request_password_reset.xhtml
+msgid "Password Reset"
+msgstr "Nollaa salasana"
+
+msgid ""
+"To reset your password, enter the email address associated with your "
+"account."
+msgstr "Syötä tiliisi liitetty sähköpostiosoite nollataksesi salasanasi."
+
+msgid "password-reset|Submit"
+msgstr "Lähetä"
+
+#: view/signup.xhtml
+msgid "Create a New Account"
+msgstr "Luo uusi tunnus"
+
+msgid "Invitation code:"
+msgstr "Kutsukoodi:"
+
+msgid "Username:"
+msgstr "Käyttäjänimi:"
+
+msgid "Password:"
+msgstr "Salasana:"
+
+msgid "Confirm password:"
+msgstr "Vahvista salasana:"
+
+msgid "(optional)"
+msgstr "(valinnainen)"
+
+msgid "button|Sign up"
+msgstr "Rekisteröidy"
+
+#: view/rivers/{new,edit}.xhtml
+msgid "Edit River"
+msgstr "Muokkaa jokea"
+
+msgid "river-query|Search:"
+msgstr "Etsi:"
+
+msgid "river|Label:"
+msgstr "Nimi:"
+
+msgid "append to all other rivers"
+msgstr "lisää kaikkiin muihin jokiin"
+
+msgid "river|Update"
+msgstr "Päivitä"
+
+msgid "river|Create"
+msgstr "Luo"
+
+#: view/rivers/index.xhtml
+msgid "My Rivers"
+msgstr "Omat jokeni"
+
+msgid "new river"
+msgstr "uusi joki"
+
+msgid "river|Global Queries"
+msgstr "Globaalit haut"
+
+msgid ""
+"The following river queries are being appended to every other river query."
+msgstr "Seuraavat jokihaut liitetään kaikkiin muihin jokihakuihin."
+
+#: view/rivers/_list.xhtml
+msgid "(home river)"
+msgstr "(kotijoki)"
+
+msgid "Set as home river"
+msgstr "Aseta kotijoeksi"
+
+msgid "river|edit"
+msgstr "muokkaa"
+
+msgid "river|delete"
+msgstr "poista"
+
+#: view/rivers/_river.xhtml
+msgid "Delete this river?"
+msgstr "Poistetaanko tämä joki?"
+
+#: view/rivers/_tips_and_examples.xhtml
+msgid "river-tips|Tips:"
+msgstr "Vihjeitä:"
+
+msgid ""
+"For the search, enter one or more words or hashtags, separated by spaces."
+msgstr "Voit hakea yhtä tai useampaa sanaa tai hashtagia. Erota hakutermit välilyönneillä."
+
+msgid "Posts having any of the words will be included in the river."
+msgstr "Viestit, joissa on jokin näistä sanoista, sisällytettään jokeen."
+
+msgid ""
+"Use a minus sign (-) in front of a word to exclude posts with that word."
+msgstr "Jos käytät miinusmerkkiä (-) sanan edessä, tämän sanan sisältäviä viestejä ei sisällytetä jokeen."
+
+msgid ""
+"Example: %s#music -#classical%s will find posts about music, but not "
+"classical music."
+msgstr "Esimerkki: %s#musiikki -#klassinen%s hakee viestit, joissa puhutaan musiikista, mutta ei klassisesta musiikista."
+
+msgid ""
+"Use a plus sign (+) in front of a word to include only posts with that word."
+msgstr "Jos käytät plusmerkkiä (+) sanan edessä, vain tämän sanan sisältävät viestit sisällytetään jokeen."
+
+msgid ""
+"Use the special term %s to include only posts which you have not read yet."
+msgstr "Jos käytät erikoistermiä %s, vain sellaiset viestit, joita et ole vielä lukenut, sisällytetään jokeen."
+
+msgid ""
+"Use the special term %s to include only posts by members of the same tree as"
+" you."
+msgstr "Jos käytät erikoistermiä %s, vain oman puusi jäsenten lähettämät viestit sisällytetään jokeen."
+
+msgid ""
+"Use double quotes to match multi-word phrases, or exact matches involving "
+"symbols."
+msgstr "Käytä lainausmerkkejä, jos haluat hakea useamman sanan pituisia tai erikoismerkkejä sisältäviä ilmauksia."
+
+msgid ""
+"Use the special term %s followed by a name in quotes to match all posts by "
+"that person."
+msgstr "Jos käytät erikoistermiä %s ja lisäät sen perään käyttäjänimen, kaikki kyseisen henkilön lähettämät viestit sisällytetään jokeen."
+
+msgid ""
+"Use the special term %s followed by a contact list name in quotes to match "
+"all posts by the people in that contact list."
+msgstr "Jos käytät erikoistermiä %s ja lisäät sen perään kontaktiluettelon nimen, kaikki kyseiseen listaan kuuluvien henkilöiden lähettämät viestit sisällytetään jokeen."
+
+msgid "Example: %s:river \"Special Interests\"%s"
+msgstr "Esimerkki: %s:river \"Mielenkiinnon kohteet\"%s"
+
+msgid ""
+"Use the special term %s followed by %s or %s to match posts with a given "
+"visibility."
+msgstr "Käyttämällä erikoistermiä %s ja lisäämällä sen perään %s tai %s voit lisätä jokeen viestejä niiden näkyvyyden mukaan."
+
+msgid ""
+"Other special terms: %s, %s and %s. These are for narrowing down to posts "
+"you have liked, commented on and subscribed to, respectively."
+msgstr "Muita erityistermejä: %s, %s ja %s. Näillä voit rajoittaa haun sellaisiin viesteihin, joista olet tykännyt, joita olet kommentoinut tai jotka olet tilannut."
+
+msgid ""
+"(advanced) Use the special term %s followed by a source name in quotes to "
+"match posts posted with a given source or tool."
+msgstr ""
+
+msgid ""
+"(advanced) Use the special term %s followed by a river label in quotes to "
+"compose rivers using other rivers."
+msgstr "(edistyneille käyttäjille) Käyttämällä erikoistermiä %s yhdessä lainausmerkeissä olevan joen nimen kanssa voit luoda jokia, jotka käyttävät muita jokia."
+
+msgid ""
+"(advanced) Use the special term %s followed by &lt; or &gt; and a number to "
+"match posts by their approximate number of words."
+msgstr "(edistyneille käyttäjille) Käyttämällä erikoistermiä %s sekä lisäämällä sen perään &lt; tai &gt; ja jonkin luvun voit lisätä jokeen viestejä niiden sanamäärän mukaan."
+
+msgid "Example: %s:word-count < 16%s"
+msgstr "Esimerkki %s:word-count < 16%s"
+
+msgid "river|Examples"
+msgstr "Esimerkkejä"
+
+msgid "river|Query"
+msgstr "Haku"
+
+msgid "river|Description"
+msgstr "Kuvaus"
+
+msgid "All posts originating from your tree"
+msgstr "Kaikki sinun puustasi lähtöisin olevat viestit"
+
+msgid ""
+"All posts transmitted to your tree from every other tree in the forest, plus"
+" posts from your tree"
+msgstr "Kaikki sinun puustasi lähtöisin olevat viestit ja lisäksi muista metsän puista sinun puuhusi välitetyt viestit"
+
+msgid ""
+"+:unread #knitting%sPosts tagged with %s#knitting%s which you have not read "
+"yet"
+msgstr "+:unread #neulominen%sSellaiset viestit, jotka on merkitty tagilla %s#neulominen%s ja joita et ole vielä lukenut"
+
+msgid ""
+"#funny -#cats -#lolcats%sPosts tagged %s#funny%s, but not including posts "
+"about cats"
+msgstr "#hassu -#kissat -#lolcats%sViestit, jotka on merkitty tagilla %s#hauska%s, pois lukien kissoja koskevat viestit"
+
+msgid ""
+"environment%sPosts that mention the environment, whether or not they were "
+"hashtagged with #environment"
+msgstr "ympäristö%sViestit, joissa on mainittu ympäristö, riippumatta siitä, onko ne merkitty hashtagilla #ympäristö"
+
+msgid ""
+"+:tree #bug #feature%sBug reports and feature requests made by your "
+"treemates"
+msgstr "+:tree #bug #feature%sPuusi jäsenten tekemät bugiraportit ja ominaisuuspyynnöt"
+
+msgid ""
+"\"new york\"%sPosts about New York, but not posts only having the word "
+"%snew%s"
+msgstr "\"new york\"%sNew Yorkia koskevat viestit, mutta ei viestejä, joissa on vain sana %snew%s"
+
+msgid ""
+"brazil -\"world cup\"%sPosts about Brazil, but not those mentioning the "
+"World Cup"
+msgstr "brasilia -\"jalkapallo\"%sBrasiliaa koskevat viestit, pois lukien sellaiset, joissa mainitaan jalkapallo"
+
+msgid ":from \"rekado\"%sPosts written by rekado"
+msgstr ":from \"rekado\"%sRekadon kirjoittamat viestit"
+
+msgid ""
+"#photography -:from \"Photophile\"%sPosts tagged with %s#photography%s, but "
+"not those by Photophile"
+msgstr "#valokuvaus -:from \"Photophile\"%sViestit, jotka on merkitty tagilla %s#valokuvaus%s, pois lukien Photophilen lähettämän viestit"
+
+msgid ""
+"#restaurants :river \"Important\"%sPosts tagged with %s#restaurants%s, or "
+"posts matching the river \"Important\""
+msgstr "#ravintolat :river \"Tärkeää\"%sViestit, jotka on merkitty tagilla %s#ravintolat%s tai jotka ovat joessa ”Tärkeää”"
+
+msgid ""
+"#restaurants +:river \"News Articles\"%sPosts tagged with %s#restaurants%s "
+"which also match the river \"News Articles\""
+msgstr "#ravintolat +:river \"Uutisartikkelit\"%sViestit, jotka on merkitty tagilla %s#ravintolat%s ja jotka ovat myös joessa \"Uutisartikkelit\""
+
+msgid ""
+"#restaurants -:river \"International News\"%sPosts tagged with "
+"%s#restaurants%s, but not those which match the river \"International News\""
+msgstr "#ravintolat -:river \"Kansainväliset uutiset\"%sViestit, jotka on merkitty tagilla %s#ravintolat%s, pois lukien ne, jotka ovat joessa \"Kansainväliset uutiset\""
+
+msgid ""
+"#government -:visibility internet%sPosts about government, but not those "
+"which are exposed to the Internet"
+msgstr "#hallitus -:visibility internet%sHallitusta käsittelevät viestit pois lukien ne, jotka näkyvät Internetille"
+
+#: view/chat/_index.xhtml
+msgid "Chat"
+msgstr "Chat"
+
+msgid "chat-contacts|Online:"
+msgstr "Paikalla:"
+
+msgid "chat|(no contacts online)"
+msgstr "(ei kontakteja paikalla)"
+
+msgid "Start new chat with..."
+msgstr "Aloita uusi chat-keskustelu..."
+
+#: layout/_sidebar.xhtml
+msgid "Rivers"
+msgstr ""
+
+msgid "manage rivers"
+msgstr "hallitse jokia"
+
+#: layout/_menu.xhtml
+msgid "menu|Profile"
+msgstr "Profiili"
+
+msgid "menu|Settings"
+msgstr "Asetukset"
+
+msgid "menu|Contact Lists"
+msgstr "Kontaktiluettelot"
+
+msgid "menu|Legible font size"
+msgstr "Luettava fonttikoko"
+
+msgid "menu|Small font size"
+msgstr "Pieni fonttikoko"
+
+msgid "menu|legible"
+msgstr "luettava"
+
+msgid "menu|small"
+msgstr "pieni"
+
+msgid "menu|Administrate"
+msgstr "Ylläpito"
+
+msgid "menu|Log out"
+msgstr "Kirjaudu ulos"
+
+msgid "menu|Go Home"
+msgstr "Mene kotiin"
+
+msgid "menu|You are at Home"
+msgstr "Olet kotona"
+
+msgid "menu|New Post"
+msgstr "Uusi viesti"
+
+msgid "menu|Known Issues"
+msgstr "Tunnetut ongelmat"
+
+msgid "menu|Toggle sidebar"
+msgstr ""
+
+msgid "menu|Log in"
+msgstr ""
+
+#: layout/_notifications.xhtml
+msgid "No notifications"
+msgstr "Ei huomautuksia"
+
+msgid "1 notification"
+msgstr "1 huomautus"
+
+msgid "%d notifications"
+msgstr "%d huomautusta"
+
+#: layout/_chat.xhtml
+msgid "1 unread chat message from %1$s"
+msgstr "1 lukematon chat-viesti käyttäjältä %1$s"
+
+msgid "%2$d unread chat messages from %1$s"
+msgstr "%2$d lukematonta chat-viestiä käyttäjältä %1$s"
+
+#: public/js/comments.js
+msgid "Failed to post comment."
+msgstr "Kommentin lähettäminen epäonnistui."
+
+#: view/tags/index.xhtml
+msgid "Save this hashtag listing as a river."
+msgstr ""
+
+msgid "Add this hashtag to an existing river."
+msgstr ""
+
+msgid "Added hashtag #%s to river."
+msgstr ""
+
+msgid "There are no posts matching this hashtag."
+msgstr ""
+
+#: view/intro/index.xhtml
+msgid "tutorial-river-label|My interests"
+msgstr ""
+
+msgid "tutorial|Back"
+msgstr ""
+
+msgid "tutorial|Next"
+msgstr ""
+
+msgid "tutorial|Skip"
+msgstr ""
+
+msgid "tutorial|Done!"
+msgstr ""
+
+msgid "tutorial|An error occurred while trying to create a river."
+msgstr ""
+
+msgid "tutorial-step-1\n"
+msgstr "# Welcome to Libertree!\nHello, and welcome to Libertree! We'd like to take a minute to explain the most important concepts in Libertree, as this will help you get the most out of it. You can [skip this tutorial](/home) and resume it at a later time.\n\nLibertree is a place where people write things in public, or share interesting stuff with others.\n\n - Someone who is a part of Libertree is called a *member*.\n - Members write posts <a href='#' class='help' rel='popover' title='What is a post?' data-content='A post is a message. What exactly is in these posts can vary widely; different people are interested in different things, and say many different things. Posts can be as short as a single sentence, or as long as a newspaper article.'>?</a> for other members to see.\n - Members can comment <a href='#' class='help' rel='popover' title='What is a comment?' data-content='Comments are written responses to posts or other comments.'>?</a> on posts.\n\n"
+
+msgid "tutorial-step-2a"
+msgstr "# Your interests\nThere are a lot of posts made to Libertree every day. If you like, you can take a minute right now to let us know what your interests are. We'll use this information to narrow down what posts you see at first, so you don't get overwhelmed. You can always change things later, or explore ways to read more posts.  Enter a list of interests (one word each):"
+
+msgid "tutorial-step-2b"
+msgstr "Congratulations! You have just created your first river."
+
+msgid "tutorial-step-3-heading"
+msgstr "# Rivers"
+
+msgid "tutorial-step-3a"
+msgstr "Rivers are a powerful feature that lets you pick or filter posts from the torrent of posts on Libertree. Here is a list of rivers that you may find useful. Select those that you would like added to your account."
+
+msgid "tutorial-step-3b"
+msgstr "Be sure to check out the river management page after this tutorial to see interesting examples of what you can do with rivers."
+
+msgid "tutorial-step-4-heading"
+msgstr "# Friends"
+
+msgid "intro-contact-list-name|Friends"
+msgstr ""
+
+msgid "tutorial-step-4"
+msgstr "If you think some of your friends are already Libertree members, you can try to find them and add them as contacts now."
+
+msgid "tutorial-river-label|Unread posts"
+msgstr ""
+
+msgid "tutorial|All posts on Libertree which you haven't read yet"
+msgstr ""
+
+msgid "tutorial-river-label|Posts from the forest"
+msgstr ""
+
+msgid "tutorial|All posts on Libertree"
+msgstr ""
+
+msgid "tutorial-river-label|My activity"
+msgstr ""
+
+msgid "tutorial|Posts that you have liked, commented on, or are subscribed to"
+msgstr ""

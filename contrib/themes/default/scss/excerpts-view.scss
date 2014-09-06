@@ -1,0 +1,293 @@
+@import "colours.scss";
+@import "../scss-include/mixins.scss";
+
+$threshold: 700px;
+$dynamic-excerpt-width-threshold: 1060px;
+$excerpt-padding: 30px;
+$narrow-excerpt-padding: 1em;
+
+@mixin dynamic-excerpt-width {
+    width: 720px;
+    @media screen and (max-width: $dynamic-excerpt-width-threshold) {
+        width: auto;
+    }
+    &.with-sidebar {
+        float: right;
+        @media screen and (max-width: $dynamic-excerpt-width-threshold) and (min-width: $threshold) {
+            margin-left: 240px;
+        }
+        @media screen and (max-width: $dynamic-excerpt-width-threshold) {
+            float: none;
+        }
+    }
+}
+
+body.excerpts-view .main {
+    padding: 0;
+    background-color: transparent;
+
+    #sidebar {
+        margin-left: 0; // override .main padding correction
+    }
+
+    select#river-selector {
+      width: 400px;
+    }
+
+    & > div.panel {
+        @include dynamic-excerpt-width;
+        @include border-box;
+        float: none;
+        margin: 0 auto;
+        &.with-sidebar {
+            margin: 0;
+            @media screen and (max-width: $dynamic-excerpt-width-threshold) and (min-width: $threshold) {
+                margin-left: 240px;
+            }
+        }
+    }
+    div.panel {
+        padding-left: 30px;
+        padding-right: 30px;
+
+        &.top {
+            padding-top: 30px;
+        }
+
+        ul, h1, h2, h3, h4, h5 {
+            margin: 0px;
+            padding: 0px 0px 1em 0px;
+        }
+
+        ul {
+            margin-left: 2em;
+        }
+    }
+    #post-new {
+        margin-bottom: 20px;
+
+        textarea {
+            margin: auto;
+        }
+
+        .message {
+            background-color: $sand;
+            padding: 0.5em;
+            display: none;
+            margin-top: 0.5em;
+            &.error {
+                color: $red;
+            }
+        }
+    }
+}
+
+.excerpts-view {
+    div.spinner {
+      background-color: $dust;
+    }
+
+    #header {
+      @include border-box;
+      margin: 0 auto;
+      background-color: $dust;
+      padding: 20px;
+      border-radius: $border-radius $border-radius 0 0;
+      @include dynamic-excerpt-width;
+      float: none;
+      &.with-sidebar {
+          margin: 0;
+          @media screen and (max-width: $dynamic-excerpt-width-threshold) and (min-width: $threshold) {
+              margin-left: 240px;
+          }
+      }
+    }
+
+    #no-more-posts {
+      @include border-box;
+      text-align: center;
+      border-radius: 0 0 $border-radius $border-radius;
+      padding: 1em 4em;
+    }
+
+    #no-rivers {
+      text-align: center;
+      background: $dust;
+      border-radius: $border-radius;
+      padding: 2em;
+      margin-top: 1em;
+    }
+
+    #post-excerpts {
+        @include shadow;
+        @include rounded;
+        background-color: $dust;
+        @include dynamic-excerpt-width;
+        float: none;
+        margin: 0 auto;
+        position: relative;
+    }
+
+    form#post-new {
+        @include shadow;
+        @include rounded;
+        background-color: $dust;
+        @include dynamic-excerpt-width;
+        position: relative;
+        float: none;
+    }
+
+    .post-excerpt {
+        padding: 0px 0px $excerpt-padding 0px;
+        @media screen and (max-width: $threshold) {
+            padding: 0px 0px $narrow-excerpt-padding 0px;
+        }
+        border-bottom: 1px dotted $main;
+        overflow: auto;
+
+        .avatar {
+            float: left;
+        }
+
+        .post-stats {
+            color: $bark;
+            float: right;
+            &.text {
+              color: #888;
+              font-size: 11px;
+              margin: inherit;
+              float: none;
+              & > span {
+                  padding-right: 4px;
+              }
+              span + span {
+                  border-left: 1px solid;
+                  padding-left: 4px;
+              }
+            }
+        }
+
+        .post-tools {
+            &.iconic {
+              margin-top: inherit;
+              right: 1em;
+              position: absolute;
+              top: 25%;
+              @media screen and (max-width: $threshold) {
+                  position: relative;
+                  height: auto;
+              }
+            }
+        }
+
+        // the max-height of the excerpt is set in layout/_head.xhtml
+        div.meta {
+            background-color: $sand;
+            position: relative;
+            padding: $excerpt-padding;
+            @media screen and (max-width: $threshold) {
+                padding: $narrow-excerpt-padding;
+            }
+
+            .back-to-top {
+                @media screen and (min-width: $threshold) {
+                    display: none;
+                }
+                position: absolute;
+                right: 0;
+                top: 0;
+            }
+
+            .post-tools {
+                max-width: 372px;
+            }
+
+            &:hover .post-tools {
+              opacity: 1;
+            }
+
+            .member {
+                white-space: nowrap;
+                display: inline-block;
+                .member-text {
+                    max-width: 15em;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    float: left;
+                }
+                .avatar {
+                   margin-bottom: 0px; /* override application.scss */
+                }
+            }
+        }
+
+        div.excerpt {
+            padding: $excerpt-padding $excerpt-padding 0px;
+            @media screen and (max-width: $threshold) {
+                padding: $narrow-excerpt-padding $narrow-excerpt-padding 0px;
+            }
+
+            overflow: hidden;
+            .overflowed {
+              min-height: 200px;
+              .comments {
+                margin-bottom: 1em;
+                form.comment {
+                  display: inline-block;
+                  width: 80%;
+                  @media screen and (max-width: $threshold) {
+                      width: 100%;
+                  }
+                }
+              }
+            }
+            img {
+                max-width: 100%;
+            }
+            &.images-thumbnailed {
+                img {
+                    max-height: 60px;
+                }
+                img:hover {
+                    max-height: none;
+                }
+            }
+            .end-of-text {
+                opacity: 0.2;
+            }
+        }
+
+        .show-more, .show-less {
+            display: none;
+            text-align: center;
+            position: relative;
+            &:hover {
+                background-color: $sand;
+            }
+            a {
+                width: 100%;
+                display: block;
+                border: none;
+                padding: 0.5em 0;
+            }
+        }
+
+        .jump-to-comment {
+            display: none;
+        }
+    }
+    .post-excerpt.first {
+        @include rounded-top;
+        .meta {
+            @include rounded-top;
+        }
+    }
+
+    textarea.comment {
+        width: 100%;
+    }
+}
+
+.excerpts-view.home #header {
+    display: none;
+}

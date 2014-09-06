@@ -1,0 +1,120 @@
+@import "colours.scss";
+@import "../scss-include/fonts-default.scss";
+@import "../scss-include/mixins.scss";
+
+$font_family: 'Droid Sans', Tahoma, Arial, sans-serif;
+$threshold: 700px;
+
+html.intro {
+  // This background image is based on photos copyright by Jim Champion
+  // (http://www.geograph.org.uk/profile/1086), available under a CC licence.
+  background: url('../images/bg-green.png') fixed bottom center repeat-x $main;
+  height: 100%;
+  font-size: $font_normal;
+  font-family: $font_family;
+  color: $text;
+}
+
+body.intro {
+  .tutorial-step {
+    display: none;
+    min-width: 60%;
+    max-width: 700px;
+    margin: 2em auto;
+    background: $dust;
+    padding: 30px 30px 0;
+    @media screen and (max-width: $threshold) {
+        padding: 15px 15px 0;
+        margin: 1em auto;
+    }
+    overflow: auto;
+    @include shadow;
+    @include rounded;
+
+    ul, div.contact-list-container {
+      margin: 0 auto;
+      max-width: 30em;
+    }
+
+    ul#list-of-rivers {
+      padding-left: 2em;
+      width: 30em;
+      margin: 1.5em auto;
+      input[type="checkbox"] {
+        margin-right: 0.5em;
+      }
+    }
+
+    ul#list-of-rivers {
+      list-style: none;
+    }
+
+    input[type="text"] {
+      width: 30em;
+      margin: 0 auto;
+      font-size: $font-normal;
+      display: block;
+      @include rounded;
+    }
+
+    h1 {
+      margin: -30px -30px 1em;
+      padding: 1em;
+      @media screen and (min-width: $threshold) {
+          padding-left: 160px;
+      }
+      @include rounded;
+      color: $main;
+      background: $sand url(../images/logo-in-heading.png) no-repeat 20px bottom;
+      @media screen and (max-width: $threshold) {
+          background-image: none;
+          margin: -15px -15px 1em;
+      }
+    }
+
+    p, div.errors {
+      max-width: 30em;
+      margin: 1em auto;
+    }
+
+    div.errors {
+      color: $red;
+      margin-top: 0.5em;
+    }
+
+    .navigation {
+      clear: both;
+      display: block;
+      float: right;
+      width: auto;
+      margin-top: 1em;
+      margin-bottom: 1em;
+
+      li {
+        list-style: none;
+        float: none;
+        display: inline-block;
+
+        a.button {
+          color: $text;
+          text-align: center;
+          cursor: pointer;
+          padding: 5px;
+          display: inline-block;
+          @include rounded;
+          border: 1px solid $stone;
+          background: $sand;
+          margin: 5px;
+          min-width: 5em;
+          &.default {
+            border: 3px solid $stone;
+          }
+          &:hover {
+            background: $bark;
+            color: $dust;
+          }
+        }
+      }
+    }
+  }
+}

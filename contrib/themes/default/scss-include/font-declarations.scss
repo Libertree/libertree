@@ -1,0 +1,182 @@
+$font_family: 'Droid Sans', Tahoma, Arial, sans-serif;
+
+body {
+    font-family: $font_family;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: $font_family;
+}
+h1 { font-size: $font_extra_extra_large; }
+h2 { font-size: $font_extra_large; }
+h3 { font-size: $font_large; }
+h4 { font-size: $font_normal; }
+h5, h6 { font-size: $font_small; }
+
+.menu {
+    font-size: $font_small;
+}
+#menu-narrower #menu-account {
+    font-size: $font_small;
+}
+
+.member-name {
+    font-size: $font_normal;
+    font-weight: bold;
+    // serifs or slab serifs look better here
+}
+
+.typed-text .member-name {
+    font-weight: normal;
+}
+
+.post-text {
+    font-size: $font_normal;
+}
+
+div.comment {
+    .member-name { font-size: $font_small }
+    .age { font-size: $font_extra_small; }
+    .num-likes { font-size: $font_extra_small; }
+    .text { font-size: $font_small; }
+}
+
+#account-window {
+    font-size: $font_normal;
+}
+
+#notifications-window {
+    font-size: $font_small;
+    .header .title {
+        float: left;
+        font-weight: bold;
+        font-size: $font_normal;
+    }
+}
+
+#num-notifications-unseen, #num-chat-unseen {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.notification.unseen {
+    font-weight: bold;
+}
+.notification.seen {
+    font-weight: normal;
+}
+
+.notification {
+    .age {
+        font-size: inherit;
+    }
+}
+
+blockquote {
+    font-style: italic;
+}
+
+.form-buttons input {
+    font-size: $font_extra_small;
+}
+input[type="button"], input[type="submit"] {
+    font-family: $font_family;
+}
+
+.filler {
+    font-size: $font_extra_small;
+}
+
+table.table th {
+    font-weight: bold;
+}
+
+#query-examples td:first-child {
+    font-family: monospace;
+}
+
+div.river .query {
+    font-family: monospace;
+}
+
+.markdown-injector a {
+    font-size: $font_extra_extra_small;
+}
+
+.excerpts-view {
+    #post-new {
+        .message {
+            font-size: $font_small;
+        }
+    }
+    .post-excerpt {
+        .post-tools {
+            font-size: $font_extra_small;
+        }
+        .post-stats {
+            font-size: $font_extra_small;
+        }
+        div.excerpt {
+            .end-of-text {
+                font-size: $font_extra_extra_small;
+            }
+        }
+    }
+}
+
+.post-tools {
+    a.confirm-hide {
+        font-weight: bold;
+    }
+}
+
+.preview-box {
+    h3.preview {
+        a {
+            font-size: $font_extra_small;
+        }
+    }
+}
+
+.message {
+    font-size: $font_normal;
+}
+
+.chzn-container {
+    font-size: $font_normal;
+}
+
+.chzn-container-multi .chzn-choices .search-choice {
+    line-height: $font_normal;
+}
+
+.chzn-container-multi .chzn-choices .search-choice .search-choice-close {
+    top: $chosen_deleter_top;
+}
+
+#chat-window {
+    select {
+        font-size: $font_normal;
+    }
+    .logs {
+        .message {
+            font-size: $font_normal;
+            .age {
+                font-size: $font_extra_small;
+            }
+        }
+    }
+}
+
+.ui-widget {
+  font-family: $font_family;
+  font-size: 1em;
+
+  /* Does this actually change anything visually? */
+  button {
+    font-family: $font_family;
+    font-size: 1em;
+  }
+}
+
+.big-search input { font-size: $font_large; }

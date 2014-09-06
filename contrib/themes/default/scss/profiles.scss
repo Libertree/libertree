@@ -1,0 +1,23 @@
+@import "../scss-include/mixins.scss";
+@import "colours.scss";
+$threshold: 700px; // TODO: same as in application.scss
+
+body.profile {
+    #textarea-description {
+        @include border-box;
+        width: 500px;
+        @media screen and (max-width: $threshold) {
+            width: 100%;
+        }
+    }
+}
+
+div.profile {
+  padding: 2em;
+  border-radius: 3px 3px 0px 0px;
+  background-color: $dust; /* fallback for browsers that don't support alpha in colours */
+  background-color: $dust_translucent;
+  .description {
+      word-wrap: break-word;
+  }
+}

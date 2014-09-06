@@ -1,0 +1,21 @@
+<div class="header">
+  <span class="title">#{_('Notifications')}</span>
+  <span class="n hidden">#{@n}</span>
+
+  <div class="tools">
+    <?r if @n > 0 ?>
+    <a id="mark-all-notifications-seen" href="/notifications/seen/all">#{_('mark all seen')}</a>
+    <?r end ?>
+    <a href="/notifications">#{_('view all')}</a>
+  </div>
+</div>
+
+<?r if @n == 0 ?>
+  #{_('You have no new notifications.')}
+<?r else
+  ?>#{ render_partial '_notifications', sets: @sets, set_keys: @set_keys }<?r
+
+  if @n_more > 0
+    ?><div id="notifications-more"><a href="/notifications">#{_('%d more') % @n_more}</a></div><?r
+  end
+end ?>

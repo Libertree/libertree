@@ -1,0 +1,10 @@
+<?r if @comment ?>
+  #{ render_file 'view/notifications/_notification_head.xhtml', notifications: @notifications, avatar_member: @comment.member }
+    <?r link = "<a href=\"#{ comment_link(@comment) }\" title=\"#{::CGI.escape_html(@comment.post.glimpse)}\">" ?>
+    <?r if @comment.post.member.account && @comment.post.member.account.id == account.id ?>
+      #{s_("#{@sg_or_pl}|%1$s commented on your %2$spost%3$s.") % [@actors, link, "</a>"]}
+    <?r else ?>
+      #{s_("#{@sg_or_pl}|%1$s commented on %2$s's %3$spost%4$s.") % [@actors, @comment.post.member.name_display, link, "</a>"]}
+    <?r end ?>
+  #{ render_file 'view/notifications/_notification_foot.xhtml', notifications: @notifications, glimpse: @comment.post.glimpse }
+<?r end ?>

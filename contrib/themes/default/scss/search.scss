@@ -1,0 +1,50 @@
+@import "colours.scss";
+
+.search {
+    ul {
+      margin: 0;
+      padding: 0;
+    }
+    li.search-result {
+      padding: 1em;
+      margin-bottom: .5em;
+      background: $dust;
+      border-radius: 3px;
+
+      span {
+        display: block;
+      }
+
+      span.glimpse {
+        margin-bottom: 0.5em;
+      }
+      em.highlight {
+        background: $water;
+        color: $text;
+        font-style: normal;
+        font-weight: bold;
+        padding: 2px;
+      }
+
+      a {
+        color: inherit;
+        display: block;
+        border-bottom: none;
+      }
+      &.post, &.comment {
+        list-style-type: none;
+        .member {
+          display: block;
+          margin-bottom: 0.3em;
+        }
+      }
+    }
+    li.profile {
+        list-style-type: none;
+    }
+    img.avatar {
+        width: 1.3em;
+        height: 1.3em;
+        margin-bottom: 0;
+    }
+}

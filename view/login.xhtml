@@ -1,0 +1,27 @@
+<div class="image-wrapper">
+  #{img 'logo.png', {class: "logo", alt: "Libertree"}}
+</div>
+
+<form id="login" method="POST">
+  <div class="label">#{_('Username')}</div>
+  <input type="text" name="username"/><br/>
+  <div class="label">#{_('Password')}</div>
+  <input type="password" name="password"/>
+  <input type="submit" value="#{_('Login')}"/>
+</form>
+
+<p class="note">
+#{_('Not a member yet?')}
+<a href="/signup">#{_('Sign up now!')}</a>
+</p>
+
+<p class="note">
+#{_('Forgot your credentials?')}
+#{_('You can %sreset your password%s if your account has an email address on record.') % ["<a href=\"/request_password_reset\">", "</a>"]}
+</p>
+
+<p class="language-bar">
+  <?r Libertree::LANG.each do |locale,name| ?>
+  <a href="/lang/#{locale}">#{name}</a>
+  <?r end ?>
+</p>

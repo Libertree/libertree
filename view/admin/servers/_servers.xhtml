@@ -1,0 +1,22 @@
+<div class="servers">
+  <?r if @forest.nil? || @forest.local? || @forest.local_is_member? ?>
+    <div
+      class="server #{@forest.nil? || ! @forest.local? ? 'draggable' : ''}"
+      data-server-id='local'
+      #{ @forest ? 'data-forest-id="'+@forest.id.to_s+'"' : ''}
+    >
+      <span class="name">#{@local_host}</span> (this tree)
+    </div>
+  <?r end ?>
+
+  <?r @servers.each do |s| ?>
+     <div
+      class="server #{ ( @forest.nil? || @forest.local? ) ? 'draggable' : '' }"
+      data-server-id="#{s.id}"
+      #{ @forest ? 'data-forest-id="'+@forest.id.to_s+'"' : ''}
+    >
+      <span class="name">#{s.name_display}</span>
+      (#{s.ip})
+    </div>
+  <?r end ?>
+</div>

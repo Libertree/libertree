@@ -1,0 +1,229 @@
+@import "colours.scss";
+@import "../scss-include/mixins.scss";
+
+$threshold: 700px;
+$full_width_threshold: 1024px;
+
+body.single-post-view {
+  height: 100%;
+  .main {
+    @media screen and (max-width: $full_width_threshold) {
+      width: auto;
+    }
+    @media screen and (min-width: $threshold) {
+      @include border-box;
+      margin: 0 auto;
+      padding: 70px 0px 30px 0px;
+      background: transparent;
+      height: 100%;
+    }
+    @media screen and (max-width: $threshold) {
+      margin: 60px 0px;
+      padding: 0px;
+      max-width: none;
+      min-width: none;
+    }
+  }
+}
+
+.single-post-view {
+  #sidebar {
+    display: none;
+    margin-left: 0;
+  }
+  div.post {
+    position: relative;
+    @media screen and (min-width: $threshold) {
+      height: 100%;
+      width: 100%;
+      display: inline-block;
+      padding: 0;
+      @include rounded;
+    }
+    @media screen and (max-width: $threshold) {
+      @include border-box;
+      background-color: $dust;
+      padding: 1em;
+    }
+
+    &.with-comments-sliding {
+      background-color: $dust; /* fallback for browsers that don't support alpha in colours */
+      background-color: $dust_translucent;
+    }
+
+    img {
+      max-width: 100%;
+    }
+
+    div.post-pane {
+      @media screen and (min-width: $threshold) {
+        @include border-box;
+        width: 55%;
+        height: 100%;
+        overflow-y: auto;
+
+        padding: 2em;
+        background: $dust;
+        float: left;
+        border-right: 1px solid $sand;
+        border-radius: $border-radius 0 0 $border-radius;
+
+        vertical-align: top;
+      }
+
+      .post-proper {
+        width: 100%;
+        .post-text {
+          width: 100%;
+          word-wrap: break-word;
+        }
+        .post-extras {
+            right: 0;
+            width: 100%;
+            text-align: right;
+            margin-bottom: 1em;
+            > a, > span {
+                margin-left: 1em;
+            }
+            @media screen and (max-width: $threshold) {
+                #comments-show, #comments-hide {
+                    display: none;
+                }
+            }
+        }
+        .meta {
+          @include rounded-top;
+          background: $sand;
+          margin: -2em -2em 1em;
+          @media screen and (max-width: $threshold) {
+              margin: -1em -1em 1em;
+          }
+          padding-top: 28px;
+          padding-bottom: 4px;
+          overflow: hidden;
+          position: relative;
+
+          &:hover .post-tools {
+            opacity: 1;
+          }
+
+          .member {
+            display: inline-block;
+            padding: 0px 10px 0px 28px;
+            border-radius: $border-radius 0 0 $border-radius;
+            .member-text {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                float: left;
+            }
+            img.avatar {
+                margin-bottom: 0px; /* override application.scss */
+            }
+          }
+
+          .post-stats.text {
+              color: #888;
+              font-size: 11px;
+              & > span {
+                  padding-right: 4px;
+              }
+              span + span {
+                  border-left: 1px solid;
+                  padding-left: 4px;
+              }
+          }
+
+          .post-tools {
+            margin-top: 0px; /* override application.scss */
+            margin-bottom: 30px;
+            span.num-likes {
+              margin-left: 1em;
+            }
+          }
+        }
+      }
+      &.expanded-post {
+        width: 100%;
+        /* position: relative; */
+      }
+    }
+    div.comments-pane {
+      @media screen and (min-width: $threshold) {
+        @include border-box;
+        width: 45%;
+        height: 100%;
+        padding: 28px;
+        border-radius: 0 $border-radius $border-radius 0;
+        /* position: relative; */
+        float: right;
+        z-index: 0;
+        overflow-y: auto;
+
+        background-color: $dust; /* fallback for browsers that don't support alpha in colours */
+        background-color: $dust_translucent;
+      }
+
+      div.comments {
+        vertical-align: top;
+        padding-right: 1em;
+        padding-bottom: 1em;
+
+        div.content img.avatar {
+            display: none;
+        }
+
+        form.comment {
+          margin-left: 0;
+          .form-buttons {
+            a.detach {
+              display: inline;
+            }
+          }
+        }
+
+        textarea.comment {
+            width: 100%;
+        }
+
+        .detachable {
+          .drag-handle-bar {
+            display: none;
+            height: 1.5em;
+            background: $main;
+            cursor: move;
+          }
+          .comment {
+            max-width: 100%;
+          }
+        }
+
+        .detachable.detached {
+          position: fixed;
+          z-index: 2;
+          border: 1px solid $main;
+          @include rounded;
+
+          .drag-handle-bar {
+            display: block;
+          }
+
+          .content {
+            background: $dust;
+            padding: 1.5em;
+            margin: 0px;
+            border-top: 0px;
+          }
+
+          .preview-box {
+            max-width: 500px;
+          }
+        }
+
+      }
+      &.expanded-post {
+        display: none;
+        width: 0;
+      }
+    }
+  }
+}

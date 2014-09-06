@@ -1,0 +1,29 @@
+<h2>#{_('New River')}</h2>
+
+<form id="form-river-new" class="form-river" method="POST" action="create">
+  <div class="field">
+    <label>
+      #{s_('river-query|Search:')}
+    </label>
+    <textarea name="query"></textarea>
+  </div>
+
+  <div class="field">
+    <label>
+      #{s_('river|Label:')}
+    </label>
+    <input type="text" name="label"/>
+  </div>
+
+  <div class="field">
+    <label>
+      #{_('append to all other rivers')}
+    </label>
+    <input type="checkbox" name="appended_to_all"/>
+  </div>
+
+  <input type="submit" value="#{s_('river|Create')}"/>
+  <a href="/rivers">#{_('Cancel')}</a>
+</form>
+
+#{ render_partial '_tips_and_examples' }

@@ -1,0 +1,54 @@
+<div id="step-1" class="tutorial-step">
+  #{ Libertree::render_unsafe(_("tutorial-step-1\n")) }
+  #{ render_partial '_navigation', done: nil, prev: nil, next: 2 }
+</div>
+
+<div id="step-2" data-func="createRiver" data-success="#{_('tutorial-step-2b')}" class="tutorial-step">
+  #{ Libertree::render(_("tutorial-step-2a")) }
+  <input id="first-river-query" type="text" />
+  <div class="errors"></div>
+  #{ render_partial '_navigation', done: nil, prev: 1, next: 3 }
+</div>
+
+<div id="step-3" data-func="addRiversFromList" class="tutorial-step">
+  #{ Libertree::render(_("tutorial-step-3-heading")) }
+  #{ Libertree::render(_("tutorial-step-3a")) }
+  <ul id="list-of-rivers">
+    <li>
+      <input type="checkbox"
+             data-label="#{s_('tutorial-river-label|Unread posts')}"
+             data-query="+:unread" />
+      #{s_('tutorial-river-label|Unread posts')}
+      #{help_bubble s_("tutorial|All posts on Libertree which you haven't read yet")}
+    </li>
+
+    <li>
+      <input type="checkbox"
+             data-label="#{s_('tutorial-river-label|Posts from the forest')}"
+             data-query=":forest" />
+      #{s_('tutorial-river-label|Posts from the forest')}
+      #{help_bubble s_('tutorial|All posts on Libertree')}
+    </li>
+
+    <li>
+      <input type="checkbox"
+             data-label="#{s_('tutorial-river-label|My activity')}"
+             data-query=":liked :commented :subscribed" />
+      #{s_('tutorial-river-label|My activity')}
+      #{help_bubble s_('tutorial|Posts that you have liked, commented on, or are subscribed to')}
+    </li>
+  </ul>
+
+  <div class="errors"></div>
+  #{ Libertree::render(_("tutorial-step-3b")) }
+  #{ render_partial '_navigation', done: nil, prev: 2, next: 4 }
+</div>
+
+<div id="step-4" data-func="createContactList" data-name="#{s_('intro-contact-list-name|Friends')}" class="tutorial-step">
+  #{ Libertree::render(_("tutorial-step-4-heading")) }
+  #{ Libertree::render(_("tutorial-step-4")) }
+  <div class="contact-list-container">
+    <input id="contact-list-members" name="contact-list-members" data-placeholder="#{_('(type here to search)')}" />
+  </div>
+  #{ render_partial '_navigation', done: true, prev: 3, next: nil }
+</div>

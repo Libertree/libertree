@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="menu-bar-icons.svg">
+  <defs
+     id="defs4">
+    <inkscape:path-effect
+       effect="spiro"
+       id="path-effect4089"
+       is_visible="true" />
+    <marker
+       inkscape:stockid="Arrow1Lstart"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Lstart"
+       style="overflow:visible">
+      <path
+         id="path4309"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt"
+         transform="scale(0.8) translate(12.5,0)" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.4"
+     inkscape:cx="145.66115"
+     inkscape:cy="918.33487"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="true"
+     inkscape:window-width="1022"
+     inkscape:window-height="540"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="0"
+     showguides="true"
+     inkscape:guide-bbox="true">
+    <inkscape:grid
+       type="xygrid"
+       id="grid4111"
+       empspacing="5"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true"
+       spacingx="0.5px"
+       spacingy="0.5px" />
+  </sodipodi:namedview>
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="fill:#4d4d4d;fill-opacity:0;fill-rule:nonzero;stroke:none"
+       id="rect4232-0-91"
+       width="109.28572"
+       height="109.28572"
+       x="17.5"
+       y="142.36218"
+       inkscape:export-filename="/home/jackie/libertree-project/libertree-frontend-ramaze/public/images/icon-exclamation.png"
+       inkscape:export-xdpi="21.243006"
+       inkscape:export-ydpi="21.243006" />
+    <rect
+       style="fill:#4d4d4d;fill-opacity:0;fill-rule:nonzero;stroke:none"
+       id="rect4232-0-2"
+       width="109.28572"
+       height="109.28572"
+       x="258"
+       y="22.362183"
+       inkscape:export-filename="/home/jackie/libertree-project/libertree-frontend-ramaze/public/images/icon-home.png"
+       inkscape:export-xdpi="21.243006"
+       inkscape:export-ydpi="21.243006" />
+    <rect
+       style="fill:#4d4d4d;fill-opacity:0;fill-rule:nonzero;stroke:none"
+       id="rect4232-0-23"
+       width="109.28572"
+       height="109.28572"
+       x="378"
+       y="22.362183"
+       inkscape:export-filename="/home/rekado/dev/libertree-project/libertree-frontend-ramaze/public/themes/default/images/icon-bell.png"
+       inkscape:export-xdpi="23.4"
+       inkscape:export-ydpi="23.4" />
+    <rect
+       style="fill:#4d4d4d;fill-opacity:0;fill-rule:nonzero;stroke:none"
+       id="rect4232-0-9"
+       width="109.28572"
+       height="109.28572"
+       x="498"
+       y="22.362183"
+       inkscape:export-filename="/home/jackie/libertree-project/libertree-frontend-ramaze/public/images/icon-edit.png"
+       inkscape:export-xdpi="21.243006"
+       inkscape:export-ydpi="21.243006" />
+    <rect
+       style="fill:#4d4d4d;fill-opacity:0;fill-rule:nonzero;stroke:none"
+       id="rect4232-0-6"
+       width="109.28572"
+       height="109.28572"
+       x="618"
+       y="22.362183"
+       inkscape:export-filename="/home/jackie/libertree-project/libertree-frontend-ramaze/public/images/icon-message.png"
+       inkscape:export-xdpi="21.243006"
+       inkscape:export-ydpi="21.243006" />
+    <rect
+       style="fill:#4d4d4d;fill-opacity:0;fill-rule:nonzero;stroke:none"
+       id="rect4232"
+       width="109.28572"
+       height="109.28572"
+       x="17.142857"
+       y="22.505041"
+       inkscape:export-filename="/home/jackie/libertree-project/libertree-frontend-ramaze/public/images/icon-chat.png"
+       inkscape:export-xdpi="21.243006"
+       inkscape:export-ydpi="21.243006" />
+    <rect
+       style="fill:#4d4d4d;fill-opacity:0;fill-rule:nonzero;stroke:none"
+       id="rect4232-0"
+       width="109.28572"
+       height="109.28572"
+       x="138"
+       y="23.076462"
+       inkscape:export-filename="/home/jackie/libertree-project/libertree-frontend-ramaze/public/images/icon-exclamation.png"
+       inkscape:export-xdpi="21.243006"
+       inkscape:export-ydpi="21.243006" />
+    <path
+       style="fill:#505534;fill-opacity:1"
+       d="m 507.52683,99.167909 48.5234,-48.523399 5.8228,5.822807 -46.58245,46.582443 -3.2996,16.88615 16.88615,-3.2996 46.58246,-46.582439 5.8228,5.822807 -48.52339,48.523382 -30.08451,4.85234 z m 13.58657,5.822781 44.64151,-44.641506 5.82281,5.822797 -44.64152,44.641509 z m 38.81871,-58.228059 5.8228,-5.822807 25.23217,25.232157 -5.82281,5.822817 z m 9.70467,-9.704674 9.70468,-9.704675 25.23217,25.232168 -9.70468,9.704674 z"
+       id="path4147"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cccccccccccccccccccccccccc"
+       inkscape:export-filename="/home/jackie/libertree-project/libertree-frontend-ramaze/public/images/icon-edit.png"
+       inkscape:export-xdpi="21.243006"
+       inkscape:export-ydpi="21.243006" />
+    <path
+       style="fill:#505534;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       d="m 37.674082,107.22276 c -23.18546,-14.313211 -26.74573,-40.230971 -7.95206,-57.888951 18.79367,-17.658 52.824468,-20.36948 76.009938,-6.05627 23.18546,14.31319 26.74573,40.23097 7.95206,57.888941 -14.602,13.71962 -43.16337,20.28836 -64.899998,14.1363 0,0 -7.366393,2.57185 -12.875403,4.19251 -5.50901,1.62066 -15.538557,3.56689 -15.538557,3.56689 z"
+       id="path4115"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="cssscscc"
+       inkscape:export-filename="/home/jackie/libertree-project/libertree-frontend-ramaze/public/images/icon-chat.png"
+       inkscape:export-xdpi="21.243006"
+       inkscape:export-ydpi="21.243006" />
+    <path
+       style="fill:#505534;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       d="m 193.43747,30.115308 c -5.25472,-0.02692 -55.6199,86.178472 -53.01589,90.742672 2.60401,4.5642 102.42338,5.0845 105.07408,0.54726 2.6507,-4.53724 -46.80347,-91.262974 -52.05819,-91.289932 z m 0.23943,24.250494 c 4.43946,0 8.62638,3.637599 8.03789,8.037893 -0.97725,7.307202 -1.04725,7.261035 -2.73642,20.522281 -0.41726,3.275706 -2.48591,8.003689 -5.30147,8.003689 -2.85011,0 -4.78157,-4.737429 -5.26723,-8.003689 -1.88463,-12.674889 -1.95465,-12.832226 -2.73646,-20.522281 -0.44902,-4.416701 3.56423,-8.037893 8.00369,-8.037893 z m -0.10256,40.257876 c 4.65602,0 8.44834,3.758102 8.44834,8.414122 0,4.65602 -3.79232,8.44834 -8.44834,8.44834 -4.65602,0 -8.41413,-3.79232 -8.41413,-8.44834 0,-4.65602 3.75811,-8.414122 8.41413,-8.414122 z"
+       id="path4938"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ssssssssssssssss"
+       inkscape:export-filename="/home/jackie/libertree-project/libertree-frontend-ramaze/public/images/icon-exclamation.png"
+       inkscape:export-xdpi="21.243006"
+       inkscape:export-ydpi="21.243006" />
+    <path
+       style="fill:#505534;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       d="m 626.26432,41.423993 c -4.49859,0 -8.11029,3.646368 -8.11029,8.144956 l 0,57.950491 c 0,4.4986 3.6117,8.14496 8.11029,8.14496 l 91.60476,0 c 4.49859,0 8.11031,-3.64636 8.11031,-8.14496 l 0,-57.950491 c 0,-4.498588 -3.61172,-8.144956 -8.11031,-8.144956 l -91.60476,0 z m 5.64948,15.666043 a 1.663817,1.663817 0 0 1 0.93581,0.346593 l 39.65034,28.628653 39.65033,-28.628653 a 1.6640115,1.6640115 0 1 1 1.94093,2.703433 l -24.26157,17.537649 c 7.39127,7.776147 11.08071,11.6018 12.72,13.274546 0.7611,0.776636 1.05718,1.063738 1.17842,1.178419 0.006,0.0066 0.0638,0.06377 0.0693,0.06932 a 1.663817,1.663817 0 0 1 0.0693,0.03472 c -0.002,-0.0011 0.004,0.03915 0,0.03472 a 1.663817,1.663817 0 0 1 0.24262,0.207957 c 0,0 0.0271,0.0437 0.0693,0.103922 0.0211,0.03016 0.0534,0.08218 0.10391,0.173297 0.0253,0.04558 0.0595,0.09084 0.10393,0.207957 0.0223,0.05856 0.0692,0.24215 0.0693,0.242616 1.1e-4,4.65e-4 0.0348,0.519546 0.0348,0.51989 0,1.66e-4 -0.10392,0.450439 -0.10392,0.450572 -6e-5,1.33e-4 -0.31184,0.485132 -0.31193,0.485231 -9e-5,1e-4 -0.51977,0.381187 -0.51989,0.381254 -1.4e-4,6.6e-5 -0.51972,0.173275 -0.5199,0.173296 -3.5e-4,0 -0.58868,-0.03449 -0.58921,-0.03472 -5.3e-4,-1.11e-4 -0.21183,-0.07564 -0.27727,-0.103924 -0.26164,-0.113793 -0.29392,-0.168693 -0.34659,-0.207955 -0.10537,-0.07864 -0.15328,-0.08895 -0.20796,-0.138638 -0.2187,-0.198806 -0.55614,-0.53848 -1.42104,-1.421035 -1.69755,-1.732193 -5.41993,-5.607124 -13.10124,-13.690458 l -13.62114,9.843266 -0.97046,0.693188 -0.97048,-0.693188 L 657.423,79.272106 641.16775,94.730192 a 1.6667165,1.6667165 0 1 1 -2.32217,-2.391498 l 15.83944,-15.04218 -23.77633,-17.156397 a 1.663817,1.663817 0 0 1 0.69318,-3.015366 1.663817,1.663817 0 0 1 0.31193,-0.03472 z"
+       id="rect4970"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/jackie/libertree-project/libertree-frontend-ramaze/public/images/icon-message.png"
+       inkscape:export-xdpi="21.243006"
+       inkscape:export-ydpi="21.243006" />
+    <path
+       style="fill:#505534;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       d="m 314.3117,25.186421 -3.06226,3.096288 -50.05099,50.050987 6.15855,6.158551 46.9547,-46.988724 24.6342,24.634204 21.5039,21.503892 6.15855,-6.158552 -15.51547,-15.515465 0,-34.875773 -12.14698,0 0,22.728796 -21.53791,-21.537916 -3.09629,-3.096288 z m 0,19.734583 -44.33476,45.083317 0,26.301439 c 0,4.41626 2.97262,7.96188 6.6349,7.96188 l 75.43375,0 c 3.66227,0 6.60087,-3.54562 6.60087,-7.96188 l 0,-26.301439 -44.33476,-45.083317 z m -10.47974,39.299042 20.99351,0 c 0.86171,0 1.56516,0.86229 1.56516,1.939433 l 0,28.785271 c 0,1.07714 -0.70345,1.93943 -1.56516,1.93943 l -20.99351,0 c -0.86172,0 -1.56516,-0.86229 -1.56516,-1.93943 l 0,-28.785271 c 0,-1.077143 0.70344,-1.939433 1.56516,-1.939433 z"
+       id="rect5010"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/jackie/libertree-project/libertree-frontend-ramaze/public/images/icon-home.png"
+       inkscape:export-xdpi="21.243006"
+       inkscape:export-ydpi="21.243006" />
+    <g
+       id="g8845"
+       inkscape:export-filename="/home/rekado/dev/libertree-project/libertree-frontend-ramaze/public/themes/default/images/icon-bell.png"
+       inkscape:export-xdpi="23.4"
+       inkscape:export-ydpi="23.4"
+       transform="matrix(1.0853487,-0.20907784,0.20907784,1.0853487,-52.392032,86.207826)">
+      <path
+         inkscape:connector-curvature="0"
+         inkscape:export-ydpi="21.243006"
+         inkscape:export-xdpi="21.243006"
+         inkscape:export-filename="/home/jackie/libertree-project/libertree-frontend-ramaze/public/images/icon-bell.png"
+         id="rect4060"
+         d="m 463.43508,35.665093 c -4.41559,-2.752979 -10.54847,-0.88933 -13.70856,4.179233 -0.18273,0.293088 -0.33279,0.608826 -0.48772,0.909488 -8.67432,-4.707426 -18.80146,-3.043608 -23.19557,4.004237 0,0 -11.25353,20.002675 -19.90567,27.538849 -3.95759,3.447136 -15.59163,2.932738 -14.2036,7.708099 3.30587,11.37341 15.44371,16.966114 28.43708,25.240621 12.99338,8.27451 22.92767,16.01835 35.28871,16.03195 5.41866,0.006 -1.43585,-12.20413 -0.0858,-17.79787 2.72319,-11.283545 16.15576,-30.237596 16.15576,-30.237596 4.38524,-7.033627 1.40744,-16.827093 -6.60103,-22.548665 0.20771,-0.278129 0.40053,-0.578714 0.58816,-0.879669 3.16009,-5.068564 2.13389,-11.395677 -2.2817,-14.148656 z m -1.62158,2.728104 c 2.73522,1.705327 2.85871,6.481419 0.25629,10.655528 l -9.90824,-6.177473 c 2.60242,-4.174109 6.91672,-6.183382 9.65195,-4.478055 z m 2.39037,16.709141 c 2.81591,4.523728 2.96102,9.140571 1.42149,13.87473 -1.53952,4.734165 -4.68102,9.718894 -8.59524,15.567018 -7.01534,10.481385 -8.17953,17.467114 -7.74301,21.641414 0.21825,2.08715 0.82729,3.48536 1.3369,4.34303 0.50961,0.85768 0.77761,1.04241 0.77761,1.04241 l -1.85577,1.95891 c 0,0 -0.83343,-0.75505 -1.57085,-1.99615 -0.73742,-1.24111 -1.50699,-3.08047 -1.76649,-5.56204 -0.51901,-4.96315 0.90605,-12.420859 8.10987,-23.183853 3.89219,-5.815195 6.94195,-10.726728 8.34313,-15.035424 1.40115,-4.308701 1.2429,-7.879217 -1.06427,-11.585656 l 2.60663,-1.064389 z"
+         style="fill:#505534;fill-opacity:1;fill-rule:nonzero;stroke:none" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path8840"
+         d="m 420.49656,107.88323 c -2.01951,3.47748 -1.00674,7.94973 2.3906,10.19678 3.39733,2.24705 7.92567,1.43978 10.33551,-1.77953 l -12.72611,-8.41725 z"
+         style="fill:#505534;fill-opacity:1;stroke:none" />
+    </g>
+    <path
+       style="fill:#505534;fill-opacity:1"
+       d="m 56.56932,207.40846 c -7.25137,-5.05292 -0.93814,-6.83211 3.38289,-11.91799 8.52591,4.5109 13.8896,6.566 20.96067,6.566 7.07107,0 29.94213,-23.24417 30.05204,-30.05204 0.11413,-7.07014 -5.30331,-12.37437 -12.37437,-12.37437 -7.9057,0 -15.90991,8.83883 -24.74874,17.67767 l -15.9099,-1.76777 c 12.37437,-12.37437 22.94443,-24.0267 35.7251,-27.82309 9.76062,-2.89931 15.54014,-2.22895 22.61121,4.84212 7.07106,7.07107 8.39295,16.9802 6.31345,23.73859 -2.0203,6.56599 -30.30458,38.63833 -37.37565,38.63833 -7.07107,0 -16.21986,0.94567 -28.6367,-7.52745 z M 27.87987,240.94734 C 20.8088,233.87627 20.8088,226.8052 20.8088,219.73413 c 0,-7.07106 12.37437,-19.44543 22.98097,-30.05203 5.31004,-4.08277 9.21764,-10.73287 16.28871,-10.73287 7.07107,0 17.29886,1.89403 24.36993,8.9651 0.96003,3.71335 0.3273,9.50504 -3.53553,10.6066 -4.68229,-2.72435 -12.37437,-5.3033 -19.44544,-5.3033 -7.07107,0 -28.28427,21.2132 -28.28427,28.28427 0,7.07107 7.07107,14.14214 14.14214,14.14214 7.07106,0 17.9302,-13.38452 23.2335,-18.68782 l 13.8896,2.02031 c -8.41605,8.57713 -28.2843,28.74247 -35.38479,28.8928 -7.04162,0.14908 -14.11268,0.14908 -21.18375,-6.92199 z"
+       id="use3197"
+       inkscape:connector-curvature="0"
+       sodipodi:nodetypes="ccsssccsssscsscsccsssccss" />
+    <rect
+       style="fill:#4d4d4d;fill-opacity:0;fill-rule:nonzero;stroke:none"
+       id="rect4232-0-4"
+       width="109.28572"
+       height="109.28572"
+       x="138"
+       y="143.07648"
+       inkscape:export-filename="/home/jackie/libertree-project/libertree-frontend-ramaze/public/themes/default/images/icon-sidebar.png"
+       inkscape:export-xdpi="21.243006"
+       inkscape:export-ydpi="21.243006" />
+    <rect
+       style="fill:#505534;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3904"
+       width="94.520142"
+       height="20.255102"
+       x="145.38278"
+       y="153.61934"
+       ry="10.127551"
+       rx="6.7514386"
+       inkscape:export-filename="/home/jackie/libertree-project/libertree-frontend-ramaze/public/themes/default/images/icon-sidebar.png"
+       inkscape:export-xdpi="21.243006"
+       inkscape:export-ydpi="21.243006" />
+    <rect
+       style="fill:#505534;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3904-5"
+       width="94.520142"
+       height="20.255102"
+       x="145.38278"
+       y="189.55606"
+       ry="10.127551"
+       rx="6.7514386"
+       inkscape:export-filename="/home/jackie/libertree-project/libertree-frontend-ramaze/public/themes/default/images/icon-sidebar.png"
+       inkscape:export-xdpi="21.243006"
+       inkscape:export-ydpi="21.243006" />
+    <rect
+       style="fill:#505534;fill-opacity:1;fill-rule:nonzero;stroke:none"
+       id="rect3904-5-0"
+       width="94.520142"
+       height="20.255102"
+       x="145.38278"
+       y="225.4928"
+       ry="10.127551"
+       rx="6.7514386"
+       inkscape:export-filename="/home/jackie/libertree-project/libertree-frontend-ramaze/public/themes/default/images/icon-sidebar.png"
+       inkscape:export-xdpi="21.243006"
+       inkscape:export-ydpi="21.243006" />
+  </g>
+</svg>

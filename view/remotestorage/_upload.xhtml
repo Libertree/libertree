@@ -1,0 +1,15 @@
+<h4>#{s_('remote-storage|Upload a file')}</h4>
+
+<form id="upload" action="upload" method="POST" enctype="multipart/form-data"
+      data-remote-url="#{@storage.storage_url}"
+      data-access-token="#{@storage.access_token}">
+  <div class="field">
+    <label>#{s_('remote-storage|File')}</label>
+    <input type="file" name="file" id="fileToUpload" />
+  </div>
+  <input type="submit" name="submit" value="#{s_('remote-storage|Upload')}" />
+  <div class="alert alert-block message" style="display:none"
+       data-msg-success="#{s_('remote-storage|The file has been uploaded successfully.')}"
+       data-msg-error="#{s_('remote-storage|An error occurred during file upload: ')}">
+  </div>
+</form>

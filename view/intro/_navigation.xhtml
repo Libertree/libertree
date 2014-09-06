@@ -1,0 +1,31 @@
+<ul class="navigation">
+  <?r unless @done ?>
+  <li>
+    <a href="/intro#step-#{@next}" data-target="#{@next}" class="button skip">
+      #{s_('tutorial|Skip')}
+    </a>
+  </li>
+  <?r end ?>
+
+  <?r if @prev ?>
+  <li>
+    <a href="/intro#step-#{@prev}" data-prev="#{@prev}" class="button prev">
+      &lt;&lt; #{s_('tutorial|Back')}
+    </a>
+  </li>
+  <?r end ?>
+
+  <?r if @next ?>
+  <li>
+    <a href="/intro#step-#{@next}" data-next="#{@next}" class="button next default">
+      #{s_('tutorial|Next')} &gt;&gt;
+    </a>
+  </li>
+  <?r else ?>
+  <li>
+    <a href="/home" class="button next default">
+      #{s_('tutorial|Done!')}
+    </a>
+  </li>
+  <?r end ?>
+</ul>

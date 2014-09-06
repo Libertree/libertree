@@ -1,0 +1,12 @@
+<h2>#{_('Account Deletion')}</h2>
+
+<p>
+#{_('Account deletion is permanent!')}
+#{_('Also note that after your account is deleted, anyone is free to claim the username that you have abandoned, and impersonation becomes a possibility.')}
+#{_('To delete your account and all associated data, input your username below:')}
+</p>
+
+<form action="delete" method="POST">
+  <input type="text" name="username" value="#{_('(read warnings above)')}"/><br/>
+  <input type="submit" value="#{s_('account-delete|Confirm')}"/>
+</form>
