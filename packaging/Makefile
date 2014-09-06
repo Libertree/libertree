@@ -179,9 +179,9 @@ Gemfile:
 
 # Download all gems listed in the Gemfile
 # and place them in the cache in vendor/cache
-prepare : Gemfile
+Gemfile.lock : Gemfile
 	bundle pack --all
 
 rebuild: cleanall libertree-backend-$(VERSION_BACKEND).$(PKG_TYPE)
 
-.PHONY: prepare clean cleanall nuke rebuild
+.PHONY: clean cleanall nuke rebuild
