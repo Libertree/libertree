@@ -53,5 +53,8 @@ class GemfileMerger
 end
 
 # merge the Gemfiles of all sub-projects
-gemfile = GemfileMerger.new ['libertree-model-rb', 'libertree-backend-rb', 'libertree-client-rb']
+gemfile = GemfileMerger.new ['libertree-frontend-ramaze',
+                             'libertree-model-rb',
+                             'libertree-backend-rb',
+                             'libertree-client-rb']
 gemfile.print
