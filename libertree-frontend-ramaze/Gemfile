@@ -7,7 +7,7 @@ gem 'sequel'
 gem 'bcrypt-ruby'
 gem 'dalli'  # memcached client
 gem 'unicorn'
-gem 'nokogiri'
+
 gem 'mini_magick'
 gem 'sass'
 gem 'ruby-oembed'
@@ -15,6 +15,7 @@ gem 'fast_gettext'
 gem 'gpgme'  # to verify PGP public keys before storing them
 
 group 'extensions' do
+  gem 'nokogiri'
   gem 'curb'           # libcurl-dev (Debian) / libcurl-devel (Fedora)
   gem 'ruby-filemagic' # libmagic-dev (Debian) / file-devel (Fedora)
 end
