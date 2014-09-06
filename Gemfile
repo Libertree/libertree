@@ -1,23 +1,22 @@
 source 'http://rubygems.org'
 gem 'ramaze', git: 'git://github.com/Ramaze/ramaze.git'
 gem 'innate', git: 'git://github.com/Ramaze/innate.git'
-gem 'json'
-gem 'pg'
 gem 'sequel'
-gem 'bcrypt-ruby'
 gem 'dalli'  # memcached client
-gem 'unicorn'
-
 gem 'mini_magick'
 gem 'sass'
 gem 'ruby-oembed'
 gem 'fast_gettext'
-gem 'gpgme'  # to verify PGP public keys before storing them
 
 group 'extensions' do
+  gem 'json'
+  gem 'bcrypt-ruby'
+  gem 'pg'
   gem 'nokogiri'
+  gem 'unicorn'
   gem 'curb'           # libcurl-dev (Debian) / libcurl-devel (Fedora)
   gem 'ruby-filemagic' # libmagic-dev (Debian) / file-devel (Fedora)
+  gem 'gpgme'  # to verify PGP public keys before storing them
 end
 
 gem 'libertree-model', git: 'git://github.com/Libertree/libertree-model-rb.git'
