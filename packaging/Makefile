@@ -72,6 +72,20 @@ libertree-frontend-$(VERSION_FRONTEND).$(PKG_TYPE) : gems \
 	libertree-model-$(VERSION_MODEL).$(PKG_TYPE)
 	fpm -d ruby -d rubygems \
 		-d libertree-model \
+		-d libertree-ramaze \
+		-d libertree-innate \
+		-d libertree-dalli \
+		-d libertree-mini_magick \
+		-d libertree-sass \
+		-d libertree-ruby-oembed \
+		-d libertree-fast_gettext \
+		-d libertree-json \
+		-d libertree-bcrypt-ruby \
+		-d libertree-nokogiri \
+		-d libertree-unicorn \
+		-d libertree-curb \
+		-d libertree-ruby-filemagic \
+		-d libertree-gpgme \
 		--prefix $(PREFIX_FRONTEND) \
 		--url "http://libertreeproject.org" \
 		--maintainer "rekado+libertree@elephly.net" \
@@ -100,7 +114,6 @@ libertree-frontend-$(VERSION_FRONTEND).$(PKG_TYPE) : gems \
 		view/
 
 # TODO: share database config file?
-# TODO: add built rpms/debs as dependencies
 # TODO: if config files are included fpm fails
 # TODO: can we build dependencies from Gemfile?
 # TODO: exclude frontend gems from prerequisites
@@ -110,6 +123,12 @@ libertree-backend-$(VERSION_BACKEND).$(PKG_TYPE) : gems \
 	fpm -d ruby -d rubygems \
 		-d libertree-model \
 		-d libertree-client \
+		-d libertree-json \
+		-d libertree-mail \
+		-d libertree-mail-gpg \
+		-d libertree-em-websocket \
+		-d libertree-blather \
+		-d libertree-bcrypt-ruby \
 		--prefix $(PREFIX_BACKEND) \
 		--url "http://libertreeproject.org" \
 		--maintainer "rekado+libertree@elephly.net" \
