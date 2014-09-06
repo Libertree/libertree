@@ -1,7 +1,6 @@
 source 'http://rubygems.org'
 gem 'ramaze', git: 'git://github.com/Ramaze/ramaze.git'
 gem 'innate', git: 'git://github.com/Ramaze/innate.git'
-gem 'sequel'
 gem 'dalli'  # memcached client
 gem 'mini_magick'
 gem 'sass'
@@ -11,7 +10,6 @@ gem 'fast_gettext'
 group 'extensions' do
   gem 'json'
   gem 'bcrypt-ruby'
-  gem 'pg'
   gem 'nokogiri'
   gem 'unicorn'
   gem 'curb'           # libcurl-dev (Debian) / libcurl-devel (Fedora)
