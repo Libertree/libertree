@@ -13,6 +13,9 @@ VERSION_BACKEND = 0.0.1
 VERSION_MODEL   = 0.9.1
 VERSION_CLIENT  = 0.0.3
 
+FRONTEND_DESC = "Libertree web frontend"
+BACKEND_DESC = "Libertree backend server"
+
 GEMDIR = vendor/cache
 PKG_TYPE = rpm
 #PKG_TYPE = deb
@@ -72,6 +75,7 @@ libertree-frontend-$(VERSION_FRONTEND).$(PKG_TYPE) : gems \
 		--prefix $(PREFIX_FRONTEND) \
 		--url "http://libertreeproject.org" \
 		--maintainer "rekado+libertree@elephly.net" \
+		--description $(FRONTEND_DESC) \
 		--version $(VERSION_FRONTEND) \
 		--license AGPL3 \
 		-p $@ \
@@ -112,6 +116,7 @@ libertree-backend-$(VERSION_BACKEND).$(PKG_TYPE) : gems \
 		--prefix $(PREFIX_BACKEND) \
 		--url "http://libertreeproject.org" \
 		--maintainer "rekado+libertree@elephly.net" \
+		--description $(BACKEND_DESC) \
 		--version $(VERSION_BACKEND) \
 		--license AGPL3 \
 		-p $@ \
