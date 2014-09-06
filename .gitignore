@@ -3,3 +3,4 @@ packaging/vendor/
 packaging/*.deb
 packaging/*.rpm
 packaging/*.gem
+packaging/Gemfile*
