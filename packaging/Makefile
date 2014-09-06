@@ -139,6 +139,7 @@ $(PKG_PREFIX)-nokogiri-%.$(PKG_TYPE) : $(GEMDIR)/nokogiri-%.gem
 	$(call MKPACKAGE, nokogiri-$*.gem, -p $@ -d libxml2 -d libxslt)
 
 # needs gpgme
+# needs mini_portile gem to be installed at build time
 $(PKG_PREFIX)-gpgme-%.$(PKG_TYPE) : $(GEMDIR)/gpgme-%.gem
 ifeq ($(PKG_TYPE), rpm)
 	$(call MKPACKAGE, gpgme-$*.gem, -p $@ -d gpgme)
