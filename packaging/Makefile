@@ -12,6 +12,7 @@
 
 # TODO:
 #   - add architecture ("-a all" or "-a native")
+#   - create libertree user
 
 PREFIX = /usr/share/libertree
 PREFIX_FRONTEND = $(addprefix $(PREFIX)/,frontend-ramaze)
@@ -43,6 +44,10 @@ PKG_TYPE = rpm
 WRAPGEMDIR = fpm -d ruby -d rubygems $(4) \
 		--prefix $(PREFIX_GEMS) \
 		--version $(3) \
+		--deb-user libertree \
+		--deb-group libertree \
+		--rpm-user libertree \
+		--rpm-group libertree \
 		-s dir -t $(PKG_TYPE) -n $(addprefix $(PKG_PREFIX)-,$(2)) $(addprefix $(GEMDIR)/,$(1))
 
 # Convert a ruby gem to a deb/rpm package
@@ -53,6 +58,10 @@ MKPACKAGE = fpm -d ruby -d rubygems $(2) \
 		--prefix $(PREFIX_GEMS) --gem-package-name-prefix $(PKG_PREFIX) \
 		--directories . \
 		--gem-bin-path $(addprefix $(PREFIX_GEMS)/,bin) \
+		--deb-user libertree \
+		--deb-group libertree \
+		--rpm-user libertree \
+		--rpm-group libertree \
 		-s gem -t $(PKG_TYPE) $(addprefix $(GEMDIR)/,$(1))
 
 # Build a deb/rpm package from a libertree gem
@@ -71,6 +80,10 @@ BUILDPKG = fpm -d ruby -d rubygems \
 		--license AGPL3 \
 		--directories . \
 		--gem-bin-path $(addprefix $(PREFIX_GEMS)/,bin) \
+		--deb-user libertree \
+		--deb-group libertree \
+		--rpm-user libertree \
+		--rpm-group libertree \
 		-p $(3) \
 		-n $(4) \
 		-s gem -t $(PKG_TYPE) $(addprefix ./,$(1))
@@ -107,6 +120,10 @@ libertree-frontend-$(VERSION_FRONTEND).$(PKG_TYPE) : gems \
 		--description $(FRONTEND_DESC) \
 		--version $(VERSION_FRONTEND) \
 		--license AGPL3 \
+		--deb-user libertree \
+		--deb-group libertree \
+		--rpm-user libertree \
+		--rpm-group libertree \
 		-p $@ \
 		-C ../libertree-frontend-ramaze \
 		--directories . \
@@ -150,6 +167,10 @@ libertree-backend-$(VERSION_BACKEND).$(PKG_TYPE) : gems \
 		--description $(BACKEND_DESC) \
 		--version $(VERSION_BACKEND) \
 		--license AGPL3 \
+		--deb-user libertree \
+		--deb-group libertree \
+		--rpm-user libertree \
+		--rpm-group libertree \
 		-p $@ \
 		-C ../libertree-backend-rb \
 		--directories . \
