@@ -63,7 +63,7 @@ DEPENDENCIES
   json
   linecache19!
   net-ldap
-  nokogiri (~> 1.5)
+  nokogiri
   parkdown
   pg
   rspec
