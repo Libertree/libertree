@@ -1,13 +1,13 @@
 source 'http://rubygems.org'
 gem 'libertree-model', git: 'git://github.com/Libertree/libertree-model-rb.git'
 gem 'libertree-client', git: 'git://github.com/Libertree/libertree-client-rb.git'
-gem 'json'
 gem 'mail'
 gem 'mail-gpg'
 gem 'em-websocket'
 gem 'blather'
 
 group 'extensions' do
+  gem 'json'
   gem 'bcrypt-ruby'
 end
 
