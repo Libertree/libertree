@@ -24,7 +24,7 @@ PKG_PREFIX = libertree
 
 VERSION_FRONTEND = 0.0.1
 VERSION_BACKEND = 0.0.1
-VERSION_MODEL   = 0.9.1
+VERSION_MODEL   = 0.9.2
 VERSION_CLIENT  = 0.0.3
 VERSION_DB      = 0.0.1
 
@@ -236,7 +236,7 @@ gems : Gemfile.lock $(addprefix $(PKG_PREFIX)-,$(addsuffix .$(PKG_TYPE),innate-2
 	net-ldap-0.5.1 \
 	niceogiri-1.1.2 \
 	nokogiri-1.6.3.1 \
-	parkdown-1.4.23 \
+	parkdown-1.4.24 \
 	pg-0.17.1 \
 	rack-1.5.2 \
 	raindrops-0.13.0 \
