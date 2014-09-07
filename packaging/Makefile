@@ -16,6 +16,7 @@
 PREFIX = /usr/share/libertree
 PREFIX_FRONTEND = $(addprefix $(PREFIX)/,frontend-ramaze)
 PREFIX_BACKEND = $(addprefix $(PREFIX)/,backend-rb)
+PREFIX_DB = $(addprefix $(PREFIX)/,db)
 PREFIX_GEMS = $(addprefix $(PREFIX)/,gems)
 PKG_PREFIX = libertree
 
@@ -23,9 +24,12 @@ VERSION_FRONTEND = 0.0.1
 VERSION_BACKEND = 0.0.1
 VERSION_MODEL   = 0.9.1
 VERSION_CLIENT  = 0.0.3
+VERSION_DB      = 0.0.1
 
 FRONTEND_DESC = "Libertree web frontend"
 BACKEND_DESC = "Libertree backend server"
+DB_DESC = "Libertree database migrations"
+
 
 GEMDIR = vendor/cache
 PKG_TYPE = rpm
@@ -157,6 +161,29 @@ libertree-backend-$(VERSION_BACKEND).$(PKG_TYPE) : gems \
 #		--config-files database.yaml.example \
 #		--config-files config.yaml.example \
 
+libertree-db-$(VERSION_DB).$(PKG_TYPE) :
+	fpm --prefix $(PREFIX_DB) \
+		--url "http://libertreeproject.org" \
+		--maintainer "rekado+libertree@elephly.net" \
+		--description $(DB_DESC) \
+		--version $(VERSION_DB) \
+		--license AGPL3 \
+		-p $@ \
+		-C ../libertree-db \
+		--directories . \
+		-s dir -t $(PKG_TYPE) \
+		-n libertree-db \
+		migrations/ \
+		functions/ \
+		LICENCE \
+		LICENSE \
+		README.md \
+		createdb.sh \
+		createuser.sh \
+		database.yaml.example \
+		gnu-agpl-3.txt \
+		migrate.sh
+
 
 # generate this list from Gemfile.lock with the following command:
 # egrep -e '^    [a-z]+' Gemfile.lock | sed -e 's/^    //' -e 's/ (/-/' -e 's/)$//' | egrep -v -e '^libertree-' 
@@ -215,7 +242,7 @@ libertree-client-$(VERSION_CLIENT).$(PKG_TYPE) : libertree-client-$(VERSION_CLIE
 libertree-model-$(VERSION_MODEL).gem : ../libertree-model-rb/libertree-model.gemspec
 	gem build $<
 
-libertree-model-$(VERSION_MODEL).$(PKG_TYPE) : libertree-model-$(VERSION_MODEL).gem
+libertree-model-$(VERSION_MODEL).$(PKG_TYPE) : libertree-model-$(VERSION_MODEL).gem libertree-db-$(VERSION_DB).$(PKG_TYPE)
 	$(call BUILDPKG, $<, $(VERSION_MODEL), $@, libertree-model)
 
 ####################################
