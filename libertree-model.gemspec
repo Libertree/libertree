@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'libertree-model'
-  s.version     = '0.9.2'
+  s.version     = '0.9.3'
   s.date        = '2014-09-07'
   s.summary     = "Database library for Libertree"
   s.description = "Database library for Libertree"
@@ -16,5 +16,5 @@ Gem::Specification.new do |s|
   s.add_dependency 'bcrypt-ruby', '= 3.0.1'
   s.add_dependency 'nokogiri', '~> 1.5'
   s.add_dependency 'net-ldap', '~> 0.5.1'
-  s.add_dependency 'parkdown', '~> 1.4.24'
+  s.add_dependency 'parkdown', '~> 1.4.25'
 end
