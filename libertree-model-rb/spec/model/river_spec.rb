@@ -175,7 +175,7 @@ describe Libertree::Model::River do
         'contact-list' => {
           :negations    => [],
           :requirements => [],
-          :regular      => [list.member_ids]
+          :regular      => [[list.id, list.member_ids]]
         }
       }
       expect( @river.parsed_query(true) ).to eq(expected)

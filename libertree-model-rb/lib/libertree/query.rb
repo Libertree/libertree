@@ -86,7 +86,7 @@ module Libertree
               list = Model::ContactList[ account_id: account_id, name: match[:arg] ]
               check_resource(list, term) do |list|
                 ids = list.member_ids
-                @parsed_query[key][group] << ids  unless ids.empty?
+                @parsed_query[key][group] << [list.id, ids]  unless ids.empty?
               end
             when 'spring'
               # TODO: eventually remove with_display_name check
@@ -124,6 +124,44 @@ module Libertree
         select {|k| ['phrase', 'word'].include? k}.
         flat_map {|h| h.last[:regular]}
       (tags + rest).join(' ')
+    end
+
+    def to_s
+      res = []
+      apply_template = lambda do |template, groups|
+        res += groups[:negations].map    {|v| '-' + template.call(v)}
+        res += groups[:requirements].map {|v| '+' + template.call(v)}
+        res += groups[:regular].map      {|v|       template.call(v)}
+      end
+
+      @parsed_query.each_pair do |key, groups|
+        template = case key
+                   when 'phrase'
+                     lambda {|v| "\"%s\"" % v }
+                   when 'via'
+                     lambda {|v| ":via \"%s\"" % v }
+                   when 'visibility'
+                     lambda {|v| ":visibility \"%s\"" % v }
+                   when 'word-count'
+                     lambda {|v| ":word-count %s" % v }
+                   when 'flag'
+                     lambda {|v| ":%s" % v }
+                   when 'word'
+                     lambda {|v| v }
+                   when 'tag'
+                     lambda {|v| "#%s" % v }
+                   when 'from'
+                     lambda {|v| ":from %s" % Model::Member[v.to_i].handle }
+                   when 'river'
+                     lambda {|v| ":river %s" % Model::River[v.to_i].label }
+                   when 'contact-list'
+                     template = lambda {|v| Model::ContactList[v.first.to_i].label }
+                   when 'spring'
+                     lambda {|v| pool = Model::Pool[v.to_i]; ":spring \"%s\" \"%s\"" % [pool.name, pool.member.handle] }
+                   end
+        apply_template.call(template, groups)
+      end
+      res.join(' ')
     end
   end
 end

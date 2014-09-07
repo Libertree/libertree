@@ -59,7 +59,7 @@ module Libertree
             self.account.subscribed_to? post
           end
         when 'contact-list'
-          data.include? post.member_id
+          data.last.include? post.member_id
         when 'from'
           post.member_id == data
         when 'river'
