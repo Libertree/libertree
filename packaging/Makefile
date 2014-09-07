@@ -1,4 +1,5 @@
 # needed to run these recipes:
+# - git
 # - fpm gem
 # - mini_portile gem
 # - bundler
