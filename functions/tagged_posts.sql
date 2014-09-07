@@ -1,10 +1,10 @@
-CREATE OR REPLACE FUNCTION tagged_posts(tag VARCHAR, compare_time TIMESTAMP WITH TIME ZONE, newer BOOLEAN, comment_order BOOLEAN, nlimit INTEGER) RETURNS SETOF posts AS $$
+CREATE OR REPLACE FUNCTION tagged_posts(tags VARCHAR[], compare_time TIMESTAMP WITH TIME ZONE, newer BOOLEAN, comment_order BOOLEAN, nlimit INTEGER) RETURNS SETOF posts AS $$
          SELECT
            *
          FROM
            posts
          WHERE
-           text ~* (E'(^|\\s|\\()#' || $1 || E'(\\M|\\s|$|[[:punct:]])')
+           hashtags @> $1
            AND CASE
              WHEN ($4 AND $3) THEN
                GREATEST(time_commented, time_updated) > $2
