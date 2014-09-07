@@ -11,7 +11,6 @@
 
 
 # TODO:
-#   - add support for frontend
 #   - add architecture ("-a all" or "-a native")
 
 PREFIX = /usr/share/libertree
