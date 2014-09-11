@@ -346,7 +346,7 @@ Gemfile:
 # Download all gems listed in the Gemfile
 # and place them in the cache in vendor/cache
 Gemfile.lock : Gemfile
-	bundle pack --all --path vendor
+	bundle pack --all
 
 rebuild: cleanall libertree-backend-$(VERSION_BACKEND).$(PKG_TYPE)
 
