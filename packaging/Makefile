@@ -24,7 +24,7 @@ PKG_PREFIX = libertree
 
 VERSION_FRONTEND = 0.0.1
 VERSION_BACKEND = 0.0.1
-VERSION_MODEL   = 0.9.2
+VERSION_MODEL   = 0.9.3
 VERSION_CLIENT  = 0.0.3
 VERSION_DB      = 0.0.1
 
@@ -212,7 +212,7 @@ libertree-db-$(VERSION_DB).$(PKG_TYPE) :
 
 gems : Gemfile.lock $(addprefix $(PKG_PREFIX)-,$(addsuffix .$(PKG_TYPE),innate-2013.02.21 \
 	ramaze-2012.12.08 \
-	activesupport-4.1.5 \
+	activesupport-4.1.6 \
 	bcrypt-ruby-3.0.1 \
 	blather-1.0.0 \
 	connection_pool-1.2.0 \
@@ -222,7 +222,7 @@ gems : Gemfile.lock $(addprefix $(PKG_PREFIX)-,$(addsuffix .$(PKG_TYPE),innate-2
 	eventmachine-1.0.3 \
 	fast_gettext-0.9.0 \
 	girl_friday-0.11.2 \
-	gpgme-2.0.6 \
+	gpgme-2.0.7 \
 	http_parser.rb-0.6.0 \
 	i18n-0.6.11 \
 	json-1.8.1 \
@@ -230,13 +230,13 @@ gems : Gemfile.lock $(addprefix $(PKG_PREFIX)-,$(addsuffix .$(PKG_TYPE),innate-2
 	mail-2.6.1 \
 	mail-gpg-0.2.2 \
 	mime-types-2.3 \
-	mini_magick-3.8.0 \
+	mini_magick-3.8.1 \
 	mini_portile-0.6.0 \
 	minitest-5.4.1 \
 	net-ldap-0.5.1 \
 	niceogiri-1.1.2 \
 	nokogiri-1.6.3.1 \
-	parkdown-1.4.24 \
+	parkdown-1.4.25 \
 	pg-0.17.1 \
 	rack-1.5.2 \
 	raindrops-0.13.0 \
