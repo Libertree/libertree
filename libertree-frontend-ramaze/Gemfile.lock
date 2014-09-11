@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/Libertree/libertree-model-rb.git
-  revision: de9fbc702f07a6d4109cd2a08878fba0d250f533
+  revision: ee5582869b0684c61922691e5c2071fc93f64cdb
   specs:
     libertree-model (0.9.3)
       bcrypt-ruby (= 3.0.1)
@@ -65,7 +65,8 @@ GEM
       activesupport (>= 3.0.0)
     fast_gettext (0.6.8)
     ffi (1.9.0)
-    gpgme (2.0.2)
+    gpgme (2.0.7)
+      mini_portile (>= 0.5.0, <= 0.6.0)
     i18n (0.6.0)
     json (1.7.6)
     kgio (2.7.3)
