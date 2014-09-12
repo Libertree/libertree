@@ -42,7 +42,7 @@ PKG_TYPE = rpm
 # $(2) : plain name
 # $(3) : version
 # $(4) : optional deb/rpm dependencies for the built package
-WRAPGEMDIR = fpm -d ruby -d rubygems $(4) \
+WRAPGEMDIR = fpm -f -d ruby -d rubygems $(4) \
 		--prefix $(PREFIX_GEMS) \
 		--version $(3) \
 		--deb-user libertree \
@@ -55,7 +55,7 @@ WRAPGEMDIR = fpm -d ruby -d rubygems $(4) \
 # The name of the resulting package will be prefixed with "libertree-" (PKG_PREFIX)
 # $(1) : the directory containing the source gem
 # $(2) : additional parameters to fpm (e.g. package name, version, etc)
-MKPACKAGE = fpm -d ruby -d rubygems $(2) \
+MKPACKAGE = fpm -f -d ruby -d rubygems $(2) \
 		--prefix $(PREFIX_GEMS) --gem-package-name-prefix $(PKG_PREFIX) \
 		--directories . \
 		--gem-bin-path $(addprefix $(PREFIX_GEMS)/,bin) \
@@ -71,7 +71,7 @@ MKPACKAGE = fpm -d ruby -d rubygems $(2) \
 # $(2) : version
 # $(3) : path of generated package
 # $(4) : package name
-BUILDPKG = fpm -d ruby -d rubygems \
+BUILDPKG = fpm -f -d ruby -d rubygems \
 		--prefix $(PREFIX_GEMS) \
 		--gem-package-name-prefix $(PKG_PREFIX) \
 		--no-gem-fix-name \
@@ -99,7 +99,7 @@ all: libertree-frontend-$(VERSION_FRONTEND).$(PKG_TYPE) libertree-backend-$(VERS
 # TODO: what about empty paths like public/avatars, log/, pids/?
 libertree-frontend-$(VERSION_FRONTEND).$(PKG_TYPE) : gems \
 	libertree-model-$(VERSION_MODEL).$(PKG_TYPE)
-	fpm -d ruby -d rubygems \
+	fpm -f -d ruby -d rubygems \
 		-d libertree-model \
 		-d libertree-ramaze \
 		-d libertree-innate \
@@ -153,7 +153,7 @@ libertree-frontend-$(VERSION_FRONTEND).$(PKG_TYPE) : gems \
 libertree-backend-$(VERSION_BACKEND).$(PKG_TYPE) : gems \
 	libertree-client-$(VERSION_CLIENT).$(PKG_TYPE) \
 	libertree-model-$(VERSION_MODEL).$(PKG_TYPE)
-	fpm -d ruby -d rubygems \
+	fpm -f -d ruby -d rubygems \
 		-d libertree-model \
 		-d libertree-client \
 		-d libertree-json \
@@ -184,7 +184,7 @@ libertree-backend-$(VERSION_BACKEND).$(PKG_TYPE) : gems \
 #		--config-files config.yaml.example \
 
 libertree-db-$(VERSION_DB).$(PKG_TYPE) :
-	fpm --prefix $(PREFIX_DB) \
+	fpm -f --prefix $(PREFIX_DB) \
 		--url "http://libertreeproject.org" \
 		--maintainer "rekado+libertree@elephly.net" \
 		--description $(DB_DESC) \
