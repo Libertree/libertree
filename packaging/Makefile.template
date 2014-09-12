@@ -208,7 +208,7 @@ libertree-db-$(VERSION_DB).$(PKG_TYPE) :
 
 
 PLACEHOLDER_FOR_GEM_DEPENDENCIES
-
+	touch gems
 
 libertree-client-$(VERSION_CLIENT).gem : ../libertree-client-rb/libertree-client.gemspec
 	gem build $<
@@ -289,6 +289,8 @@ clean :
 	rm -rf *.$(PKG_TYPE)
 
 cleanall : clean
+	rm -rf gems
+	rm -rf Makefile
 	rm -rf $(GEMDIR)
 	rm -rf libertree-client-*.gem
 	rm -rf libertree-model-*.gem
