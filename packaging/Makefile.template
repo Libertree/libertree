@@ -207,51 +207,8 @@ libertree-db-$(VERSION_DB).$(PKG_TYPE) :
 		migrate.sh
 
 
-# generate this list from Gemfile.lock with the following command:
-# egrep -e '^    [a-z]+' Gemfile.lock | sed -e 's/^    //' -e 's/ (/-/' -e 's/)$//' | egrep -v -e '^libertree-' 
+PLACEHOLDER_FOR_GEM_DEPENDENCIES
 
-gems : Gemfile.lock $(addprefix $(PKG_PREFIX)-,$(addsuffix .$(PKG_TYPE),innate-2013.02.21 \
-	ramaze-2012.12.08 \
-	activesupport-4.1.6 \
-	bcrypt-ruby-3.0.1 \
-	blather-1.0.0 \
-	connection_pool-1.2.0 \
-	curb-0.8.6 \
-	dalli-2.7.2 \
-	em-websocket-0.5.1 \
-	eventmachine-1.0.3 \
-	fast_gettext-0.9.0 \
-	girl_friday-0.11.2 \
-	gpgme-2.0.7 \
-	http_parser.rb-0.6.0 \
-	i18n-0.6.11 \
-	json-1.8.1 \
-	kgio-2.9.2 \
-	mail-2.6.1 \
-	mail-gpg-0.2.2 \
-	mime-types-2.3 \
-	mini_magick-3.8.1 \
-	mini_portile-0.6.0 \
-	minitest-5.4.1 \
-	net-ldap-0.5.1 \
-	niceogiri-1.1.2 \
-	nokogiri-1.6.3.1 \
-	parkdown-1.4.25 \
-	pg-0.17.1 \
-	rack-1.5.2 \
-	raindrops-0.13.0 \
-	rake-10.3.2 \
-	rubinius-actor-0.0.2 \
-	rubinius-core-api-0.0.1 \
-	ruby-filemagic-0.6.1 \
-	ruby-oembed-0.8.10 \
-	sass-3.4.3 \
-	sequel-4.14.0 \
-	subexec-0.2.3 \
-	thread_safe-0.3.4 \
-	timedcache-0.4.0 \
-	tzinfo-1.2.2 \
-	unicorn-4.8.3))
 
 libertree-client-$(VERSION_CLIENT).gem : ../libertree-client-rb/libertree-client.gemspec
 	gem build $<
@@ -332,21 +289,12 @@ clean :
 	rm -rf *.$(PKG_TYPE)
 
 cleanall : clean
-	rm Gemfile*
 	rm -rf $(GEMDIR)
 	rm -rf libertree-client-$(VERSION_CLIENT).gem
 	rm -rf libertree-model-$(VERSION_MODEL).gem
 
 nuke : cleanall
 	rm -rf vendor
-
-Gemfile:
-	ruby build_gemfile.rb > Gemfile
-
-# Download all gems listed in the Gemfile
-# and place them in the cache in vendor/cache
-Gemfile.lock : Gemfile
-	bundle pack --all
 
 rebuild: cleanall libertree-backend-$(VERSION_BACKEND).$(PKG_TYPE)
 
