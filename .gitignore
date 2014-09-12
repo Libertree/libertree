@@ -4,3 +4,6 @@ packaging/*.deb
 packaging/*.rpm
 packaging/*.gem
 packaging/Gemfile*
+packaging/bundle.log
+packaging/Makefile
+packaging/gems
