@@ -3,19 +3,19 @@
 ### System tools
 
 - Debian: `apt-get install git build-essentials ruby`
-- Fedora: `yum install git ruby; yum groupinstall "Development Tools"`
+- Fedora: `yum install git gcc ruby`
 
 ### Development headers
 
 - Debian: `apt-get install libglib2.0-dev libmagic-dev libpq-dev libcurl4-openssl-dev`
-- Fedora: `yum install TODO file-devel TODO libcurl-devel`
+- Fedora: `yum install glib2-devel file-devel postgresql-devel libcurl-devel`
 
 Why?
 
-- eventmachine: openssl-dev? (Debian, or is it part of libcurl4-openssl-dev) / TODO (Fedora)
-- parkdown: libglib2.0-dev (Debian) / TODO (Fedora)
+- eventmachine: libssl-dev (Debian?) / openssl-devel (Fedora)
+- parkdown: libglib2.0-dev (Debian) / glib2-devel (Fedora)
 - ruby-filemagic: libmagic-dev (Debian) / file-devel (Fedora)
-- pg: libpq-dev (Debian), TODO (Fedora)
+- pg: libpq-dev (Debian), postgresql-devel (Fedora)
 - curb: libcurl4-openssl-dev (Debian) / libcurl-devel (Fedora)
 
 ### Optional headers
