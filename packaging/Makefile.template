@@ -290,8 +290,8 @@ clean :
 
 cleanall : clean
 	rm -rf $(GEMDIR)
-	rm -rf libertree-client-$(VERSION_CLIENT).gem
-	rm -rf libertree-model-$(VERSION_MODEL).gem
+	rm -rf libertree-client-*.gem
+	rm -rf libertree-model-*.gem
 
 nuke : cleanall
 	rm -rf vendor
