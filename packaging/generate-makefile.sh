@@ -7,7 +7,7 @@ echo "DONE"
 
 # install all dependencies to a local directory and create Gemfile.lock
 echo -n "Installing dependent gems... "
-rm Gemfile.lock
+rm -f Gemfile.lock
 bundle pack --all 2>&1 >bundle.log
 echo "DONE"
 
