@@ -7,8 +7,8 @@
 
 ### Development headers
 
-- Debian: `apt-get install libglib2.0-dev libmagic-dev libpq-dev libcurl4-openssl-dev`
-- Fedora: `yum install glib2-devel file-devel postgresql-devel libcurl-devel`
+- Debian: `apt-get install ruby-dev libglib2.0-dev libmagic-dev libpq-dev libcurl4-openssl-dev`
+- Fedora: `yum install ruby-devel glib2-devel file-devel postgresql-devel libcurl-devel`
 
 Why?
 
