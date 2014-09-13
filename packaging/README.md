@@ -2,7 +2,7 @@
 
 ### System tools
 
-- Debian: `apt-get install git build-essentials ruby`
+- Debian: `apt-get install git build-essential ruby`
 - Fedora: `yum install git gcc ruby`
 
 ### Development headers
