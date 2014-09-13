@@ -51,3 +51,26 @@ cd packaging
 ./generate-makefile.sh
 make PKG_TYPE=deb  # or make PKG_TYPE=rpm
 ~~~
+
+## Publishing packages
+
+On Debian I use [aptly](http://www.aptly.info) to manage the deb
+package repository.  After
+[installing aptly](http://www.aptly.info/download) we can create a new
+repository and add the packages to it:
+
+~~~
+aptly repo create -component="main" -architectures="amd64" libertree
+aptly repo add libertree *.deb
+~~~
+
+For testing purposes we can immediately publish the repository to
+`~/.aptly/public/` (a directory that can then be served by a
+webserver) without creating snapshots and GPG signing:
+
+~~~
+aptly publish repo -skip-signing -distribution=wheezy libertree
+~~~
+
+For production purposes a snapshot should be created first and the
+packages should be signed.
