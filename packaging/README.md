@@ -74,3 +74,9 @@ aptly publish repo -skip-signing -distribution=wheezy libertree
 
 For production purposes a snapshot should be created first and the
 packages should be signed.
+
+To update a published repository, the following command is used:
+
+~~~
+aptly publish -skip-signing update wheezy
+~~~
