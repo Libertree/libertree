@@ -233,35 +233,9 @@ You may need to make your distro install specific modules for Nginx or Apache,
 such as the proxy pass and proxy balancer modules.
 
 You can find an example configuration file for Nginx at `libertree-frontend-ramaze/config/libertree.nginx.example`.
+An example configuration file for Apache can be found at `libertree-frontend-ramaze/config/libertree.apache.example`.
 
-### Apache
-
-    <VirtualHost *:80>
-        ServerName example.com
-        ServerAlias example.com
-        ErrorLog /var/log/apache2/example.com.errors
-        CustomLog /var/log/apache2/example.com.log combined
-
-        <Proxy balancer://libertreecluster>
-            BalancerMember http://127.0.0.1:8088
-            # If running more than one unicorn process, add more BalancerMembers:
-            # BalancerMember http://127.0.0.1:8089
-            # BalancerMember http://127.0.0.1:8090
-        </Proxy>
-
-        ProxyPreserveHost On
-        ProxyPass / balancer://libertreecluster/
-        ProxyPassReverse / balancer://libertreecluster/
-
-        <Directory "/path/to/libertree-frontend-ramaze/public">
-            Options Indexes FollowSymLinks ExecCGI
-            AllowOverride All
-            Order allow,deny
-            Allow from all
-        </Directory>
-    </VirtualHost>
-
-You may need this config for proxy balancer, depending on your distro and setup:
+When using Apache you may need this config for proxy balancer, depending on your distro and setup:
 
     <IfModule mod_proxy_balancer.c>
         <Proxy *>
