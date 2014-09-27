@@ -6,7 +6,7 @@ module Libertree
     def patterns
       {
         'phrase'       => /(?<sign>[+-])?"(?<arg>[^"]+)"/,
-        'from'         => /(?<sign>[+-])?:from "(?<arg>.+?)"/,
+        'from'         => /(?<sign>[+-])?:from ("(?<arg>.+?)"|(?<arg>[^ ]+))/,
         'river'        => /(?<sign>[+-])?:river "(?<arg>.+?)"/,
         'contact-list' => /(?<sign>[+-])?:contact-list "(?<arg>.+?)"/,
         'via'          => /(?<sign>[+-])?:via "(?<arg>.+?)"/,
@@ -78,7 +78,7 @@ module Libertree
                 @parsed_query[key][group] << member.id
               end
             when 'river'
-              river = Model::River[label: match[:arg]]
+              river = Model::River[label: match[:arg], account_id: account_id]
               check_resource(river, term) do |river|
                 @parsed_query[key][group] << river  if river_id && river.id != river_id
               end
@@ -141,7 +141,7 @@ module Libertree
                    when 'via'
                      lambda {|v| ":via \"%s\"" % v }
                    when 'visibility'
-                     lambda {|v| ":visibility \"%s\"" % v }
+                     lambda {|v| ":visibility %s" % v }
                    when 'word-count'
                      lambda {|v| ":word-count %s" % v }
                    when 'flag'
@@ -153,11 +153,11 @@ module Libertree
                    when 'from'
                      lambda {|v| ":from %s" % Model::Member[v.to_i].handle }
                    when 'river'
-                     lambda {|v| ":river %s" % Model::River[v.to_i].label }
+                     lambda {|v| ":river \"%s\"" % Model::River[v.id.to_i].label }
                    when 'contact-list'
-                     template = lambda {|v| Model::ContactList[v.first.to_i].label }
+                     template = lambda {|v| ":contact-list \"%s\"" % Model::ContactList[v.first.to_i].name }
                    when 'spring'
-                     lambda {|v| pool = Model::Pool[v.to_i]; ":spring \"%s\" \"%s\"" % [pool.name, pool.member.handle] }
+                     lambda {|v| pool = Model::Pool[v.id.to_i]; ":spring \"%s\" \"%s\"" % [pool.name, pool.member.handle] }
                    end
         apply_template.call(template, groups)
       end

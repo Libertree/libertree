@@ -55,6 +55,27 @@ module Libertree
           end
         end
       end
+
+      # refresh any river containing a reference to this contact list
+      def refresh_rivers
+        rivers = account.rivers.select do |r|
+          vals = r.parsed_query['contact-list'].values.flatten(1)
+          ! vals.empty? && vals.map(&:first).include?(self.id)
+        end
+
+        # refresh rivers in background jobs
+        rivers.each do |river|
+          if ! river.appended_to_all
+            Libertree::Model::Job.create(
+              task: 'river:refresh',
+              params: {
+                'river_id' => river.id,
+              }.to_json
+            )
+          end
+        end
+      end
+
     end
   end
 end
