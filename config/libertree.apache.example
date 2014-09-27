@@ -1,0 +1,24 @@
+<VirtualHost *:80>
+    ServerName example.com
+    ServerAlias example.com
+    ErrorLog /var/log/apache2/example.com.errors
+    CustomLog /var/log/apache2/example.com.log combined
+
+    <Proxy balancer://libertreecluster>
+        BalancerMember http://127.0.0.1:8088
+        # If running more than one unicorn process, add more BalancerMembers:
+        # BalancerMember http://127.0.0.1:8089
+        # BalancerMember http://127.0.0.1:8090
+    </Proxy>
+
+    ProxyPreserveHost On
+    ProxyPass / balancer://libertreecluster/
+    ProxyPassReverse / balancer://libertreecluster/
+
+    <Directory "/path/to/libertree-frontend-ramaze/public">
+        Options Indexes FollowSymLinks ExecCGI
+        AllowOverride All
+        Order allow,deny
+        Allow from all
+    </Directory>
+</VirtualHost>

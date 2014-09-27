@@ -129,8 +129,7 @@ module Libertree
         :url_short => url_s,
         :url_expanded => resolution
       )
-    # TODO: there are no PGErrors any more, catch sequel errors instead
-    rescue PGError => e
+    rescue Sequel::UniqueConstraintViolation => e
       if e.message =~ /url_expansions_url_short_key/
         # expansion already exists, ignore
       else

@@ -1,6 +1,9 @@
 ## frontend application server
 upstream unicorn_cluster {
   server localhost:8088;
+  # If running more than one unicorn process, add more servers:
+  # server localhost:8089;
+  # server localhost:8090;
 }
 
 ## websocket backend server
@@ -19,7 +22,7 @@ server {
 server {
   listen       443;
   server_name  MY.SERVER.NET;
-  root         /home/libertree/git/libertree-frontend-ramaze/public;
+  root         /PATH/TO/libertree-frontend-ramaze/public;
 
   ssl on;
   ssl_certificate      /PATH/TO/YOUR/SSL/cert.pem;

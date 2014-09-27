@@ -51,7 +51,8 @@ $(document).ready( function() {
     source: function( request, response ) {
       var entireText = request.term,
           textUpToCursor = entireText.substring(0, this.element.textCursorPosition()),
-          indexOfAtSymbol = textUpToCursor.search(/@\S{2,}$/);  /* require at least 2 characters */
+          indexOfAtSymbol = textUpToCursor.search(Libertree.UI.memberHandleAutocompletionTriggers),
+          triggerLength = Libertree.UI.memberHandleAutocompletionTriggerLength(textUpToCursor);
 
       if(
         indexOfAtSymbol == -1 ||
@@ -60,7 +61,7 @@ $(document).ready( function() {
         return response([]);
       }
 
-      var autocompletableWord = textUpToCursor.substring(indexOfAtSymbol+1),
+      var autocompletableWord = textUpToCursor.substring(indexOfAtSymbol+triggerLength),
           post = $(this.element).closest('[data-post-id]'),
           post_id;
 
