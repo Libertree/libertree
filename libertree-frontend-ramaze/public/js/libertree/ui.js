@@ -73,6 +73,7 @@ Libertree.UI = (function () {
     duration: setSpeed(600),
     threshold: 700, // pixels, same as used by @media queries in CSS
     autoResizeTextareas: true, // overridden by serverside initialization
+    memberHandleAutocompletionTriggers: new RegExp('(@|:from ")\\S{2,}$'),  /* 2 meaning at least 2 chars before activating */
     selectDefaults: {
       width: '450px',
       multiple: true,
@@ -126,16 +127,27 @@ Libertree.UI = (function () {
       );
     },
 
+    memberHandleAutocompletionTriggerLength: function(textToScan) {
+      var MHACTriggerMatches = Libertree.UI.memberHandleAutocompletionTriggers.exec(textToScan);
+      if( MHACTriggerMatches ) {
+        return MHACTriggerMatches[1].length;
+      } else {
+        return null;
+      }
+    },
+
     memberHandleAutocompletion: function (event, ui) {
       if( ! ui.item ) { return; }
 
       var textfield = $(event.target),
         text = textfield.val(),
-        indexOfAtSymbol = text.substring(0, textfield.textCursorPosition()).search(/@\S+$/),
-        newText = text.substring(0, indexOfAtSymbol+1) + ui.item.value + text.substring(textfield.textCursorPosition());
+        autocompletableText = text.substring(0, textfield.textCursorPosition()),
+        indexOfAtSymbol = autocompletableText.search(Libertree.UI.memberHandleAutocompletionTriggers),
+        triggerLength = Libertree.UI.memberHandleAutocompletionTriggerLength(autocompletableText),
+        newText = text.substring(0, indexOfAtSymbol+triggerLength) + ui.item.value + text.substring(textfield.textCursorPosition());
 
       textfield.val(newText);
-      textfield.setTextCursorPosition(indexOfAtSymbol + ui.item.value.length + 1);
+      textfield.setTextCursorPosition(indexOfAtSymbol + ui.item.value.length + triggerLength);
 
       return false;
     },
