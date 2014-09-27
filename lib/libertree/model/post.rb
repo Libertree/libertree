@@ -177,7 +177,7 @@ module Libertree
           if account = Account[ username: handle ]
             accounts << account
           elsif member = Member.with_handle(handle)
-            accounts << member.account
+            accounts << member.account  if member.account
           end
         end
 
@@ -209,8 +209,8 @@ module Libertree
       def delete_cascade(force=false)
         self.before_destroy  unless force
         # clear cached posts
-        Libertree::MODELCACHE.delete(self.cache_key)
-        Libertree::MODELCACHE.delete("#{self.cache_key}:get_full")
+        $LibertreeMODELCACHE.delete(self.cache_key)
+        $LibertreeMODELCACHE.delete("#{self.cache_key}:get_full")
 
         DB.dbh[ "SELECT delete_cascade_post(?)", self.id ].get
       end
@@ -300,8 +300,8 @@ module Libertree
         )
 
         # clear cached posts
-        Libertree::MODELCACHE.delete(self.cache_key)
-        Libertree::MODELCACHE.delete("#{self.cache_key}:get_full")
+        $LibertreeMODELCACHE.delete(self.cache_key)
+        $LibertreeMODELCACHE.delete("#{self.cache_key}:get_full")
         mark_as_unread_by_all
       end
 
@@ -447,9 +447,9 @@ module Libertree
           required = tags[:requirements].delete_if {|t| t =~ /[{}]/ }
           regular  = tags[:regular].delete_if      {|t| t =~ /[{}]/ }
 
-          posts = posts.exclude(Sequel.pg_array_op(:hashtags).contains("{#{excluded.join(',')}}"))  unless excluded.empty?
-          posts = posts.where  (Sequel.pg_array_op(:hashtags).contains("{#{required.join(',')}}"))  unless required.empty?
-          posts = posts.where  (Sequel.pg_array_op(:hashtags).overlaps("{#{regular.join(',')}}" ))  unless regular.empty?
+          posts = posts.exclude(Sequel.pg_array(:hashtags).cast('text[]').pg_array.overlaps(excluded))  unless excluded.empty?
+          posts = posts.where  (Sequel.pg_array(:hashtags).cast('text[]').pg_array.contains(required))  unless required.empty?
+          posts = posts.where  (Sequel.pg_array(:hashtags).cast('text[]').pg_array.overlaps(regular))   unless regular.empty?
         end
 
         phrases = parsed_query['phrase']
@@ -559,7 +559,7 @@ module Libertree
 
       # Expand and embed all associated records.
       def self.get_full(id)
-        if cached = Libertree::MODELCACHE.get("#{self.cache_key(id)}:get_full")
+        if cached = $LibertreeMODELCACHE.get("#{self.cache_key(id)}:get_full")
           return cached
         end
 
@@ -627,7 +627,7 @@ module Libertree
           res
         }
 
-        Libertree::MODELCACHE.set("#{self.cache_key(id)}:get_full", post, 60)
+        $LibertreeMODELCACHE.set("#{self.cache_key(id)}:get_full", post, 60)
         post
       end
 

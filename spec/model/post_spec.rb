@@ -286,6 +286,22 @@ describe Libertree::Model::Post do
     end
   end
 
+  describe '.filter_by_query' do
+    it 'filters multiple tags' do
+      account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
+      q = Libertree::Query.new("-#annoying -#boring", account.id)
+
+      p1 = new_post "what an annoying day"
+      p2 = new_post "I post #annoying cat photos"
+      p3 = new_post "I am boring #boring"
+
+      res = Libertree::Model::Post.filter_by_query(q.parsed, account).all
+      expect( res ).to include(p1)
+      expect( res ).not_to include(p2)
+      expect( res ).not_to include(p3)
+    end
+  end
+
   describe '.urls_already_posted?' do
     context 'given some posts with URLs' do
       before do

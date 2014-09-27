@@ -85,7 +85,7 @@ describe Libertree::Model::Account do
           Libertree::Model::Comment[@comment2_id],
           Libertree::Model::Member[@member_id]
         ].each do |cached|
-          Libertree::MODELCACHE.delete(cached.cache_key)
+          $LibertreeMODELCACHE.delete(cached.cache_key)
         end
 
         Libertree::Model::Post[@post1_id].should be_nil
