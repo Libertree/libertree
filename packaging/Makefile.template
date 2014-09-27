@@ -232,7 +232,11 @@ $(PKG_PREFIX)-eventmachine-%.$(PKG_TYPE) : $(GEMDIR)/eventmachine-%.gem
 
 # needs libxml2 libxslt
 $(PKG_PREFIX)-nokogiri-%.$(PKG_TYPE) : $(GEMDIR)/nokogiri-%.gem
+ifeq ($(PKG_TYPE), rpm)
 	$(call MKPACKAGE, nokogiri-$*.gem, -p $@ -d libxml2 -d libxslt)
+else
+	$(call MKPACKAGE, nokogiri-$*.gem, -p $@ -d libxml2 -d libxslt1.1)
+endif
 
 # needs gpgme
 # needs mini_portile gem to be installed at build time
