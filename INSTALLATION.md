@@ -232,38 +232,7 @@ example configuration snippets for them.
 You may need to make your distro install specific modules for Nginx or Apache,
 such as the proxy pass and proxy balancer modules.
 
-### Nginx
-
-    upstream unicorn_cluster {
-      server localhost:8088;
-      # If running more than one unicorn process, add more servers:
-      # server localhost:8089;
-      # server localhost:8090;
-    }
-
-    server {
-
-      listen       80;
-      server_name  serverdomain.com;
-      root         /path/to/libertree-frontend-ramaze/public;
-
-      location / {
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header Host $http_host;
-        proxy_redirect off;
-        proxy_read_timeout 90s;
-
-        client_max_body_size 5M;
-        client_body_buffer_size 128K;
-
-        if (!-f $request_filename) {
-          proxy_pass http://unicorn_cluster;
-          break;
-        }
-      }
-
-    }
+You can find an example configuration file for Nginx at `libertree-frontend-ramaze/config/libertree.nginx.example`.
 
 ### Apache
 
