@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
-gem 'ramaze', git: 'git://github.com/Ramaze/ramaze.git'
-gem 'innate', git: 'git://github.com/Ramaze/innate.git'
+gem 'ramaze'
+gem 'innate'
 gem 'dalli'  # memcached client
 gem 'mini_magick'
 gem 'sass'
