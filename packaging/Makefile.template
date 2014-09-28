@@ -196,7 +196,7 @@ PLACEHOLDER_FOR_GEM_DEPENDENCIES
 	touch gems
 
 libertree-client-$(VERSION_CLIENT).gem : ../libertree-client-rb/libertree-client.gemspec
-	gem build $<
+	cd ../libertree-client-rb/; gem build libertree-client.gemspec; cd -; mv ../libertree-client-rb/$@ .
 
 libertree-client-$(VERSION_CLIENT).$(PKG_TYPE) : libertree-client-$(VERSION_CLIENT).gem
 	$(call BUILDPKG, $<, $(VERSION_CLIENT), $@, libertree-client)
@@ -204,7 +204,7 @@ libertree-client-$(VERSION_CLIENT).$(PKG_TYPE) : libertree-client-$(VERSION_CLIE
 # TODO: specify database.yaml.example as config file
 # TODO: share database.yaml with other packages?
 libertree-model-$(VERSION_MODEL).gem : ../libertree-model-rb/libertree-model.gemspec
-	gem build $<
+	cd ../libertree-model-rb/; gem build libertree-model.gemspec; cd -; mv ../libertree-model-rb/$@ .
 
 libertree-model-$(VERSION_MODEL).$(PKG_TYPE) : libertree-model-$(VERSION_MODEL).gem libertree-db-$(VERSION_DB).$(PKG_TYPE)
 	$(call BUILDPKG, $<, $(VERSION_MODEL), $@, libertree-model)
