@@ -209,16 +209,6 @@ libertree-model-$(VERSION_MODEL).gem : ../libertree-model-rb/libertree-model.gem
 libertree-model-$(VERSION_MODEL).$(PKG_TYPE) : libertree-model-$(VERSION_MODEL).gem libertree-db-$(VERSION_DB).$(PKG_TYPE)
 	$(call BUILDPKG, $<, $(VERSION_MODEL), $@, libertree-model)
 
-####################################
-# DEPENDENT UNRELEASED GEMS
-####################################
-
-$(PKG_PREFIX)-innate-%.$(PKG_TYPE) :
-	$(call WRAPGEMDIR, innate-*, innate, $*, -p $@)
-
-$(PKG_PREFIX)-ramaze-%.$(PKG_TYPE) :
-	$(call WRAPGEMDIR, ramaze-*, ramaze, $*, -p $@)
-
 
 ####################################
 # DEPENDENT GEMS WITH EXTENSIONS
