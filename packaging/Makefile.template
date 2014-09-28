@@ -264,14 +264,18 @@ endif
 
 # curb depends on libcurl-dev (Debian) / libcurl-devel (Fedora)
 $(PKG_PREFIX)-curb-%.$(PKG_TYPE) : $(GEMDIR)/curb-%.gem
+ifeq ($(PKG_TYPE), rpm)
 	$(call MKPACKAGE, curb-$*.gem, -p $@ -d libcurl)
+else
+	$(call MKPACKAGE, curb-$*.gem, -p $@ -d libcurl3)
+endif
 
 # ruby-filemagic depends on libmagic-dev (Debian) / file-devel (Fedora)
 $(PKG_PREFIX)-ruby-filemagic-%.$(PKG_TYPE) : $(GEMDIR)/ruby-filemagic-%.gem
 ifeq ($(PKG_TYPE), rpm)
 	$(call MKPACKAGE, ruby-filemagic-$*.gem, -p $@ -d file)
 else
-	$(call MKPACKAGE, ruby-filemagic-$*.gem, -p $@ -d libmagic)
+	$(call MKPACKAGE, ruby-filemagic-$*.gem, -p $@ -d libmagic1)
 endif
 
 
