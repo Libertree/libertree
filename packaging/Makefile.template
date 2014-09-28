@@ -228,7 +228,11 @@ $(PKG_PREFIX)-ramaze-%.$(PKG_TYPE) :
 
 # needs OpenSSL library
 $(PKG_PREFIX)-eventmachine-%.$(PKG_TYPE) : $(GEMDIR)/eventmachine-%.gem
+ifeq ($(PKG_TYPE), rpm)
 	$(call MKPACKAGE, eventmachine-$*.gem, -p $@ -d openssl-libs)
+else
+	$(call MKPACKAGE, eventmachine-$*.gem, -p $@ -d libssl1.0.0)
+endif
 
 # needs libxml2 libxslt
 $(PKG_PREFIX)-nokogiri-%.$(PKG_TYPE) : $(GEMDIR)/nokogiri-%.gem
