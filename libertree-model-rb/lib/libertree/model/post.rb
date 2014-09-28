@@ -1,6 +1,7 @@
 # encoding: utf-8
 
 require 'date'
+require 'set'
 require_relative '../embedder'
 
 module Libertree
