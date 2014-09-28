@@ -13,21 +13,6 @@ GIT
       timedcache
 
 GIT
-  remote: git://github.com/Ramaze/innate.git
-  revision: 64ca67a23560557f451d658aadf4c65712ccf67d
-  specs:
-    innate (2012.12)
-      rack (~> 1.4.1)
-
-GIT
-  remote: git://github.com/Ramaze/ramaze.git
-  revision: d3fdce83d8c9ad477c0e1b47fbc4ee05b87e3b0f
-  specs:
-    ramaze (2012.12.08)
-      innate (>= 2012.12)
-      rake
-
-GIT
   remote: git://github.com/mark-moseley/linecache
   revision: 869c6a65155068415925067e480741bd0a71527e
   specs:
@@ -68,6 +53,8 @@ GEM
     gpgme (2.0.7)
       mini_portile (>= 0.5.0, <= 0.6.0)
     i18n (0.6.0)
+    innate (2013.02)
+      rack (~> 1.4.1)
     json (1.7.6)
     kgio (2.7.3)
     method_source (0.8.2)
@@ -96,6 +83,9 @@ GEM
       rack-test (>= 0.5)
     raindrops (0.8.0)
     rake (0.9.2.2)
+    ramaze (2012.12.08)
+      innate (>= 2012.12)
+      rake
     rspec (2.13.0)
       rspec-core (~> 2.13.0)
       rspec-expectations (~> 2.13.0)
@@ -155,7 +145,7 @@ DEPENDENCIES
   factory_girl
   fast_gettext
   gpgme
-  innate!
+  innate
   json
   libertree-model!
   linecache19!
@@ -163,7 +153,7 @@ DEPENDENCIES
   nokogiri
   pry-byebug
   racksh
-  ramaze!
+  ramaze
   rspec
   ruby-debug-base19x (~> 0.11.30.pre4)
   ruby-debug19
