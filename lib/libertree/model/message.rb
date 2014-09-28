@@ -1,3 +1,5 @@
+require 'set'
+
 module Libertree
   module Model
     class Message < Sequel::Model(:messages)
