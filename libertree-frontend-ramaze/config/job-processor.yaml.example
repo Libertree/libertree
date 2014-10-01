@@ -1,2 +1,0 @@
-# If no log_path is specified, the job-processor logs to stdout
-# log_path: /path/to/file.log

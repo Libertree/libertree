@@ -142,9 +142,10 @@ module Libertree
     resolution
   end
 
+  # This is used by the intro and the docs
   def self.render_unsafe(s)
-    opts = [:strike, :autolink, :hard_wrap]
-    Render.to_html_string(s, opts)
+    opts = Render::Options.dup - [:filter_html]
+    self.render(s, {autoembed: true}, [], opts)
   end
 
   # filter HTML but ignore markdown
@@ -152,8 +153,8 @@ module Libertree
     Render.to_html_nodeset(s, opts).inner_text
   end
 
-  def self.render(s, settings={}, pipeline_steps=[])
-    opts = Render::Options.dup
+  def self.render(s, settings={}, pipeline_steps=[], override_opts=nil)
+    opts = override_opts || Render::Options.dup
     opts.push :no_images  if settings[:filter_images]
     opts.push :media      if settings[:autoembed]
 
