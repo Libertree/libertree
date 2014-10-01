@@ -1,0 +1,39 @@
+@import "colours.scss";
+@import "../scss-include/mixins.scss";
+@import "../scss-include/fonts-default.scss";
+$threshold: 700px; // TODO: same as in application.scss
+
+body.docs {
+    .main {
+        @include shadow;
+        @include rounded;
+        background: $dust;
+        padding: 30px;
+    }
+
+    h1 {
+        margin: -30px -30px 1em;
+        padding: 1.5em;
+        @media screen and (min-width: $threshold) {
+            padding-left: 160px;
+        }
+        @include rounded;
+        color: $main;
+        background: $sand url(../images/logo-in-heading.png) no-repeat 20px bottom;
+        @media screen and (max-width: $threshold) {
+            background-image: none;
+            margin: -15px -15px 1em;
+        }
+    }
+
+    .example {
+        @include rounded;
+        margin-bottom: 1em;
+        padding: 0.5em;
+        background: $sand;
+        border: 2px dashed $stone;
+        pre {
+            margin: 0;
+        }
+    }
+}
