@@ -1,10 +1,14 @@
 require 'bcrypt'
 require 'net/ldap'
 require 'securerandom'
+require 'gpgme'
+require 'tmpdir'
 
 module Libertree
   module Model
     class Account < Sequel::Model(:accounts)
+      class KeyError < StandardError; end
+
       def self.set_auth_settings(type, settings)
         @@auth_type = type
         @@auth_settings = settings
@@ -122,8 +126,35 @@ module Libertree
       end
 
       def notifications_unseen
-        return @notifications_unseen  if @notifications_unseen
-        @notifications_unseen = Notification.where(account_id: self.id, seen: false).order(:id).all
+        @notifications_unseen ||= Notification.where(account_id: self.id, seen: false).order(:id)
+      end
+
+      def notifications_unseen_grouped(max_groups=5, limit=200)
+        grouped = {}
+        targets = [] # so we have a display order
+
+        notifs = self.notifications_unseen.reverse_order(:id).limit(limit)
+        notifs.each do |n|
+          next  if n.subject.nil?
+
+          target = case n.subject
+                   when Libertree::Model::Comment, Libertree::Model::PostLike
+                     n.subject.post
+                   when Libertree::Model::CommentLike
+                     n.subject.comment
+                   else
+                     n.subject
+                   end
+
+          if grouped[target]
+            grouped[target] << n
+          else
+            grouped[target] = [n]
+            targets << target
+          end
+        end
+
+        targets.take(max_groups).map {|t| grouped[t] }
       end
 
       def num_notifications_unseen
@@ -300,6 +331,30 @@ module Libertree
         account.password_reset_expiry = Time.now + 60 * 60
         account.save
         account
+      end
+
+      # NOTE: this method does not save the account record
+      def validate_and_set_pubkey(key)
+        # import pubkey into temporary keyring to verify it
+        GPGME::Engine.home_dir = Dir.tmpdir
+        result = GPGME::Key.import key.to_s
+
+        if result.considered == 1 && result.secret_read == 1
+          # Delete the key immediately from the keyring and
+          # alert the user in case a secret key was uploaded
+          keys = GPGME::Key.find(:secret, result.imports.first.fpr)
+          keys.first.delete!(true)  # force deletion of secret key
+          keys = nil; result = nil
+          raise KeyError, 'secret key imported'
+        elsif result.considered == 1 && (result.imported == 1 || result.unchanged == 1)
+          # We do not check whether the key matches the given email address.
+          # This is not necessary, because we don't search the keyring to get
+          # the encryption key when sending emails.  Instead, we just take
+          # whatever key the user provided.
+          self.pubkey = key.to_s
+        else
+          raise KeyError, 'invalid key'
+        end
       end
 
       def data_hash

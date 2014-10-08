@@ -137,6 +137,12 @@ module Libertree
         res = res.limit(opt[:limit].to_i)            if opt[:limit]
         res.all.reverse
       end
+
+      def guid
+        server = self.member.server
+        origin = server ? server.domain : Server.own_domain
+        "xmpp:#{origin}?;node=/comments;item=#{self.public_id}"
+      end
     end
   end
 end

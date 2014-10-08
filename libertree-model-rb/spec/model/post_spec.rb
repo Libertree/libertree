@@ -390,4 +390,19 @@ describe Libertree::Model::Post do
       end
     end
   end
+
+  describe '#guid' do
+    it 'includes the post origin and its public id' do
+      # local member
+      account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
+      post = Libertree::Model::Post.create(FactoryGirl.attributes_for(:post, member_id: account.member.id))
+      expect( post.guid ).to eq("xmpp:#{Libertree::Model::Server.own_domain}?;node=/posts;item=#{post.public_id}")
+
+      # remote member
+      server = Libertree::Model::Server.create(FactoryGirl.attributes_for(:server))
+      member = Libertree::Model::Member.create(FactoryGirl.attributes_for(:member, :server_id => server.id))
+      post = Libertree::Model::Post.create(FactoryGirl.attributes_for(:post, member_id: member.id))
+      expect( post.guid ).to eq("xmpp:#{server.domain}?;node=/posts;item=#{post.public_id}")
+    end
+  end
 end

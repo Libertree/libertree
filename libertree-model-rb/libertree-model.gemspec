@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name        = 'libertree-model'
-  s.version     = '0.9.4'
-  s.date        = '2014-09-28'
+  s.version     = '0.9.6'
+  s.date        = '2014-10-08'
   s.summary     = "Database library for Libertree"
   s.description = "Database library for Libertree"
   s.authors     = ["Pistos", "rekado"]
@@ -10,6 +10,7 @@ Gem::Specification.new do |s|
   s.homepage    = 'http://libertreeproject.org/'
 
   s.add_dependency 'ruby-oembed', '~> 0.8.8'
+  s.add_dependency 'gpgme'
   s.add_dependency 'pg'
   s.add_dependency 'sequel'
   s.add_dependency 'timedcache'

@@ -82,4 +82,20 @@ describe Libertree::Model::Comment do
       expect_search_match 'comment this', [ @p1, @p2, @p3 ]
     end
   end
+
+  describe '#guid' do
+    it 'includes the comment origin and its public id' do
+      # local member
+      account = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
+      comment = Libertree::Model::Comment.create(FactoryGirl.attributes_for(:comment, post_id: @post.id, member_id: account.member.id))
+      expect( comment.guid ).to eq("xmpp:#{Libertree::Model::Server.own_domain}?;node=/comments;item=#{comment.public_id}")
+
+      # remote member
+      server = Libertree::Model::Server.create(FactoryGirl.attributes_for(:server))
+      member = Libertree::Model::Member.create(FactoryGirl.attributes_for(:member, :server_id => server.id))
+      comment = Libertree::Model::Comment.create(FactoryGirl.attributes_for(:comment, post_id: @post.id, member_id: member.id))
+      expect( comment.guid ).to eq("xmpp:#{server.domain}?;node=/comments;item=#{comment.public_id}")
+    end
+  end
+
 end
