@@ -11,9 +11,9 @@ This is an ASCII GNU by Martin Dickopp
 
 ~~~
   ,= ,-_-. =.
- ((_/)o o(\\_))
+ ((_/)o o(\_))
   `-'(. .)`-'
-      \\_/
+      \_/
 ~~~
 </pre></div>
 
@@ -23,9 +23,9 @@ This is an ASCII GNU by Martin Dickopp
 
 ~~~
   ,= ,-_-. =.
- ((_/)o o(\\_))
+ ((_/)o o(\_))
   `-'(. .)`-'
-      \\_/
+      \_/
 ~~~
 
 

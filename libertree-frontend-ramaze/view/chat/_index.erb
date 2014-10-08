@@ -1,0 +1,31 @@
+<div class="header">
+  <span class="title"><%=_('Chat')%></span>
+  <span class="n hidden"><%=@n%></span>
+</div>
+
+<div id="online-contacts">
+<%=s_('chat-contacts|Online:')%>
+<% if @contacts_online.empty? %>
+  <%=s_('chat|(no contacts online)')%>
+<% else %>
+  <% @contacts_online.each do |c| %>
+    <a href="#"><%=member_img(c, 'avatar size-32')%></a>
+  <% end %>
+<% end %>
+</div>
+
+<div id="chat-new-partner-wrapper">
+  <input id="chat-new-partner" name="chat-new-partner" data-placeholder="<%=_('Start new chat with...')%>" />
+</div>
+
+<div class="tabs">
+  <% @partners.each do |partner| %>
+    <%= render_partial "_tab/#{partner.id}/#{partner == @partner_active ? 'active' : ''}" %>
+  <% end %>
+</div>
+
+<div class="logs">
+  <% @partners.each do |partner| %>
+    <%= render_partial "_log/#{partner.id}/#{partner == @partner_active ? 'active' : ''}" %>
+  <% end %>
+</div>

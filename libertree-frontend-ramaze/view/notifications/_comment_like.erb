@@ -1,0 +1,6 @@
+<% link = "<a href=\"#{ comment_link(@subject.comment) }\" title=\"#{::CGI.escape_html(@subject.comment.glimpse)}\">" %>
+<% if @subject.comment.post.member == account.member %>
+  <%=s_("#{@sg_or_pl}|%1$s liked your %2$scomment%3$s on your post.") % [@actors, link, "</a>"]%>
+<% else %>
+  <%=s_("#{@sg_or_pl}|%1$s liked your %2$scomment%3$s on %4$s's post.") % [@actors, link, "</a>", @subject.comment.post.member.name_display]%>
+<% end %>

@@ -1,0 +1,6 @@
+<% link = "<a href=\"#{ comment_link(@subject) }\" title=\"#{::CGI.escape_html(@subject.post.glimpse)}\">" %>
+<% if @subject.post.member.account && @subject.post.member.account.id == account.id %>
+  <%=s_("#{@sg_or_pl}|%1$s commented on your %2$spost%3$s.") % [@actors, link, "</a>"]%>
+<% else %>
+  <%=s_("#{@sg_or_pl}|%1$s commented on %2$s's %3$spost%4$s.") % [@actors, @subject.post.member.name_display, link, "</a>"]%>
+<% end %>

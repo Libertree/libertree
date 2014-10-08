@@ -1,0 +1,19 @@
+<div class="river" data-river-id="<%=@river.id%>">
+  <div class="label">
+    <% if ! @not_linked %>
+      <a href="/home/<%= @river.id %>"><%= @river.label %></a>
+    <% else %>
+      <%=@river.label%>
+    <% end %>
+  </div>
+  <span class="river-tools">
+    <% if @river.home? %>
+      <%=_('(home river)')%>
+    <% else %>
+    <a href="/rivers/set_home/<%=@river.id %>"><%= img 'icon-home.png', {alt:_('Set as home river'), title:_('Set as home river'), class:"size-16"}%></a>
+    <% end %>
+    <a href="/rivers/edit/<%= @river.id %>"><%= img 'icon-edit.png', {alt:s_('river|edit'), title:s_('river|edit'), class:"size-16"}%></a>
+    <a class="delete" rel="confirm" data-msg="<%= _('Delete this river?') %>" href="/rivers/destroy/<%= @river.id %>"><%= img 'icon-delete.png', {alt:s_('river|delete'), title:s_('river|delete'), class:"size-16"}%></a>
+  </span>
+  <span class="query"><%=@river.query%></span>
+</div>

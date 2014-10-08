@@ -1,0 +1,29 @@
+<h2><%=_('Edit Pool: %s') % @pool.name%></h2>
+
+<form id="form-pool-edit" class="form-pool" method="POST" action="/pools/update/<%=@pool.id%>">
+  <div class="field">
+    <label>
+      <%=s_('pool|Name:')%>
+    </label>
+    <input type="text" name="name" value="<%=@pool.name%>"/>
+  </div>
+
+  <div class="field">
+    <label>
+      <%=s_('pool|Sprung:')%>
+      <%=help_bubble _("&quot;Springing&quot; a pool causes the pool and which posts it contains to become publicly visible.  Members can add other members&#39; springs to rivers.")%>
+    </label>
+    <input type="checkbox" name="sprung" value="true" <%=@pool.sprung? ? 'checked' : '' %>/>
+  </div>
+
+  <div class="field">
+    <label>
+      <%=s_('pool|Public spring URL:')%>
+      <%=help_bubble _("Leave this field empty if you do not want the spring to be accessible outside of Libertree.")%>
+    </label>
+    <span>http://<%=@host%>/s/<%=account.username%>/</span><input type="text" name="spring_url_name" value="<%=@pool.spring_url_name%>"/>
+  </div>
+  <input type="submit" value="<%=s_('pool|Update')%>"/>
+</form>
+
+<%=s_("(You can remove posts from this pool via %1$sthe pool's page%2$s.)") % [%{<a href="/pools/show/#{@pool.id}">}, '</a>']%>

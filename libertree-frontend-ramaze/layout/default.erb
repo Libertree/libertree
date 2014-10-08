@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<%= render_file 'layout/_head.erb' %>
+
+<body class="<%= @view %> <%= (logged_in? && account.settings.filter_images) ? 'filter-images' : '' %>"
+      data-msg-spoiler-prompt="<%=_('Show hidden content')%>">
+  <%= render_file 'layout/_menu.erb' %>
+
+  <% if flash[:error] %>
+    <div class="flash error alert alert-error alert-block">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <%=flash[:error]%>
+    </div>
+  <% end %>
+
+  <% if flash[:notice] %>
+    <div class="flash notice alert alert-info alert-block">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <%=flash[:notice]%>
+    </div>
+  <% end %>
+
+  <div class="main">
+    <%= render_file 'layout/_sidebar.erb' %>
+    <%=@content%>
+  </div>
+</body>
+
+</html>

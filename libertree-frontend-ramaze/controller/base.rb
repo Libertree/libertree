@@ -3,6 +3,8 @@ module Controller
     helper :user, :xhtml, :age, :comment, :member, :wording, :views, :post, :search
     trait :user_model => ::Libertree::Model::Account
 
+    engine :erb
+
     layout do |path|
       if path =~ /error/
         nil
@@ -98,7 +100,7 @@ module Controller
 
     def error_404
       @view = "splash"
-      render_file "#{Ramaze.options.views[0]}/404.xhtml"
+      render_file "#{Ramaze.options.views[0]}/404.erb"
     end
 
   end

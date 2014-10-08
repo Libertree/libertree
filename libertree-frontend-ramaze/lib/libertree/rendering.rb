@@ -22,7 +22,7 @@ module Libertree
 
     pattern = %r{(?<=^|\(|\[|\p{Space})(/posts/show/\d+(/\d+/?(#comment(-|–)\d+)?|/(\d+/?)?)?)}
 
-    html.xpath('*[not(self::code)]/text()').each do |n|
+    html.xpath('.//*[not(self::code)]/text()', '*[not(self::code)]/text()').each do |n|
       linked = n.content.gsub(pattern) {
         url = $1.gsub('–','-')
         "<a href='#{url}'>#{url}</a>"

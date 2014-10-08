@@ -1,8 +1,0 @@
-<div class="pools window has-shadow" data-post-id="#{@post.id}">
-  <select id="pool-selector" name="pool_id" data-placeholder="#{s_('pool-selector|Collect in...')}">
-    <option value="0"></option>
-    <?r @pools.each do |p| ?>
-      <option value="#{p.id}">#{p.name}</option>
-    <?r end ?>
-  </select>
-</div>

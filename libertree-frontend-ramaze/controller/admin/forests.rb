@@ -12,11 +12,6 @@ module Controller
 
       layout :default
 
-      # TODO:
-      def _index
-        @forests = Libertree::Model::Forest.all
-      end
-
       def create
         redirect_referrer  if ! request.post?
 

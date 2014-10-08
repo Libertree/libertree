@@ -1,0 +1,1 @@
+<%=_('%s sent you a %smessage%s.') % [@actors, "<a href=\"/messages/show/#{@subject.id}\" title=\"#{::CGI.escape_html(@subject.glimpse)}\">", "</a>"]%>

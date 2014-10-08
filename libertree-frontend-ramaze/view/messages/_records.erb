@@ -1,0 +1,14 @@
+<% @messages.each do |message| %>
+  <div class="message autoloadable" data-t="<%= message.time_created.to_time.to_f %>" data-message-id="<%= message.id %>">
+    <div class="meta">
+      <div class="sender"><%=s_('direct-message|From:') %> <%= member_avatar_link(message.sender) %> <%= member_name_link(message.sender) %></div>
+      <div class="recipients">
+        <%=s_('direct-message|To:')%>
+        <%= message.recipients.map { |r| member_name_link(r) }.join(', ') %>
+      </div>
+      <div class="age"><%=ago(message.time_created)%></div>
+      <a class="delete" href="/messages/delete/<%= message.id %>" data-msg="<%= s_('direct-message|Do you really want to delete this message?') %>"><%= s_('direct-message|delete') %></a>
+    </div>
+    <a class="text" href="/messages/show/<%= message.id %>"><%= ::CGI.escape_html(message.glimpse) %></a>
+  </div>
+<% end %>

@@ -1,0 +1,42 @@
+<% if logged_in? %>
+<div id="sidebar">
+  <% if @river_post_order == :comment %>
+    <span class="menu-item"><a href="/home/sort_by_time_created"><%=_('by post time')%></a></span>
+    <span class="menu-item inactive"><%=_('by update time')%></span>
+  <% else %>
+    <span class="menu-item inactive"><%=_('by post time')%></span>
+    <span class="menu-item"><a href="/home/sort_by_time_updated_overall"><%=_('by update time')%></a></span>
+  <% end %>
+  <br/>
+  <% if @river %>
+  <a href="/home/mark_all_read/<%=@river.id%>"><%=_('mark all read')%></a>
+  <% end %>
+  <h3><a href="/rivers"><%=_('Rivers')%></a></h3>
+  <ul>
+    <% if account.home_river %>
+      <% if account.home_river == @river %>
+        <li class="selected"><%=account.home_river.label%></li>
+      <% else %>
+        <li><a href="/home"><%=account.home_river.label%></a></li>
+      <% end %>
+    <% end %>
+
+    <% account.rivers_not_appended.reject(&:home).sort_by(&:label).each do |r| %>
+      <% if r == @river %>
+        <li class="selected"><%=r.label%></li>
+      <% else %>
+        <li><a href="/home/<%=r.id%>"><%=r.label%></a></li>
+      <% end %>
+    <% end %>
+  </ul>
+
+  <% unless account.member.pools.empty? %>
+    <h3><a href="/pools"><%=_('Pools')%></a></h3>
+    <ul>
+    <% account.member.pools.sort_by(&:name).each do |p| %>
+      <li><a href="/pools/show/<%= p.id %>"><%= p.name %></a></li>
+    <% end %>
+    </ul>
+  <% end %>
+</div>
+<% end %>

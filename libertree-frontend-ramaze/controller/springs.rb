@@ -33,7 +33,7 @@ module Controller
                 @spring.posts({:public => true})
               end
 
-      render_file("#{Ramaze.options.views[0]}/pools/show.xhtml",
+      render_file("#{Ramaze.options.views[0]}/pools/show.erb",
                   { :pool => @spring,
                     :posts => posts,
                     :member => account.member })

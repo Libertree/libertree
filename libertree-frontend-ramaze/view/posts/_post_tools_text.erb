@@ -1,0 +1,65 @@
+<div class="post-tools textual">
+  <span class="mutation">
+<% if logged_in? %>
+    <% if @post.like_by(account.member) %>
+      <a href="#" class="unlike" data-post-like-id="<%=@post.like_by(account.member).id%>"><%=_('unlike')%></a>
+      <a href="#" class="like hidden"><%=_('like')%></a>
+    <% else %>
+      <a href="#" class="like"><%=_('like')%></a>
+      <a href="#" class="unlike hidden"><%=_('unlike')%></a>
+    <% end %>
+<% end %>
+
+    <% if @excerpt_links %>
+      <a href="#" class="comment"><%=_('comment')%></a>
+    <% end %>
+
+<% if logged_in? %>
+    <% if @post.read_by?(account) %>
+      <a class="mark-unread" href="#"><%=_('mark unread')%></a>
+      <a class="mark-read hidden" href="#"><%=_('mark read')%></a>
+    <% else %>
+      <a class="mark-unread hidden" href="#"><%=_('mark unread')%></a>
+      <a class="mark-read" href="#"><%=_('mark read')%></a>
+    <% end %>
+<% end %>
+  </span>
+
+  <br />
+
+  <% if @excerpt_links %>
+    <a href="/posts/show/<%=@post.id%>" title="<%= _('Middle click, Shift-click, or Ctrl-Shift-click to open in new tab/window') %>"><%= _('view post')%></a>
+  <% end %>
+
+<% if logged_in? %>
+  <% if ! account.subscribed_to?(@post) %>
+    <a href="#" class="subscribe" title="<%=_('Start receiving notifications about comments on this post') %>"><%= _('subscribe')%></a>
+    <a href="#" class="unsubscribe hidden" title="<%=_('Stop receiving notifications about comments on this post') %>"><%= _('unsubscribe')%></a>
+  <% else %>
+    <a href="#" class="subscribe hidden" title="<%=_('Start receiving notifications about comments on this post') %>"><%= _('subscribe')%></a>
+    <a href="#" class="unsubscribe" title="<%=_('Stop receiving notifications about comments on this post') %>"><%= _('unsubscribe')%></a>
+  <% end %>
+
+  <% if @post.collected_by?(account) %>
+    <% if @pool && @pool.member.id == account.member.id %>
+    <a class="remove" data-pool-id="<%= @pool.id %>" href="#" title="<%= _('Remove this post from this pool') %>"><%= _('remove')%></a>
+    <% else %>
+    <a class="collect collected" href="#" title="<%=_('Collect this post in a pool') %>"><%= _('collected')%></a>
+    <a class="collect hidden" href="#" title="<%=_('Collect this post in a pool') %>"><%= _('collect')%></a>
+    <% end %>
+  <% else %>
+    <a class="collect" href="#" title="<%=_('Collect this post in a pool') %>"><%= _('collect')%></a>
+    <a class="collect collected hidden" href="#" title="<%=_('Collect this post in a pool') %>"><%= _('collected')%></a>
+  <% end %>
+
+  <span class="admin">
+    <% if @post.member.id == account.member.id %>
+      <a href="/posts/edit/<%=@post.id %>" class="edit"><%= _('edit')%></a>
+      <a href="/posts/destroy/<%=@post.id %>" data-msg="<%= _('Delete this post?') %>" class="delete"><%= _('delete')%></a>
+    <% else %>
+      <a class="hide" href="#" title="<%=_('Hiding a post prevents it from showing in your rivers or triggering notifications.') %>"><%= _('hide') %></a>
+      <a class="confirm-hide" href="#" title="<%=_('Click to confirm hiding of this post.') %>"><%=_('confirm')%></a>
+    <% end %>
+  </span>
+<% end %>
+</div>
