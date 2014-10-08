@@ -1,19 +1,27 @@
 require 'libertree/db'
 require 'libertree/job-processor'
 
+
+if ARGV[0].nil?
+  $stderr.puts "#{$0} <config.yaml> <database.yaml>"
+  exit 1
+end
+
+if ARGV[1].nil?
+  $stderr.puts "no database configuration file given; assuming #{File.dirname( __FILE__ ) }/../database.yaml"
+  db_config = "#{File.dirname( __FILE__ ) }/../database.yaml"
+else
+  db_config = ARGV[1]
+end
+
 ########################
 # FIXME: Sequel needs to connect to the db before defining models.  As model
 # definitions are loaded when 'lib/jobs' is required, we have to do this first.
-Libertree::DB.load_config "#{File.dirname( __FILE__ ) }/../database.yaml"
+Libertree::DB.load_config db_config
 Libertree::DB.dbh
 ########################
 
 require_relative '../lib/jobs'
-
-if ARGV[0].nil?
-  $stderr.puts "#{$0} <config.yaml>"
-  exit 1
-end
 
 jobp = Libertree::JobProcessor.new( ARGV[0] )
 jobp.extend Jobs
