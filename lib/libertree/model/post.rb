@@ -665,6 +665,12 @@ module Libertree
 
         posts_found.sort_by(&:time_created)[0]
       end
+
+      def guid
+        server = self.member.server
+        origin = server ? server.domain : Server.own_domain
+        "xmpp:#{origin}?;node=/posts;item=#{self.public_id}"
+      end
     end
   end
 end

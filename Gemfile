@@ -10,6 +10,7 @@ group 'extensions' do
   gem 'pg'
   gem 'bcrypt-ruby'
   gem 'nokogiri'
+  gem 'gpgme'
 end
 
 group 'development' do
