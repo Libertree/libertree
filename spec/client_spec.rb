@@ -15,6 +15,7 @@ describe Libertree::Client do
     @public_key = key.public_key.to_pem
     @contact = "admin@localhost"
     @domain = "localhost"
+    Libertree::Model::Server.own_domain = @domain
 
     @c = Libertree::Client.new({ private_key: key,
                                  contact: @contact,
@@ -112,7 +113,7 @@ XML
   context 'with a few test entities' do
     before :all do
       @forest = Libertree::Model::Forest.create( FactoryGirl.attributes_for(:forest) )
-      @requester = Libertree::Model::Server.create( FactoryGirl.attributes_for(:server) )
+      @requester = Libertree::Model::Server.create( FactoryGirl.attributes_for(:server, domain: Libertree::Model::Server.own_domain) )
       @forest.add @requester
 
       @member = Libertree::Model::Member.create(
@@ -154,10 +155,10 @@ XML
         expected =<<XML
 <comment>
   <id>#{@comment.id}</id>
-  <uid>xmpp:#{@domain}?;node=/comments;item=#{@comment.id}</uid>
+  <uid>#{@comment.guid}</uid>
   <post_id>#{@post.public_id}</post_id>
   <origin>#{@requester.domain}</origin>
-  <thr:in-reply-to ref="xmpp:#{@requester.domain}?;node=/posts;item=#{@post.public_id}"/>
+  <thr:in-reply-to ref="#{@post.guid}"/>
   <username>#{@comment.member.username}</username>
   <text>#{@comment.text}</text>
 </comment>
@@ -182,6 +183,7 @@ XML
         expected =<<XML
 <comment-like>
   <id>#{@comment_like.id}</id>
+  <thr:in-reply-to ref="#{@comment_like.comment.guid}"/>
   <comment_id>#{@comment_like.comment.public_id}</comment_id>
   <origin>#{@comment_like.member.server.domain}</origin>
   <username>#{@comment_like.member.username}</username>
@@ -283,7 +285,7 @@ XML
 <post>
   <username>#{@post.member.username}</username>
   <id>#{@post.id}</id>
-  <uid>xmpp:#{@domain}?;node=/posts;item=#{@post.id}</uid>
+  <uid>#{@post.guid}</uid>
   <visibility>#{@post.visibility}</visibility>
   <text>#{@post.text}</text>
 </post>
@@ -296,7 +298,7 @@ XML
 <post>
   <username>#{@post.member.username}</username>
   <id>#{@post.id}</id>
-  <uid>xmpp:#{@domain}?;node=/posts;item=#{@post.id}</uid>
+  <uid>#{@post.guid}</uid>
   <visibility>#{@post.visibility}</visibility>
   <text>#{@post.text}</text>
   <references>
@@ -435,6 +437,7 @@ XML
         expected =<<XML
 <post-like>
   <id>#{@comment_like.id}</id>
+  <thr:in-reply-to ref="#{@post_like.post.guid}"/>
   <post_id>#{@post_like.post.public_id}</post_id>
   <origin>#{@post_like.member.server.domain}</origin>
   <username>#{@post_like.member.username}</username>

@@ -1,11 +1,13 @@
 GIT
   remote: git://github.com/Libertree/libertree-model-rb.git
-  revision: 2e0d1c3bd759cabe535ebdb7478100707600badf
+  revision: 055ea74f5715af9cb5941b7db10f8de307189a01
   specs:
-    libertree-model (0.8.4)
+    libertree-model (0.9.5)
       bcrypt-ruby (= 3.0.1)
+      gpgme
       net-ldap (~> 0.5.1)
       nokogiri (~> 1.5)
+      parkdown (~> 1.4.25)
       pg
       ruby-oembed (~> 0.8.8)
       sequel
@@ -42,13 +44,17 @@ GEM
     girl_friday (0.11.1)
       connection_pool (~> 0.9.0)
       rubinius-actor
+    gpgme (2.0.7)
+      mini_portile (>= 0.5.0, <= 0.6.0)
     i18n (0.6.0)
     json (1.8.1)
+    mini_portile (0.6.0)
     multi_json (1.1.0)
     net-ldap (0.5.1)
     niceogiri (1.1.1)
       nokogiri (~> 1.5)
-    nokogiri (1.5.5)
+    nokogiri (1.5.11)
+    parkdown (1.4.25)
     pg (0.17.1)
     rake (10.1.1)
     rspec (2.12.0)
@@ -73,10 +79,10 @@ GEM
       columnize (>= 0.3.1)
       linecache19 (>= 0.5.11)
       ruby-debug-base19 (>= 0.11.19)
-    ruby-oembed (0.8.9)
+    ruby-oembed (0.8.10)
     ruby_core_source (0.1.5)
       archive-tar-minitar (>= 0.5.2)
-    sequel (4.13.0)
+    sequel (4.15.0)
     timedcache (0.4.0)
 
 PLATFORMS
