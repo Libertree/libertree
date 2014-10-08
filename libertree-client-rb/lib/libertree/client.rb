@@ -242,10 +242,10 @@ module Libertree
       xml {|x|
         x.comment_ {
           x.id_         comment.id
-          x.uid         "xmpp:#{@domain}?;node=/comments;item=#{comment.id}"
+          x.uid         comment.guid
           x.post_id     post.public_id
           x.origin      origin
-          x.send('thr:in-reply-to', {ref: "xmpp:#{origin}?;node=/posts;item=#{post.public_id}"})
+          x.send('thr:in-reply-to', {ref: post.guid})
           x.username    comment.member.username
           x.text_       comment.text
           unless references.empty?
@@ -265,6 +265,7 @@ module Libertree
       xml {|x|
         x.send('comment-like') {
           x.id_         like.id
+          x.send('thr:in-reply-to', {ref: like.comment.guid})
           x.comment_id  like.comment.public_id
           x.origin      origin
           x.username    like.member.username
@@ -343,7 +344,7 @@ module Libertree
         x.post {
           x.username    post.member.username
           x.id_         post.id
-          x.uid         "xmpp:#{@domain}?;node=/posts;item=#{post.id}"
+          x.uid         post.guid
           x.visibility  post.visibility
           x.text_       post.text
           x.via         post.via  if post.via
@@ -411,6 +412,7 @@ module Libertree
       xml {|x|
         x.send('post-like') {
           x.id_       like.id
+          x.send('thr:in-reply-to', {ref: like.post.guid})
           x.post_id   like.post.public_id
           x.origin    origin
           x.username  like.member.username
