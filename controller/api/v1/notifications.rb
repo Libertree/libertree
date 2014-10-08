@@ -14,7 +14,7 @@ module Controller
           if ! request.get?
             respond '', 405
           end
-          @account.notifications_unseen[0..100].map(&:data).to_json
+          @account.notifications_unseen.take(100).map(&:data).to_json
         end
       end
     end

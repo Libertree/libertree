@@ -1,0 +1,70 @@
+<div class="post-excerpt autoloadable <%=@is_first ? 'first' : ''%>" id="post-<%=@post.id%>" data-post-id="<%=@post.id%>" data-t="<%= @river_post_order == :comment ? @post.time_updated_overall.to_time.to_f : @post.time_created.to_time.to_f %>">
+  <% comments = @post.comments %>
+  <% likes = @post.likes %>
+  <div class="meta">
+    <a href="#post-excerpts" class="back-to-top" title="<%=_('back to top')%>"><%=img 'up-arrow.png', {alt:"back to top", class:"size-16"}%></a>
+    <div class="member">
+      <%=member_avatar_link(@post.member)%>
+      <div class="member-text">
+        <span class="member-name"><%=member_name_link(@post.member)%></span><br/>
+
+        <% icons = (!logged_in? && $conf['post_tools_default'].to_s == 'icons') || (account && account.settings && account.settings.icons) %>
+        <% if icons %>
+          <div class="post-stats text">
+            <span class="age"><%=ago(@post.time_created)%></span><span><%=_('Visibility: %s') % @post.visibility%></span>
+            <br/>
+            <span
+               class="num-likes"
+               title="<%=likes.empty? ? '' : _('Liked by %s') % like_list(likes)%>"
+            ><%=_('Likes: %s') % "<span class='value'>#{likes.count}</span>" %>
+            </span><span
+               class="num-comments"
+               title="<%=comments.empty? ? '' : commenter_list(comments)%>"
+            ><%=_('Comments: %s') % "<span class='value'>#{comments.count}</span>" %>
+            </span>
+          </div>
+        <% else %>
+          <span class="age"><%=ago(@post.time_created)%></span>
+        <% end %>
+      </div>
+    </div>
+
+    <% if icons %>
+      <%= render_partial '_post_tools', post: @post, excerpt_links: true %>
+    <% else %>
+      <div class="post-stats">
+        <span
+          class="num-likes <%=likes.empty? ? 'hidden' : ''%>"
+          title="<%=_('Liked by %s') % like_list(likes)%>"
+        ><%=img 'icon-like.png', {class:"size-16", alt:_('likes')}%>
+          <span class="value"><%=likes.count%></span>
+        </span><br/>
+
+        <span
+          class="num-comments <%=comments.empty? ? 'hidden' : ''%>"
+          title="<%=commenter_list(comments)%>"
+        ><%=img 'icon-comment.png', {class:"size-16", alt:_('comments')}%>
+          <span class="num-comments"><%=comments.count%></span>
+        </span>
+      </div>
+      <%= render_partial '_post_tools_text', post: @post, excerpt_links: true %>
+    <% end %>
+  </div>
+
+  <div class="excerpt <%=(logged_in? && account.settings.thumbnail) ? 'images-thumbnailed' : ''%>">
+    <div class="overflowed">
+      <div class="post-text typed-text">
+        <%=@post.text_rendered(account)%>
+        <% if @post.via %>
+          <div class="via">
+            <%=_('posted with: %s') % @post.via%>
+          </div>
+        <% end %>
+      </div>
+      <%= render_file 'view/comments/_comments_list.erb', post: @post, comment_fetch_options: @comment_fetch_options || { limit: 4 }, hidden: true %>
+    </div>
+  </div>
+
+  <div class="show-more"><a href="#"><%=_('show more')%></a></div>
+  <div class="show-less"><a href="#"><%=_('show less')%></a></div>
+</div>

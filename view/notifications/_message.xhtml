@@ -1,3 +1,0 @@
-#{ render_file 'view/notifications/_notification_head.xhtml', notifications: @notifications, avatar_member: @message.sender }
-  #{_('%s sent you a %smessage%s.') % [@actors, "<a href=\"/messages/show/#{@message.id}\" title=\"#{::CGI.escape_html(@message.glimpse)}\">", "</a>"]}
-#{ render_file 'view/notifications/_notification_foot.xhtml', notifications: @notifications, glimpse: @message.glimpse }

@@ -1,0 +1,51 @@
+<%
+@grouped_notifs.each do |notifications|
+  ids = notifications.map(&:id).to_json
+  seen_or_not = notifications.any? { |n| ! n.seen } ? 'unseen' : 'seen'
+  notif = notifications[0]
+  actor_array = notifications.map { |n| n.subject.member.name_display }
+  actors = anded_list( actor_array.uniq )
+  sg_or_pl = actor_array.uniq.length == 1 ? "singular" : "plural"
+
+  case notif.subject
+  when Libertree::Model::Comment
+    partial = '_comment'
+    avatar_member = notif.subject.member
+    glimpse = notif.subject.post.glimpse
+  when Libertree::Model::CommentLike
+    partial = '_comment_like'
+    avatar_member = notif.subject.member
+    glimpse = notif.subject.comment.glimpse
+  when Libertree::Model::Message
+    partial = '_message'
+    avatar_member = notif.subject.sender
+    glimpse = notif.subject.glimpse
+  when Libertree::Model::PoolPost
+    partial = '_pool_post'
+    avatar_member = notif.subject.pool.member
+    glimpse = notif.subject.post.glimpse
+  when Libertree::Model::PostLike
+    partial = '_post_like'
+    avatar_member = notif.subject.member
+    glimpse = notif.subject.post.glimpse
+  when Libertree::Model::Post
+    partial = '_mention'
+    avatar_member = notif.subject.member
+    glimpse = notif.subject.glimpse
+  end
+%>
+
+<% if notif.subject %>
+<table class="notification <%= seen_or_not %>" data-notification-ids="<%= ids %>">
+  <tr>
+    <td class="avatar"><%= member_avatar_link(avatar_member) %></td>
+    <td>
+      <%= render_partial partial, notifications: notifications, subject: notif.subject, actors: actors, sg_or_pl: sg_or_pl %>
+      <div class="glimpse touch-only"><%= Libertree.plain(glimpse) %></div>
+      <div class="age"><%= ago(notif.time_created) %></div>
+    </td>
+  </tr>
+</table>
+<% end %>
+
+<% end %>

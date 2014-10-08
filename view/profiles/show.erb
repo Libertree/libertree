@@ -1,0 +1,60 @@
+<div id="header" class="profile">
+
+  <h2><%=@member.name_display%></h2>
+
+  <%= member_img(@member, "profile") %>
+
+  <h3><%=@member.handle%></h3>
+
+  <% if @member == account.member %>
+  <a href="/profiles/edit"><%=s_('profile|Edit')%></a>
+  <% end %>
+
+  <div class="description">
+    <%= Libertree.render(@profile.description) %>
+  </div>
+  <% if @member != account.member %>
+  <div>
+    <select id="contact-list-selector" name="contact_list_id" data-member-id="<%=@member.id%>" data-placeholder="<%=_('Add %s to a contact list') % @member.name_display%>" data-msg="<%=_('Added %s to contact list.') % @member.name_display%>">
+      <option></option>
+      <% account.contact_lists.sort_by { |cl| cl.name.downcase }.each do |cl| %>
+        <option value="<%=cl.id%>"><%=cl.name%></option>
+      <% end %>
+    </select>
+  </div>
+  <% end %>
+</div>
+
+<% if @member.springs.any? %>
+  <div id="springs" class="panel">
+    <h3>Springs of <%=@member.name_display%></h3>
+    <ul>
+    <% @member.springs.each do |spring| %>
+      <li class="spring">
+        <a href="/pools/show/<%=spring.id%>"><%=spring.name%></a>
+      </li>
+    <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<div class="panel">
+  <h3><%=_('Posts by %s') % @member.name_display%></h3>
+</div>
+
+<% if @posts.empty? %>
+  <div id="no-more-posts" class="panel">
+    <%=_('No more posts (for now).')%>
+  </div>
+<% else %>
+<div id="post-excerpts" class="autoload-container"
+     data-loader-type="profile" data-loader-args="<%=@member.id%>">
+  <div class="more-posts">
+    <a href="#" class="load-more"></a>
+  </div>
+  <% @posts.each do |post| %>
+    <%= Controller::Posts.render_partial '_excerpt', post: post %>
+  <% end %>
+  <div class="spinner"></div>
+</div>
+<% end %>

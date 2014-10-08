@@ -1,0 +1,11 @@
+<div class="log <%= @active ? 'active' : '' %>" data-member-id="<%= @partner.id %>">
+  <div class="messages">
+    <% @chat_messages.each do |cm| %>
+      <%= render_partial "_message/#{cm.id}" %>
+    <% end %>
+  </div>
+
+  <form>
+    <textarea name="text" rows="3" class="textarea-chat" tabindex="1"></textarea><br/>
+  </form>
+</div>

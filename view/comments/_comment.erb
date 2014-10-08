@@ -1,0 +1,29 @@
+<% if @old_n && @n_total %>
+  <%= render_file 'view/comments/_num_comments.erb', num_shown: @old_n+1, num_total: @n_total, hidden: true %>
+<% end %>
+<div class="comment" id="comment-<%=@comment.id%>" data-comment-id="<%= @comment.id %>" data-commenter-member-id="<%= @comment.member.id%>">
+  <% likes = @comment.likes %>
+  <div class="num-likes <%= likes.empty? ? 'hidden' : '' %>" title="<%= like_list(likes) %>"><%= n_('1 like', '%d likes', likes.count) % likes.count%></div>
+  <div class="comment-tools">
+    <a href="#" class="go-ref-back"><%=s_('back-to-referencing-comment|back')%></a>
+    <% if logged_in? %>
+      <% if likes.map(&:member).include?(account.member) %>
+        <a href="#" class="unlike" data-comment-like-id="<%=@comment.like_by(account.member).id%>"><%=img 'icon-unlike.png', {class:"size-16", alt:_('unlike'), title:_('Unlike this comment')}%></a>
+        <a href="#" class="like hidden"><%=img 'icon-like.png', {class:"size-16", alt:_('like'), title:_('Like this comment')}%></a>
+      <% else %>
+        <a href="#" class="like"><%=img 'icon-like.png', {class:"size-16", alt:_('like'), title:_('Like this comment')}%></a>
+        <a href="#" class="unlike hidden"><%=img 'icon-unlike.png', {class:"size-16", alt:_('unlike'), title:_('Unlike this comment')}%></a>
+      <% end %>
+      <% if @comment.member == account.member %>
+        <a href="#" class="delete" data-msg="<%=_('Delete this comment?')%>"><%= img 'icon-delete.png', {class:"size-16", alt:_('delete'), title:_('delete')}%></a>
+      <% end %>
+    <% end %>
+    <a class="link" href="<%= comment_link(@comment) %>"><%= img 'icon-link.png', {class:"size-16", alt:_('shareable link for this comment'), title:_('shareable link for this comment')}%></a>
+  </div>
+  <%=member_avatar_link(@comment.member)%>
+  <div class="member-name"><%=member_name_link(@comment.member)%></div>
+  <div class="age"><%=ago(@comment.time_created)%></div>
+  <div class="text typed-text">
+    <%=@comment.text_rendered_and_participants_linked(@commenters, account, @i)%>
+  </div>
+</div>

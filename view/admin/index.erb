@@ -1,0 +1,41 @@
+<h2><%= _('Libertree Administration') %></h2>
+
+<p>
+  <a href="/admin/jobs"><%= _('Job queue') %></a>
+</p>
+
+<h3><%= _('Forests') %></h3>
+
+<p>
+<%= _('Drag trees in and out of forests.  The local tree is automatically a part of each forest originating from it.') %>
+</p>
+
+<form action="/admin/forests/create" method="POST">
+  <%= s_('create-forest|Name:') %> <input type="text" name="name"/> <input type="submit" value="<%= s_('create-forest|Add') %>"/>
+</form>
+
+<div class="forests">
+  <% @forests.each do |f| %>
+    <div class="forest" data-forest-id="<%= f.id %>">
+      <span class="name"><%= f.name %></span>
+      <div class="origin">
+        <%= s_('forest|Origin:') %>
+        <% if f.local? %>
+          <%= s_('forest-origin|this tree') %>
+        <% else %>
+          <%= f.origin.name_display %>
+        <% end %>
+      </div>
+      <%= render_file 'view/admin/_servers.erb', servers: f.servers, forest: f %>
+    </div>
+  <% end %>
+</div>
+
+<h3><%= _('Trees') %></h3>
+
+<form action="/admin/jobs/introduce" method="POST">
+  <p>Introduce this (local) tree to another (remote) tree:</p>
+  <%= s_('introduce-tree|Hostname or IP address:') %> <input type="text" name="host"/> <input type="submit" value="<%= s_('introduce-tree|Introduce') %>"/>
+</form>
+
+<%= render_file 'view/admin/_servers.erb', servers: @servers %>

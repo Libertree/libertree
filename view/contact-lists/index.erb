@@ -1,0 +1,16 @@
+<h2><%=_('Contact Lists')%></h2>
+
+<h3><%=_('Create Contact List')%></h3>
+
+<%= render_partial '_new' %>
+
+<h3><%=_('Contact Lists')%></h3>
+
+<ul>
+<% @lists.each do |l| %>
+  <li data-contact-list-id="<%= l.id %>">
+    <a href="/contact-lists/show/<%= l.id %>"><%= l.name %></a>
+    <a class="delete" rel="confirm" data-msg="<%=_('Delete this contact list?') %>" href="/contact-lists/destroy/<%= l.id %>"><%= img 'icon-delete.png', {alt:s_('contact-list|delete'), title:s_('contact-list|delete'), class:"size-16"} %></a>
+  </li>
+<% end %>
+</ul>

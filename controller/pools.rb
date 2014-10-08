@@ -63,7 +63,7 @@ module Controller
 
       # TODO: throw error if pool doesn't exist
       @posts = @pool.posts(options)
-      render_file "#{Ramaze.options.views[0]}/posts/_excerpts.xhtml"
+      render_file "#{Ramaze.options.views[0]}/posts/_excerpts.erb"
     end
 
     def create

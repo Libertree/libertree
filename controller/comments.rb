@@ -50,8 +50,8 @@ module Controller
       end
     end
 
-    # rendered as partial in posts/show.xhtml
-    # rendered as file in posts/_excerpt.xhtml
+    # rendered as partial in posts/show.erb
+    # rendered as file in posts/_excerpt.erb
     # the comment_fetch_options only apply to _excerpt; show provides its own instance variables.
     def _comments_list
       @post ||= Libertree::Model::Post[ post_id.to_i ]

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html class='splash <%= @view %>'>
+
+<head>
+  <title><%=( @num_unseen && ( @num_unseen > 0 ) ) ? "(#{@num_unseen})" : ''%> Libertree<%= $conf['title_insert'] ? " - #{::CGI.escape_html($conf['title_insert'])}" : '' %><%= @subtitle ? " - #{::CGI.escape_html(@subtitle)}" : '' %></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0"/>
+
+  <%= css 'bootstrap' %>
+  <%= css 'select2' %>
+  <%= css_nocache 'application' %>
+  <%= css_nocache 'splash' %>
+  <%= css_nocache 'intro' %>
+
+  <%= js 'jquery-1.11.1.min' %>
+  <%= js 'jquery-ui-1.11.0.custom.min' %>
+  <%= js 'jquery.expandable' %>
+  <%= js 'jquery.cookie' %>
+  <%= js 'jquery.mousewheel' %>
+  <%= js 'select2.min' %>
+  <%= js 'textinputs_jquery' %>
+  <%= js_nocache 'bootstrap' %>
+
+  <%= js_nocache 'login' %>
+  <%= js_nocache 'libertree' %>
+  <%= js_nocache 'libertree/post_loader' %>
+  <%= js_nocache 'libertree/ui' %>
+  <%= js_nocache 'libertree/intro' %>
+  <%= controller_js %>
+</head>
+
+<body class="<%= @view %>">
+  <% if flash[:error] %>
+    <div class="flash error alert alert-error alert-block">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <%=flash[:error]%>
+    </div>
+  <% end %>
+
+  <% if flash[:notice] %>
+    <div class="flash notice alert alert-info alert-block">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <%=flash[:notice]%>
+    </div>
+  <% end %>
+
+  <%=@content%>
+</body>
+
+</html>

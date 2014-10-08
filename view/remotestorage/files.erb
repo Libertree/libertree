@@ -1,0 +1,18 @@
+<h2><%=_('Files on your remote storage')%></h2>
+
+<p><a href="/remotestorage/connection"><%=s_('remote-storage|View connection details')%></a></p>
+
+<%= render_partial '_upload' %>
+
+<% if @files.nil? || @files.empty? %>
+  <p><%=_('There are currently no files in your remote storage.')%></p>
+<% else %>
+  <ul>
+    <% @files.keys.each do |name| %>
+      <li>
+        <a href="<%= @storage.storage_url %>/public/libertree/<%= name %>"><%= name %></a>
+        <a class="delete" data-msg="<%=_('Delete this file?')%>" href="/remotestorage/delete_file/<%=::CGI.escape_html(name)%>"><%=img 'icon-delete.png', {alt:s_('remotestorage|delete'), title:s_('remotestorage|delete'), class:"size-16"}%></a>
+      </li>
+    <% end %>
+  </ul>
+<% end %>

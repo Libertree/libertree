@@ -1,0 +1,48 @@
+<% if @river %>
+<div id="header">
+  <h1><%=@river.label%></h1>
+</div>
+<% end %>
+
+<% if account.settings.new_post_in_river %>
+  <form id="post-new">
+    <%= Controller::Main.render_partial 'posts/_form-new', springs: @springs %>
+    <input type="hidden" name="river_id" value="<%=@river.id%>"/>
+    <div class="message"></div>
+  </form>
+<% end %>
+
+<% if @no_rivers %>
+  <div id="no-rivers" class="panel">
+    <p>
+      <%=_('In order to see posts here, you need to have at least one river.')%>
+    </p>
+    <p>
+      <%=_('%sCreate one now%s') % ["<a href='/rivers/new'>", "</a>"]%>
+    </p>
+  </div>
+<% else %>
+  <div id="post-excerpts" class="autoload-container"
+       data-loader-type="river" data-loader-args="<%=@river ? @river.id : ''%>"
+       data-river-id="<%=@river ? @river.id : ''%>">
+    <div class="more-posts">
+      <a href="#" class="load-more"></a>
+    </div>
+    <% if @posts.empty? %>
+      <div id="no-more-posts" class="panel">
+        <%=_('No more posts (for now).')%>
+      </div>
+    <% else %>
+      <% @posts.reverse.each_with_index do |post, index| %>
+        <%= Controller::Posts.render_partial '_excerpt', post: post, river_post_order: @river_post_order, is_first: index == 0 %>
+      <% end %>
+    <% end %>
+    <div class="spinner"></div>
+  </div>
+
+  <% if @river && @river.being_processed? %>
+    <div id="no-more-posts" class="panel">
+    <%=_('The system is still matching posts with this river. Check in a few minutes for more posts.')%>
+    </div>
+  <% end %>
+<% end %>

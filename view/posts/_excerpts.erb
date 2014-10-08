@@ -1,0 +1,13 @@
+<% if @posts.empty? %>
+  <div id="no-more-posts" class="panel">
+    <% if @river && @river.being_processed? %>
+      <%=_('The system is still matching posts with this river. Check in a few minutes for more posts.')%>
+    <% else %>
+      <%=_('No more posts (for now).')%>
+    <% end %>
+  </div>
+<% else %>
+  <% @posts.each do |post| %>
+    <%= Controller::Posts.render_partial '_excerpt', post: post %>
+  <% end %>
+<% end %>

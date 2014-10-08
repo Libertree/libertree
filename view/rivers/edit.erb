@@ -1,0 +1,30 @@
+<h2><%=_('Edit River')%></h2>
+
+<form id="form-river-edit" class="form-river" method="POST" action="/rivers/update/<%=@river.id%>">
+  <div class="field">
+    <label>
+      <%=s_('river-query|Search:')%>
+    </label>
+    <textarea name="query"><%=@river.query.gsub('"', '&quot;')%></textarea>
+  </div>
+
+  <div class="field">
+    <label>
+      <%=s_('river|Label:')%>
+    </label>
+    <input type="text" name="label" value="<%=@river.label.gsub('"', '&quot;')%>"/>
+  </div>
+
+  <div class="field">
+    <label>
+      <%=_('append to all other rivers')%>
+    </label>
+    <input type="checkbox" name="appended_to_all" <%=@river.appended_to_all ? 'checked' : ''%>/>
+  </div>
+
+  <input type="submit" value="<%=s_('river|Update')%>"/>
+  <a href="/rivers"><%=_('Cancel')%></a>
+</form>
+
+<%= render_partial '_tips_and_examples' %>
+

@@ -7,7 +7,7 @@ describe Libertree do
   describe '#render' do
     it 'should not turn a line break into a paragraph break at hashtags' do
       text = "There is no paragraph\n #break here."
-      expect( Libertree.render(text) ).to eq "<p>There is no paragraph<br>\n <a href=\"/tags/break\" class=\"hashtag\">#break</a> here.</p>"
+      expect( Libertree.render(text) ).to eq "<p>There is no paragraph<br><a href=\"/tags/break\" class=\"hashtag\">#break</a> here.</p>"
     end
 
     it 'should escape XHTML tags' do

@@ -1,0 +1,9 @@
+<h2><%=_('Notifications')%></h2>
+
+<div style="margin-bottom: 1.5em;">
+  <a id="mark-all-notifications-seen" href="#"><%=_('mark all seen')%></a>
+</div>
+
+<% if @grouped_notifs.empty? %>
+    <%=_('You have no new notifications.')%>
+<% else %><%= render_partial '_notifications', grouped_notifs: @grouped_notifs %><% end %>
