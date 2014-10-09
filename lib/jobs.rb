@@ -55,6 +55,7 @@ module Jobs
             if params['pubkey']
               gpg encrypt: true, keys: { params['to'] => params['pubkey'] }
             end
+            charset = "UTF-8"
           end
         rescue Errno::ECONNRESET => e
           raise Libertree::RetryJob, "Email: #{e.message}"
