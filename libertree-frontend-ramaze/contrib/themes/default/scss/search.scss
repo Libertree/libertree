@@ -1,6 +1,40 @@
+@import "../scss-include/mixins.scss";
 @import "colours.scss";
 
-.search {
+body.search {
+    .main {
+        padding: 0;
+        background-color: transparent;
+
+        .panel, #header {
+            @include shadow;
+            @include rounded;
+            @include border-box;
+            margin: 0 auto;
+            padding: 20px;
+            float: none;
+            overflow: auto;
+        }
+        #header {
+            background-color: $dust;
+        }
+        #header + .panel, .panel + .panel {
+            margin-top: 1em;
+        }
+    }
+
+    ul.result-links {
+        li {
+            float: left;
+            list-style-type: none;
+        }
+        li + li {
+            margin-left: 0.5em;
+            border-left: 1px solid $bark;
+            padding-left: 0.5em;
+        }
+    }
+
     ul {
       margin: 0;
       padding: 0;
