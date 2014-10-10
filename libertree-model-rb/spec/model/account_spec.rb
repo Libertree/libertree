@@ -40,6 +40,46 @@ describe Libertree::Model::Account do
     end
   end
 
+  describe '#notifications_unseen_grouped' do
+    before :each do
+      Libertree::DB.dbh.execute 'TRUNCATE notifications CASCADE'
+    end
+    it 'returns an empty list when there are no notifications' do
+      expect( @account.notifications_unseen_grouped ).to eq([])
+    end
+    it 'bins notifications of the same type when they are on the same target' do
+      account1 = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
+      member1 = account1.member
+      account2 = Libertree::Model::Account.create( FactoryGirl.attributes_for(:account) )
+      member2 = account2.member
+
+      post = Libertree::Model::Post.create(
+        FactoryGirl.attributes_for(:post, member_id: @member.id, text: 'some post'))
+      like1 = Libertree::Model::PostLike.create(
+        FactoryGirl.attributes_for(:post_like, member_id: member1.id, post_id: post.id))
+      like2 = Libertree::Model::PostLike.create(
+        FactoryGirl.attributes_for(:post_like, member_id: member2.id, post_id: post.id))
+      comment1 = Libertree::Model::Comment.create(
+        FactoryGirl.attributes_for(:comment, member_id: member1.id, post_id: post.id, text: 'first comment' ))
+
+      @account.notify_about({
+        'type'         => 'post-like',
+        'post_like_id' => like1.id,
+      })
+      @account.notify_about({
+        'type'         => 'post-like',
+        'post_like_id' => like2.id,
+      })
+      @account.notify_about({
+        'type'         => 'comment',
+        'comment_id'   => comment1.id,
+      })
+
+      # three notifs on the same target, but only two different types
+      expect( @account.notifications_unseen_grouped.length ).to eq(2)
+    end
+  end
+
   describe '#delete_cascade' do
     context 'given an account with some posts and other entities' do
       before :each do
