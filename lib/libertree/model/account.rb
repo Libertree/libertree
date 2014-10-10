@@ -131,7 +131,7 @@ module Libertree
 
       def notifications_unseen_grouped(max_groups=5, limit=200)
         grouped = {}
-        targets = [] # so we have a display order
+        keys = [] # so we have a display order
 
         notifs = self.notifications_unseen.reverse_order(:id).limit(limit)
         notifs.each do |n|
@@ -146,15 +146,19 @@ module Libertree
                      n.subject
                    end
 
-          if grouped[target]
-            grouped[target] << n
+          # collect by target and type; we don't want to but comment
+          # and post like notifs in the same bin
+          key = [target, n.subject.class]
+          if grouped[key]
+            grouped[key] << n
           else
-            grouped[target] = [n]
-            targets << target
+            grouped[key] = [n]
+            keys << key
           end
         end
 
-        targets.take(max_groups).map {|t| grouped[t] }
+        # get the groups in order of keys
+        keys.take(max_groups).map {|k| grouped[k] }
       end
 
       def num_notifications_unseen
