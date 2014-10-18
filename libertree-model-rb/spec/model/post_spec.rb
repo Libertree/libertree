@@ -405,4 +405,92 @@ describe Libertree::Model::Post do
       expect( post.guid ).to eq("xmpp:#{server.domain}?;node=/posts;item=#{post.public_id}")
     end
   end
+
+  context 'with pools and a post' do
+    before do
+      server = Libertree::Model::Server.
+        create(FactoryGirl.attributes_for(:server))
+      @other_member = Libertree::Model::Member.
+        create(FactoryGirl.attributes_for(:member, :server_id => server.id))
+      account = Libertree::Model::Account.create(FactoryGirl.attributes_for(:account))
+      @member = account.member
+
+      @post = Libertree::Model::Post.
+        create(FactoryGirl.attributes_for(:post, member_id: @member.id, text: 'just a test post'))
+      @pools = (1..3).map do |i|
+        Libertree::Model::Pool.
+          create(FactoryGirl.attributes_for(:pool, member_id: @member.id, name: "pool #{i}"))
+      end
+      @other_pools = (1..3).map do |i|
+        Libertree::Model::Pool.
+          create(FactoryGirl.attributes_for(:pool, member_id: @other_member.id, name: "not my pool #{i}"))
+      end
+    end
+
+    describe '#pools_by_member' do
+      it "returns all of this member's pools containing this post" do
+        expect( @post.pools_by_member(@member.id).all ).to eq([])
+        @pools.each {|p| p << @post }
+        expect( @post.pools_by_member(@member.id).all ).to match_array(@pools)
+      end
+      it 'does not return pools belonging to other members' do
+        expect( @post.pools_by_member(@member.id).all ).to eq([])
+        @pools.each {|p| p << @post }
+        @other_pools.each {|p| p << @post }
+        expect( @post.pools_by_member(@member.id).all ).to match_array(@pools)
+        expect( @post.pools_by_member(@other_member.id).all ).to match_array(@other_pools)
+        expect( @post.pools_by_member(@member.id).all ).not_to match_array(@other_pools)
+      end
+    end
+
+    describe '#update_collection_status_for_member' do
+      it 'ignores bogus pool ids' do
+        pool = @pools.first
+        pool << @post
+        before_ids = @post.pools_by_member(@member.id).map(&:id)
+
+        expect( @post.pools_by_member(@member.id).all ).to include(pool)
+
+        @post.update_collection_status_for_member(@member.id, [9999999, 0, -10, pool.id])
+        expect( @post.pools_by_member(@member.id).map(&:id) ).to match_array before_ids
+      end
+
+      it 'adds the post to all given pools' do
+        @post.update_collection_status_for_member(@member.id, @pools.map(&:id))
+        expect( @post.pools_by_member(@member.id).map(&:id) ).to match_array @pools.map(&:id)
+
+        @pools.each do |pool|
+          expect( pool.includes?(@post) ).to be(true)
+        end
+      end
+
+      it 'removes the post from all pools that are not specified' do
+        all_pool_ids = @pools.map(&:id)
+        @post.update_collection_status_for_member(@member.id, all_pool_ids)
+        @pools.each do |pool|
+          expect( pool.includes?(@post) ).to be(true)
+        end
+
+        pool = @pools.sample
+        @post.update_collection_status_for_member(@member.id, [ pool.id ])
+        expect( pool.includes?(@post) ).to be(true)
+        removed = @pools - [pool]
+        removed.each do |pool|
+          expect( pool.includes?(@post) ).to be(false)
+        end
+      end
+
+      it 'only changes the collection status for the given member' do
+        all_pool_ids = (@pools + @other_pools).map(&:id)
+        @post.update_collection_status_for_member(@member.id, all_pool_ids)
+        @other_pools.each do |pool|
+          expect( pool.includes?(@post) ).to be(false)
+        end
+        @pools.each do |pool|
+          expect( pool.includes?(@post) ).to be(true)
+        end
+      end
+
+    end
+  end
 end
