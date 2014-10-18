@@ -1,8 +1,28 @@
-<div class="pools window has-shadow" data-post-id="<%=@post.id%>">
-  <select id="pool-selector" name="pool_id" data-placeholder="<%=s_('pool-selector|Collect in...')%>">
-    <option value="0"></option>
-    <% @pools.each do |p| %>
-      <option value="<%= p.id %>"><%= p.name %></option>
+<div class="pools modal" data-post-id="<%=@post.id%>">
+  <form action='/pools/update_post_collection_status' method='POST'>
+    <input type="hidden" name="post_id" value="<%= @post.id %>"/>
+
+    <% if @pools.empty?  %>
+      <p>
+        <%=s_('pool-selector|Collect this post in a new pool named...') %>
+      </p>
+      <input type="text" name="pool_name" />
+    <% else  %>
+      <p>
+        <%=s_('pool-selector|Collect in...')%>
+      </p>
+
+      <ul>
+        <% @pools.each do |p| %>
+          <li>
+            <label>
+              <input type="checkbox" name="pool_ids[]" value="<%= p.id %>" <%=p.includes?(@post) ? 'checked' : ''%> />
+              <%= p.name %>
+            </label>
+          </li>
+        <% end %>
+      </ul>
     <% end %>
-  </select>
+    <input class="submit" type="submit" value="<%=_('Save')%>"/>
+  </form>
 </div>

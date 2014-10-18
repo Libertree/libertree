@@ -2,12 +2,11 @@
   <% all_comments = @post.comments %>
   <% fetched_comments = @post.comments(@comment_fetch_options) %>
   <%= render_file 'view/comments/_num_comments.erb', num_shown: fetched_comments.count, num_total: all_comments.count %>
-  <br/>
 
   <% if logged_in? %>
     <a href="#" class="jump-to-comment"><%=s_('jump-to-comment|Comment')%></a>
   <% else %>
-    | <a href="/login">Log in</a> to comment.
+    <a href="/login">Log in</a> to comment.
   <% end %>
 
   <% loader_hidden = !( @comment_fetch_options && ( @comment_fetch_options[:limit] || @comment_fetch_options[:from_id] ) ) || ( fetched_comments.count == all_comments.count ) %>

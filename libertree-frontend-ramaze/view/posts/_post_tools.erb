@@ -24,12 +24,12 @@
       <% if @pool && @pool.member.id == account.member.id %>
       <a class="remove" data-pool-id="<%=@pool.id%>" href="#" title="<%=_('Remove this post from this pool')%>"><%= img 'icon-collected.png', {alt:_('remove'), class:'size-16'}%></a>
       <% else %>
-      <a class="collect collected" href="#" title="<%=_('Collect this post in a pool')%>"><%= img 'icon-collected.png', {alt:_('collected'), class:'size-16'}%></a>
-      <a class="collect hidden" href="#" title="<%=_('Collect this post in a pool')%>"<%= img 'icon-collect.png', {alt:_('collect'), class:'size-16'}%></a>
+      <a class="collected" href="#" title="<%=_('Collect this post in a pool')%>"><%= img 'icon-collected.png', {alt:_('collected'), class:'size-16'}%></a>
+      <a class="collect hidden" href="#" title="<%=_('Collect this post in a pool')%>"><%= img 'icon-collect.png', {alt:_('collect'), class:'size-16'}%></a>
       <% end %>
     <% else %>
       <a class="collect" href="#" title="<%=_('Collect this post in a pool')%>"><%= img 'icon-collect.png', {alt:_('collect'), class:'size-16'}%></a>
-      <a class="collect collected hidden" href="#" title="<%=_('Collect this post in a pool')%>"><%= img 'icon-collected.png', {alt:_('collected'), class:'size-16'}%></a>
+      <a class="collected hidden" href="#" title="<%=_('Collect this post in a pool')%>"><%= img 'icon-collected.png', {alt:_('collected'), class:'size-16'}%></a>
     <% end %>
 
     <% if ! account.subscribed_to?(@post) %>

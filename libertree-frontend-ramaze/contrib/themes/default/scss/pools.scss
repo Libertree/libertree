@@ -1,0 +1,35 @@
+@import "colours.scss";
+@import "../scss-include/mixins.scss";
+
+.pools.modal {
+    @include rounded;
+    @include shadow;
+
+    box-sizing: border-box;
+    border: 1px solid $sand;
+    background: $dust;
+    width: 60%;
+    padding: 1em;
+    margin: 1em;
+
+    form {
+        box-sizing: border-box;
+        padding-bottom: 3em;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+    ul {
+        border: 1px solid $stone;
+        max-height: 90%;
+        overflow-y: auto;
+        list-style: none;
+        padding: 0;
+        box-shadow: 0px 0px 8px $stone inset;
+
+        li {
+            padding: 0.5em;
+            border-bottom: 1px dotted $main;
+        }
+    }
+}
