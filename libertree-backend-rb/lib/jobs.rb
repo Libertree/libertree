@@ -47,7 +47,7 @@ module Jobs
       def self.perform(params)
         begin
           GPGME::Engine.home_dir = Dir.tmpdir
-          Mail.deliver do
+          mail = Mail.new do
             to       params['to']
             from     @@from_address
             subject  params['subject']
@@ -55,8 +55,9 @@ module Jobs
             if params['pubkey']
               gpg encrypt: true, keys: { params['to'] => params['pubkey'] }
             end
-            charset = "UTF-8"
           end
+          mail.charset = 'utf-8'
+          mail.deliver
         rescue Errno::ECONNRESET => e
           raise Libertree::RetryJob, "Email: #{e.message}"
         end
