@@ -135,26 +135,6 @@ Libertree.Posts = (function () {
           return false;
         } );
 
-        $('#comments-hide').click( function() {
-          $('div.post').addClass('with-comments-sliding');
-          $('div.comments, #comments-hide').hide();
-          $('#comments-show').show();
-          $('div.post-pane, div.comments-pane').toggleClass(
-            'expanded-post',
-            500
-          );
-        } );
-        $('#comments-show').click( function() {
-          $('#comments-show').hide();
-          $('#comments-hide').show();
-          $('div.comments-pane, div.post-pane').toggleClass('expanded-post', 500).promise().done(
-            function () {
-              $('div.comments').show();
-              $('div.post').removeClass('with-comments-sliding');
-            }
-          );
-        } );
-
         $(document).on('click', '.post-tools a.hide', function() {
           $(this).hide();
           $(this).siblings('.confirm-hide').show();

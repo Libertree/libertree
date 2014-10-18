@@ -4,24 +4,9 @@
 $(document).ready( function() {
   "use strict";
 
-  $(document).on('click', '.post-tools .collect', Libertree.Pools.collectHandler);
+  $(document).on('click', '.post-tools .collect, .post-tools .collected', Libertree.Pools.collectHandler);
   $(document).on('click', '.post-tools .remove', Libertree.Pools.removePostHandler);
-
-  $(document).on('click', '.create-pool-and-add-post', function(e) {
-    e.preventDefault();
-    var post = $(this).closest('.post, .post-excerpt');
-    Libertree.Pools.createPoolAndAddPost(post);
-    return false;
-  } );
-
-  $(document).on('keydown', '.pools .chzn-search input', function(event) {
-    if( event.keyCode !== 13 ) {
-      return;
-    }
-
-    var post = $(this).closest('.post, .post-excerpt');
-    Libertree.Pools.createPoolAndAddPost(post);
-  } );
+  $(document).on('click', '.pools input.submit', Libertree.Pools.submit);
 
   $('.excerpts-view.pool #river-selector').select2({ width: '450px' }).change(function (event) {
     event.preventDefault();

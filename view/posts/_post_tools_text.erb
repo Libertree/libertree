@@ -44,12 +44,12 @@
     <% if @pool && @pool.member.id == account.member.id %>
     <a class="remove" data-pool-id="<%= @pool.id %>" href="#" title="<%= _('Remove this post from this pool') %>"><%= _('remove')%></a>
     <% else %>
-    <a class="collect collected" href="#" title="<%=_('Collect this post in a pool') %>"><%= _('collected')%></a>
+    <a class="collected" href="#" title="<%=_('Collect this post in a pool') %>"><%= _('collected')%></a>
     <a class="collect hidden" href="#" title="<%=_('Collect this post in a pool') %>"><%= _('collect')%></a>
     <% end %>
   <% else %>
     <a class="collect" href="#" title="<%=_('Collect this post in a pool') %>"><%= _('collect')%></a>
-    <a class="collect collected hidden" href="#" title="<%=_('Collect this post in a pool') %>"><%= _('collected')%></a>
+    <a class="collected hidden" href="#" title="<%=_('Collect this post in a pool') %>"><%= _('collected')%></a>
   <% end %>
 
   <span class="admin">

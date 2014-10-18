@@ -12,7 +12,7 @@ module Controller
     end
 
     layout do |path|
-      if path =~ %r{\b_|create_pool_and_add_post|add_post}
+      if path =~ %r{\b_|update_post_collection_status}
         nil
       else
         :default
@@ -136,40 +136,62 @@ module Controller
       redirect r(:/)
     end
 
-    def add_post(pool_id, post_id)
-      error = {
-        'success' => false,
-        'msg' => _('Failed to add post to pool.')
-      }
+    # TODO: convert this to API endpoint?
+    def update_post_collection_status
+      redirect_referrer  if ! request.post?
 
-      pool = Libertree::Model::Pool[ member_id: account.member.id, id: pool_id.to_i ]
-      return error.to_json if pool.nil?
-      post = Libertree::Model::Post[ id: post_id.to_i ]
-      return error.to_json if post.nil?
+      if ! request['post_id']
+        # pool_ids may be empty if the post is removed from all pools
+        return { 'success' => false, 'msg' => _('Missing parameters.') }.to_json
+      end
 
-      pool << post
+      post_id = request['post_id'].to_i
+      post = Libertree::Model::Post[ id: post_id ]
+      return { 'success' => false, 'msg' => _('Post does not exist.') }.to_json  if post.nil?
+
+      if request['pool_name']
+        begin
+          pool_name = request['pool_name'].to_s.strip
+
+          # TODO: validate post name in model
+          if pool_name.empty?
+            return {
+              'success' => false,
+              'msg' => _('Failed to create pool or add post.')
+            }.to_json
+          end
+
+          pool = Libertree::Model::Pool.
+            find_or_create(member_id: account.member.id,
+                           name: pool_name)
+          pool << post
+          return {
+            'success' => true,
+            'msg'     => _("Post added to &ldquo;%s&rdquo; pool.") % pool.name,
+            'count'   => 1
+          }.to_json
+        rescue
+          return {
+            'success' => false,
+            'msg' => _('Failed to create pool or add post.')
+          }.to_json
+        end
+      end
+
+      pool_ids = if request['pool_ids']
+                   request['pool_ids'].map(&:to_i)
+                 else
+                   []
+                 end
+
+      post.update_collection_status_for_member(account.member.id, pool_ids)
+      count = post.pools_by_member(account.member.id).count
 
       {
         'success' => true,
-        'msg' => _("Post added to &ldquo;%s&rdquo; pool.") % pool.name
+        'msg'     => _('Post collections updated.'),
+        'count'   => count
       }.to_json
-    end
-
-    def create_pool_and_add_post(pool_name, post_id)
-      error = {
-        'success' => false,
-        'msg' => _('Failed to create pool or add post.')
-      }
-      post = Libertree::Model::Post[ id: post_id.to_i ]
-      return error.to_json if post.nil?
-
-      pool = Libertree::Model::Pool.find_or_create(
-        member_id: account.member.id,
-        name: pool_name.to_s
-      )
-      pool << post
-
-      { 'success' => true }.to_json
     end
 
     def _remove_post(pool_id, post_id)

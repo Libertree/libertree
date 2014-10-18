@@ -46,11 +46,6 @@ body.single-post-view {
       padding: 1em;
     }
 
-    &.with-comments-sliding {
-      background-color: $dust; /* fallback for browsers that don't support alpha in colours */
-      background-color: $dust_translucent;
-    }
-
     img {
       max-width: 100%;
     }
@@ -84,11 +79,6 @@ body.single-post-view {
             margin-bottom: 1em;
             > a, > span {
                 margin-left: 1em;
-            }
-            @media screen and (max-width: $threshold) {
-                #comments-show, #comments-hide {
-                    display: none;
-                }
             }
         }
         .meta {
@@ -142,10 +132,6 @@ body.single-post-view {
           }
         }
       }
-      &.expanded-post {
-        width: 100%;
-        /* position: relative; */
-      }
     }
     div.comments-pane {
       @media screen and (min-width: $threshold) {
@@ -167,6 +153,10 @@ body.single-post-view {
         vertical-align: top;
         padding-right: 1em;
         padding-bottom: 1em;
+
+        .num-comments {
+            display: block;
+        }
 
         form.comment {
           margin-left: 50px;
@@ -218,10 +208,6 @@ body.single-post-view {
           }
         }
 
-      }
-      &.expanded-post {
-        display: none;
-        width: 0;
       }
     }
   }

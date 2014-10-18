@@ -14,10 +14,9 @@
                     <span class="age-update">(updated <%=ago(@post.time_updated)%>)</span>
                   <% end %></span>
                   <br/>
-                  <% if logged_in? %><span><%=_('Visibility: %s') % @post.visibility%></span><% end %><span
-                     class="num-likes"
-                     title="<%=@post.likes.empty? ? '' : _('Liked by %s') % like_list(@post.likes)%>"
-                  ><%=_('Likes: %s') % "<span class='value'>#{@post.likes.count}</span>" %>
+                  <span><%=_('Visibility: %s') % @post.visibility%></span>
+                  <span class="num-likes" title="<%=@post.likes.empty? ? '' : _('Liked by %s') % like_list(@post.likes)%>">
+                    <%=_('Likes: %s') % "<span class='value'>#{@post.likes.count}</span>" %>
                   </span>
                 </div>
               <% else %>
@@ -45,9 +44,6 @@
           <% if logged_in? && ! account.settings.icons %>
             <a class="visibility" href="#" rel="popover" title="<%=_('Visibility') %>" data-content="<%= visibility_description(@post) %>"><%= img 'icon-eye.png', {class:"size-16", alt: visibility_description(@post)} %></a>
           <% end %>
-
-          <a href="#" id="comments-show" title="show comments">&lt;&lt;</a>
-          <a href="#" id="comments-hide" title="hide comments">&gt;&gt;</a>
         </div>
 
         <div class="post-text typed-text">

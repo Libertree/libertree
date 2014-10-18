@@ -812,38 +812,24 @@ textarea#invitations {
     opacity: 1.0;
 }
 
-div.pools {
-    z-index: 2;
-    width: 250px;
-    padding: 1em;
-    display: none;
-
-    select#pool-selector {
-        width: 100%;
-    }
-}
-
-.post-excerpt div.pools {
-    right: 0px;
-}
-.post div.pools {
-    left: 300px;
-    @media screen and (max-width: $threshold) {
-        left: 5px;
-    }
-}
-div.pools .chzn-container .chzn-results li {
-    line-height: 24px;
-}
-
 .fading-alert {
-    position: absolute;
-    top: 50%;
-    left: 50%;
+    @include border-box;
+    @include shadow;
+    @include rounded;
+
+    position: fixed;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    top: 1em;
     z-index: 3;
+    width: 20em;
+    max-width: 90%;
+    background: url('../images/flash-notice.png') no-repeat scroll 10px 0.5em $water;
+    border: 1px solid $sky;
     padding: 1em;
-    border: 1px solid $stone;
-    background-color: $sand;
+    padding-left: 50px; //make room for icon
 }
 
 .profile #contact-list-selector, .excerpts-view.pool #river-selector {

@@ -229,9 +229,13 @@ msgid "You already have a pool with that name."
 msgstr ""
 msgid "Failed to create pool or add post."
 msgstr ""
-msgid "Failed to add post to pool."
+msgid "Post collections updated."
 msgstr ""
 msgid "Post added to &ldquo;%s&rdquo; pool."
+msgstr ""
+msgid "Post does not exist."
+msgstr ""
+msgid "Missing parameters."
 msgstr ""
 msgid "The spring URL may only consist of letters, hyphens or underscores."
 msgstr ""
@@ -754,6 +758,8 @@ msgstr ""
 
 #: view/pools/_index.xhtml
 msgid "pool-selector|Collect in..."
+msgstr ""
+msgid "pool-selector|Collect this post in a new pool named..."
 msgstr ""
 
 #: view/pools/index.xhtml

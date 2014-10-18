@@ -4,9 +4,10 @@
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0"/>
 
   <%= css 'ui-lightness/jquery-ui-1.11.0.custom' %>
-  <%= css 'chosen' %>
   <%= css 'select2' %>
   <%= css 'bootstrap' %>
+  <%= css 'modalBox' %>
+
   <%= css_nocache 'application' %>
   <% if logged_in? && account.font_css %>
     <%= css_nocache account.font_css %>
@@ -35,10 +36,10 @@
   <%= js 'jquery.cookie' %>
   <%= js 'jquery.mousewheel' %>
   <%= js 'remotestorage.min' %>
-  <%= js 'chosen.jquery.min' %>
   <%= js 'select2.min' %>
   <%= js 'textinputs_jquery' %>
   <%= js 'bootstrap' %>
+  <%= js 'modalBox' %>
 
   <%= js_nocache 'libertree' %>
   <%= js_nocache 'libertree/post_loader' %>

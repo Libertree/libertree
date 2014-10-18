@@ -239,6 +239,30 @@ Libertree.UI = (function () {
         $('div.spoilers').each( function () { initSpoiler($(this)); } );
     },
 
+    initLightbox: function () {
+      var reset = function () {
+        $(this)
+          .removeAttr('style')
+          .css({cursor: 'zoom-in'})
+          .click(openLightbox);
+      };
+      var openLightbox = function (event) {
+        event.preventDefault();
+
+        var $this = $(this);
+        $this.unbind('click');
+        // free the img first to allow the modalBox to detect larger dimensions
+        $this.css({'position': 'fixed', height: '90%', cursor: 'inherit'});
+        $this.modalBox({ onClose: reset });
+      };
+
+      // enable lightbox only for resized images in SPV
+      $('.single-post-view .post-text img')
+        .filter(function () { return this.naturalHeight > this.clientHeight; })
+        .css({cursor: 'zoom-in'})
+        .click(openLightbox);
+    },
+
     jumpToCommentField: function (excerpt) {
       var scrollable = Libertree.UI.scrollable(),
           scrollTop = scrollable.scrollTop(),
@@ -350,20 +374,14 @@ Libertree.UI = (function () {
       } );
     },
 
-    // TODO: replace with bootstrap popover
-    fadingAlert: function(message, x, y) {
+    fadingAlert: function(message) {
       var div = $('<div class="fading-alert has-shadow">'+message+'</div>');
-      div.appendTo('body');
-
-      if( x !== undefined && y !== undefined ) {
-        div.css( { left: x+'px', top: y+'px' } );
-      }
-      setTimeout(
-        function() {
-          $('.fading-alert').fadeOut(2000);
-        },
-        1000 + message.length * 50
-      );
+      div
+        .appendTo('body')
+        .hide()
+        .fadeIn(500)
+        .delay(1000 + message.length * 50)
+        .fadeOut(1000, function () { $(this).remove(); });
     },
 
     TextAreaBackup: (function () {
@@ -534,6 +552,7 @@ Libertree.UI = (function () {
     init: function() {
       $(document).ready( function () {
         Libertree.UI.registerScrollHandler();
+        Libertree.UI.initLightbox();
 
         setInterval( Libertree.UI.updateAges, 60 * 1000 );
         Libertree.UI.TextAreaBackup.enable();
