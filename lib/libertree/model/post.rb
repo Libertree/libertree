@@ -666,6 +666,29 @@ module Libertree
         posts_found.sort_by(&:time_created)[0]
       end
 
+      def pools_by_member(member_id)
+        Libertree::Model::Pool.qualify.
+          join(:pools_posts, :pools_posts__pool_id => :pools__id).
+          where(pools_posts__post_id: self.id, pools__member_id: member_id)
+      end
+
+      def update_collection_status_for_member(member_id, pool_ids)
+        # - ignore ids in pool_ids that are also in ids
+        # - remove: ids that are not in pool_ids but are in ids
+        # - add: ids that are in pool_ids but not in ids
+        ids = pools_by_member(member_id).map(&:id)
+
+        add_ids = pool_ids - ids
+        add_pools = Libertree::Model::Pool.where(member_id: member_id, id: add_ids)
+        add_pools.each {|pool| pool << self }
+
+        remove_ids = ids - pool_ids
+        remove_pools = Libertree::Model::Pool.where(member_id: member_id, id: remove_ids)
+        remove_pools.each {|pool| pool.remove_post self }
+
+        add_pools
+      end
+
       def guid
         server = self.member.server
         origin = server ? server.domain : Server.own_domain
