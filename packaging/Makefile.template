@@ -56,7 +56,8 @@ MKPACKAGE = fpm -f -d ruby $(2) \
 # $(2) : version
 # $(3) : path of generated package
 # $(4) : package name
-BUILDPKG = fpm -f -d ruby \
+# $(5) : additional parameters to fpm
+BUILDPKG = fpm -f -d ruby $(5) \
 		--prefix $(PREFIX_GEMS) \
 		--gem-package-name-prefix $(PKG_PREFIX) \
 		--no-gem-fix-name \
@@ -207,7 +208,7 @@ libertree-model-$(VERSION_MODEL).gem : ../libertree-model-rb/libertree-model.gem
 	cd ../libertree-model-rb/; gem build libertree-model.gemspec; cd -; mv ../libertree-model-rb/$@ .
 
 libertree-model-$(VERSION_MODEL).$(PKG_TYPE) : libertree-model-$(VERSION_MODEL).gem libertree-db-$(VERSION_DB).$(PKG_TYPE)
-	$(call BUILDPKG, $<, $(VERSION_MODEL), $@, libertree-model)
+	$(call BUILDPKG, $<, $(VERSION_MODEL), $@, libertree-model, -d libertree-db)
 
 
 ####################################
