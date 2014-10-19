@@ -67,7 +67,7 @@ Three simple steps need to be performed initially:
 - run the migration script
 
 ~~~
-$ cd /usr/share/libertree/db
+$ cd /opt/libertree/db
 $ ./createuser.sh
 $ ./createdb.sh
 $ cp database.yaml.example database.yaml
@@ -82,7 +82,7 @@ package.
 
 To expose the frontend to the Internet, a proxying web server, such as
 nginx or Apache, is recommended.  Under
-`/usr/share/libertree/frontend-rb/config/` you can find an example
+`/opt/libertree/frontend-rb/config/` you can find an example
 configuration files for an nginx setup (`libertree.nginx.example`) and
 an Apache vhost definition (`libertree.apache.example`).
 
@@ -123,7 +123,7 @@ if [ "$EUID" -eq 0 ]; then
   exit
 fi
 
-PREFIX=/usr/share/libertree
+PREFIX=/opt/libertree
 GEM_PATH=$PREFIX/gems
 
 # start backend and job processor
@@ -137,7 +137,7 @@ $GEM_PATH/bin/unicorn -Ilib -c unicorn.rb config.ru &
 cd -
 ~~~
 
-Name this script `/usr/share/libertree/start.sh`, make it executable,
+Name this script `/opt/libertree/start.sh`, make it executable,
 and run it as the `libertree` user to start all three Libertree
 components.
 
@@ -158,6 +158,6 @@ After upgrading any Libertree component, perform the following steps:
 - compare the configuration files against the example files to see if
   they need updating
 - run the migration script (`LIBERTREE_ENV=production
-  /usr/share/libertree/db/migrate.sh`) to update the database schema.
+  /opt/libertree/db/migrate.sh`) to update the database schema.
 - kill all Libertree processes and restart them (`su - libertree
-  /usr/share/libertree/start.sh`)
+  /opt/libertree/start.sh`)

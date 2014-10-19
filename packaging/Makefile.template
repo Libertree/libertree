@@ -2,7 +2,7 @@
 #   - add architecture ("-a all" or "-a native")
 #   - create libertree user
 
-PREFIX = /usr/share/libertree
+PREFIX = /opt/libertree
 PREFIX_FRONTEND = $(addprefix $(PREFIX)/,frontend-ramaze)
 PREFIX_BACKEND = $(addprefix $(PREFIX)/,backend-rb)
 PREFIX_DB = $(addprefix $(PREFIX)/,db)
