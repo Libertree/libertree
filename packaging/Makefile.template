@@ -20,7 +20,7 @@ BACKEND_DESC = "Libertree backend server"
 DB_DESC = "Libertree database migrations"
 
 GEMDIR = vendor/cache
-PKG_TYPE := $(shell if [ $(which apt-get 2>/dev/null) ]; then echo rpm; else echo deb; fi)
+PKG_TYPE := $(shell if [ -f /usr/bin/rpm ]; then echo rpm; else echo deb; fi)
 
 # Create a deb/rpm package from an unpacked ruby gem.
 # $(1) : dir name
