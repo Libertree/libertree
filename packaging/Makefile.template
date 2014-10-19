@@ -181,6 +181,10 @@ libertree-db-$(VERSION_DB).$(PKG_TYPE) :
 		--description $(DB_DESC) \
 		--version $(VERSION_DB) \
 		--license AGPL3 \
+		--deb-user libertree \
+		--deb-group libertree \
+		--rpm-user libertree \
+		--rpm-group libertree \
 		-p $@ \
 		-C ../libertree-db \
 		--directories . \
