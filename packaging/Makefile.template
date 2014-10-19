@@ -169,8 +169,13 @@ libertree-backend-$(VERSION_BACKEND).$(PKG_TYPE) : gems \
 #		--config-files database.yaml.example \
 #		--config-files config.yaml.example \
 
+ifeq ($(PKG_TYPE), rpm)
+POSTGRES_DEPS := -d postgresql-server -d postgresql
+else
+POSTGRES_DEPS := -d postgresql -d postgresql-client
+endif
 libertree-db-$(VERSION_DB).$(PKG_TYPE) :
-	fpm -f --prefix $(PREFIX_DB) \
+	fpm -f $(POSTGRES_DEPS) --prefix $(PREFIX_DB) \
 		--url "http://libertreeproject.org" \
 		--maintainer "rekado+libertree@elephly.net" \
 		--description $(DB_DESC) \
