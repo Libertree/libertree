@@ -11,8 +11,8 @@ PKG_PREFIX = libertree
 
 VERSION_FRONTEND = 0.0.2
 VERSION_BACKEND = 0.0.2
-VERSION_MODEL   = 0.9.7
-VERSION_CLIENT  = 0.0.4
+VERSION_MODEL   := $(shell grep -oP "version += +'\K([^']+)" ../libertree-model-rb/libertree-model.gemspec)
+VERSION_CLIENT  := $(shell grep -oP "version += +'\K([^']+)" ../libertree-client-rb/libertree-client.gemspec)
 VERSION_DB      = 0.0.1
 
 FRONTEND_DESC = "Libertree web frontend"
