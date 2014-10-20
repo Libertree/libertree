@@ -129,7 +129,7 @@ libertree-frontend-$(VERSION_FRONTEND).$(PKG_TYPE) : gems \
 		public/ \
 		README.md \
 		spec/ \
-		test.sh \
+		service.sh \
 		view/
 
 # TODO: share database config file?
