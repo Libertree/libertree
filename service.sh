@@ -10,6 +10,7 @@ start() {
 }
 
 stop() {
+    cd ${PREFIX}/backend-rb
     for pid in $(find ./pids/ -type f); do
       kill $(cat $pid) && rm $pid
     done
