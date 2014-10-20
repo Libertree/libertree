@@ -1,7 +1,7 @@
 #!/bin/bash
 
 PREFIX=/opt/libertree
-GEM_HOME=${PREFIX}/gems/
+export GEM_HOME=${PREFIX}/gems/
 
 start() {
     cd ${PREFIX}/backend-rb
@@ -10,7 +10,9 @@ start() {
 }
 
 stop() {
-    kill $(cat ./pids/*)
+    for pid in $(find ./pids/ -type f); do
+      kill $(cat $pid) && rm $pid
+    done
 }
 
 case "$1" in
