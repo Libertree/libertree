@@ -42,7 +42,9 @@ module Libertree
     end
 
     def self.load_config(config_filename)
-      @conf = YAML.load( File.read(config_filename) )
+      # load defaults first, then merge
+      @conf = YAML.load(File.read("#{File.dirname( __FILE__ ) }/../../defaults.yaml")).
+        merge YAML.load(File.read(config_filename))
       missing = []
       [
         'xmpp_server',
@@ -57,6 +59,10 @@ module Libertree
 
       if missing.any?
         raise ConfigurationError.new("Configuration error: Missing required configuration keys: #{missing.join(', ')}")
+      end
+
+      if ! File.exists?(@conf['private_key_path'])
+        raise ConfigurationError.new("Configuration error: private key file does not exist.}")
       end
     end
 
@@ -97,6 +103,10 @@ module Libertree
           end
 
           if @conf['log_path']
+            log_dir = File.dirname(@conf['log_path'])
+            if ! Dir.exists?(log_dir)
+              FileUtils.mkdir_p log_dir
+            end
             @log_handle = File.open( @conf['log_path'], 'a+' )
             @log_handle.sync = true
             puts "Logging to #{File.absolute_path(@log_handle.path)}"
@@ -122,6 +132,9 @@ module Libertree
         secret = @conf['shared_secret']
         port   = @conf['port'].to_i || 5347
         socket = @conf['relay_socket'] || "/tmp/libertree-relay"
+
+        # create directory holding the socket file
+        FileUtils.mkdir_p(File.dirname(socket))
 
         # TODO: take the appropriate setting from the config file
         Libertree::Model::Account.set_auth_settings(:default, nil)

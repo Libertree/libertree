@@ -10,14 +10,16 @@ module Libertree
 
     def initialize(config_filename)
       @config_filename = config_filename
-      @conf = YAML.load( File.read(config_filename) )
+      # load defaults first, then merge
+      @conf = YAML.load(File.read("#{File.dirname( __FILE__ ) }/../../defaults.yaml")).
+        merge YAML.load(File.read(config_filename))
 
       # initialise own domain (used for local member handles)
       Libertree::Model::Server.own_domain = @conf['domain']
 
       if @conf && @conf['pid_dir']
         if ! Dir.exists?(@conf['pid_dir'])
-          Dir.mkdir @conf['pid_dir']
+          FileUtils.mkdir_p @conf['pid_dir']
         end
         pid_filepath = ENV['LIBERTREE_PID_FILEPATH'] || File.join(@conf['pid_dir'], 'job-processor.pid')
         @pid = Process.pid
@@ -27,6 +29,10 @@ module Libertree
       end
 
       if @conf && @conf['log_path']
+        log_dir = File.dirname(@conf['log_path'])
+        if ! Dir.exists?(log_dir)
+          FileUtils.mkdir_p log_dir
+        end
         @log = File.open( @conf['log_path'], 'a+' )
         @log.sync = true
       else
