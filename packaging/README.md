@@ -75,8 +75,16 @@ aptly publish repo -skip-signing -distribution=wheezy libertree
 For production purposes a snapshot should be created first and the
 packages should be signed.
 
-To update a published repository, the following command is used:
+To update a published repository with new packages, the following
+commands are used:
 
 ~~~
-aptly publish -skip-signing update wheezy
+aptly repo add -force-replace=true libertree *.deb
+aptly publish update -force-overwrite -skip-signing wheezy
+~~~
+
+The directory could then be copied to a remote server hosting the repository:
+
+~~~
+rsync -arvz ~/.aptly/public repo-host:~/repos/debian/
 ~~~
