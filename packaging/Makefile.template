@@ -163,8 +163,9 @@ libertree-backend-$(VERSION_BACKEND).$(PKG_TYPE) : gems \
 		--directories . \
 		-s dir -t $(PKG_TYPE) -n libertree-backend \
 		lib/ bin/server.rb bin/job-processor.rb generate-key-pair.sh \
+		service.sh \
 		database.yaml.example \
-		config.yaml.example
+		defaults.yaml
 
 #		--config-files database.yaml.example \
 #		--config-files config.yaml.example \
