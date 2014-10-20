@@ -111,35 +111,15 @@ domain name.
 
 # Starting it all
 
-Currently, the Libertree components do not come with a convenient
-start-up script.  Here is a script that will start all components:
+The frontend and backend processes can be started with the provided
+service scripts:
 
 ~~~
-#!/bin/bash
-
-# complain if run as root
-if [ "$EUID" -eq 0 ]; then
-  echo "Please do not run this as root."
-  exit
-fi
-
-PREFIX=/opt/libertree
-GEM_PATH=$PREFIX/gems
-
-# start backend and job processor
-cd $PREFIX/backend-rb
-ruby -I./lib ./bin/server.rb config.yaml database.yaml &
-ruby -I./lib ./bin/job-processor.rb config.yaml database.yaml &
-
-# start frontend
-cd $PREFIX/frontend-ramaze
-$GEM_PATH/bin/unicorn -Ilib -c unicorn.rb config.ru &
-cd -
+$ su -
+$ cd /opt/libertree
+$ ./frontend-ramaze/service.sh start
+$ ./backend-rb/service.sh start
 ~~~
-
-Name this script `/opt/libertree/start.sh`, make it executable,
-and run it as the `libertree` user to start all three Libertree
-components.
 
 
 # Updating
@@ -159,5 +139,11 @@ After upgrading any Libertree component, perform the following steps:
   they need updating
 - run the migration script (`LIBERTREE_ENV=production
   /opt/libertree/db/migrate.sh`) to update the database schema.
-- kill all Libertree processes and restart them (`su - libertree
-  /opt/libertree/start.sh`)
+- restart all Libertree processes:
+
+~~~
+$ su -
+$ cd /opt/libertree
+$ ./frontend-ramaze/service.sh restart
+$ ./backend-rb/service.sh restart
+~~~
