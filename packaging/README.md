@@ -49,7 +49,7 @@ On Debian the packages are owned by the libertree user, which must exist.
 ~~~
 cd packaging
 ./generate-makefile.sh
-make PKG_TYPE=deb  # or make PKG_TYPE=rpm
+make
 ~~~
 
 ## Publishing packages
