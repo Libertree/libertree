@@ -5,6 +5,7 @@ export GEM_HOME=${PREFIX}/gems/
 
 start() {
     cd ${PREFIX}/frontend-ramaze
+    su libertree -c 'mkdir -p pids/ log/'
     su libertree -c "${GEM_PATH}/bin/unicorn -Ilib -c config/unicorn.conf config.ru" &
 }
 
