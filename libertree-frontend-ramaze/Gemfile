@@ -1,11 +1,13 @@
 source 'http://rubygems.org'
 gem 'ramaze'
 gem 'innate'
+gem 'grape'
 gem 'dalli'  # memcached client
 gem 'mini_magick'
 gem 'sass'
 gem 'ruby-oembed'
 gem 'fast_gettext'
+gem 'grape-swagger'
 
 group 'extensions' do
   gem 'json'

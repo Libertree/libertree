@@ -1,26 +1,9 @@
-require 'ramaze'
-require 'sass'
-require 'yaml'
-require 'mini_magick'
-require 'fast_gettext'
-require 'markdown'
-require_relative 'lib/libertree/lang'
-require 'libertree/db'
-
-Libertree::DB.load_config("#{ File.dirname( __FILE__ ) }/config/database.yaml")
-$dbh = Libertree::DB.dbh
-require 'libertree/model'
-
 [ 'frontend', 'email' ].each do |domain|
   FastGettext.add_text_domain(domain, :path => 'locale', :type => :po)
 end
 FastGettext.default_text_domain = 'frontend'
 FastGettext.default_available_locales = Libertree::LANG.map(&:first)
 include FastGettext::Translation
-
-$conf = YAML.load( File.read("#{ File.dirname( __FILE__ ) }/config/application.yaml") )
-$conf['websocket_blacklist'] ||= []
-ENV['RACK_ENV'] = $conf['environment'] || 'live'
 
 # compile SCSS to CSS
 Dir.glob("public/themes/*") do |theme_path|
