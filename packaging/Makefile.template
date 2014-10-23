@@ -101,6 +101,8 @@ libertree-frontend-$(VERSION_FRONTEND).$(PKG_TYPE) : gems \
 		-d libertree-curb \
 		-d libertree-ruby-filemagic \
 		-d libertree-gpgme \
+		-d libertree-grape \
+		-d libertree-grape-swagger \
 		--prefix $(PREFIX_FRONTEND) \
 		--url "http://libertreeproject.org" \
 		--maintainer "rekado+libertree@elephly.net" \
