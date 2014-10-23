@@ -254,9 +254,10 @@ module Jobs
             # which is very unwise. This defect is also present in the
             # master branch.
 
-          # TODO: should we just catch *all* exceptions?
           rescue Timeout::Error => e
             raise Libertree::RetryJob, "With #{server.domain}: #{e.message}"
+          rescue => e
+            raise Libertree::RetryJob, "Fatal error: with #{server.domain}: #{e.message}"
           end
         end
       end
