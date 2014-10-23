@@ -126,6 +126,7 @@ libertree-frontend-$(VERSION_FRONTEND).$(PKG_TYPE) : gems \
 		lib/ \
 		LICENCE \
 		locale/ \
+		member-api/ \
 		public/ \
 		README.md \
 		spec/ \
