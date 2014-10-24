@@ -34,7 +34,7 @@ module Libertree
               comment_id: comment.id,
               remote_id:  params['id'],
             )
-          rescue PGError => e
+          rescue => e
             fail InternalError, "Error in #{__method__}: #{e.message}", nil
           end
         end
@@ -49,7 +49,7 @@ module Libertree
 
             fail_if_nil likes[0], "Unrecognized like ID: #{params['id'].inspect}"
             likes[0].delete  # there should only be one Like
-          rescue PGError => e
+          rescue => e
             fail InternalError, "Error in #{__method__}: #{e.message}", nil
           end
         end

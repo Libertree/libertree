@@ -40,7 +40,7 @@ module Libertree
               remote_id: remote_id,
               recipient_member_ids: member_ids
             )
-          rescue PGError => e
+          rescue => e
             fail InternalError, "Error in #{__method__}: #{e.message}", nil
           end
         end
