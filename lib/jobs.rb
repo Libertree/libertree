@@ -244,20 +244,18 @@ module Jobs
           if server.domain.nil? || server.domain.empty?
             raise Libertree::JobInvalid, "Server #{server.id} has no domain."
           end
+
           begin
             params = Request.client.send(method_name, *args)
-            Request.client.request(server.domain, params)
-
-            # TODO: when the response code is not OK the job should
-            # not be marked as successfully completed. Currently, we
-            # just ignore the response code from the remote tree,
-            # which is very unwise. This defect is also present in the
-            # master branch.
-
+            success, response = Request.client.request(server.domain, params)
           rescue Timeout::Error => e
             raise Libertree::RetryJob, "With #{server.domain}: #{e.message}"
           rescue => e
             raise Libertree::RetryJob, "Fatal error: with #{server.domain}: #{e.message}"
+          end
+
+          if ! success
+            raise Libertree::JobFailed, "Rejected by #{server.domain}: #{response}"
           end
         end
       end

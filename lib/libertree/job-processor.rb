@@ -108,7 +108,7 @@ module Libertree
         reason = "Failed job #{job.id}: #{e.message}\n"
         log_error reason
         # TODO: mark the job as failed instead of unreserving it
-        job.retry_reason = reason
+        job.retry_reason = "Failed: #{e.message}"
         job.save
         job.unreserve
       rescue Libertree::RetryJob => e
