@@ -25,6 +25,8 @@ module Libertree
               tree['domain'] == Server.conf['domain']
             }
             forest.set_trees_by_domain trees.map {|t| t['domain']}
+          rescue LibertreeError => e
+            raise e
           rescue => e
             fail InternalError, "Error on FOREST request: #{e.message}", nil
           end

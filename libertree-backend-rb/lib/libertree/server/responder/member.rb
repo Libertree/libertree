@@ -52,6 +52,8 @@ module Libertree
             end
           rescue URI::InvalidURIError => e
             fail InternalError, "Invalid URI: #{params['avatar_url']}", nil
+          rescue LibertreeError => e
+            raise e
           rescue => e
             fail InternalError, "Error in #{__method__}: #{e.message}", nil
           end
@@ -67,6 +69,8 @@ module Libertree
 
             fail_if_nil members[0], "Unrecognized username: #{params['username'].inspect}"
             members[0].delete_cascade  # there should only be one member
+          rescue LibertreeError => e
+            raise e
           rescue => e
             fail InternalError, "Error in #{__method__}: #{e.message}", nil
           end

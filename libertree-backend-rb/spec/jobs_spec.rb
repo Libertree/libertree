@@ -73,7 +73,7 @@ describe Jobs do
     before :each do
       @client = double("Client")
       @client.stub(:request) {|domain, args|
-        Nokogiri::XML.fragment("<iq />")
+        [ true, Nokogiri::XML.fragment("<iq />") ]
       }
       Jobs::Request.stub(:client) { @client }
     end

@@ -257,6 +257,8 @@ module Jobs
           if ! success
             raise Libertree::JobFailed, "Rejected by #{server.domain}: #{response}"
           end
+
+          response
         end
       end
     end
