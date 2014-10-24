@@ -89,11 +89,12 @@ module Controller
     # called by JS: Libertree.Comments.insertHtmlFor
     def _comment(comment_id, old_n = nil)
       @comment = Libertree::Model::Comment[comment_id.to_i]
-      all_comments = @comment.post.comments
+      post = Libertree::Model::Post.get_full( @comment.post_id )
+      all_comments = post.comments(:refresh_cache => true)
       @commenters = commenters(all_comments)
       @old_n = old_n ? old_n.to_i : nil
       @n_total = all_comments.count
-      return ""  if ! @comment.post.v_internet? && ! logged_in?
+      return ""  if ! post.v_internet? && ! logged_in?
     end
 
     def destroy(comment_id)
