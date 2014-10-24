@@ -6,7 +6,7 @@ require 'yaml'
 require 'mini_magick'
 require 'fast_gettext'
 require 'markdown'
-require_relative 'lib/libertree/lang'
+require './lib/libertree/lang'
 require 'libertree/db'
 
 Libertree::DB.load_config("#{ File.dirname( __FILE__ ) }/config/database.yaml")
