@@ -7,6 +7,9 @@ module Libertree
 
       def after_create
         super
+        # invalidate post.get_full cache
+        $LibertreeMODELCACHE.delete("#{self.post.cache_key}:get_full")
+
         if self.local? && self.post.distribute?
           Libertree::Model::Job.create_for_forests(
             {
