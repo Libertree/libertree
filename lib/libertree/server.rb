@@ -153,6 +153,10 @@ module Libertree
         rescue Blather::Stream::ConnectionFailed
           log_error "No connection to the XMPP server on #{host}; retrying."
           sleep 3
+        rescue => e
+          log_error "Unhandled error: #{e.message}"
+          log_error "Aborting."
+          exit 1
         end
 
         if @log_handle.respond_to? :path

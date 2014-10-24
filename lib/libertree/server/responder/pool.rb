@@ -32,7 +32,7 @@ module Libertree
                 sprung:    true
               )
             end
-          rescue PGError => e
+          rescue => e
             fail InternalError, "ERROR on POOL request: #{e.message}", nil
           end
         end
@@ -53,7 +53,7 @@ module Libertree
             ]
             fail_if_nil pool, "Unrecognized pool: #{params['id']}"
             pool.delete_cascade
-          rescue PGError => e
+          rescue => e
             fail InternalError, "ERROR on POOL request: #{e.message}", nil
           end
         end

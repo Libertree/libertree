@@ -38,7 +38,7 @@ module Libertree
 
             fail_if_nil post, "Unrecognized post (#{params['post_id']})."
             pool << post
-          rescue PGError => e
+          rescue => e
             fail InternalError, "ERROR on POOL request: #{e.message}", nil
           end
         end
@@ -81,7 +81,7 @@ module Libertree
 
             # Try to remove, regardless of whether or not it really is there.
             pool.remove_post post
-          rescue PGError => e
+          rescue => e
             fail InternalError, "ERROR on POOL-POST request: #{e.message}", nil
           end
         end

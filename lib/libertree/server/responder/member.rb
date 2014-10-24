@@ -22,7 +22,7 @@ module Libertree
                 profile.name_display = params['profile']['name_display']
                 profile.description = params['profile']['description']
                 profile.save
-              rescue Sequel::CheckConstraintViolation, PGError => e
+              rescue Sequel::CheckConstraintViolation => e
                 if e.message =~ /valid_name_display/
                   fail InternalError, "Invalid display name: #{params['profile']['name_display'].inspect}", nil
                 else
@@ -52,7 +52,7 @@ module Libertree
             end
           rescue URI::InvalidURIError => e
             fail InternalError, "Invalid URI: #{params['avatar_url']}", nil
-          rescue PGError => e
+          rescue => e
             fail InternalError, "Error in #{__method__}: #{e.message}", nil
           end
         end
@@ -67,7 +67,7 @@ module Libertree
 
             fail_if_nil members[0], "Unrecognized username: #{params['username'].inspect}"
             members[0].delete_cascade  # there should only be one member
-          rescue PGError => e
+          rescue => e
             fail InternalError, "Error in #{__method__}: #{e.message}", nil
           end
         end

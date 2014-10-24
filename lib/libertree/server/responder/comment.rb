@@ -44,7 +44,7 @@ module Libertree
               # TODO: Sanitize with Loofah
               text:      comment_text
             )
-          rescue PGError => e
+          rescue => e
             fail InternalError, "Error in #{__method__}: #{e.message}", nil
           end
         end
@@ -59,7 +59,7 @@ module Libertree
 
             fail_if_nil comments[0], "Unrecognized comment ID: #{params['id'].inspect}"
             comments[0].delete_cascade  # there should only be one comment
-          rescue PGError => e
+          rescue => e
             fail InternalError, "Error in #{__method__}: #{e.message}", nil
           end
         end
