@@ -4,7 +4,8 @@ require 'set'
 module Libertree
   module Model
     class Job < Sequel::Model(:jobs)
-      MAX_TRIES = 11
+      MAX_TRIES = 48
+      RETRY_FACTOR = 0.2
 
       def params
         if val = super
@@ -62,7 +63,7 @@ module Libertree
           time_started: nil,
           pid: nil,
           tries: new_tries,
-          time_to_start: Time.now + 60 * Math::E**new_tries
+          time_to_start: Time.now + 60 * Math::E**(new_tries * RETRY_FACTOR)
         )
       end
 
