@@ -39,6 +39,8 @@ module Libertree
                 via:        params['via']
               )
             end
+          rescue LibertreeError => e
+            raise e
           rescue => e
             fail InternalError, "Error in #{__method__}: #{e.message}", nil
           end
@@ -54,6 +56,8 @@ module Libertree
 
             fail_if_nil posts[0], "Unrecognized post ID: #{params['id'].inspect}"
             posts[0].delete_cascade  # there should only be one post
+          rescue LibertreeError => e
+            raise e
           rescue => e
             fail InternalError, "Error in #{__method__}: #{e.message}", nil
           end

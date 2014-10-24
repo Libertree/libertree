@@ -11,10 +11,11 @@ require 'libertree/server/websocket'
 
 module Libertree
   module Server
-    class ConfigurationError < StandardError; end
-    class MissingParameterError < StandardError; end
-    class NotFoundError < StandardError; end
-    class InternalError < StandardError; end
+    class LibertreeError < StandardError; end
+    class ConfigurationError < LibertreeError; end
+    class MissingParameterError < LibertreeError; end
+    class NotFoundError < LibertreeError; end
+    class InternalError < LibertreeError; end
 
     class << self
       attr_accessor :conf
