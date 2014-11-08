@@ -63,3 +63,4 @@ smtp:
   starttls_auto: false
   ssl: false
   from_address: exampleusername@example.org
+  # openssl_verify_mode: none  # Either comment out, or choose: none, peer, client_once, fail_if_no_peer_cert
