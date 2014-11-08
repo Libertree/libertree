@@ -82,9 +82,16 @@ package.
 
 To expose the frontend to the Internet, a proxying web server, such as
 nginx or Apache, is recommended.  Under
-`/opt/libertree/frontend-rb/config/` you can find an example
+`/opt/libertree/frontend-ramaze/config/` you can find an example
 configuration files for an nginx setup (`libertree.nginx.example`) and
-an Apache vhost definition (`libertree.apache.example`).
+an Apache vhost definition (`libertree.apache.example`).  For nginx,
+copy the configuration file to
+`/etc/nginx/sites-available/libertree.conf`, adjust it if necessary,
+and link it to `/etc/nginx/sites-enabled/libertree.conf` when you are
+ready to deploy it.
+
+The frontend also requires configuration.  Edit the files in
+`/opt/libertree/frontend-ramaze/config/`.
 
 
 ## Connecting the backend to an XMPP server
@@ -106,7 +113,13 @@ name "libertree.myserver.net" and that it will register with the given
 shared secret.  Make sure that this secret is the same as the one
 specified in the backend's configuration file.  Also, you need to make
 sure that the backend is in fact configured to listen on the specified
-domain name.
+domain name.  Do take a look at
+`/opt/libertree/backend-rb/config.yaml.example`; it contains the
+settings that *must* be customised before you can expect the backend
+to work.  Copy this file to `config.yaml` and edit the settings.  More
+settings are available in `/opt/libertree/backend-rb/defaults.yaml`.
+Unless a conflicting definition is configured in `config.yaml` the
+defaults from `defaults.yaml` are used.
 
 
 # Starting it all
