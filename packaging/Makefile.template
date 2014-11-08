@@ -9,8 +9,8 @@ PREFIX_DB = $(addprefix $(PREFIX)/,db)
 PREFIX_GEMS = $(addprefix $(PREFIX)/,gems)
 PKG_PREFIX = libertree
 
-VERSION_FRONTEND = 0.0.6
-VERSION_BACKEND = 0.0.7
+VERSION_FRONTEND = 0.0.7
+VERSION_BACKEND = 0.0.8
 VERSION_MODEL   := $(shell grep -oP "version += +'\K([^']+)" ../libertree-model-rb/libertree-model.gemspec)
 VERSION_CLIENT  := $(shell grep -oP "version += +'\K([^']+)" ../libertree-client-rb/libertree-client.gemspec)
 VERSION_DB      = 0.0.1
@@ -168,7 +168,8 @@ libertree-backend-$(VERSION_BACKEND).$(PKG_TYPE) : gems \
 		lib/ bin/server.rb bin/job-processor.rb generate-key-pair.sh \
 		service.sh \
 		database.yaml.example \
-		defaults.yaml
+		defaults.yaml \
+		config.yaml.example
 
 #		--config-files database.yaml.example \
 #		--config-files config.yaml.example \
