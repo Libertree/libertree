@@ -1,0 +1,30 @@
+# Add definitions here to override the defaults.  Take a look at
+# defaults.yaml for a complete set of possible settings keys.  The
+# settings here need to be customised, all others are optional.
+
+# The fully qualified domain name of this server
+# (the Libertree backend component)
+domain: libertree.localhost
+
+# The shared secret between XMPP server and the Libertree backend
+shared_secret: 'secret'
+
+# The URL base of the frontend web interface (used for URL substitution)
+frontend_url_base: 'https://oak.elephly.net'
+
+# The administrator's email address to allow other
+# Libertree administrators to contact you.
+contact: admin@mydomain.net
+
+# What the system will use for sending email
+smtp:
+  host: mail.example.org
+  port: 25
+  username: exampleusername
+  password: examplepassword
+  authentication: plain  # plain, login, cram_md5, or comment out for no auth
+  helo_domain: localhost.localdomain
+  starttls_auto: false
+  ssl: false
+  from_address: exampleusername@example.org
+  # openssl_verify_mode: none  # Either comment out, or choose: none, peer, client_once, fail_if_no_peer_cert
