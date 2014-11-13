@@ -1,5 +1,6 @@
 <h2><%=_('Invite Others')%></h2>
 
+<% if $conf['invitations'] %>
 <p>
   <a href="/invitations/create"><%=_('Generate a new invitation')%></a>
 </p>
@@ -10,3 +11,10 @@
   @invitations.map { |i| "http://#{@host}/signup?invitation_code=#{i.code}" }.join("\n")
 %></textarea>
 <% end %>
+
+<% else %>
+<p>
+  <%=_('Invitations have been disabled.')%>
+</p>
+<% end %>
+

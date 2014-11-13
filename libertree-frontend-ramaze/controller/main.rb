@@ -76,6 +76,7 @@ module Controller
     def signup
       @view = 'signup'
       redirect '/intro'  if logged_in?
+      redirect_referrer  unless $conf['sign_up']
 
       @invitation_code = request['invitation_code'].to_s.sub(%r{http?://#{request.host_with_port}/signup\?invitation_code=},"")
 
