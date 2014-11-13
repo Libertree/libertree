@@ -60,6 +60,8 @@ msgid "not-authenticated|Please log in."
 msgstr ""
 
 #: controller/invitations.rb
+msgid "Invitations have been disabled."
+msgstr ""
 msgid "Failed to create invitation.  You may only have up to 5 unaccepted invitations at once."
 msgstr ""
 

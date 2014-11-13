@@ -173,11 +173,15 @@ module Libertree
       # (No parameters.)
 
       post do
-        invitation = @account.new_invitation
-        if invitation.nil?
-          { 'success' => false }
+        if $conf['invitations']
+          invitation = @account.new_invitation
+          if invitation.nil?
+            { 'success' => false }
+          else
+            { 'success' => true, 'code' => invitation.code, }
+          end
         else
-          { 'success' => true, 'code' => invitation.code, }
+          { 'success' => false }
         end
       end
     end
