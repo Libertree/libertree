@@ -1,6 +1,7 @@
 # TODO:
 #   - add architecture ("-a all" or "-a native")
 #   - create libertree user
+#   - add glib2 as a dependency to parkdown
 
 PREFIX = /opt/libertree
 PREFIX_FRONTEND = $(addprefix $(PREFIX)/,frontend-ramaze)
@@ -9,8 +10,8 @@ PREFIX_DB = $(addprefix $(PREFIX)/,db)
 PREFIX_GEMS = $(addprefix $(PREFIX)/,gems)
 PKG_PREFIX = libertree
 
-VERSION_FRONTEND = 0.0.8
-VERSION_BACKEND = 0.0.8
+VERSION_FRONTEND = 0.0.9
+VERSION_BACKEND = 0.0.9
 VERSION_MODEL   := $(shell grep -oP "version += +'\K([^']+)" ../libertree-model-rb/libertree-model.gemspec)
 VERSION_CLIENT  := $(shell grep -oP "version += +'\K([^']+)" ../libertree-client-rb/libertree-client.gemspec)
 VERSION_DB      = 0.0.1
