@@ -121,6 +121,16 @@ settings are available in `/opt/libertree/backend-rb/defaults.yaml`.
 Unless a conflicting definition is configured in `config.yaml` the
 defaults from `defaults.yaml` are used.
 
+Setting up an XMPP server is not covered by these instructions.  The
+recommended (and easiest) configuration is to make the XMPP server
+listen on the root domain name (e.g. `myserver.net`) and assign the
+Libertree component a subdomain (e.g. `libertree.myserver.net`).
+Other configurations (e.g. XMPP server on a subdomain) may be more
+difficult to achieve and probably require the use of
+[SRV records](http://prosody.im/doc/dns).  If you do not already have
+a properly configured XMPP server do yourself a favour and read the
+[excellent Prosody documentation](http://prosody.im/doc).
+
 
 # Starting it all
 
