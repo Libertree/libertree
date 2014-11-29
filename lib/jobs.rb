@@ -345,7 +345,18 @@ module Jobs
 
     class INTRODUCE < RequestJob
       def self.perform(params)
-        with_tree(params['server_id'], :req_introduce)
+        host = params['host']
+        begin
+          success, response = Request.client.request(host, Request.client.req_introduce)
+        rescue Timeout::Error => e
+          raise Libertree::RetryJob, "With #{host}: #{e.message}"
+        rescue => e
+          raise Libertree::RetryJob, "Fatal error: with #{host}: #{e.message}"
+        end
+
+        if ! success
+          raise Libertree::JobFailed, "Rejected by #{host}: #{response}"
+        end
       end
     end
 
