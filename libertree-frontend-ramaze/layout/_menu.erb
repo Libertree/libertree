@@ -11,22 +11,26 @@
       <span id="account-name"><%=account.member.name_display%></span>
       <%= member_img(account.member) %>
     </a>
-    <div id="account-window" class="window has-shadow">
-      <a href="/p/<%= account.member.username %>"><%= img 'icon-account.png', {alt:s_('menu|Profile')}%> <%=s_('menu|Profile')%></a><br/>
-      <a href="/accounts/edit"><%=img 'icon-settings.png', {alt:s_('menu|Settings')}%> <%= s_('menu|Settings')%></a><br/>
-      <a href="/contact-lists"><%=img 'icon-group.png', {alt:s_('menu|Contact Lists')}%> <%= s_('menu|Contact Lists')%></a><br/>
-      Text:
-      <% if account.font_css == 'fonts-small' %>
-        <a href="/accounts/font" title="<%=s_('menu|Legible font size')%>"><%= s_('menu|legible') %></a> | <%= s_('menu|small')%>
-      <% else %>
+    <ul id="account-window" class="window has-shadow">
+      <li><a href="/p/<%= account.member.username %>"><%= img 'icon-account.png', {alt:s_('menu|Profile')}%> <%=s_('menu|Profile')%></a></li>
+      <li><a href="/accounts/edit"><%=img 'icon-settings.png', {alt:s_('menu|Settings')}%> <%= s_('menu|Settings')%></a></li>
+      <li><a href="/contact-lists"><%=img 'icon-group.png', {alt:s_('menu|Contact Lists')}%> <%= s_('menu|Contact Lists')%></a></li>
+      <li>
+        Text:
+        <% if account.font_css == 'fonts-small' %>
+        <a href="/accounts/font" title="<%=s_('menu|Legible font size')%></%=s_</%=s_('menu|Legible></%=s_('menu|Legible>"><%= s_('menu|legible') %></a> | <%= s_('menu|small')%>
+        <% else %>
         <%= s_('menu|legible') %> | <a href="/accounts/font/small" title="<%= s_('menu|Small font size') %>"><%= s_('menu|small')%></a>
-      <% end %>
-      <br/>
+        <% end %>
+      </li>
+      <li><a href="/docs/index"><%=img 'icon-documentation.png', {alt:s_('menu|Documentation')}%> <%= s_('menu|Documentation')%></a></li>
       <% if account.admin? %>
-        <a href="/admin"><%=img 'icon-admin.png', {alt:s_('menu|Administrate')}%> <%= s_('menu|Administrate')%></a><br/>
+      <li>
+        <a href="/admin"><%=img 'icon-admin.png', {alt:s_('menu|Administrate')}%> <%= s_('menu|Administrate')%></a>
+      </li>
       <% end %>
-      <a href="/logout"><%=img 'icon-logout.png', {alt:s_('menu|Log out')}%> <%= s_('menu|Log out')%></a>
-    </div>
+      <li><a href="/logout"><%=img 'icon-logout.png', {alt:s_('menu|Log out')}%> <%= s_('menu|Log out')%></a></li>
+    </ul>
 
     <div id="main-menu-container" class="<%=account.settings.custom_link ? 'with-custom' : ''%>">
       <form action="/search" method="POST" class="search">

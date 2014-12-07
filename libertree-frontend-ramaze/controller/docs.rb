@@ -4,18 +4,23 @@ module Controller
 
     layout :default
 
-    def index(lang, document)
-      @view = 'docs'
+    # leave only safe characters in the document name
+    PATH = lambda {|doc| "#{Ramaze.options.views[0]}/docs/%s/#{doc.gsub(/[^a-zA-Z_-]/,'')}.markdown" }
 
-      # leave only safe characters in the document name
-      filename_template = "#{Ramaze.options.views[0]}/docs/%s/#{document.gsub(/[^a-zA-Z_-]/,'')}.markdown"
+    def index(lang='en_GB')
+      @view = 'docs'
+      redirect r(:show, lang, 'index')
+    end
+
+    def show(lang, document)
+      @view = 'docs'
 
       # restrict language to whitelist and default to en_GB
       if Libertree::LANG.map(&:first).include?(lang) &&
-          File.exists?(filename_template % lang)
-        filename = filename_template % lang
+         File.exists?(PATH.call(document) % lang)
+        filename = PATH.call(document) % lang
       else
-        filename = filename_template % 'en_GB'
+        filename = PATH.call(document) % 'en_GB'
       end
 
       if File.exists? filename
