@@ -124,9 +124,24 @@ defaults from `defaults.yaml` are used.
 Setting up an XMPP server is not covered by these instructions.  The
 recommended (and easiest) configuration is to make the XMPP server
 listen on the root domain name (e.g. `myserver.net`) and assign the
-Libertree component a subdomain (e.g. `libertree.myserver.net`).
-Other configurations (e.g. XMPP server on a subdomain) may be more
-difficult to achieve and probably require the use of
+Libertree component a subdomain (e.g. `libertree.myserver.net`), both
+of which are configured to point to the very same IP address.
+
+According to the
+[XMPP protocol specifications](http://xmpp.org/rfcs/rfc6120.html#tcp-resolution)
+a remote XMPP server will look up DNS information for another XMPP
+server before establishing a connection.  The preferred method is to
+use SRV (service) records.  In our setting, a remote server queries a
+DNS server for the XMPP SRV record associated with the domain of the
+Libertree component (e.g. `libertree.myserver.net`).  If a SRV record
+exists, it will proceed to look up the IP address of the server named
+in the SRV record.  If no SRV record exists for the component domain,
+the IP of the component domain is looked up.  If the IP of the
+component domain is in fact the same as the IP mapped to the host
+running the XMPP server programme, all is well and communication with
+the XMPP server is established.
+
+For advanced configurations with SRV records, please do read up on
 [SRV records](http://prosody.im/doc/dns).  If you do not already have
 a properly configured XMPP server do yourself a favour and read the
 [excellent Prosody documentation](http://prosody.im/doc).
