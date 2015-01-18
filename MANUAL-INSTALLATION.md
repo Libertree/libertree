@@ -8,6 +8,10 @@ technology, or where certain components are optional, this is noted.  Given
 sufficient confidence and technical ability, other technologies can be
 used instead to achieve a full, functional Libertree installation.
 
+**If you are using Debian or a similar distribution, please follow the
+simple instructions in INSTALLATION.md instead.**
+
+
 ## Using the installer script
 
 We provide an installer script that sets up Libertree according to the
