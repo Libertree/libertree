@@ -77,6 +77,8 @@ $ LIBERTREE_ENV=production ./migrate.sh
 Only the last step is required after updates to the `libertree-db`
 package.
 
+Due to a defect you will also have to copy `database.yaml` to
+`/opt/libertree/frontend-ramaze/` and `/opt/libertree/backend-rb/`.
 
 ## Frontend configuration
 
