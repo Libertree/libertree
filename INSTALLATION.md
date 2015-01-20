@@ -162,6 +162,23 @@ $ ./backend-rb/service.sh start
 ~~~
 
 
+# Creating a user account
+
+Now that everything is running you can create your first administrator
+account for Libertree.  The Libertree software currently requires a
+valid invitation code to sign up.  Members can generate invitation
+URLs from the Settings page, but the very first invitation needs to be
+created by hand:
+
+    % echo 'INSERT INTO invitations DEFAULT VALUES; SELECT code FROM invitations ORDER BY id DESC LIMIT 1;' | psql -U libertree libertree_production
+
+Then use the given code on the signup page to create your account.
+After your first account is created, set that account to be the admin
+user, like this:
+
+    % echo "UPDATE accounts SET admin = 'true' WHERE username = 'youraccount';" | psql -U libertree libertree_production
+
+
 # Updating
 
 To update an existing installation just fetch the latest version from
