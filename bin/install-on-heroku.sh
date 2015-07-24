@@ -49,7 +49,8 @@ if [[ -z "${HEROKU_APP_NAME// }" ]]; then
 fi
 heroku apps:create $HEROKU_APP_NAME
 WEB_ADDRESS="http://$HEROKU_APP_NAME.herokuapp.com"
-HEROKU_BACKEND_APP_NAME="$HEROKU_APP_NAME-backend"
+HEROKU_WEBSOCKET_BACKEND_APP_NAME="$HEROKU_APP_NAME-websocket"
+HEROKU_JOB_PROCESSOR_BACKEND_APP_NAME="$HEROKU_APP_NAME-job-processor"
 WEBSOCKET_HOST="$HEROKU_BACKEND_APP_NAME.herokuapp.com"
 
 git push heroku `git rev-parse --abbrev-ref HEAD`:master
@@ -86,21 +87,43 @@ production:
 LIBERTREE_ENV=production PGPASSFILE=.pgpass ./migrate.sh
 
 # ----------------------------------------------------------------------------
-# Backend
+# Backend: Websocket
 
 cd $WORKING_DIR
-git clone https://github.com/Libertree/libertree-backend-rb.git || echo '(failed to clone libertree-backend-rb)'
-cd libertree-backend-rb
+git clone https://github.com/Libertree/libertree-backend-rb.git libertree-backend-rb-websocket || echo '(failed to clone libertree-backend-rb)'
+cd libertree-backend-rb-websocket
 git checkout $BACKEND_BRANCH
 
-heroku apps:create $HEROKU_BACKEND_APP_NAME
+heroku apps:create $HEROKU_WEBSOCKET_BACKEND_APP_NAME
 
 git push heroku `git rev-parse --abbrev-ref HEAD`:master
 
 # Backend will not have its own DB, the frontend and backend will share the same DB.
-heroku addons:destroy heroku-postgresql --confirm $HEROKU_BACKEND_APP_NAME
+heroku addons:destroy heroku-postgresql --confirm $HEROKU_WEBSOCKET_BACKEND_APP_NAME
 
-heroku config:set LANG=en_GB.UTF-8 DATABASE_URL=$DATABASE_URL LIBERTREE_WEBSOCKET_LISTEN_HOST=127.0.0.1
+heroku config:set LANG=en_GB.UTF-8 DATABASE_URL=$DATABASE_URL LIBERTREE_WEBSOCKET_LISTEN_HOST=0.0.0.0 LIBERTREE_DOMAIN=$BACKEND_HOST LIBERTREE_FRONTEND_URL_BASE=$WEB_ADDRESS
+
+# Ensure DATABASE_URL is used
+heroku ps:restart
+
+# ----------------------------------------------------------------------------
+# Backend: Job Processor (Local)
+
+cd $WORKING_DIR
+git clone https://github.com/Libertree/libertree-backend-rb.git libertree-backend-rb-job-processor || echo '(failed to clone libertree-backend-rb)'
+cd libertree-backend-rb-job-processor
+git checkout $BACKEND_BRANCH
+
+heroku apps:create $HEROKU_JOB_PROCESSOR_BACKEND_APP_NAME
+
+git push heroku `git rev-parse --abbrev-ref HEAD`:master
+
+# Backend will not have its own DB, the frontend and backend will share the same DB.
+heroku addons:destroy heroku-postgresql --confirm $HEROKU_JOB_PROCESSOR_BACKEND_APP_NAME
+
+heroku config:set LANG=en_GB.UTF-8 DATABASE_URL=$DATABASE_URL LIBERTREE_TASKS=http:embed,post:add-to-rivers,river:refresh,river:refresh-all LIBERTREE_DOMAIN=$BACKEND_HOST LIBERTREE_FRONTEND_URL_BASE=$WEB_ADDRESS
+
+heroku ps:scale web=0 jobprocessorlocal=1 --app $HEROKU_JOB_PROCESSOR_BACKEND_APP_NAME
 
 # ----------------------------------------------------------------------------
 
