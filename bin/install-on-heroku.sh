@@ -11,8 +11,8 @@ echo '***************************************************'
 echo
 
 which ruby || (echo 'Ruby must be installed.' && exit 1)
-
-which heroku || (echo 'The Heroku CLI must be installed.  https://toolbelt.heroku.com/' && exit 2)
+which git || (echo 'git must be installed.' && exit 2)
+which heroku || (echo 'The Heroku CLI must be installed.  https://toolbelt.heroku.com/' && exit 3)
 
 # ----------------------------------------------------------------------------
 # Setup
